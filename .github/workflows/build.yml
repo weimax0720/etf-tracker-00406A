@@ -19,16 +19,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Latest Apktool & Build Tools
+      - name: Install Apktool 2.9.3 & Build Tools
         run: |
           sudo apt-get update
           sudo apt-get install -y apksigner
           mkdir -p bin
-          curl -s https://api.github.com/repos/iBotPeaches/Apktool/releases/latest | grep "browser_download_url.*jar" | cut -d : -f 2,3 | tr -d \" | wget -i - -O bin/apktool.jar
+          wget https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar -O bin/apktool.jar
 
       - name: Build APK with Apktool
         run: |
-          java -jar bin/apktool.jar b 00406A_Tracker_v62R22F -o app-unsigned.apk
+          java -jar bin/apktool.jar b --use-aapt1 00406A_Tracker_v62R22F -o app-unsigned.apk
 
       - name: Generate Keystore & Sign APK
         run: |
