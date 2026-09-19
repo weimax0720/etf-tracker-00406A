@@ -19,21 +19,25 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Apktool 2.9.3 & Build Tools
+      - name: Install Build Tools & Apktool
         run: |
           sudo apt-get update
-          sudo apt-get install -y apksigner
+          sudo apt-get install -y zipalign apksigner
           mkdir -p bin
           wget https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar -O bin/apktool.jar
 
       - name: Build APK with Apktool
         run: |
-          java -jar bin/apktool.jar b --use-aapt1 00406A_Tracker_v62R22F -o app-unsigned.apk
+          java -jar bin/apktool.jar b 00406A_Tracker_v62R22F -o app-unsigned.apk
+
+      - name: Zipalign APK
+        run: |
+          zipalign -v -p 4 app-unsigned.apk app-aligned.apk
 
       - name: Generate Keystore & Sign APK
         run: |
           keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-          apksigner sign --min-sdk-version 21 --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out app-release.apk app-unsigned.apk
+          apksigner sign --v1-signing-enabled true --v2-signing-enabled true --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out app-release.apk app-aligned.apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
