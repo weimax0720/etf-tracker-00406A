@@ -493,10 +493,6 @@ const ACTION_BACKUP_KEY='tracker00406A_v9_split_backup';
 const MONTHLY_KEY='tracker00406A_monthly_v17';
 const BACKUP_TS_KEY='tracker00406A_backup_last_v17';
 const OLD_KEY='tracker00406A_v2';
- // ==========================================
-// 雲端同步系統
-// ==========================================
-// ⚠️ 請將下方的 firebaseConfig 替換成你剛剛複製的那段！
 const firebaseConfig = {
   apiKey: "AIzaSyDPaFgrEFcrhdLDqNU7WGM5jTHZpj0jHxc",
   authDomain: "my-etf-app.firebaseapp.com",
@@ -504,29 +500,21 @@ const firebaseConfig = {
   storageBucket: "my-etf-app.firebasestorage.app",
   messagingSenderId: "921320760904",
   appId: "1:921320760904:web:452e22730d530fbee55a7d"
-};
-
-if (!firebase.apps.length) {
+};if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 const db = firebase.firestore();
-// 設定你在雲端的專屬檔案櫃
 const userDocRef = db.collection('etf_users').doc('my_account'); 
-
-// 接收雲端資料的監聽器
 function initCloudSync() {
   userDocRef.onSnapshot((doc) => {
     if (doc.exists) {
       const data = doc.data();
-      // 如果雲端有資料，就覆蓋掉本地端的舊資料
       if (data.settings) settings = data.settings;
       if (data.purchases) purchases = data.purchases;
       if (data.snapshots) snapshots = data.snapshots;
       if (data.cache) cache = data.cache;
       if (data.corporateActions) corporateActions = data.corporateActions;
       if (data.monthlyHistory) monthlyHistory = data.monthlyHistory;
-      
-      // 通知程式重新計算並更新畫面
       projectionCache = null;
       safeRenderAll(); 
       showToast('☁️ 雲端資料已同步');
@@ -562,26 +550,7 @@ let monthlyHistory=loadJSON(MONTHLY_KEY,[]);if(!Array.isArray(monthlyHistory))mo
 cache.announcements=Array.isArray(cache.announcements)?cache.announcements:[];cache.splitPreview=cache.splitPreview&&typeof cache.splitPreview==='object'?cache.splitPreview:null;
 let pendingSplitAction=null;
 function loadJSON(k,d){try{const x=JSON.parse(localStorage.getItem(k));return x??d}catch(e){return d}}
-function saveAll(){
-  // 1. 保留原本的手機/電腦本地備份
-  localStorage.setItem(SNAP_KEY,JSON.stringify(snapshots));
-  localStorage.setItem(CACHE_KEY,JSON.stringify(cache));
-  localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings));
-  localStorage.setItem(PURCHASE_KEY,JSON.stringify(purchases));
-  localStorage.setItem(ACTION_KEY,JSON.stringify(corporateActions));
-  localStorage.setItem(MONTHLY_KEY,JSON.stringify(monthlyHistory));
-
-  // 2. 將最新的資料打包上傳到 Firebase 雲端
-  userDocRef.set({
-    settings: settings,
-    purchases: purchases,
-    snapshots: snapshots,
-    cache: cache,
-    corporateActions: corporateActions,
-    monthlyHistory: monthlyHistory,
-    lastUpdate: new Date().toISOString()
-  }, { merge: true }); // merge: true 代表只更新有變動的部分
-}
+function saveAll(){localStorage.setItem(SNAP_KEY,JSON.stringify(snapshots));localStorage.setItem(CACHE_KEY,JSON.stringify(cache));localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings));localStorage.setItem(PURCHASE_KEY,JSON.stringify(purchases));localStorage.setItem(ACTION_KEY,JSON.stringify(corporateActions));localStorage.setItem(MONTHLY_KEY,JSON.stringify(monthlyHistory));userDocRef.set({settings: settings,purchases: purchases,snapshots: snapshots,cache: cache,corporateActions: corporateActions,monthlyHistory: monthlyHistory,lastUpdate: new Date().toISOString()}, { merge: true });}
 function migrateOld(){try{let x=JSON.parse(localStorage.getItem(OLD_KEY));if(!Array.isArray(x)||!x.length)return null;return x.map(r=>({date:r.date,aum:+r.aum||0,bene:+r.bene||0,avgTurn:+r.avgTurn||0,price:+r.price||0,nav:+r.nav||0,div:+r.div||0})).filter(r=>r.date)}catch(e){return null}}
 function cleanNum(v){if(v===null||v===undefined)return NaN;let x=String(v).replace(/[,%\s]/g,'').replace(/,/g,'');let n=Number(x);return Number.isFinite(n)?n:NaN}
 function isoDate(v){if(!v)return'';let s=String(v).trim().replace(/[年月.]/g,'/').replace(/日/g,'');let m=s.match(/^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})$/);if(m)return`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;return''}
