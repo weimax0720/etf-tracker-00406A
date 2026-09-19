@@ -26,7 +26,7 @@ jobs:
 
       - name: Build APK with Apktool
         run: |
-          apktool b . -o app-unsigned.apk
+          apktool b 00406A_Tracker_v62R22F -o app-unsigned.apk
 
       - name: Setup Android SDK for signing
         uses: android-actions/setup-android@v3
