@@ -19,22 +19,21 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Apktool
+      - name: Install Latest Apktool & Build Tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y apktool
+          sudo apt-get install -y apksigner
+          mkdir -p bin
+          curl -s https://api.github.com/repos/iBotPeaches/Apktool/releases/latest | grep "browser_download_url.*jar" | cut -d : -f 2,3 | tr -d \" | wget -i - -O bin/apktool.jar
 
       - name: Build APK with Apktool
         run: |
-          apktool b 00406A_Tracker_v62R22F -o app-unsigned.apk
-
-      - name: Setup Android SDK for signing
-        uses: android-actions/setup-android@v3
+          java -jar bin/apktool.jar b 00406A_Tracker_v62R22F -o app-unsigned.apk
 
       - name: Generate Keystore & Sign APK
         run: |
           keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-          $ANDROID_HOME/build-tools/34.0.0/apksigner sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out app-release.apk app-unsigned.apk
+          apksigner sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out app-release.apk app-unsigned.apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
