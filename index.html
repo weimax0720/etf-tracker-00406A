@@ -58,7 +58,8 @@ main.wrap{touch-action:pan-y;overscroll-behavior-x:contain}
 
 /* R22 Android 系統通知／提醒中心 */
 .reminderHero{background:linear-gradient(135deg,#112a40,#252650);border:1px solid #365a80;border-radius:22px;padding:16px}.notifyState{display:flex;gap:10px;align-items:center}.notifyIcon{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:#123b51;border:1px solid #2b6b83;font-size:23px}.notifyTitle{font-weight:900;font-size:19px}.notifyTag{display:inline-block;margin-top:5px;padding:5px 8px;border-radius:999px;background:#10352b;border:1px solid #24634d;color:#83edbd;font-size:11px;font-weight:850}.notifyGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}.notifyKpi{padding:12px;border-radius:15px;background:#091a2d;border:1px solid #21405f}.notifyKpi b{display:block;margin-top:5px;font-size:17px}.notifyKpi small{display:block;margin-top:4px;color:#8da5bf;font-size:10.5px;line-height:1.45}.notifyInfo{margin-top:11px;padding:11px 12px;border-radius:14px;background:#0a192b;border:1px solid #274464;color:#a2b8cf;font-size:11.5px;line-height:1.65}.notifyInfo strong{color:#e5f1ff}.reminderCenterList{display:grid;gap:9px}.reminderCenterItem{padding:12px 13px;border-radius:15px;background:#0a1b2e;border:1px solid #213e5e}.reminderCenterItem.warn{border-color:#695520;background:#2b2511}.reminderCenterItem.good{border-color:#245f4b;background:#0d2d25}.reminderCenterItem.info{border-color:#2d4f79;background:#0d2239}.reminderCenterItem .rt{font-weight:900;font-size:13px}.reminderCenterItem .rx{margin-top:5px;color:#96adc5;font-size:11.5px;line-height:1.55}.systemRule{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid #19334f}.systemRule:last-child{border-bottom:0}.systemRuleMark{flex:none;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#12304b;color:#a9d4ff;font-weight:900}.systemRule b{font-size:12.5px}.systemRule .meta{margin-top:3px}.notifyCaution{margin-top:12px;padding:11px 12px;border-radius:14px;border:1px solid #604e20;background:#28220e;color:#e6d18e;font-size:11.5px;line-height:1.6}@media(max-width:430px){.notifyGrid{grid-template-columns:1fr 1fr}.notifyKpi b{font-size:15px}}
-
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 </style></head>
 <body>
 <header class="top"><div class="title">00406A 追蹤器</div><div class="sub">v6.2-R22F 穩定修復版｜提醒中心｜R21分析保留</div></header><nav aria-label="功能分頁" class="tabNav" id="tabNav">
@@ -492,6 +493,46 @@ const ACTION_BACKUP_KEY='tracker00406A_v9_split_backup';
 const MONTHLY_KEY='tracker00406A_monthly_v17';
 const BACKUP_TS_KEY='tracker00406A_backup_last_v17';
 const OLD_KEY='tracker00406A_v2';
+ // ==========================================
+// 雲端同步系統
+// ==========================================
+// ⚠️ 請將下方的 firebaseConfig 替換成你剛剛複製的那段！
+const firebaseConfig = {
+  apiKey: "AIzaSyDPaFgrEFcrhdLDqNU7WGM5jTHZpj0jHxc",
+  authDomain: "my-etf-app.firebaseapp.com",
+  projectId: "my-etf-app",
+  storageBucket: "my-etf-app.firebasestorage.app",
+  messagingSenderId: "921320760904",
+  appId: "1:921320760904:web:452e22730d530fbee55a7d"
+};
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.firestore();
+// 設定你在雲端的專屬檔案櫃
+const userDocRef = db.collection('etf_users').doc('my_account'); 
+
+// 接收雲端資料的監聽器
+function initCloudSync() {
+  userDocRef.onSnapshot((doc) => {
+    if (doc.exists) {
+      const data = doc.data();
+      // 如果雲端有資料，就覆蓋掉本地端的舊資料
+      if (data.settings) settings = data.settings;
+      if (data.purchases) purchases = data.purchases;
+      if (data.snapshots) snapshots = data.snapshots;
+      if (data.cache) cache = data.cache;
+      if (data.corporateActions) corporateActions = data.corporateActions;
+      if (data.monthlyHistory) monthlyHistory = data.monthlyHistory;
+      
+      // 通知程式重新計算並更新畫面
+      projectionCache = null;
+      safeRenderAll(); 
+      showToast('☁️ 雲端資料已同步');
+    }
+  });
+}
 const seedSnapshots=[
  {date:'2026-08-26',aum:342.00,bene:12.80,avgTurn:7.50,avgVol:78000,price:9.66,nav:9.64,div:0.128},
  {date:'2026-09-09',aum:360.68,bene:13.52,avgTurn:9.36,avgVol:98970,price:9.66,nav:9.63,div:0.138},
@@ -521,7 +562,26 @@ let monthlyHistory=loadJSON(MONTHLY_KEY,[]);if(!Array.isArray(monthlyHistory))mo
 cache.announcements=Array.isArray(cache.announcements)?cache.announcements:[];cache.splitPreview=cache.splitPreview&&typeof cache.splitPreview==='object'?cache.splitPreview:null;
 let pendingSplitAction=null;
 function loadJSON(k,d){try{const x=JSON.parse(localStorage.getItem(k));return x??d}catch(e){return d}}
-function saveAll(){localStorage.setItem(SNAP_KEY,JSON.stringify(snapshots));localStorage.setItem(CACHE_KEY,JSON.stringify(cache));localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings));localStorage.setItem(PURCHASE_KEY,JSON.stringify(purchases));localStorage.setItem(ACTION_KEY,JSON.stringify(corporateActions));localStorage.setItem(MONTHLY_KEY,JSON.stringify(monthlyHistory))}
+function saveAll(){
+  // 1. 保留原本的手機/電腦本地備份
+  localStorage.setItem(SNAP_KEY,JSON.stringify(snapshots));
+  localStorage.setItem(CACHE_KEY,JSON.stringify(cache));
+  localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings));
+  localStorage.setItem(PURCHASE_KEY,JSON.stringify(purchases));
+  localStorage.setItem(ACTION_KEY,JSON.stringify(corporateActions));
+  localStorage.setItem(MONTHLY_KEY,JSON.stringify(monthlyHistory));
+
+  // 2. 將最新的資料打包上傳到 Firebase 雲端
+  userDocRef.set({
+    settings: settings,
+    purchases: purchases,
+    snapshots: snapshots,
+    cache: cache,
+    corporateActions: corporateActions,
+    monthlyHistory: monthlyHistory,
+    lastUpdate: new Date().toISOString()
+  }, { merge: true }); // merge: true 代表只更新有變動的部分
+}
 function migrateOld(){try{let x=JSON.parse(localStorage.getItem(OLD_KEY));if(!Array.isArray(x)||!x.length)return null;return x.map(r=>({date:r.date,aum:+r.aum||0,bene:+r.bene||0,avgTurn:+r.avgTurn||0,price:+r.price||0,nav:+r.nav||0,div:+r.div||0})).filter(r=>r.date)}catch(e){return null}}
 function cleanNum(v){if(v===null||v===undefined)return NaN;let x=String(v).replace(/[,%\s]/g,'').replace(/,/g,'');let n=Number(x);return Number.isFinite(n)?n:NaN}
 function isoDate(v){if(!v)return'';let s=String(v).trim().replace(/[年月.]/g,'/').replace(/日/g,'');let m=s.match(/^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})$/);if(m)return`${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;return''}
@@ -976,7 +1036,7 @@ function renderDecisionPage(){
 function exportFullBackup(){const data={format:'00406A_TRACKER_BACKUP',version:'R22F',fund:'00406A',exportedAt:new Date().toISOString(),settings,purchases,snapshots,cache,corporateActions,holdingsData,holdingsHistory,benchmark0050,monthlyHistory};const text=JSON.stringify(data,null,2),blob=new Blob([text],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`00406A_backup_${todayISO()}.json`;a.click();localStorage.setItem(BACKUP_TS_KEY,todayISO());renderBackupReminder();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast('已建立完整備份')}
 function importFullBackup(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(String(r.result||''));if(d?.fund!=='00406A'||d?.format!=='00406A_TRACKER_BACKUP')throw new Error('格式不符');if(d.settings)localStorage.setItem(SETTINGS_KEY,JSON.stringify(d.settings));if(Array.isArray(d.purchases))localStorage.setItem(PURCHASE_KEY,JSON.stringify(d.purchases));if(Array.isArray(d.snapshots))localStorage.setItem(SNAP_KEY,JSON.stringify(d.snapshots));if(d.cache)localStorage.setItem(CACHE_KEY,JSON.stringify(d.cache));if(Array.isArray(d.corporateActions))localStorage.setItem(ACTION_KEY,JSON.stringify(d.corporateActions));if(d.holdingsData)localStorage.setItem(HOLDINGS_CACHE_KEY,JSON.stringify(d.holdingsData));if(Array.isArray(d.holdingsHistory))localStorage.setItem(HOLDINGS_HISTORY_KEY,JSON.stringify(d.holdingsHistory));if(d.benchmark0050)localStorage.setItem(BENCHMARK_KEY,JSON.stringify(d.benchmark0050));if(Array.isArray(d.monthlyHistory))localStorage.setItem(MONTHLY_KEY,JSON.stringify(d.monthlyHistory));localStorage.setItem(BACKUP_TS_KEY,todayISO());showToast('備份已還原，APP即將重新載入');setTimeout(()=>location.reload(),900)}catch(e){showToast('備份格式錯誤，未修改資料')}finally{const f=document.getElementById('backupFileInput');if(f)f.value=''}};r.onerror=()=>showToast('讀取備份失敗');r.readAsText(file)}
 
-function bootApp(){if(booted)return;booted=true;try{initTabbedLayout()}catch(e){console.error('tabs',e)}safeRenderAll();try{setChartRange(chartRange)}catch(e){}if(wholeShareFixed>0)setTimeout(()=>showToast(`已將 ${wholeShareFixed} 筆小數股調整為整股`),350);else if(repairedLegacy>0)setTimeout(()=>showToast(`已自動修正 ${repairedLegacy} 筆舊版小數點紀錄`),450);setTimeout(()=>autoRefresh(false),700);setTimeout(()=>startLivePolling(),1200);setTimeout(()=>refreshHoldingsWeights(false),1800);setTimeout(()=>{if(document.getElementById('updateStatus')?.querySelector?.('.spin')&&!refreshBusy)setUpdateStatus('載入上次成功資料｜自動更新尚未啟動，可按「立即更新」。','updateWarn')},3000)}
+function bootApp(){if(booted)return;booted=true;initCloudSync();try{initTabbedLayout()}catch(e){console.error('tabs',e)}safeRenderAll();try{initTabbedLayout()}catch(e){console.error('tabs',e)}safeRenderAll();try{setChartRange(chartRange)}catch(e){}if(wholeShareFixed>0)setTimeout(()=>showToast(`已將 ${wholeShareFixed} 筆小數股調整為整股`),350);else if(repairedLegacy>0)setTimeout(()=>showToast(`已自動修正 ${repairedLegacy} 筆舊版小數點紀錄`),450);setTimeout(()=>autoRefresh(false),700);setTimeout(()=>startLivePolling(),1200);setTimeout(()=>refreshHoldingsWeights(false),1800);setTimeout(()=>{if(document.getElementById('updateStatus')?.querySelector?.('.spin')&&!refreshBusy)setUpdateStatus('載入上次成功資料｜自動更新尚未啟動，可按「立即更新」。','updateWarn')},3000)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bootApp,{once:true});else bootApp();
 </script>
 </body></html>
