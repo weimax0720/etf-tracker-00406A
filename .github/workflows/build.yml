@@ -28,7 +28,7 @@ jobs:
 
       - name: Build APK with Apktool
         run: |
-          java -jar bin/apktool.jar b 00406A_Tracker_v62R22F -o app-unsigned.apk
+          java -jar bin/apktool.jar b --use-aapt1 00406A_Tracker_v62R22F -o app-unsigned.apk
 
       - name: Generate Keystore & Sign APK
         run: |
