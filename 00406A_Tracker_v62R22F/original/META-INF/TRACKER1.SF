@@ -1,0 +1,15 @@
+Signature-Version: 1.0
+Created-By: 21.0.11 (Debian)
+SHA-256-Digest-Manifest: Mc/ZLFWwWRulbKNShCt0AeigxH4XKcXZKqLr8g0kjJU=
+SHA-256-Digest-Manifest-Main-Attributes: PCz+KoLq5TMIIKo6RyqD7OcwfGcruND
+ F+SIqwEiSalI=
+
+Name: AndroidManifest.xml
+SHA-256-Digest: Z3aq9bYR4njcyXchq+Uz2Z0E1/Qj5GjKbMGq49S+Hf0=
+
+Name: classes.dex
+SHA-256-Digest: aCMiZ0+NvD+/5/+tf6R2bMRJkao877wzQyK/o3NUBQ0=
+
+Name: assets/index.html
+SHA-256-Digest: iaKE3k4qpmmiuqPSKLhPUlyZmpDRG8pLo7tisRcVzVQ=
+
