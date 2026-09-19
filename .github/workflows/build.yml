@@ -1,0 +1,43 @@
+name: Build APK with Apktool
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Apktool
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apktool
+
+      - name: Build APK with Apktool
+        run: |
+          apktool b . -o app-unsigned.apk
+
+      - name: Setup Android SDK for signing
+        uses: android-actions/setup-android@v3
+
+      - name: Generate Keystore & Sign APK
+        run: |
+          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          $ANDROID_HOME/build-tools/34.0.0/apksigner sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out app-release.apk app-unsigned.apk
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: app-release.apk
