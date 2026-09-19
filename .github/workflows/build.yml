@@ -1,4 +1,4 @@
-name: Build APK with Apktool
+name: Build APK via Asset Replacement
 
 on:
   push:
@@ -19,25 +19,33 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Build Tools & Apktool
+      - name: Install Tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y zipalign apksigner
-          mkdir -p bin
-          wget https://github.com/iBotPeaches/Apktool/releases/download/v2.9.3/apktool_2.9.3.jar -O bin/apktool.jar
+          sudo apt-get install -y zipalign apksigner zip unzip
 
-      - name: Build APK with Apktool
+      - name: Create Clean APK Base
         run: |
-          java -jar bin/apktool.jar b 00406A_Tracker_v62R22F -o app-unsigned.apk
+          # 1. 將解包資料夾中的原始 original/AndroidManifest.xml 與 res、assets 組合打包回原本的 zip 結構
+          cd 00406A_Tracker_v62R22F
+          zip -r ../base.apk assets/
+          if [ -d "res" ]; then zip -r ../base.apk res/; fi
+          if [ -f "classes.dex" ]; then zip -r ../base.apk classes.dex; fi
+          if [ -d "original" ]; then
+            cd original
+            zip -r ../../base.apk AndroidManifest.xml
+            cd ..
+          fi
+          cd ..
 
       - name: Zipalign APK
         run: |
-          zipalign -v -p 4 app-unsigned.apk app-aligned.apk
+          zipalign -v -p 4 base.apk app-aligned.apk
 
       - name: Generate Keystore & Sign APK
         run: |
           keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-          apksigner sign --min-sdk-version 21 --v1-signing-enabled true --v2-signing-enabled true --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out app-release.apk app-aligned.apk
+          apksigner sign --v1-signing-enabled true --v2-signing-enabled true --ks debug.keystore --ks-pass pass:android --key-pass pass:android --out app-release.apk app-aligned.apk
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
