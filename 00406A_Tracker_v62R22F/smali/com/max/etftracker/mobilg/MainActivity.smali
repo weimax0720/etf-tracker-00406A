@@ -38,7 +38,7 @@
 
     invoke-virtual {v1, v2}, Landroid/webkit/WebSettings;->setAllowUniversalAccessFromFileURLs(Z)V
 
-    const-string v1, "file:///android_asset/index.html"
+    const-string v1, "https://weimax0720.github.io/etf-tracker-00406A/"
 
     invoke-virtual {v0, v1}, Landroid/webkit/WebView;->loadUrl(Ljava/lang/String;)V
 
