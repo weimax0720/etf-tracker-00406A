@@ -3,387 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A 專屬投資追蹤儀表板</title>
+    <title>MAX的 00406A 追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- 引入 FontAwesome 圖示 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-            background-color: #0f172a; /* Tailwind slate-900 */
-            color: #f8fafc; /* Tailwind slate-50 */
-        }
-        
-        /* 自訂捲軸 */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1e293b; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #475569; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b; 
-        }
-
-        /* 玻璃擬態卡片風格 */
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -5px;
-            top: 6px;
-            width: 11px;
-            height: 11px;
-            border-radius: 50%;
-            background-color: #3b82f6; /* blue-500 */
-            border: 2px solid #0f172a;
-        }
+        body { background-color: #111827; color: #e5e7eb; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { background-color: #1f2937; border-radius: 0.5rem; padding: 1.5rem; border: 1px solid #374151; }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-6 lg:p-8">
-
-    <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-xl font-bold shadow-lg shadow-blue-500/30">
-                <i class="fa-solid fa-chart-line"></i>
-            </div>
+<body class="p-6">
+    <div class="max-w-6xl mx-auto space-y-6">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-                <h1 class="text-2xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">00406A 追蹤儀表板</h1>
-                <p class="text-xs text-slate-400">專屬理財計畫 (43歲 ➔ 55歲)</p>
+                <h1 class="text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
+                <p class="text-gray-400 mt-1">專屬理財計畫 (43歲 ➔ 55歲) | 每月定投 NT$5,000</p>
             </div>
-        </div>
-        <div>
-            <button id="apiKeyBtn" onclick="openApiModal()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 px-4 py-2 rounded-lg transition-colors text-sm font-medium">
-                <i class="fa-solid fa-key text-yellow-500"></i>
-                <span id="apiKeyBtnText">設定 API 金鑰</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- 主內容網格 -->
-    <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <div class="lg:col-span-2 space-y-6">
-            <!-- 投資投影區塊 -->
-            <section class="glass-card rounded-2xl p-6 shadow-xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-lg font-semibold flex items-center gap-2">
-                        <i class="fa-solid fa-seedling text-emerald-400"></i> 12 年定投複利投影 (DRIP)
-                    </h2>
-                    <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded-md">每月 NT$5,000</span>
-                </div>
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-                        <p class="text-xs text-slate-400 mb-1">總投入本金</p>
-                        <p class="text-xl font-bold text-white">NT$ 720,000</p>
-                    </div>
-                    <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-                        <p class="text-xs text-slate-400 mb-1">預估總市值 (55歲)</p>
-                        <p class="text-xl font-bold text-emerald-400">NT$ 1,079,534</p>
-                    </div>
-                    <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-                        <p class="text-xs text-slate-400 mb-1">預估年化報酬</p>
-                        <p class="text-xl font-bold text-blue-400">6.5%</p>
-                    </div>
-                    <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
-                        <p class="text-xs text-slate-400 mb-1">股息再投入增值</p>
-                        <p class="text-xl font-bold text-purple-400">NT$ 143,210</p>
-                    </div>
-                </div>
-
-                <div class="relative h-64 w-full">
-                    <canvas id="projectionChart"></canvas>
-                </div>
-            </section>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- 成分股權重 -->
-                <section class="glass-card rounded-2xl p-6 shadow-xl">
-                    <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-pie text-purple-400"></i> 成分股權重 (自動更新)
-                    </h2>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left">
-                            <thead class="text-xs text-slate-400 uppercase bg-slate-800/50 rounded-t-lg">
-                                <tr>
-                                    <th scope="col" class="px-4 py-3 rounded-tl-lg">股票名稱</th>
-                                    <th scope="col" class="px-4 py-3">代號</th>
-                                    <th scope="col" class="px-4 py-3 rounded-tr-lg">權重</th>
-                                </tr>
-                            </thead>
-                            <tbody id="constituentsTable" class="divide-y divide-slate-700/50">
-                                <!-- JS 動態填充 -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- 重大事件追蹤 -->
-                <section class="glass-card rounded-2xl p-6 shadow-xl">
-                    <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-newspaper text-yellow-400"></i> 重大事件時間軸
-                    </h2>
-                    <div class="relative border-l border-slate-600 ml-3 pl-4 space-y-6" id="eventsTimeline">
-                        <!-- JS 動態填充 -->
-                    </div>
-                </section>
+            <div class="flex space-x-2 w-full md:w-auto">
+                <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:border-blue-500">
+                <button onclick="saveAndLoad()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-medium transition whitespace-nowrap">儲存並更新</button>
             </div>
         </div>
 
-        <div class="space-y-6">
-            
-            <!-- 除息日追蹤卡片 -->
-            <section class="glass-card rounded-2xl p-6 shadow-xl relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl">
-                    <i class="fa-solid fa-calendar-check"></i>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Chart Area (2/3 width) -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-green-400">🌱 12 年定投複利投影 (DRIP)</h2>
+                        <span class="bg-green-900 text-green-300 text-xs px-2 py-1 rounded">每月 NT$5,000</span>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center">
+                        <div class="bg-gray-800 p-3 rounded">
+                            <p class="text-sm text-gray-400">總投入本金</p>
+                            <p class="text-xl font-bold text-white">NT$ 720,000</p>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded">
+                            <p class="text-sm text-gray-400">預估總市值 (55歲)</p>
+                            <p class="text-xl font-bold text-green-400" id="est_value">計算中...</p>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded">
+                            <p class="text-sm text-gray-400">預估年化報酬</p>
+                            <p class="text-xl font-bold text-blue-400">6.5%</p>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded">
+                            <p class="text-sm text-gray-400">股息再投入增值</p>
+                            <p class="text-xl font-bold text-purple-400" id="drip_value">計算中...</p>
+                        </div>
+                    </div>
+                    <canvas id="dripChart" height="120"></canvas>
                 </div>
-                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2 relative z-10">
-                    <i class="fa-solid fa-money-bill-wave text-green-400"></i> 股利發放追蹤
-                </h2>
-                
-                <div class="space-y-4 relative z-10">
-                    <div class="bg-gradient-to-r from-slate-800 to-slate-700 p-4 rounded-xl border-l-4 border-rose-500 shadow-md">
-                        <p class="text-xs text-slate-300 mb-1">下次除息日 (預估)</p>
-                        <div class="flex items-end justify-between">
-                            <p class="text-2xl font-bold text-white" id="exDividendDate">2026-11-18</p>
-                            <span class="text-xs bg-rose-500/20 text-rose-300 px-2 py-1 rounded">剩 47 天</span>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Weights -->
+                    <div class="card">
+                        <h2 class="text-xl font-semibold mb-4 text-purple-400">🥧 成分股權重 (自動更新)</h2>
+                        <div class="space-y-3" id="holdings">
+                            <p class="text-gray-400 text-sm">此功能需透過證交所API更新，目前顯示為預設大宗持股結構：</p>
+                            <div class="flex justify-between border-b border-gray-700 pb-2"><span>台積電 (2330)</span><span class="text-white">32.50%</span></div>
+                            <div class="flex justify-between border-b border-gray-700 pb-2"><span>聯發科 (2454)</span><span class="text-white">12.30%</span></div>
+                            <div class="flex justify-between border-b border-gray-700 pb-2"><span>鴻海 (2317)</span><span class="text-white">9.80%</span></div>
+                            <div class="flex justify-between border-b border-gray-700 pb-2"><span>富邦金 (2881)</span><span class="text-white">5.20%</span></div>
                         </div>
                     </div>
                     
-                    <div class="bg-gradient-to-r from-slate-800 to-slate-700 p-4 rounded-xl border-l-4 border-emerald-500 shadow-md">
-                        <p class="text-xs text-slate-300 mb-1">現金股利發放日 (預估)</p>
-                        <div class="flex items-end justify-between">
-                            <p class="text-2xl font-bold text-white" id="paymentDate">2026-12-15</p>
-                            <p class="text-sm text-emerald-400 font-medium">預估 NT$0.45 / 股</p>
+                    <!-- Timeline -->
+                    <div class="card">
+                        <h2 class="text-xl font-semibold mb-4 text-yellow-400">📅 重大事件時間軸</h2>
+                        <div class="border-l-2 border-gray-600 pl-4 space-y-4">
+                            <div>
+                                <p class="text-sm text-blue-400">2026-10-01</p>
+                                <p class="font-medium text-white">季度權重調整生效</p>
+                                <p class="text-xs text-gray-400 mt-1">新增2檔成分股，剔除1檔</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-blue-400">2026-09-15</p>
+                                <p class="font-medium text-white">聯準會利率決策</p>
+                                <p class="text-xs text-gray-400 mt-1">宣布降息一碼，有利資金動能</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- 經紀人買賣重點 -->
-            <section class="glass-card rounded-2xl p-6 shadow-xl">
-                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-building-columns text-blue-400"></i> 法人與經紀人動態
-                </h2>
-                
-                <div class="space-y-3" id="brokerHighlights">
-                    <!-- JS 動態填充 -->
-                </div>
-                
-                <div class="mt-4 pt-4 border-t border-slate-700">
-                    <div class="flex justify-between items-center text-sm">
-                        <span class="text-slate-400">外資連續買超</span>
-                        <span class="font-bold text-rose-400">3 天 <i class="fa-solid fa-arrow-trend-up"></i></span>
+            <!-- Right Sidebar (1/3 width) -->
+            <div class="space-y-6">
+                <div class="card">
+                    <h2 class="text-xl font-semibold mb-4 text-green-400">💵 股利發放追蹤</h2>
+                    <div class="bg-gray-800 p-4 rounded-lg mb-4 border border-gray-700">
+                        <p class="text-sm text-gray-400">下次除息日 (API 抓取)</p>
+                        <div class="flex justify-between items-end mt-1">
+                            <p class="text-2xl font-bold text-white" id="ex_div_date">讀取中...</p>
+                            <span class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded" id="ex_div_countdown">-- 天</span>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                        <p class="text-sm text-gray-400">現金股利發放日</p>
+                        <div class="flex justify-between items-end mt-1">
+                            <p class="text-2xl font-bold text-white" id="pay_date">讀取中...</p>
+                            <span class="text-sm text-green-400" id="div_amount">-- 元 / 股</span>
+                        </div>
                     </div>
                 </div>
-            </section>
-            
-            <!-- 小提醒區塊 -->
-            <section class="bg-blue-900/30 border border-blue-500/30 rounded-2xl p-5 shadow-xl">
-                <h3 class="text-sm font-semibold text-blue-300 mb-2 flex items-center gap-2">
-                    <i class="fa-solid fa-lightbulb"></i> 投資金句
-                </h3>
-                <p class="text-sm text-slate-300 leading-relaxed italic">
-                    「時間是優秀企業的朋友，平庸企業的敵人。」保持紀律，每月 5000 元定投，將是您 55 歲最堅實的後盾。
-                </p>
-            </section>
 
-        </div>
-    </main>
-
-    <!-- API 金鑰管理 Modal -->
-    <div id="apiModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex-items-center justify-center z-50 p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md shadow-2xl transform scale-95 transition-transform duration-300 mt-20 mx-auto" id="apiModalContent">
-            <div class="flex justify-between items-center mb-5">
-                <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-shield-halved text-blue-400"></i> 設定資料來源 API 金鑰
-                </h3>
-                <button onclick="closeApiModal()" class="text-slate-400 hover:text-white transition-colors">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-            </div>
-            
-            <p class="text-sm text-slate-300 mb-4">
-                請輸入您的資料服務 API 金鑰。此金鑰將僅儲存在您的瀏覽器中 (localStorage)，確保安全且未來無需重新輸入。
-            </p>
-            
-            <div class="mb-5">
-                <label for="apiKeyInput" class="block text-xs font-medium text-slate-400 mb-1">API Key</label>
-                <div class="relative">
-                    <input type="password" id="apiKeyInput" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="輸入您的金鑰...">
-                    <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white">
-                        <i class="fa-solid fa-eye" id="eyeIcon"></i>
-                    </button>
+                <div class="card">
+                    <h2 class="text-xl font-semibold mb-4 text-blue-400">🏛️ 法人與經紀人動態</h2>
+                    <p class="text-xs text-gray-400 mb-3">最新交易日三大法人買賣超 (張)</p>
+                    <div class="space-y-3" id="investors">
+                        <div class="flex justify-between items-center bg-gray-800 p-3 rounded">
+                            <span class="text-sm">外資 (Foreign)</span>
+                            <span class="font-bold" id="foreign_buy">讀取中...</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-800 p-3 rounded">
+                            <span class="text-sm">投信 (Trust)</span>
+                            <span class="font-bold" id="trust_buy">讀取中...</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-800 p-3 rounded">
+                            <span class="text-sm">自營商 (Dealer)</span>
+                            <span class="font-bold" id="dealer_buy">讀取中...</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="flex justify-end gap-3">
-                <button onclick="clearApiKey()" class="px-4 py-2 bg-slate-700 hover:bg-rose-600/80 text-white rounded-lg transition-colors text-sm">
-                    清除金鑰
-                </button>
-                <button onclick="saveApiKey()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg shadow-lg shadow-blue-500/30 transition-colors text-sm font-medium">
-                    儲存並應用
-                </button>
+
+                <div class="bg-blue-900/30 p-4 rounded-lg border border-blue-800/50">
+                    <p class="text-sm text-blue-200 italic">💡 「時間是優秀企業的朋友，平庸企業的敵人。」保持紀律，每月 5000 元定投，將是 MAX 您 55 歲最堅實的後盾。</p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 常數設定
-        const API_KEY_STORAGE_NAME = '00406A_TRACKER_API_KEY';
-        let currentApiKey = '';
-
-        // 模擬資料 (Mock Data)
-        const mockConstituents = [
-            { name: '台積電', code: '2330', weight: '32.50%', trend: 'up' },
-            { name: '聯發科', code: '2454', weight: '12.30%', trend: 'up' },
-            { name: '鴻海', code: '2317', weight: '9.80%', trend: 'down' },
-            { name: '富邦金', code: '2881', weight: '5.20%', trend: 'up' },
-            { name: '廣達', code: '2382', weight: '4.70%', trend: 'down' },
-        ];
-
-        const mockEvents = [
-            { date: '2026-10-01', title: '季度權重調整生效', desc: '新增2檔成分股，剔除1檔' },
-            { date: '2026-09-15', title: '聯準會利率決策', desc: '宣布降息一碼，有利資金動能' },
-            { date: '2026-08-10', title: 'Q2 財報公布完畢', desc: '前三大成分股獲利均優於預期' },
-        ];
-
-        const mockBrokers = [
-            { name: '外資 (Foreign)', action: '買超', amount: '+5,230 張', color: 'text-rose-400', bg: 'bg-rose-500/10' },
-            { name: '投信 (Trust)', action: '買超', amount: '+1,100 張', color: 'text-rose-400', bg: 'bg-rose-500/10' },
-            { name: '自營商 (Dealer)', action: '賣超', amount: '-850 張', color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-        ];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadApiKey();
-            initChart();
-            renderConstituents();
-            renderEvents();
-            renderBrokers();
-        });
-
-        // API Key 相關函數
-        function loadApiKey() {
-            const savedKey = localStorage.getItem(API_KEY_STORAGE_NAME);
-            const btnText = document.getElementById('apiKeyBtnText');
-            if (savedKey) {
-                currentApiKey = savedKey;
-                document.getElementById('apiKeyInput').value = savedKey;
-                btnText.textContent = '更新 API 金鑰';
-                btnText.parentElement.classList.add('border-emerald-500/50');
-            } else {
-                btnText.textContent = '設定 API 金鑰';
-                btnText.parentElement.classList.remove('border-emerald-500/50');
+        // 1. 初始化與儲存 API 金鑰
+        const KEY_NAME = '00406A_FINMIND_KEY';
+        
+        window.onload = () => {
+            const savedKey = localStorage.getItem(KEY_NAME);
+            if(savedKey) {
+                document.getElementById('api_key').value = savedKey;
+                fetchData(savedKey);
             }
-        }
+            drawSimulationChart();
+        };
 
-        function openApiModal() {
-            const modal = document.getElementById('apiModal');
-            const content = document.getElementById('apiModalContent');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            // 觸發動畫
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                content.classList.remove('scale-95');
-                content.classList.add('scale-100');
-            }, 10);
-        }
-
-        function closeApiModal() {
-            const modal = document.getElementById('apiModal');
-            const content = document.getElementById('apiModalContent');
-            modal.classList.add('opacity-0');
-            content.classList.remove('scale-100');
-            content.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 300);
-        }
-
-        function saveApiKey() {
-            const inputVal = document.getElementById('apiKeyInput').value.trim();
-            if (inputVal) {
-                localStorage.setItem(API_KEY_STORAGE_NAME, inputVal);
-                currentApiKey = inputVal;
-                loadApiKey(); // 更新按鈕狀態
-                closeApiModal();
-                // 這裡可以加入呼叫真實 API 更新資料的邏輯
-                console.log('API Key Saved, trigger data refresh...');
+        function saveAndLoad() {
+            const key = document.getElementById('api_key').value.trim();
+            if(!key) {
+                alert('請先輸入 API 金鑰！');
+                return;
             }
+            localStorage.setItem(KEY_NAME, key);
+            fetchData(key);
+            alert('金鑰已儲存！正在更新資料...');
         }
 
-        function clearApiKey() {
-            localStorage.removeItem(API_KEY_STORAGE_NAME);
-            document.getElementById('apiKeyInput').value = '';
-            currentApiKey = '';
-            loadApiKey();
-        }
-
-        function toggleApiKeyVisibility() {
-            const input = document.getElementById('apiKeyInput');
-            const icon = document.getElementById('eyeIcon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-
-        function initChart() {
-            const ctx = document.getElementById('projectionChart').getContext('2d');
+        // 2. 獲取真實資料
+        async function fetchData(token) {
+            const today = new Date();
+            const yearStart = `${today.getFullYear()}-01-01`;
             
-            // 產生 43 歲到 55 歲的資料 (12年)
-            const labels = [];
-            const principalData = [];
-            const totalValueData = [];
+            // 計算一個月前的日期字串 (抓取法人買賣資料用)
+            const monthAgoDate = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+            const monthAgo = monthAgoDate.toISOString().split('T')[0];
+
+            try {
+                // A. 獲取股利與除權息日
+                const divUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockDividend&data_id=00406A&start_date=${yearStart}&token=${token}`;
+                const divRes = await fetch(divUrl);
+                const divData = await divRes.json();
+                
+                if(divData.msg === 'success' && divData.data.length > 0) {
+                    const latest = divData.data[divData.data.length - 1];
+                    document.getElementById('ex_div_date').innerText = latest.CashExDividendTradingDate || '無資料';
+                    document.getElementById('pay_date').innerText = latest.CashDividendPaymentDate || '無資料';
+                    document.getElementById('div_amount').innerText = (latest.CashEarningsDistribution || 0) + ' 元 / 股';
+                    
+                    // 計算倒數
+                    if(latest.CashExDividendTradingDate) {
+                        const exDate = new Date(latest.CashExDividendTradingDate);
+                        const diffTime = exDate.getTime() - today.getTime();
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        const countdownEl = document.getElementById('ex_div_countdown');
+                        if(diffDays > 0) {
+                            countdownEl.innerText = `剩 ${diffDays} 天`;
+                            countdownEl.className = 'text-xs bg-red-900 text-red-300 px-2 py-1 rounded';
+                        } else if (diffDays === 0) {
+                            countdownEl.innerText = '就是今天';
+                            countdownEl.className = 'text-xs bg-yellow-600 text-yellow-100 px-2 py-1 rounded';
+                        } else {
+                            countdownEl.innerText = '已過除息日';
+                            countdownEl.className = 'text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded';
+                        }
+                    }
+                }
+
+                // B. 獲取法人買賣
+                const invUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockInstitutionalInvestorsBuySell&data_id=00406A&start_date=${monthAgo}&token=${token}`;
+                const invRes = await fetch(invUrl);
+                const invData = await invRes.json();
+                
+                if(invData.msg === 'success' && invData.data.length > 0) {
+                    // 找出最新日期
+                    const latestDate = invData.data[invData.data.length - 1].date;
+                    const latestData = invData.data.filter(d => d.date === latestDate);
+                    
+                    let foreign = 0, trust = 0, dealer = 0;
+                    latestData.forEach(d => {
+                        const net = d.buy - d.sell;
+                        if(d.name.includes('外資')) foreign += net;
+                        if(d.name.includes('投信')) trust += net;
+                        if(d.name.includes('自營商')) dealer += net;
+                    });
+
+                    const formatVol = (vol) => {
+                        const shares = Math.round(vol / 1000); // 轉成張數
+                        if (shares > 0) return `<span class="text-red-400">買超 +${shares.toLocaleString()} 張</span>`;
+                        if (shares < 0) return `<span class="text-green-400">賣超 ${shares.toLocaleString()} 張</span>`;
+                        return `<span class="text-gray-400">0 張</span>`;
+                    };
+
+                    document.getElementById('foreign_buy').innerHTML = formatVol(foreign);
+                    document.getElementById('trust_buy').innerHTML = formatVol(trust);
+                    document.getElementById('dealer_buy').innerHTML = formatVol(dealer);
+                }
+            } catch (e) {
+                console.error("API 獲取錯誤", e);
+            }
+        }
+
+        // 3. 繪製 DRIP 複利圖表
+        function drawSimulationChart() {
+            const ctx = document.getElementById('dripChart').getContext('2d');
+            const years = 12; // 43歲 to 55歲
+            const monthlyInvest = 5000;
+            const annualRate = 0.065; // 6.5% 預估年化
+            
+            let labels = [];
+            let principalData = [];
+            let dripData = [];
             
             let principal = 0;
             let totalValue = 0;
-            const monthlyInvestment = 5000;
-            const annualReturnRate = 0.065; // 假設 6.5% 含息年化報酬
-            const monthlyRate = annualReturnRate / 12;
 
-            for (let year = 43; year <= 55; year++) {
-                labels.push(`${year}歲`);
-                if (year === 43) {
+            for(let i = 0; i <= years; i++) {
+                labels.push((43 + i) + '歲');
+                
+                if(i === 0) {
                     principalData.push(0);
-                    totalValueData.push(0);
+                    dripData.push(0);
                 } else {
-                    // 經過一年 (12個月)
-                    for(let m = 1; m <= 12; m++) {
-                        principal += monthlyInvestment;
-                        totalValue = (totalValue + monthlyInvestment) * (1 + monthlyRate);
-                    }
-                    principalData.push(Math.round(principal));
-                    totalValueData.push(Math.round(totalValue));
+                    // 每年投入 6萬 (5000 * 12)
+                    principal += (monthlyInvest * 12);
+                    principalData.push(principal);
+                    
+                    // 粗略複利計算 (假設每月初投入，年底結算)
+                    // 真實 DRIP 會隨股價波動，這裡作平滑年化投影
+                    totalValue = totalValue * (1 + annualRate) + (monthlyInvest * 12 * (1 + annualRate/2)); 
+                    dripData.push(Math.round(totalValue));
                 }
             }
 
-            // 漸層背景
-            const gradientBlue = ctx.createLinearGradient(0, 0, 0, 300);
-            gradientBlue.addColorStop(0, 'rgba(59, 130, 246, 0.5)'); // blue-500
-            gradientBlue.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+            document.getElementById('est_value').innerText = `NT$ ${Math.round(totalValue).toLocaleString()}`;
+            document.getElementById('drip_value').innerText = `NT$ ${Math.round(totalValue - principal).toLocaleString()}`;
 
             new Chart(ctx, {
                 type: 'line',
@@ -391,135 +272,34 @@
                     labels: labels,
                     datasets: [
                         {
-                            label: '本金投入',
+                            label: '累計本金投入',
                             data: principalData,
-                            borderColor: '#94a3b8', // slate-400
-                            backgroundColor: 'transparent',
-                            borderWidth: 2,
+                            borderColor: '#6b7280',
                             borderDash: [5, 5],
-                            pointRadius: 3,
+                            fill: false,
                             tension: 0.1
                         },
                         {
                             label: '含息再投入總市值 (DRIP)',
-                            data: totalValueData,
-                            borderColor: '#34d399', // emerald-400
-                            backgroundColor: gradientBlue,
-                            borderWidth: 3,
-                            pointBackgroundColor: '#10b981',
-                            pointBorderColor: '#fff',
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
+                            data: dripData,
+                            borderColor: '#34d399',
+                            backgroundColor: 'rgba(52, 211, 153, 0.1)',
                             fill: true,
-                            tension: 0.4
+                            tension: 0.1
                         }
                     ]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
+                    scales: {
+                        y: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } },
+                        x: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } }
                     },
                     plugins: {
-                        legend: {
-                            labels: {
-                                color: '#cbd5e1', // slate-300
-                                font: { family: 'Inter', size: 12 }
-                            },
-                            position: 'top',
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                            titleColor: '#fff',
-                            bodyColor: '#cbd5e1',
-                            borderColor: '#334155',
-                            borderWidth: 1,
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += 'NT$ ' + context.parsed.y.toLocaleString();
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { color: '#334155', drawBorder: false }, // slate-700
-                            ticks: { color: '#94a3b8' } // slate-400
-                        },
-                        y: {
-                            grid: { color: '#334155', drawBorder: false },
-                            ticks: {
-                                color: '#94a3b8',
-                                callback: function(value) {
-                                    return value >= 10000 ? (value / 10000) + ' 萬' : value;
-                                }
-                            }
-                        }
+                        legend: { labels: { color: '#e5e7eb' } }
                     }
                 }
             });
-        }
-
-        function renderConstituents() {
-            const tbody = document.getElementById('constituentsTable');
-            let html = '';
-            mockConstituents.forEach(stock => {
-                const trendIcon = stock.trend === 'up' 
-                    ? '<i class="fa-solid fa-caret-up text-rose-500"></i>' 
-                    : '<i class="fa-solid fa-caret-down text-emerald-500"></i>';
-                
-                html += `
-                    <tr class="hover:bg-slate-800/50 transition-colors">
-                        <td class="px-4 py-3 font-medium text-white">${stock.name}</td>
-                        <td class="px-4 py-3 text-slate-400">${stock.code}</td>
-                        <td class="px-4 py-3 text-slate-300 flex items-center gap-2">
-                            ${stock.weight} ${trendIcon}
-                        </td>
-                    </tr>
-                `;
-            });
-            tbody.innerHTML = html;
-        }
-
-        function renderEvents() {
-            const container = document.getElementById('eventsTimeline');
-            let html = '';
-            mockEvents.forEach(event => {
-                html += `
-                    <div class="timeline-item relative">
-                        <div class="text-xs text-blue-400 font-semibold mb-1">${event.date}</div>
-                        <h4 class="text-sm text-white font-medium mb-1">${event.title}</h4>
-                        <p class="text-xs text-slate-400">${event.desc}</p>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-        }
-
-        function renderBrokers() {
-            const container = document.getElementById('brokerHighlights');
-            let html = '';
-            mockBrokers.forEach(broker => {
-                html += `
-                    <div class="flex items-center justify-between p-3 rounded-lg ${broker.bg} border border-slate-700/50">
-                        <span class="text-sm font-medium text-slate-300">${broker.name}</span>
-                        <div class="text-right">
-                            <span class="text-xs text-slate-400 mr-2">${broker.action}</span>
-                            <span class="text-sm font-bold ${broker.color}">${broker.amount}</span>
-                        </div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
         }
     </script>
 </body>
