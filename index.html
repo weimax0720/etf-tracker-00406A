@@ -31,24 +31,44 @@
 
         <!-- 最新行情即時看板 -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex justify-between items-center">
-                <div>
-                    <p class="text-sm text-gray-400">最新收盤價</p>
-                    <p class="text-2xl font-bold text-white mt-1">NT$ <span id="latest_price">--</span></p>
+            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center">
+                <p class="text-sm text-gray-400">最新收盤價</p>
+                <div class="flex justify-between items-center mt-1">
+                    <p class="text-2xl font-bold text-white">NT$ <span id="latest_price">--</span></p>
+                    <span class="text-xl">📈</span>
                 </div>
-                <div class="text-3xl text-gray-600">📈</div>
             </div>
-            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex justify-between items-center">
-                <div>
-                    <p class="text-sm text-gray-400">單月定投購買力</p>
-                    <p class="text-2xl font-bold text-green-400 mt-1"><span id="buyable_shares">--</span> <span class="text-base text-gray-400 font-normal">零股</span></p>
+            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center">
+                <p class="text-sm text-gray-400">單月定投購買力 (5千元)</p>
+                <div class="flex justify-between items-center mt-1">
+                    <p class="text-2xl font-bold text-green-400"><span id="buyable_shares">--</span> <span class="text-sm text-gray-400 font-normal">零股</span></p>
+                    <span class="text-xl">🛒</span>
                 </div>
-                <div class="text-3xl text-gray-600">🛒</div>
             </div>
-            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex justify-between items-center md:col-span-2">
+            
+            <!-- 新增：真實持股水位輸入 -->
+            <div class="bg-gray-800 p-4 rounded-lg border border-blue-700/50 flex flex-col justify-center">
+                <p class="text-sm text-blue-300">我的真實持股 (股)</p>
+                <div class="flex space-x-2 mt-2">
+                    <input type="number" id="real_shares_input" placeholder="輸入總股數" class="w-full px-2 py-1 bg-gray-900 border border-gray-600 rounded text-white text-lg font-bold focus:outline-none focus:border-blue-500">
+                    <button onclick="saveShares()" class="bg-blue-700 hover:bg-blue-600 px-3 py-1 rounded text-sm font-medium transition">更新</button>
+                </div>
+            </div>
+
+            <!-- 新增：真實庫存市值試算 -->
+            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center">
+                <p class="text-sm text-gray-400">真實庫存總市值</p>
+                <div class="flex justify-between items-center mt-1">
+                    <p class="text-2xl font-bold text-yellow-400">NT$ <span id="real_market_value">0</span></p>
+                    <span class="text-xl">💰</span>
+                </div>
+            </div>
+
+            <!-- 二代健保移至下方佔滿全寬 -->
+            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex justify-between items-center col-span-2 md:col-span-4">
                 <div>
-                    <p class="text-sm text-gray-400">二代健保門檻 (單筆股利 > 2萬扣 2.11%)</p>
-                    <p class="text-lg font-bold text-white mt-1" id="health_ins_status">等待資料同步中...</p>
+                    <p class="text-sm text-gray-400">二代健保門檻自動偵測 (依據真實持股試算)</p>
+                    <p class="text-lg font-bold text-white mt-1" id="health_ins_status">等待股價與配息資料...</p>
                 </div>
                 <div class="text-3xl" id="health_ins_icon">🛡️</div>
             </div>
@@ -168,15 +188,25 @@
 
     <script>
         const KEY_NAME = '00406A_FINMIND_KEY';
-        let latestDividend = 0; // 儲存每股配息
-        let currentPrice = 0;   // 儲存目前股價
+        const SHARES_KEY = '00406A_REAL_SHARES'; // 儲存真實股數的金鑰名稱
+        
+        let latestDividend = 0; 
+        let currentPrice = 0;   
         
         window.onload = () => {
+            // 載入 API 金鑰
             const savedKey = localStorage.getItem(KEY_NAME);
             if(savedKey) {
                 document.getElementById('api_key').value = savedKey;
                 fetchData(savedKey);
             }
+            
+            // 載入真實股數
+            const savedShares = localStorage.getItem(SHARES_KEY);
+            if(savedShares) {
+                document.getElementById('real_shares_input').value = savedShares;
+            }
+
             drawSimulationChart();
         };
 
@@ -189,6 +219,46 @@
             localStorage.setItem(KEY_NAME, key);
             fetchData(key);
             alert('金鑰已儲存！正在抓取最新市場資料...');
+        }
+
+        // 儲存並計算真實股數
+        function saveShares() {
+            const shares = document.getElementById('real_shares_input').value;
+            if(shares === '' || shares < 0) {
+                alert('請輸入正確的股數');
+                return;
+            }
+            localStorage.setItem(SHARES_KEY, shares);
+            updateHoldingCalculations(); // 更新市值與健保試算
+        }
+
+        // 更新依賴於真實股數的計算結果
+        function updateHoldingCalculations() {
+            const shares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
+            
+            // 1. 更新真實庫存市值
+            if(currentPrice > 0) {
+                const marketValue = Math.round(shares * currentPrice);
+                document.getElementById('real_market_value').innerText = marketValue.toLocaleString();
+            }
+
+            // 2. 更新二代健保試算
+            if(latestDividend > 0) {
+                const totalDividend = shares * latestDividend;
+                const healthInsStatus = document.getElementById('health_ins_status');
+                const healthInsIcon = document.getElementById('health_ins_icon');
+
+                if (shares === 0) {
+                    healthInsStatus.innerHTML = `<span class="text-gray-400">請先輸入並更新您的真實持股，以進行試算。</span>`;
+                    healthInsIcon.innerHTML = "🛡️";
+                } else if(totalDividend > 20000) {
+                    healthInsStatus.innerHTML = `<span class="text-red-400">達標！需扣繳 2.11% 補充保費</span> (試算單筆股利: ${Math.round(totalDividend).toLocaleString()}元)`;
+                    healthInsIcon.innerHTML = "⚠️";
+                } else {
+                    healthInsStatus.innerHTML = `<span class="text-green-400">安全免扣繳</span> (試算單筆股利: ${Math.round(totalDividend).toLocaleString()}元，未達兩萬)`;
+                    healthInsIcon.innerHTML = "✅";
+                }
+            }
         }
 
         async function fetchData(token) {
@@ -211,6 +281,9 @@
                     // 換算 5000 元可買股數
                     const shares = Math.floor(5000 / currentPrice);
                     document.getElementById('buyable_shares').innerText = shares;
+                    
+                    // 股價更新後，連帶更新市值計算
+                    updateHoldingCalculations();
                 }
 
                 // B. 獲取股利與除權息日
@@ -226,8 +299,8 @@
                     document.getElementById('pay_date').innerText = latest.CashDividendPaymentDate || '無資料';
                     document.getElementById('div_amount').innerText = latestDividend + ' 元/股';
                     
-                    // 二代健保試算
-                    calculateHealthInsurance();
+                    // 股利更新後，連帶更新二代健保計算
+                    updateHoldingCalculations();
 
                     if(latest.CashExDividendTradingDate) {
                         const exDate = new Date(latest.CashExDividendTradingDate);
@@ -278,23 +351,6 @@
                 }
             } catch (e) {
                 console.error("API 獲取錯誤", e);
-            }
-        }
-
-        // 二代健保計算函數
-        function calculateHealthInsurance() {
-            // 假設 MAX 投資到第1年，持有 5000*12/現價 股。這裡以動態買入 10000 股為試算基準，您可以自行在程式內調整
-            const assumedShares = 10000; 
-            const totalDividend = assumedShares * latestDividend;
-            const healthInsStatus = document.getElementById('health_ins_status');
-            const healthInsIcon = document.getElementById('health_ins_icon');
-
-            if(totalDividend > 20000) {
-                healthInsStatus.innerHTML = `<span class="text-red-400">達標！需扣繳保費</span> (試算: ${Math.round(totalDividend)}元)`;
-                healthInsIcon.innerHTML = "⚠️";
-            } else {
-                healthInsStatus.innerHTML = `<span class="text-green-400">安全免扣繳</span> (目前股數試算未達兩萬)`;
-                healthInsIcon.innerHTML = "✅";
             }
         }
 
