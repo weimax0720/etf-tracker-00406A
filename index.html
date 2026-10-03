@@ -10,163 +10,154 @@
         body { background-color: #111827; color: #e5e7eb; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .card { background-color: #1f2937; border-radius: 0.5rem; padding: 1.5rem; border: 1px solid #374151; }
         .badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 600; }
+        .tab-btn { transition: all 0.2s; }
+        .tab-btn.active { background-color: #2563eb; color: #ffffff; border-color: #3b82f6; }
     </style>
 </head>
-<body class="p-6">
+<body class="p-4 md:p-6">
     <div class="max-w-6xl mx-auto space-y-6">
         <!-- Header -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
                 <div class="flex items-center gap-3">
-                    <h1 class="text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
+                    <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1">專屬理財計畫 (43歲 ➔ 55歲) | 每月定投 NT$5,000</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 55歲) | 每月定投 NT$5,000</p>
             </div>
+            <!-- API 金鑰快捷設定 -->
             <div class="flex space-x-2 w-full md:w-auto">
-                <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:border-blue-500">
-                <button onclick="saveAndLoad()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-medium transition whitespace-nowrap">儲存並更新</button>
+                <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
+                <button onclick="saveAndLoad()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-medium transition whitespace-nowrap">儲存更新</button>
             </div>
         </div>
 
-        <!-- 最新行情即時看板 -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center">
-                <p class="text-sm text-gray-400">最新收盤價 (最近開盤日)</p>
-                <div class="flex justify-between items-center mt-1">
-                    <p class="text-2xl font-bold text-white">NT$ <span id="latest_price">--</span></p>
-                    <span class="text-xl">📈</span>
-                </div>
-            </div>
-            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center">
-                <p class="text-sm text-gray-400">單月定投購買力 (5千元)</p>
-                <div class="flex justify-between items-center mt-1">
-                    <p class="text-2xl font-bold text-green-400"><span id="buyable_shares">--</span> <span class="text-sm text-gray-400 font-normal">零股</span></p>
-                    <span class="text-xl">🛒</span>
-                </div>
-            </div>
-            
-            <!-- 真實持股水位輸入 -->
-            <div class="bg-gray-800 p-4 rounded-lg border border-blue-700/50 flex flex-col justify-center">
-                <p class="text-sm text-blue-300">我的真實持股 (股)</p>
-                <div class="flex space-x-2 mt-2">
-                    <input type="number" id="real_shares_input" placeholder="輸入總股數" class="w-full px-2 py-1 bg-gray-900 border border-gray-600 rounded text-white text-lg font-bold focus:outline-none focus:border-blue-500">
-                    <button onclick="saveShares()" class="bg-blue-700 hover:bg-blue-600 px-3 py-1 rounded text-sm font-medium transition">更新</button>
-                </div>
-            </div>
+        <!-- 導覽分頁按鈕 (Tabs) -->
+        <div class="flex border-b border-gray-700 space-x-2 overflow-x-auto pb-2">
+            <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn active px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-200 whitespace-nowrap">📊 資產與複利總覽</button>
+            <button onclick="switchTab('charts')" id="btn-charts" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📈 走勢與日週月曲線</button>
+            <button onclick="switchTab('safety')" id="btn-safety" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">🛡️ 流動性與風險雷達</button>
+        </div>
 
-            <!-- 真實庫存市值試算 -->
-            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center">
-                <p class="text-sm text-gray-400">真實庫存總市值</p>
-                <div class="flex justify-between items-center mt-1">
-                    <p class="text-2xl font-bold text-yellow-400">NT$ <span id="real_market_value">0</span></p>
-                    <span class="text-xl">💰</span>
-                </div>
-            </div>
-
-            <!-- 流動性與安全防護網警示區塊 (僅限開盤日) -->
-            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 col-span-2 md:col-span-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <div class="text-3xl" id="safety_icon">🛡️</div>
-                    <div>
-                        <p class="text-sm text-gray-400">ETF 流動性與規模安全雷達 (僅採計台股開盤日)</p>
-                        <p class="text-base font-bold text-white mt-1" id="safety_status">等待 API 資料載入以進行安全評估...</p>
+        <!-- ================= 分頁 1：資產與複利總覽 (Overview) ================= -->
+        <div id="tab-overview" class="space-y-6">
+            <!-- 即時持股與購買力 -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="card flex flex-col justify-center">
+                    <p class="text-sm text-gray-400">最新收盤價</p>
+                    <div class="flex justify-between items-center mt-1">
+                        <p class="text-2xl font-bold text-white">NT$ <span id="latest_price">--</span></p>
+                        <span class="text-xl">📈</span>
                     </div>
                 </div>
-                <div class="bg-gray-900 px-4 py-2 rounded border border-gray-700 text-right w-full md:w-auto">
+                <div class="card flex flex-col justify-center">
+                    <p class="text-sm text-gray-400">單月定投購買力 (5千元)</p>
+                    <div class="flex justify-between items-center mt-1">
+                        <p class="text-2xl font-bold text-green-400"><span id="buyable_shares">--</span> <span class="text-sm text-gray-400 font-normal">零股</span></p>
+                        <span class="text-xl">🛒</span>
+                    </div>
+                </div>
+                <div class="card flex flex-col justify-center border-blue-700/50">
+                    <p class="text-sm text-blue-300">我的真實持股 (股)</p>
+                    <div class="flex space-x-2 mt-2">
+                        <input type="number" id="real_shares_input" placeholder="輸入總股數" class="w-full px-2 py-1 bg-gray-900 border border-gray-600 rounded text-white text-base font-bold focus:outline-none focus:border-blue-500">
+                        <button onclick="saveShares()" class="bg-blue-700 hover:bg-blue-600 px-3 py-1 rounded text-sm font-medium transition">更新</button>
+                    </div>
+                </div>
+                <div class="card flex flex-col justify-center">
+                    <p class="text-sm text-gray-400">真實庫存總市值</p>
+                    <div class="flex justify-between items-center mt-1">
+                        <p class="text-2xl font-bold text-yellow-400">NT$ <span id="real_market_value">0</span></p>
+                        <span class="text-xl">💰</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 12年複利投影 (DRIP) -->
+            <div class="card">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-green-400">🌱 12 年定投複利投影 (DRIP)</h2>
+                    <span class="badge bg-green-900 text-green-300">每月投入 NT$5,000</span>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center">
+                    <div class="bg-gray-900 p-3 rounded">
+                        <p class="text-sm text-gray-400">總投入本金</p>
+                        <p class="text-xl font-bold text-white">NT$ 720,000</p>
+                    </div>
+                    <div class="bg-gray-900 p-3 rounded">
+                        <p class="text-sm text-gray-400">預估總市值 (55歲)</p>
+                        <p class="text-xl font-bold text-green-400" id="est_value">計算中...</p>
+                    </div>
+                    <div class="bg-gray-900 p-3 rounded border border-blue-900/50">
+                        <p class="text-sm text-gray-400">設定年化報酬</p>
+                        <p class="text-xl font-bold text-blue-400">6.5%</p>
+                    </div>
+                    <div class="bg-gray-900 p-3 rounded border border-purple-900/50">
+                        <p class="text-sm text-gray-400">股息再投入增值</p>
+                        <p class="text-xl font-bold text-purple-400" id="drip_value">計算中...</p>
+                    </div>
+                </div>
+                <canvas id="dripChart" height="100"></canvas>
+            </div>
+        </div>
+
+        <!-- ================= 分頁 2：走勢與日週月曲線 (Charts) ================= -->
+        <div id="tab-charts" class="space-y-6 hidden">
+            <div class="card">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-semibold text-blue-400">📈 00406A 價格與報酬走勢分析</h2>
+                        <p class="text-xs text-gray-400 mt-1">自由切換不同週期檢視短期波動與長期趨勢</p>
+                    </div>
+                    <!-- 週期切換按鈕 (日 / 週 / 月) -->
+                    <div class="flex space-x-2 bg-gray-900 p-1 rounded border border-gray-700">
+                        <button onclick="changeTimeframe('daily')" id="tf-daily" class="px-3 py-1 text-xs rounded font-medium bg-blue-600 text-white transition">日K趨勢</button>
+                        <button onclick="changeTimeframe('weekly')" id="tf-weekly" class="px-3 py-1 text-xs rounded font-medium text-gray-400 hover:text-white transition">週K曲線</button>
+                        <button onclick="changeTimeframe('monthly')" id="tf-monthly" class="px-3 py-1 text-xs rounded font-medium text-gray-400 hover:text-white transition">月K走勢</button>
+                    </div>
+                </div>
+                <canvas id="trendChart" height="120"></canvas>
+            </div>
+        </div>
+
+        <!-- ================= 分頁 3：流動性與風險雷達 (Safety) ================= -->
+        <div id="tab-safety" class="space-y-6 hidden">
+            <!-- 流動性與規模安全雷達 -->
+            <div class="card flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="text-4xl" id="safety_icon">🛡️</div>
+                    <div>
+                        <p class="text-sm text-gray-400">ETF 流動性與規模安全雷達 (僅採計台股開盤日)</p>
+                        <p class="text-lg font-bold text-white mt-1" id="safety_status">等待 API 資料載入以進行安全評估...</p>
+                    </div>
+                </div>
+                <div class="bg-gray-900 px-5 py-3 rounded border border-gray-700 text-right w-full md:w-auto">
                     <p class="text-xs text-gray-400">最近開盤日成交額</p>
-                    <p class="text-lg font-bold text-blue-400" id="trading_turnover">NT$ -- 億</p>
+                    <p class="text-xl font-bold text-blue-400" id="trading_turnover">NT$ -- 億</p>
                 </div>
             </div>
 
             <!-- 二代健保門檻自動偵測 -->
-            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex justify-between items-center col-span-2 md:col-span-4">
+            <div class="card flex justify-between items-center">
                 <div>
-                    <p class="text-sm text-gray-400">二代健保門檻自動偵測 (依據真實持股試算)</p>
+                    <p class="text-sm text-gray-400">二代健保門檻自動偵測 (單筆股利 > 2萬扣 2.11%)</p>
                     <p class="text-lg font-bold text-white mt-1" id="health_ins_status">等待股價與配息資料...</p>
                 </div>
-                <div class="text-3xl" id="health_ins_icon">🛡</div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Main Chart Area (2/3 width) -->
-            <div class="lg:col-span-2 space-y-6">
-                <div class="card">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-semibold text-green-400">🌱 12 年定投複利投影 (DRIP)</h2>
-                        <span class="badge bg-green-900 text-green-300">每月投入 NT$5,000</span>
-                    </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center">
-                        <div class="bg-gray-900 p-3 rounded">
-                            <p class="text-sm text-gray-400">總投入本金</p>
-                            <p class="text-xl font-bold text-white">NT$ 720,000</p>
-                        </div>
-                        <div class="bg-gray-900 p-3 rounded">
-                            <p class="text-sm text-gray-400">預估總市值 (55歲)</p>
-                            <p class="text-xl font-bold text-green-400" id="est_value">計算中...</p>
-                        </div>
-                        <div class="bg-gray-900 p-3 rounded border border-blue-900/50">
-                            <p class="text-sm text-gray-400">設定年化報酬</p>
-                            <p class="text-xl font-bold text-blue-400">6.5%</p>
-                        </div>
-                        <div class="bg-gray-900 p-3 rounded border border-purple-900/50">
-                            <p class="text-sm text-gray-400">股息再投入增值</p>
-                            <p class="text-xl font-bold text-purple-400" id="drip_value">計算中...</p>
-                        </div>
-                    </div>
-                    <canvas id="dripChart" height="120"></canvas>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Weights -->
-                    <div class="card">
-                        <div class="flex justify-between items-end mb-4">
-                            <h2 class="text-xl font-semibold text-purple-400">🥧 預估成分股權重</h2>
-                        </div>
-                        <div class="space-y-3" id="holdings">
-                            <p class="text-gray-400 text-xs mb-3">此為主動型基金，經理人將依市場動態調整權重。目前顯示近期大宗配置：</p>
-                            <div class="flex justify-between border-b border-gray-700 pb-2"><span>台積電 (2330)</span><span class="text-white">32.50%</span></div>
-                            <div class="flex justify-between border-b border-gray-700 pb-2"><span>聯發科 (2454)</span><span class="text-white">12.30%</span></div>
-                            <div class="flex justify-between border-b border-gray-700 pb-2"><span>鴻海 (2317)</span><span class="text-white">9.80%</span></div>
-                            <div class="flex justify-between border-b border-gray-700 pb-2"><span>富邦金 (2881)</span><span class="text-white">5.20%</span></div>
-                        </div>
-                        <div class="mt-4 p-3 bg-gray-800 rounded border border-gray-600">
-                            <p class="text-xs text-gray-300"><span class="text-yellow-400 font-bold">⚠️ 費用提醒：</span> 相較於傳統被動 ETF，00406A 需注意較高的經理費率。定投時建議每季檢視折溢價。</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Timeline -->
-                    <div class="card">
-                        <h2 class="text-xl font-semibold mb-4 text-yellow-400">📅 經理人動態與事件</h2>
-                        <div class="border-l-2 border-gray-600 pl-4 space-y-4">
-                            <div>
-                                <p class="text-sm text-blue-400">2026-10-01</p>
-                                <p class="font-medium text-white">半導體封裝轉型觀察</p>
-                                <p class="text-xs text-gray-400 mt-1">追蹤產業龍頭重組進度，評估是否納入成分股調整。</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-blue-400">2026-09-15</p>
-                                <p class="font-medium text-white">聯準會利率決策</p>
-                                <p class="text-xs text-gray-400 mt-1">因應降息循環，機動調整主動型操作部位。</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="text-4xl" id="health_ins_icon">🛡️</div>
             </div>
 
-            <!-- Right Sidebar (1/3 width) -->
-            <div class="space-y-6">
+            <!-- 股利與除息追蹤 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="card">
                     <h2 class="text-xl font-semibold mb-4 text-green-400">💵 股利與除息追蹤</h2>
-                    <div class="bg-gray-800 p-4 rounded-lg mb-4 border border-gray-700">
+                    <div class="bg-gray-900 p-4 rounded-lg mb-4 border border-gray-800">
                         <p class="text-sm text-gray-400">下次除息日 (API 抓取)</p>
                         <div class="flex justify-between items-end mt-1">
                             <p class="text-2xl font-bold text-white" id="ex_div_date">讀取中...</p>
                             <span class="text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded" id="ex_div_countdown">-- 天</span>
                         </div>
                     </div>
-                    <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800">
                         <p class="text-sm text-gray-400">預計發放日與金額</p>
                         <div class="flex justify-between items-end mt-1">
                             <p class="text-2xl font-bold text-white" id="pay_date">讀取中...</p>
@@ -175,27 +166,24 @@
                     </div>
                 </div>
 
+                <!-- 法人近期買賣超 -->
                 <div class="card">
                     <h2 class="text-xl font-semibold mb-4 text-blue-400">🏛️ 法人近期買賣超</h2>
                     <p class="text-xs text-gray-400 mb-3">最新開盤日籌碼動向 (張)</p>
-                    <div class="space-y-3" id="investors">
-                        <div class="flex justify-between items-center bg-gray-800 p-3 rounded">
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded">
                             <span class="text-sm">外資 (Foreign)</span>
                             <span class="font-bold" id="foreign_buy">讀取中...</span>
                         </div>
-                        <div class="flex justify-between items-center bg-gray-800 p-3 rounded">
+                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded">
                             <span class="text-sm">投信 (Trust)</span>
                             <span class="font-bold" id="trust_buy">讀取中...</span>
                         </div>
-                        <div class="flex justify-between items-center bg-gray-800 p-3 rounded">
+                        <div class="flex justify-between items-center bg-gray-900 p-3 rounded">
                             <span class="text-sm">自營商 (Dealer)</span>
                             <span class="font-bold" id="dealer_buy">讀取中...</span>
                         </div>
                     </div>
-                </div>
-
-                <div class="bg-blue-900/30 p-4 rounded-lg border border-blue-800/50">
-                    <p class="text-sm text-blue-200 italic">💡 「時間是優秀企業的朋友，平庸企業的敵人。」保持紀律，每月 5000 元定投，將是 MAX 您 55 歲最堅實的後盾。</p>
                 </div>
             </div>
         </div>
@@ -207,6 +195,8 @@
         
         let latestDividend = 0; 
         let currentPrice = 0;   
+        let rawPriceData = [];  // 儲存原始歷史股價以供日週月切換
+        let trendChartInstance = null;
         
         window.onload = () => {
             const savedKey = localStorage.getItem(KEY_NAME);
@@ -223,6 +213,22 @@
             drawSimulationChart();
         };
 
+        // 分頁切換控制
+        function switchTab(tabId) {
+            ['overview', 'charts', 'safety'].forEach(id => {
+                document.getElementById(`tab-${id}`).classList.add('hidden');
+                document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
+                document.getElementById(`btn-${id}`).classList.add('text-gray-400');
+            });
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
+            document.getElementById(`btn-${tabId}`).classList.remove('text-gray-400');
+            
+            if(tabId === 'charts' && trendChartInstance === null && rawPriceData.length > 0) {
+                renderTrendChart('daily');
+            }
+        }
+
         function saveAndLoad() {
             const key = document.getElementById('api_key').value.trim();
             if(!key) {
@@ -231,7 +237,7 @@
             }
             localStorage.setItem(KEY_NAME, key);
             fetchData(key);
-            alert('金鑰已儲存！正在抓取最新開盤市場資料...');
+            alert('金鑰已儲存！正在抓取最新市場資料...');
         }
 
         function saveShares() {
@@ -246,7 +252,6 @@
 
         function updateHoldingCalculations() {
             const shares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
-            
             if(currentPrice > 0) {
                 const marketValue = Math.round(shares * currentPrice);
                 document.getElementById('real_market_value').innerText = marketValue.toLocaleString();
@@ -270,7 +275,6 @@
             }
         }
 
-        // 判斷是否為週末 (星期六=6, 星期日=0)
         function isWeekend(dateString) {
             const date = new Date(dateString);
             const day = date.getDay();
@@ -280,48 +284,45 @@
         async function fetchData(token) {
             const today = new Date();
             const yearStart = `${today.getFullYear()}-01-01`;
-            const monthAgoDate = new Date(today.getTime() - 45 * 24 * 60 * 60 * 1000); // 抓取 45 天以確保足夠過濾出開盤日
+            const monthAgoDate = new Date(today.getTime() - 90 * 24 * 60 * 60 * 1000); // 抓取 90 天以支援週月K線
             const monthAgo = monthAgoDate.toISOString().split('T')[0];
 
             try {
-                // A. 獲取每日股價與成交額 (過濾掉週末假日)
+                // A. 獲取每日股價與成交額
                 const priceUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=00406A&start_date=${monthAgo}&token=${token}`;
                 const priceRes = await fetch(priceUrl);
                 const priceData = await priceRes.json();
                 
                 if(priceData.msg === 'success' && priceData.data.length > 0) {
-                    // 只保留非週末（星期六、日）的真實開盤日資料
-                    const openMarketDays = priceData.data.filter(item => !isWeekend(item.date));
+                    rawPriceData = priceData.data.filter(item => !isWeekend(item.date));
                     
-                    if(openMarketDays.length > 0) {
-                        const latestPriceObj = openMarketDays[openMarketDays.length - 1]; // 最近一個開盤日
+                    if(rawPriceData.length > 0) {
+                        const latestPriceObj = rawPriceData[rawPriceData.length - 1];
                         currentPrice = latestPriceObj.close;
                         document.getElementById('latest_price').innerText = currentPrice.toFixed(2);
                         
-                        // 換算 5000 元可買股數
                         const shares = Math.floor(5000 / currentPrice);
-                        5000
                         document.getElementById('buyable_shares').innerText = shares;
 
-                        // 計算最新開盤日成交額
-                        const turnover = latestPriceObj.Trading_turnover || (latestPriceObj.close * latestPriceObj.Trading_Volume);
-                        const turnoverInYi = turnover / 100000000; 
+                        // 兼容處理 FinMind 各種成交額欄位大小寫
+                        const turnoverVal = latestPriceObj.Trading_turnover || latestPriceObj.turnover || (latestPriceObj.close * latestPriceObj.Trading_Volume);
+                        const turnoverInYi = turnoverVal / 100000000; 
                         
                         document.getElementById('trading_turnover').innerText = `NT$ ${turnoverInYi.toFixed(2)} 億`;
 
-                        // 流動性安全檢測 (低於 5 億發出警告)
                         const safetyStatus = document.getElementById('safety_status');
                         const safetyIcon = document.getElementById('safety_icon');
 
                         if (turnoverInYi < 5) {
-                            safetyStatus.innerHTML = `<span class="text-red-400 font-bold">⚠ 警告：最近開盤日成交額低於 5 億台幣 (${turnoverInYi.toFixed(2)}億)！</span> 流動性偏低，請留意買賣滑價。`;
+                            safetyStatus.innerHTML = `<span class="text-red-400 font-bold">⚠ 警告：成交額低於 5 億台幣 (${turnoverInYi.toFixed(2)}億)！</span> 流動性偏低，請留意買賣滑價。`;
                             safetyIcon.innerHTML = "🚨";
                         } else {
-                            safetyStatus.innerHTML = `<span class="text-green-400 font-bold">✅ 流動性健康</span> (最近開盤日成交額 ${turnoverInYi.toFixed(2)} 億，大於 5 億安全門檻)`;
+                            safetyStatus.innerHTML = `<span class="text-green-400 font-bold">✅ 流動性健康</span> (成交額 ${turnoverInYi.toFixed(2)} 億，大於 5 億安全門檻)`;
                             safetyIcon.innerHTML = "🛡️";
                         }
+
+                        renderTrendChart('daily');
                     }
-                    
                     updateHoldingCalculations();
                 }
 
@@ -359,7 +360,7 @@
                     }
                 }
 
-                // C. 獲取法人買賣 (同樣過濾掉假日)
+                // C. 獲取法人買賣
                 const invUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockInstitutionalInvestorsBuySell&data_id=00406A&start_date=${monthAgo}&token=${token}`;
                 const invRes = await fetch(invUrl);
                 const invData = await invRes.json();
@@ -393,6 +394,81 @@
             } catch (e) {
                 console.error("API 獲取錯誤", e);
             }
+        }
+
+        // 切換日、週、月走勢圖週期
+        function changeTimeframe(tf) {
+            ['daily', 'weekly', 'monthly'].forEach(t => {
+                const btn = document.getElementById(`tf-${t}`);
+                if(t === tf) {
+                    btn.className = 'px-3 py-1 text-xs rounded font-medium bg-blue-600 text-white transition';
+                } else {
+                    btn.className = 'px-3 py-1 text-xs rounded font-medium text-gray-400 hover:text-white transition';
+                }
+            });
+            renderTrendChart(tf);
+        }
+
+        // 渲染日、週、月走勢圖
+        function renderTrendChart(timeframe) {
+            if(rawPriceData.length === 0) return;
+
+            let labels = [];
+            let dataPoints = [];
+
+            if(timeframe === 'daily') {
+                // 日K：取最近 30 筆
+                const sliceData = rawPriceData.slice(-30);
+                labels = sliceData.map(d => d.date.slice(5)); // 顯示 MM-DD
+                dataPoints = sliceData.map(d => d.close);
+            } else if(timeframe === 'weekly') {
+                // 週K：每 5 個交易日取一筆代表
+                let weeklyData = [];
+                for(let i = 0; i < rawPriceData.length; i += 5) {
+                    weeklyData.push(rawPriceData[i]);
+                }
+                labels = weeklyData.map(d => d.date.slice(5));
+                dataPoints = weeklyData.map(d => d.close);
+            } else if(timeframe === 'monthly') {
+                // 月K：依月份分組取最後一筆
+                let monthlyMap = {};
+                rawPriceData.forEach(d => {
+                    let monthKey = d.date.slice(0, 7); // YYYY-MM
+                    monthlyMap[monthKey] = d.close;
+                });
+                labels = Object.keys(monthlyMap);
+                dataPoints = Object.values(monthlyMap);
+            }
+
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            if(trendChartInstance) {
+                trendChartInstance.destroy();
+            }
+
+            trendChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `00406A 收盤價 (${timeframe === 'daily' ? '日' : timeframe === 'weekly' ? '週' : '月'})`,
+                        data: dataPoints,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } },
+                        x: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#e5e7eb' } }
+                    }
+                }
+            });
         }
 
         // 繪製 DRIP 複利圖表
