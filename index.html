@@ -25,7 +25,6 @@
                 </div>
                 <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 55歲) | 每月定投 NT$5,000</p>
             </div>
-            <!-- API 金鑰快捷設定 -->
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
                 <button onclick="saveAndLoad()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-medium transition whitespace-nowrap">儲存更新</button>
@@ -41,7 +40,6 @@
 
         <!-- ================= 分頁 1：資產與複利總覽 (Overview) ================= -->
         <div id="tab-overview" class="space-y-6">
-            <!-- 即時持股與購買力 -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="card flex flex-col justify-center">
                     <p class="text-sm text-gray-400">最新收盤價</p>
@@ -73,7 +71,6 @@
                 </div>
             </div>
 
-            <!-- 12年複利投影 (DRIP) -->
             <div class="card">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-green-400">🌱 12 年定投複利投影 (DRIP)</h2>
@@ -109,7 +106,6 @@
                         <h2 class="text-xl font-semibold text-blue-400">📈 00406A 價格與報酬走勢分析</h2>
                         <p class="text-xs text-gray-400 mt-1">自由切換不同週期檢視短期波動與長期趨勢</p>
                     </div>
-                    <!-- 週期切換按鈕 (日 / 週 / 月) -->
                     <div class="flex space-x-2 bg-gray-900 p-1 rounded border border-gray-700">
                         <button onclick="changeTimeframe('daily')" id="tf-daily" class="px-3 py-1 text-xs rounded font-medium bg-blue-600 text-white transition">日K趨勢</button>
                         <button onclick="changeTimeframe('weekly')" id="tf-weekly" class="px-3 py-1 text-xs rounded font-medium text-gray-400 hover:text-white transition">週K曲線</button>
@@ -122,7 +118,6 @@
 
         <!-- ================= 分頁 3：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
-            <!-- 流動性與規模安全雷達 -->
             <div class="card flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div class="flex items-center gap-4">
                     <div class="text-4xl" id="safety_icon">🛡️</div>
@@ -137,7 +132,6 @@
                 </div>
             </div>
 
-            <!-- 二代健保門檻自動偵測 -->
             <div class="card flex justify-between items-center">
                 <div>
                     <p class="text-sm text-gray-400">二代健保門檻自動偵測 (單筆股利 > 2萬扣 2.11%)</p>
@@ -146,7 +140,6 @@
                 <div class="text-4xl" id="health_ins_icon">🛡️</div>
             </div>
 
-            <!-- 股利與除息追蹤 -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="card">
                     <h2 class="text-xl font-semibold mb-4 text-green-400">💵 股利與除息追蹤</h2>
@@ -166,7 +159,6 @@
                     </div>
                 </div>
 
-                <!-- 法人近期買賣超 -->
                 <div class="card">
                     <h2 class="text-xl font-semibold mb-4 text-blue-400">🏛️ 法人近期買賣超</h2>
                     <p class="text-xs text-gray-400 mb-3">最新開盤日籌碼動向 (張)</p>
@@ -303,10 +295,11 @@
                         const shares = Math.floor(5000 / currentPrice);
                         document.getElementById('buyable_shares').innerText = shares;
 
-                        // 強制利用收盤價乘以成交股數來計算總成交金額 (避免 API 欄位缺失)
+                        // 【重點修正 1】改用正確的 Trading_money (成交金額) 欄位，若無則用 收盤價*成交股數 手動計算
                         const closeP = latestPriceObj.close || 0;
                         const volShares = latestPriceObj.Trading_Volume || latestPriceObj.volume || 0;
-                        const turnoverVal = latestPriceObj.Trading_turnover || latestPriceObj.turnover || (closeP * volShares);
+                        const turnoverVal = latestPriceObj.Trading_money || (closeP * volShares);
+                        
                         const turnoverInYi = turnoverVal / 100000000; 
                         
                         document.getElementById('trading_turnover').innerText = `NT$ ${turnoverInYi.toFixed(2)} 億`;
@@ -325,7 +318,9 @@
                             safetyIcon.innerHTML = "🛡️";
                         }
 
-                        renderTrendChart('daily');
+                        if(!document.getElementById('tab-charts').classList.contains('hidden')) {
+                            renderTrendChart('daily');
+                        }
                     }
                     updateHoldingCalculations();
                 }
@@ -369,18 +364,27 @@
                 const invRes = await fetch(invUrl);
                 const invData = await invRes.json();
                 
-                if(invData.msg === 'success' && invData.data.length > 0) {
+                const showNoInvData = () => {
+                    const msg = `<span class="text-gray-500 text-sm font-normal">API 尚無此 ETF 籌碼資料</span>`;
+                    document.getElementById('foreign_buy').innerHTML = msg;
+                    document.getElementById('trust_buy').innerHTML = msg;
+                    document.getElementById('dealer_buy').innerHTML = msg;
+                };
+                
+                if(invData.msg === 'success' && invData.data && invData.data.length > 0) {
                     const openMarketInv = invData.data.filter(item => !isWeekend(item.date));
                     if(openMarketInv.length > 0) {
                         const latestDate = openMarketInv[openMarketInv.length - 1].date;
                         const latestData = openMarketInv.filter(d => d.date === latestDate);
                         
                         let foreign = 0, trust = 0, dealer = 0;
+                        let hasMatchedData = false;
+                        
                         latestData.forEach(d => {
                             const net = d.buy - d.sell;
-                            if(d.name.includes('外資')) foreign += net;
-                            if(d.name.includes('投信')) trust += net;
-                            if(d.name.includes('自營商')) dealer += net;
+                            if(d.name.includes('外資')) { foreign += net; hasMatchedData = true; }
+                            if(d.name.includes('投信')) { trust += net; hasMatchedData = true; }
+                            if(d.name.includes('自營商')) { dealer += net; hasMatchedData = true; }
                         });
 
                         const formatVol = (vol) => {
@@ -390,10 +394,19 @@
                             return `<span class="text-gray-400">0 張</span>`;
                         };
 
-                        document.getElementById('foreign_buy').innerHTML = formatVol(foreign);
-                        document.getElementById('trust_buy').innerHTML = formatVol(trust);
-                        document.getElementById('dealer_buy').innerHTML = formatVol(dealer);
+                        // 【重點修正 2】如果 API 真的有傳回有效的三大法人名字，才顯示張數；否則誠實顯示無資料
+                        if(hasMatchedData) {
+                            document.getElementById('foreign_buy').innerHTML = formatVol(foreign);
+                            document.getElementById('trust_buy').innerHTML = formatVol(trust);
+                            document.getElementById('dealer_buy').innerHTML = formatVol(dealer);
+                        } else {
+                            showNoInvData();
+                        }
+                    } else {
+                        showNoInvData();
                     }
+                } else {
+                    showNoInvData();
                 }
             } catch (e) {
                 console.error("API 獲取錯誤", e);
