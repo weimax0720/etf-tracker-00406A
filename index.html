@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A 追蹤儀表板</title>
+    <title>MAX的 00406A 追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -20,7 +20,6 @@
         ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
         
-        /* 隱藏數字輸入框的上下箭頭 */
         input[type="number"]::-webkit-inner-spin-button, 
         input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
@@ -34,7 +33,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (2026年10月起扣 | 43歲 ➔ 55歲) | 每月定投 NT$5,000</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (2026年10月起扣 | 43歲 ➔ 55歲) | 自訂實際定投金額</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -42,7 +41,7 @@
             </div>
         </div>
 
-        <!-- 導覽分頁按鈕 (Tabs) 增加為 4 個 -->
+        <!-- 導覽分頁按鈕 (Tabs) -->
         <div class="flex border-b border-gray-700 space-x-2 overflow-x-auto pb-2">
             <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn active px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-200 whitespace-nowrap">📊 資產與即時領息</button>
             <button onclick="switchTab('ledger')" id="btn-ledger" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📝 每月存股手帳</button>
@@ -68,7 +67,7 @@
                     </div>
                 </div>
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center col-span-2 md:col-span-1">
-                    <p class="text-sm text-gray-400">單月 5 千元購買力</p>
+                    <p class="text-sm text-gray-400">約 5 千元購買力參考</p>
                     <div class="flex justify-between items-center mt-1">
                         <p class="text-xl md:text-2xl font-bold text-green-400"><span id="buyable_shares">--</span> <span class="text-sm text-gray-400 font-normal">零股</span></p>
                         <span class="text-lg md:text-xl">🛒</span>
@@ -101,13 +100,13 @@
             <div class="card">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-green-400">🌱 12 年定投動態複利投影 (DRIP)</h2>
-                    <span class="badge bg-green-900 text-green-300">結合手帳真實數據</span>
+                    <span class="badge bg-green-900 text-green-300">結合手帳實際金額與加碼</span>
                 </div>
 
                 <div class="bg-gray-800 p-5 rounded-lg mb-6 border border-yellow-500/40 flex justify-between items-center shadow-lg">
                     <div>
                         <p class="text-sm text-yellow-500 font-bold mb-1">🎯 理想財務自由目標 (55歲結算時)</p>
-                        <p class="text-gray-400 text-sm">依據您的「起點持股 + 每月5千 + 動態加碼」滾動出的預估月配息</p>
+                        <p class="text-gray-400 text-sm">依據您的手帳實際投入金額與加碼，滾動出的預估月配息</p>
                         <div class="mt-2 flex items-baseline gap-2">
                             <p class="text-4xl font-bold text-yellow-400">NT$ <span id="monthly_dividend_55">0</span></p>
                             <span class="text-gray-400 text-sm">/ 月</span>
@@ -126,7 +125,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
                         <h2 class="text-xl font-semibold text-green-400">📝 每月存股手帳與動態投影</h2>
-                        <p class="text-sm text-gray-400 mt-1">在對應月份輸入您的「額外加碼股數」，系統將自動重算未來的複利滾雪球效應。</p>
+                        <p class="text-sm text-gray-400 mt-1">可自行修改每月的實際扣款金額（非整數5千也行）與手動加碼股數。</p>
                     </div>
                     <div class="bg-gray-900 p-2 rounded text-sm text-gray-300 border border-gray-700 text-right w-full md:w-auto">
                         <p>動態預估持股總數</p>
@@ -140,12 +139,12 @@
                 </div>
 
                 <div class="overflow-x-auto border border-gray-700 rounded-lg">
-                    <table class="w-full text-left border-collapse min-w-[700px]">
+                    <table class="w-full text-left border-collapse min-w-[750px]">
                         <thead class="bg-gray-800 border-b border-gray-700 text-sm text-gray-400">
                             <tr>
                                 <th class="py-3 px-4 font-medium">年月 (進度)</th>
-                                <th class="py-3 px-4 font-medium">基本定投</th>
-                                <th class="py-3 px-4 font-medium text-blue-300">手動加碼 (股) ✏️</th>
+                                <th class="py-3 px-4 font-medium text-blue-300">實際定投金額 (NT$) ✏️</th>
+                                <th class="py-3 px-4 font-medium text-purple-300">手動加碼 (股) ✏️</th>
                                 <th class="py-3 px-4 font-medium">累積總股數</th>
                                 <th class="py-3 px-4 font-medium text-green-400">預估當月配息</th>
                                 <th class="py-3 px-4 font-medium text-yellow-400">預估總市值</th>
@@ -245,7 +244,8 @@
     <script>
         const KEY_NAME = '00406A_FINMIND_KEY';
         const SHARES_KEY = '00406A_REAL_SHARES';
-        const LEDGER_KEY = '00406A_LEDGER_EXTRA';
+        const LEDGER_INVEST_KEY = '00406A_LEDGER_INVEST'; // 儲存自訂定投金額
+        const LEDGER_EXTRA_KEY = '00406A_LEDGER_EXTRA';   // 儲存手動加碼股數
         
         let latestDividend = 0; 
         let currentPrice = 0;   
@@ -253,13 +253,14 @@
         let trendChartInstance = null;
         let dripChartInstance = null;
         
-        // 核心動態投影資料
         const startYear = 2026;
         const startMonth = 10;
-        const totalMonths = 144; // 12年 * 12個月
-        let extraSharesMap = {}; // 存放使用者手動加碼的資料
-        let projectedData = [];  // 計算後的逐月資料
-        let currentSelectedYear = startYear; // 目前手帳檢視的年份
+        const totalMonths = 144; 
+        
+        let customInvestMap = {}; // 記錄每個月自訂的定投金額
+        let extraSharesMap = {};  // 記錄每個月手動加碼的股數
+        let projectedData = [];   
+        let currentSelectedYear = startYear; 
 
         window.onload = () => {
             const savedKey = localStorage.getItem(KEY_NAME);
@@ -273,13 +274,17 @@
                 document.getElementById('real_shares_input').value = savedShares;
             }
             
-            const savedLedger = localStorage.getItem(LEDGER_KEY);
-            if(savedLedger) {
-                extraSharesMap = JSON.parse(savedLedger);
+            const savedInvest = localStorage.getItem(LEDGER_INVEST_KEY);
+            if(savedInvest) {
+                customInvestMap = JSON.parse(savedInvest);
+            }
+
+            const savedExtra = localStorage.getItem(LEDGER_EXTRA_KEY);
+            if(savedExtra) {
+                extraSharesMap = JSON.parse(savedExtra);
             }
 
             renderYearTabs();
-            // 先用預設值畫圖表，等 API 抓到真實股價再重算
             runDynamicSimulation(); 
         };
 
@@ -317,15 +322,22 @@
             }
             localStorage.setItem(SHARES_KEY, shares);
             updateHoldingCalculations();
-            runDynamicSimulation(); // 起點股數改變，重算整個生命週期
+            runDynamicSimulation(); 
         }
 
+        // 儲存每個月自訂的定投金額
+        function saveCustomInvest(monthIndex, inputObj) {
+            const val = parseFloat(inputObj.value) || 0;
+            customInvestMap[monthIndex] = val;
+            localStorage.setItem(LEDGER_INVEST_KEY, JSON.stringify(customInvestMap));
+            runDynamicSimulation();
+        }
+
+        // 儲存每個月手動加碼的股數
         function saveExtraShares(monthIndex, inputObj) {
             const val = parseInt(inputObj.value) || 0;
             extraSharesMap[monthIndex] = val;
-            localStorage.setItem(LEDGER_KEY, JSON.stringify(extraSharesMap));
-            
-            // 使用者打字完立刻重算全局
+            localStorage.setItem(LEDGER_EXTRA_KEY, JSON.stringify(extraSharesMap));
             runDynamicSimulation();
         }
 
@@ -369,7 +381,6 @@
             const monthAgo = monthAgoDate.toISOString().split('T')[0];
 
             try {
-                // A. 獲取每日股價
                 const priceUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=00406A&start_date=${monthAgo}&token=${token}`;
                 const priceRes = await fetch(priceUrl);
                 const priceData = await priceRes.json();
@@ -412,7 +423,6 @@
                     }
                 }
 
-                // B. 獲取配息
                 const divUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockDividend&data_id=00406A&start_date=${yearStart}&token=${token}`;
                 const divRes = await fetch(divUrl);
                 const divData = await divRes.json();
@@ -444,11 +454,9 @@
                     }
                 }
 
-                // 取得全部資料後更新計算與圖表
                 updateHoldingCalculations();
                 runDynamicSimulation();
 
-                // C. 法人
                 const invUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockInstitutionalInvestorsBuySell&data_id=00406A&start_date=${monthAgo}&token=${token}`;
                 const invRes = await fetch(invUrl);
                 const invData = await invRes.json();
@@ -546,37 +554,31 @@
             });
         }
 
-        // ================= 核心：動態投影模擬系統 =================
+        // ================= 動態模擬系統 (支援自訂定投金額) =================
         
         function runDynamicSimulation() {
-            projectedData = []; // 清空重建
+            projectedData = []; 
             
-            const basePrice = currentPrice > 0 ? currentPrice : 15.0; // API沒抓到時假設 15 元
+            const basePrice = currentPrice > 0 ? currentPrice : 15.0; 
             const baseDividend = latestDividend > 0 ? latestDividend : 0.138;
-            let runningShares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0; // 起點為真實股數
+            let runningShares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0; 
             
             let simulatedPrice = basePrice;
-            const monthlyGrowthRate = Math.pow(1.065, 1/12) - 1; // 年化 6.5% 轉月複合增長
+            const monthlyGrowthRate = Math.pow(1.065, 1/12) - 1; 
 
             let currentY = startYear;
             let currentM = startMonth;
 
             for(let i = 0; i < totalMonths; i++) {
-                // 1. 每月固定定投 5000 元買入股數
-                let regularShares = 5000 / simulatedPrice;
+                // 讀取該月自訂金額，若未輸入則預設為 5000
+                let investAmount = (customInvestMap[i] !== undefined && customInvestMap[i] !== '') ? parseFloat(customInvestMap[i]) : 5000;
                 
-                // 2. 抓取使用者在手帳輸入的「額外加碼」
+                let regularShares = investAmount / simulatedPrice;
                 let extraS = extraSharesMap[i] || 0;
-                
-                // 3. 預估當月配息收入 (配息率假設持平)
                 let monthDividendIncome = runningShares * baseDividend;
-                
-                // 4. DRIP：將配息再投入買股
                 let dripShares = monthDividendIncome / simulatedPrice;
                 
-                // 5. 更新本月總股數
                 runningShares += (regularShares + extraS + dripShares);
-                
                 let marketValue = runningShares * simulatedPrice;
 
                 projectedData.push({
@@ -584,22 +586,18 @@
                     year: currentY,
                     month: currentM,
                     age: 43 + Math.floor(i / 12),
-                    regularInvest: 5000,
+                    investAmount: investAmount,
                     extraShares: extraS,
                     totalShares: runningShares,
                     dividendIncome: monthDividendIncome,
                     marketValue: marketValue
                 });
 
-                // 推進月份
                 currentM++;
                 if(currentM > 12) { currentM = 1; currentY++; }
-                
-                // 推進價格 (微幅上漲以符合年化報酬)
                 simulatedPrice *= (1 + monthlyGrowthRate);
             }
 
-            // 更新總覽上的目標數字 (取最後一個月的數據)
             const finalData = projectedData[projectedData.length - 1];
             document.getElementById('monthly_dividend_55').innerText = Math.round(finalData.dividendIncome).toLocaleString();
             document.getElementById('ledger_total_shares').innerText = Math.round(finalData.totalShares).toLocaleString() + " 股";
@@ -608,47 +606,46 @@
             drawDRIPChartFromProjection();
         }
 
-        // 渲染年度切換按鈕
         function renderYearTabs() {
             const container = document.getElementById('ledger-year-tabs');
             let html = '';
             for(let i = 0; i <= 12; i++) {
                 let y = startYear + i;
                 let age = 43 + i;
-                if(i === 12 && startMonth !== 1) { 
-                    // 第12年可能不滿一年，但還是給個標籤
-                }
                 let activeClass = (y === currentSelectedYear) ? 'active bg-emerald-500 text-white border-emerald-600' : 'bg-gray-800 text-gray-400 border-gray-700 hover:text-white';
-                html += `<button onclick="changeLedgerYear(${y})" id="tab-year-${y}" class="year-btn px-3 py-1 text-sm rounded border ${activeClass}">${y} (${age}歲)</button>`;
+                html += `<button onclick="changeYear(${y})" id="tab-year-${y}" class="year-btn px-3 py-1 text-sm rounded border ${activeClass}">${y} (${age}歲)</button>`;
             }
             container.innerHTML = html;
         }
 
-        function changeLedgerYear(year) {
+        function changeYear(year) {
             currentSelectedYear = year;
-            renderYearTabs(); // 刷新按鈕外觀
-            renderLedgerTable(year); // 刷新表格
+            renderYearTabs();
+            renderLedgerTable(year);
         }
 
-        // 渲染手帳表格內容
         function renderLedgerTable(year) {
             const tbody = document.getElementById('ledger_table_body');
             const yearData = projectedData.filter(d => d.year === year);
             
             if(yearData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-gray-500">該年度無定投計畫資料</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-gray-500">該年度無資料</td></tr>`;
                 return;
             }
 
             let html = '';
             yearData.forEach(d => {
                 let formattedMonth = d.month.toString().padStart(2, '0');
+                let currentInvestVal = (customInvestMap[d.index] !== undefined) ? customInvestMap[d.index] : 5000;
+                
                 html += `
                     <tr class="hover:bg-gray-700/50 transition-colors">
                         <td class="py-2 px-4 text-white">${d.year}-${formattedMonth} <span class="text-xs text-gray-500 ml-1">第${d.index + 1}期</span></td>
-                        <td class="py-2 px-4 text-gray-400">NT$ 5,000</td>
                         <td class="py-2 px-4">
-                            <input type="number" onchange="saveExtraShares(${d.index}, this)" value="${d.extraShares === 0 ? '' : d.extraShares}" placeholder="0" class="w-20 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-blue-300 text-sm focus:outline-none focus:border-blue-500">
+                            <input type="number" onchange="saveCustomInvest(${d.index}, this)" value="${currentInvestVal}" placeholder="5000" class="w-28 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-blue-300 text-sm font-bold focus:outline-none focus:border-blue-500">
+                        </td>
+                        <td class="py-2 px-4">
+                            <input type="number" onchange="saveExtraShares(${d.index}, this)" value="${d.extraShares === 0 ? '' : d.extraShares}" placeholder="0" class="w-20 px-2 py-1 bg-gray-900 border border-purple-800 rounded text-purple-300 text-sm focus:outline-none focus:border-purple-500">
                         </td>
                         <td class="py-2 px-4 text-white">${Math.round(d.totalShares).toLocaleString()}</td>
                         <td class="py-2 px-4 text-green-400 font-bold">NT$ ${Math.round(d.dividendIncome).toLocaleString()}</td>
@@ -659,32 +656,20 @@
             tbody.innerHTML = html;
         }
 
-        // 根據動態模擬的結果來畫總覽的 DRIP 折線圖
         function drawDRIPChartFromProjection() {
             if(projectedData.length === 0) return;
+            let labels = []; let principalData = []; let dripData = [];
             
-            let labels = [];
-            let principalData = [];
-            let dripData = [];
-            
-            // 為了讓圖表不過於擁擠，我們每年抽樣一次（每年的 10 月）
             const annualMilestones = projectedData.filter(d => d.month === startMonth);
-            // 補上最後一個月作為終點
             if (annualMilestones[annualMilestones.length - 1].index !== projectedData[projectedData.length - 1].index) {
                 annualMilestones.push(projectedData[projectedData.length - 1]);
             }
 
             let cumulatedPrincipal = 0;
-
             annualMilestones.forEach(d => {
                 labels.push([`${d.age}歲`, `${d.year}年`]);
-                
-                // 粗略估算該時間點的累積本金 (每月5000 + 當月額外買入股數*價格)
-                // 為了簡化圖表本金線，這裡僅計算「起始市值 + 每月定投金額」做為本金基準線
-                // 若要精準需加總歷年額外投入金額，這裡以 5000*總期數 呈現穩定本金線
-                cumulatedPrincipal = 5000 * d.index; 
+                cumulatedPrincipal += (d.investAmount * 12); 
                 principalData.push(cumulatedPrincipal);
-                
                 dripData.push(Math.round(d.marketValue));
             });
 
@@ -696,16 +681,8 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        {
-                            label: '基礎定投本金軌跡',
-                            data: principalData,
-                            borderColor: '#6b7280', borderDash: [5, 5], fill: false, tension: 0.1
-                        },
-                        {
-                            label: '動態含息總市值 (結合加碼)',
-                            data: dripData,
-                            borderColor: '#34d399', backgroundColor: 'rgba(52, 211, 153, 0.1)', fill: true, tension: 0.1
-                        }
+                        { label: '累計投入本金軌跡', data: principalData, borderColor: '#6b7280', borderDash: [5, 5], fill: false, tension: 0.1 },
+                        { label: '動態含息總市值 (結合實際金額)', data: dripData, borderColor: '#34d399', backgroundColor: 'rgba(52, 211, 153, 0.1)', fill: true, tension: 0.1 }
                     ]
                 },
                 options: { responsive: true, scales: { y: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } }, x: { ticks: { color: '#9ca3af', font:{size: 10} }, grid: { color: '#374151' } } }, plugins: { legend: { labels: { color: '#e5e7eb' } } } }
