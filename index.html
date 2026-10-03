@@ -195,7 +195,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
                         <h2 class="text-xl font-semibold text-pink-400">👧 雙寶每週 100 元存股手帳</h2>
-                        <p class="text-sm text-gray-400 mt-1">每週 100 元換算平均每月預算為 <span class="text-white font-bold">433 元</span>。支援為大寶、二寶各自獨立輸入「真實買價」與「實買股數」。</p>
+                        <p class="text-sm text-gray-400 mt-1">每週 100 元換算平均每月預算為 <span class="text-white font-bold">433 元</span>。支援獨立輸入「買價」、「實買股數」與「推算總市值」。</p>
                     </div>
                 </div>
 
@@ -204,16 +204,18 @@
                 </div>
 
                 <div class="overflow-x-auto border border-gray-700 rounded-lg">
-                    <table class="w-full text-left border-collapse min-w-[900px]">
+                    <table class="w-full text-left border-collapse min-w-[950px]">
                         <thead class="bg-gray-800 border-b border-gray-700 text-sm text-gray-400">
                             <tr>
                                 <th class="py-3 px-3 font-medium">年月 (期數)</th>
                                 <th class="py-3 px-2 font-medium text-pink-300">大寶買價 ✏️</th>
                                 <th class="py-3 px-2 font-medium text-pink-300">大寶實買 ✏️</th>
+                                <th class="py-3 px-2 font-medium text-pink-300 text-right">大寶總市值</th>
                                 <th class="py-3 px-2 font-medium text-blue-300">二寶買價 ✏️</th>
                                 <th class="py-3 px-2 font-medium text-blue-300">二寶實買 ✏️</th>
-                                <th class="py-3 px-3 font-medium text-right">大寶累計總股數</th>
-                                <th class="py-3 px-3 font-medium text-right">二寶累計總股數</th>
+                                <th class="py-3 px-2 font-medium text-blue-300 text-right">二寶總市值</th>
+                                <th class="py-3 px-3 font-medium text-right">大寶總股數</th>
+                                <th class="py-3 px-3 font-medium text-right">二寶總股數</th>
                             </tr>
                         </thead>
                         <tbody id="kids_table_body" class="text-sm divide-y divide-gray-800 bg-gray-900">
@@ -315,7 +317,7 @@
         const LEDGER_DRIP_KEY = '00406A_LEDGER_DRIP';     
         const LEDGER_EXTRA_KEY = '00406A_LEDGER_EXTRA';   
         
-        // 雙寶資料儲存 Key (包含個別買進股價)
+        // 雙寶資料儲存 Key
         const LEDGER_KID_A_PRICE_KEY = '00406A_LEDGER_KID_A_PRICE';
         const LEDGER_KID_A_KEY = '00406A_LEDGER_KID_A';
         const LEDGER_KID_B_PRICE_KEY = '00406A_LEDGER_KID_B_PRICE';
@@ -413,7 +415,7 @@
             if(isNaN(val) || val <= 0) { delete customPriceMap[monthIndex]; } else { customPriceMap[monthIndex] = val; }
             localStorage.setItem(LEDGER_PRICE_KEY, JSON.stringify(customPriceMap));
             runDynamicSimulation();
-            runKidsSimulation(); // 雙寶若未填專屬價格，預設會連動主帳戶價格，因此需重算
+            runKidsSimulation();
         }
         function saveCustomInvest(monthIndex, inputObj) {
             const val = parseFloat(inputObj.value);
@@ -751,19 +753,15 @@
             const monthlyBudget = 433;
 
             for(let i = 0; i < totalMonths; i++) {
-                // 基準股價 (若主帳戶有填寫，優先採用主帳戶股價做為未填寫時的預估依據)
                 let manualMainPrice = customPriceMap[i];
                 let mainExecPrice = (manualMainPrice && manualMainPrice > 0) ? manualMainPrice : simulatedPrice;
 
-                // 大寶買價判定
                 let manualPriceA = kidAPriceMap[i];
                 let execPriceA = (manualPriceA && manualPriceA > 0) ? manualPriceA : mainExecPrice;
                 
-                // 二寶買價判定
                 let manualPriceB = kidBPriceMap[i];
                 let execPriceB = (manualPriceB && manualPriceB > 0) ? manualPriceB : mainExecPrice;
 
-                // 預估本月自動買到的股數 (依據各自股價)
                 let defaultBuySharesA = Math.floor(monthlyBudget / execPriceA);
                 let defaultBuySharesB = Math.floor(monthlyBudget / execPriceB);
 
@@ -884,7 +882,7 @@
             const yearData = kidsProjectedData.filter(d => d.year === year);
             
             if(yearData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-gray-500">該年度無資料</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-gray-500">該年度無資料</td></tr>`;
                 return;
             }
 
@@ -892,11 +890,9 @@
             yearData.forEach(d => {
                 let formattedMonth = d.month.toString().padStart(2, '0');
                 
-                // 大寶數值
                 let currentPriceValA = d.isManualPriceA ? d.execPriceA : '';
                 let currentValA = d.isManualA ? d.buyA : '';
                 
-                // 二寶數值
                 let currentPriceValB = d.isManualPriceB ? d.execPriceB : '';
                 let currentValB = d.isManualB ? d.buyB : '';
                 
@@ -910,6 +906,7 @@
                         <td class="py-2 px-2">
                             <input type="number" onchange="saveKidAShares(${d.index}, this)" value="${currentValA}" placeholder="${d.defaultBuySharesA}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-pink-800 rounded text-pink-300 text-sm focus:outline-none focus:border-pink-500">
                         </td>
+                        <td class="py-2 px-2 text-yellow-400 text-right font-medium">NT$ ${Math.round(d.valueA).toLocaleString()}</td>
                         
                         <td class="py-2 px-2 border-l border-gray-700">
                             <input type="number" onchange="saveKidBPrice(${d.index}, this)" value="${currentPriceValB}" placeholder="${d.execPriceB.toFixed(2)}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-blue-300 text-sm focus:outline-none focus:border-blue-500">
@@ -917,6 +914,7 @@
                         <td class="py-2 px-2">
                             <input type="number" onchange="saveKidBShares(${d.index}, this)" value="${currentValB}" placeholder="${d.defaultBuySharesB}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-blue-300 text-sm focus:outline-none focus:border-blue-500">
                         </td>
+                        <td class="py-2 px-2 text-yellow-400 text-right font-medium">NT$ ${Math.round(d.valueB).toLocaleString()}</td>
                         
                         <td class="py-2 px-3 text-white text-right border-l border-gray-700">${Math.round(d.totalA).toLocaleString()} 股</td>
                         <td class="py-2 px-3 text-white text-right">${Math.round(d.totalB).toLocaleString()} 股</td>
