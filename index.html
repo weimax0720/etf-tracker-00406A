@@ -32,7 +32,7 @@
         <!-- 最新行情即時看板 -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center">
-                <p class="text-sm text-gray-400">最新收盤價</p>
+                <p class="text-sm text-gray-400">最新收盤價 (最近開盤日)</p>
                 <div class="flex justify-between items-center mt-1">
                     <p class="text-2xl font-bold text-white">NT$ <span id="latest_price">--</span></p>
                     <span class="text-xl">📈</span>
@@ -64,17 +64,17 @@
                 </div>
             </div>
 
-            <!-- 新增：流動性與安全防護網警示區塊 -->
+            <!-- 流動性與安全防護網警示區塊 (僅限開盤日) -->
             <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 col-span-2 md:col-span-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div class="flex items-center gap-3">
                     <div class="text-3xl" id="safety_icon">🛡️</div>
                     <div>
-                        <p class="text-sm text-gray-400">ETF 流動性與規模安全雷達 (交易額 & 交易量監控)</p>
+                        <p class="text-sm text-gray-400">ETF 流動性與規模安全雷達 (僅採計台股開盤日)</p>
                         <p class="text-base font-bold text-white mt-1" id="safety_status">等待 API 資料載入以進行安全評估...</p>
                     </div>
                 </div>
                 <div class="bg-gray-900 px-4 py-2 rounded border border-gray-700 text-right w-full md:w-auto">
-                    <p class="text-xs text-gray-400">最近交易額</p>
+                    <p class="text-xs text-gray-400">最近開盤日成交額</p>
                     <p class="text-lg font-bold text-blue-400" id="trading_turnover">NT$ -- 億</p>
                 </div>
             </div>
@@ -85,7 +85,7 @@
                     <p class="text-sm text-gray-400">二代健保門檻自動偵測 (依據真實持股試算)</p>
                     <p class="text-lg font-bold text-white mt-1" id="health_ins_status">等待股價與配息資料...</p>
                 </div>
-                <div class="text-3xl" id="health_ins_icon">🛡️️</div>
+                <div class="text-3xl" id="health_ins_icon">🛡</div>
             </div>
         </div>
 
@@ -132,7 +132,7 @@
                             <div class="flex justify-between border-b border-gray-700 pb-2"><span>富邦金 (2881)</span><span class="text-white">5.20%</span></div>
                         </div>
                         <div class="mt-4 p-3 bg-gray-800 rounded border border-gray-600">
-                            <p class="text-xs text-gray-300"><span class="text-yellow-400 font-bold">⚠️ 費用提醒：</span> 相較於傳統被動 ETF，00406A 需注意較高的「經理費率」是否長期侵蝕獲利。自動化定投時建議每季檢視一次淨值折溢價。</p>
+                            <p class="text-xs text-gray-300"><span class="text-yellow-400 font-bold">⚠️ 費用提醒：</span> 相較於傳統被動 ETF，00406A 需注意較高的經理費率。定投時建議每季檢視折溢價。</p>
                         </div>
                     </div>
                     
@@ -177,7 +177,7 @@
 
                 <div class="card">
                     <h2 class="text-xl font-semibold mb-4 text-blue-400">🏛️ 法人近期買賣超</h2>
-                    <p class="text-xs text-gray-400 mb-3">最新交易日籌碼動向 (張)</p>
+                    <p class="text-xs text-gray-400 mb-3">最新開盤日籌碼動向 (張)</p>
                     <div class="space-y-3" id="investors">
                         <div class="flex justify-between items-center bg-gray-800 p-3 rounded">
                             <span class="text-sm">外資 (Foreign)</span>
@@ -231,7 +231,7 @@
             }
             localStorage.setItem(KEY_NAME, key);
             fetchData(key);
-            alert('金鑰已儲存！正在抓取最新市場資料...');
+            alert('金鑰已儲存！正在抓取最新開盤市場資料...');
         }
 
         function saveShares() {
@@ -264,49 +264,62 @@
                     healthInsStatus.innerHTML = `<span class="text-red-400">達標！需扣繳 2.11% 補充保費</span> (試算單筆股利: ${Math.round(totalDividend).toLocaleString()}元)`;
                     healthInsIcon.innerHTML = "⚠️";
                 } else {
-                    healthInsStatus.innerHTML = `<span class="text-green-400">安全免扣繳</span> (試算單筆股利: ${Math.round(totalDividend).toLocaleString()}元服務，未達兩萬)`;
+                    healthInsStatus.innerHTML = `<span class="text-green-400">安全免扣繳</span> (試算單筆股利: ${Math.round(totalDividend).toLocaleString()}元，未達兩萬)`;
                     healthInsIcon.innerHTML = "✅";
                 }
             }
         }
 
+        // 判斷是否為週末 (星期六=6, 星期日=0)
+        function isWeekend(dateString) {
+            const date = new Date(dateString);
+            const day = date.getDay();
+            return day === 0 || day === 6;
+        }
+
         async function fetchData(token) {
             const today = new Date();
             const yearStart = `${today.getFullYear()}-01-01`;
-            const monthAgoDate = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+            const monthAgoDate = new Date(today.getTime() - 45 * 24 * 60 * 60 * 1000); // 抓取 45 天以確保足夠過濾出開盤日
             const monthAgo = monthAgoDate.toISOString().split('T')[0];
 
             try {
-                // A. 獲取每日股價與成交額
+                // A. 獲取每日股價與成交額 (過濾掉週末假日)
                 const priceUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=00406A&start_date=${monthAgo}&token=${token}`;
                 const priceRes = await fetch(priceUrl);
                 const priceData = await priceRes.json();
                 
                 if(priceData.msg === 'success' && priceData.data.length > 0) {
-                    const latestPriceObj = priceData.data[priceData.data.length - 1];
-                    currentPrice = latestPriceObj.close;
-                    document.getElementById('latest_price').innerText = currentPrice.toFixed(2);
+                    // 只保留非週末（星期六、日）的真實開盤日資料
+                    const openMarketDays = priceData.data.filter(item => !isWeekend(item.date));
                     
-                    // 換算 5000 元可買股數
-                    const shares = Math.floor(5000 / currentPrice);
-                    document.getElementById('buyable_shares').innerText = shares;
+                    if(openMarketDays.length > 0) {
+                        const latestPriceObj = openMarketDays[openMarketDays.length - 1]; // 最近一個開盤日
+                        currentPrice = latestPriceObj.close;
+                        document.getElementById('latest_price').innerText = currentPrice.toFixed(2);
+                        
+                        // 換算 5000 元可買股數
+                        const shares = Math.floor(5000 / currentPrice);
+                        5000
+                        document.getElementById('buyable_shares').innerText = shares;
 
-                    // 計算成交額 (成交金額 turnover 或 close * volume)
-                    const turnover = latestPriceObj.Trading_turnover || (latestPriceObj.close * latestPriceObj.Trading_Volume);
-                    const turnoverInYi = turnover / 100000000; // 換算成億
-                    
-                    document.getElementById('trading_turnover').innerText = `NT$ ${turnoverInYi.toFixed(2)} 億`;
+                        // 計算最新開盤日成交額
+                        const turnover = latestPriceObj.Trading_turnover || (latestPriceObj.close * latestPriceObj.Trading_Volume);
+                        const turnoverInYi = turnover / 100000000; 
+                        
+                        document.getElementById('trading_turnover').innerText = `NT$ ${turnoverInYi.toFixed(2)} 億`;
 
-                    // 流動性安全檢測 (低於 5 億發出警告)
-                    const safetyStatus = document.getElementById('safety_status');
-                    const safetyIcon = document.getElementById('safety_icon');
+                        // 流動性安全檢測 (低於 5 億發出警告)
+                        const safetyStatus = document.getElementById('safety_status');
+                        const safetyIcon = document.getElementById('safety_icon');
 
-                    if (turnoverInYi < 5) {
-                        safetyStatus.innerHTML = `<span class="text-red-400 font-bold">⚠️️ 警告：日交易額低於 5 億台幣 (${turnoverInYi.toFixed(2)}億)！</span> 流動性偏低，買賣請注意折溢價與滑價風險。`;
-                        safetyIcon.innerHTML = "🚨";
-                    } else {
-                        safetyStatus.innerHTML = `<span class="text-green-400 font-bold">✅ 流動性健康</span> (日交易額 ${turnoverInYi.toFixed(2)} 億，大於 5 億安全門檻)`;
-                        safetyIcon.innerHTML = "🛡️";
+                        if (turnoverInYi < 5) {
+                            safetyStatus.innerHTML = `<span class="text-red-400 font-bold">⚠ 警告：最近開盤日成交額低於 5 億台幣 (${turnoverInYi.toFixed(2)}億)！</span> 流動性偏低，請留意買賣滑價。`;
+                            safetyIcon.innerHTML = "🚨";
+                        } else {
+                            safetyStatus.innerHTML = `<span class="text-green-400 font-bold">✅ 流動性健康</span> (最近開盤日成交額 ${turnoverInYi.toFixed(2)} 億，大於 5 億安全門檻)`;
+                            safetyIcon.innerHTML = "🛡️";
+                        }
                     }
                     
                     updateHoldingCalculations();
@@ -346,33 +359,36 @@
                     }
                 }
 
-                // C. 獲取法人買賣
+                // C. 獲取法人買賣 (同樣過濾掉假日)
                 const invUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockInstitutionalInvestorsBuySell&data_id=00406A&start_date=${monthAgo}&token=${token}`;
                 const invRes = await fetch(invUrl);
                 const invData = await invRes.json();
                 
                 if(invData.msg === 'success' && invData.data.length > 0) {
-                    const latestDate = invData.data[invData.data.length - 1].date;
-                    const latestData = invData.data.filter(d => d.date === latestDate);
-                    
-                    let foreign = 0, trust = 0, dealer = 0;
-                    latestData.forEach(d => {
-                        const net = d.buy - d.sell;
-                        if(d.name.includes('外資')) foreign += net;
-                        if(d.name.includes('投信')) trust += net;
-                        if(d.name.includes('自營商')) dealer += net;
-                    });
+                    const openMarketInv = invData.data.filter(item => !isWeekend(item.date));
+                    if(openMarketInv.length > 0) {
+                        const latestDate = openMarketInv[openMarketInv.length - 1].date;
+                        const latestData = openMarketInv.filter(d => d.date === latestDate);
+                        
+                        let foreign = 0, trust = 0, dealer = 0;
+                        latestData.forEach(d => {
+                            const net = d.buy - d.sell;
+                            if(d.name.includes('外資')) foreign += net;
+                            if(d.name.includes('投信')) trust += net;
+                            if(d.name.includes('自營商')) dealer += net;
+                        });
 
-                    const formatVol = (vol) => {
-                        const shares = Math.round(vol / 1000); 
-                        if (shares > 0) return `<span class="text-red-400">買超 +${shares.toLocaleString()} 張</span>`;
-                        if (shares < 0) return `<span class="text-green-400">賣超 ${shares.toLocaleString()} 張</span>`;
-                        return `<span class="text-gray-400">0 張</span>`;
-                    };
+                        const formatVol = (vol) => {
+                            const shares = Math.round(vol / 1000); 
+                            if (shares > 0) return `<span class="text-red-400">買超 +${shares.toLocaleString()} 張</span>`;
+                            if (shares < 0) return `<span class="text-green-400">賣超 ${shares.toLocaleString()} 張</span>`;
+                            return `<span class="text-gray-400">0 張</span>`;
+                        };
 
-                    document.getElementById('foreign_buy').innerHTML = formatVol(foreign);
-                    document.getElementById('trust_buy').innerHTML = formatVol(trust);
-                    document.getElementById('dealer_buy').innerHTML = formatVol(dealer);
+                        document.getElementById('foreign_buy').innerHTML = formatVol(foreign);
+                        document.getElementById('trust_buy').innerHTML = formatVol(trust);
+                        document.getElementById('dealer_buy').innerHTML = formatVol(dealer);
+                    }
                 }
             } catch (e) {
                 console.error("API 獲取錯誤", e);
