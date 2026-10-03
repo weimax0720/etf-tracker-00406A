@@ -25,6 +25,7 @@
                 </div>
                 <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 55歲) | 每月定投 NT$5,000</p>
             </div>
+            <!-- API 金鑰快捷設定 -->
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
                 <button onclick="saveAndLoad()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-medium transition whitespace-nowrap">儲存更新</button>
@@ -40,6 +41,7 @@
 
         <!-- ================= 分頁 1：資產與複利總覽 (Overview) ================= -->
         <div id="tab-overview" class="space-y-6">
+            <!-- 即時持股與購買力 -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="card flex flex-col justify-center">
                     <p class="text-sm text-gray-400">最新收盤價</p>
@@ -71,14 +73,29 @@
                 </div>
             </div>
 
+            <!-- 12年複利投影 (DRIP) -->
             <div class="card">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-green-400">🌱 12 年定投複利投影 (DRIP)</h2>
                     <span class="badge bg-green-900 text-green-300">每月投入 NT$5,000</span>
                 </div>
+
+                <!-- 💡 新增：55歲理想財務自由目標 (每月股息) 區塊 -->
+                <div class="bg-gray-800 p-5 rounded-lg mb-6 border border-yellow-500/40 flex justify-between items-center shadow-lg">
+                    <div>
+                        <p class="text-sm text-yellow-500 font-bold mb-1">🎯 理想財務自由目標 (55歲時)</p>
+                        <p class="text-gray-400 text-sm">以預估總市值換算，未來每個月可獲得的被動股息</p>
+                        <div class="mt-2 flex items-baseline gap-2">
+                            <p class="text-4xl font-bold text-yellow-400">NT$ <span id="monthly_dividend_55">0</span></p>
+                            <span class="text-gray-400 text-sm">/ 月</span>
+                        </div>
+                    </div>
+                    <div class="text-6xl hidden md:block">💸</div>
+                </div>
+
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center">
                     <div class="bg-gray-900 p-3 rounded">
-                        <p class="text-sm text-gray-400">總投入本金</p>
+                        <p class="text-sm text-gray-400">12年總投入本金</p>
                         <p class="text-xl font-bold text-white">NT$ 720,000</p>
                     </div>
                     <div class="bg-gray-900 p-3 rounded">
@@ -90,7 +107,7 @@
                         <p class="text-xl font-bold text-blue-400">6.5%</p>
                     </div>
                     <div class="bg-gray-900 p-3 rounded border border-purple-900/50">
-                        <p class="text-sm text-gray-400">股息再投入增值</p>
+                        <p class="text-sm text-gray-400">股息再投入總增值</p>
                         <p class="text-xl font-bold text-purple-400" id="drip_value">計算中...</p>
                     </div>
                 </div>
@@ -106,6 +123,7 @@
                         <h2 class="text-xl font-semibold text-blue-400">📈 00406A 價格與報酬走勢分析</h2>
                         <p class="text-xs text-gray-400 mt-1">自由切換不同週期檢視短期波動與長期趨勢</p>
                     </div>
+                    <!-- 週期切換按鈕 (日 / 週 / 月) -->
                     <div class="flex space-x-2 bg-gray-900 p-1 rounded border border-gray-700">
                         <button onclick="changeTimeframe('daily')" id="tf-daily" class="px-3 py-1 text-xs rounded font-medium bg-blue-600 text-white transition">日K趨勢</button>
                         <button onclick="changeTimeframe('weekly')" id="tf-weekly" class="px-3 py-1 text-xs rounded font-medium text-gray-400 hover:text-white transition">週K曲線</button>
@@ -118,6 +136,7 @@
 
         <!-- ================= 分頁 3：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
+            <!-- 流動性與規模安全雷達 -->
             <div class="card flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div class="flex items-center gap-4">
                     <div class="text-4xl" id="safety_icon">🛡️</div>
@@ -132,6 +151,7 @@
                 </div>
             </div>
 
+            <!-- 二代健保門檻自動偵測 -->
             <div class="card flex justify-between items-center">
                 <div>
                     <p class="text-sm text-gray-400">二代健保門檻自動偵測 (單筆股利 > 2萬扣 2.11%)</p>
@@ -140,6 +160,7 @@
                 <div class="text-4xl" id="health_ins_icon">🛡️</div>
             </div>
 
+            <!-- 股利與除息追蹤 -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="card">
                     <h2 class="text-xl font-semibold mb-4 text-green-400">💵 股利與除息追蹤</h2>
@@ -159,6 +180,7 @@
                     </div>
                 </div>
 
+                <!-- 法人近期買賣超 -->
                 <div class="card">
                     <h2 class="text-xl font-semibold mb-4 text-blue-400">🏛️ 法人近期買賣超</h2>
                     <p class="text-xs text-gray-400 mb-3">最新開盤日籌碼動向 (張)</p>
@@ -205,6 +227,7 @@
             drawSimulationChart();
         };
 
+        // 分頁切換控制
         function switchTab(tabId) {
             ['overview', 'charts', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
@@ -295,7 +318,6 @@
                         const shares = Math.floor(5000 / currentPrice);
                         document.getElementById('buyable_shares').innerText = shares;
 
-                        // 【重點修正 1】改用正確的 Trading_money (成交金額) 欄位，若無則用 收盤價*成交股數 手動計算
                         const closeP = latestPriceObj.close || 0;
                         const volShares = latestPriceObj.Trading_Volume || latestPriceObj.volume || 0;
                         const turnoverVal = latestPriceObj.Trading_money || (closeP * volShares);
@@ -394,7 +416,6 @@
                             return `<span class="text-gray-400">0 張</span>`;
                         };
 
-                        // 【重點修正 2】如果 API 真的有傳回有效的三大法人名字，才顯示張數；否則誠實顯示無資料
                         if(hasMatchedData) {
                             document.getElementById('foreign_buy').innerHTML = formatVol(foreign);
                             document.getElementById('trust_buy').innerHTML = formatVol(trust);
@@ -413,6 +434,7 @@
             }
         }
 
+        // 切換日、週、月走勢圖週期
         function changeTimeframe(tf) {
             ['daily', 'weekly', 'monthly'].forEach(t => {
                 const btn = document.getElementById(`tf-${t}`);
@@ -425,6 +447,7 @@
             renderTrendChart(tf);
         }
 
+        // 渲染日、週、月走勢圖
         function renderTrendChart(timeframe) {
             if(rawPriceData.length === 0) return;
 
@@ -483,9 +506,10 @@
             });
         }
 
+        // 繪製 DRIP 複利圖表與計算
         function drawSimulationChart() {
             const ctx = document.getElementById('dripChart').getContext('2d');
-            const years = 12; 
+            const years = 12; // 43歲到55歲
             const monthlyInvest = 5000;
             const annualRate = 0.065; 
             
@@ -509,8 +533,13 @@
                 }
             }
 
+            // 更新畫面上的試算數值
             document.getElementById('est_value').innerText = `NT$ ${Math.round(totalValue).toLocaleString()}`;
             document.getElementById('drip_value').innerText = `NT$ ${Math.round(totalValue - principal).toLocaleString()}`;
+
+            // 💡 根據總市值與年化報酬，換算出 55 歲時的每月理想被動收入
+            const targetMonthlyDividend = (totalValue * annualRate) / 12;
+            document.getElementById('monthly_dividend_55').innerText = Math.round(targetMonthlyDividend).toLocaleString();
 
             new Chart(ctx, {
                 type: 'line',
