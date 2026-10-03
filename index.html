@@ -134,7 +134,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
                         <h2 class="text-xl font-semibold text-green-400">📝 我的存股手帳 (精確股數版)</h2>
-                        <p class="text-sm text-gray-400 mt-1">若欄位留空會帶入預設值：前期 5000 ➔ 2027/7起 8000 ➔ 55歲後 0 (停扣)。</p>
+                        <p class="text-sm text-gray-400 mt-1">將每月多筆交易匯總為一筆：請修改對應月份的「定投金額」與「買進股價(平均)」。</p>
                     </div>
                     <div class="bg-gray-900 p-2 rounded text-sm text-gray-300 border border-gray-700 text-right w-full md:w-auto">
                         <p>推算60歲最終持股</p>
@@ -330,9 +330,10 @@
         let dripChartInstance = null;
         let currentChartTimeframe = 'daily'; 
         
+        // ★★★ 更新起點：因為對帳單顯示交易始於 2026/09，將起點推前一個月 ★★★
         const startYear = 2026;
-        const startMonth = 10;
-        const totalMonths = 204; 
+        const startMonth = 9;   
+        const totalMonths = 205; 
         
         let customInvestMap = {}; 
         let customPriceMap = {};  
@@ -436,7 +437,6 @@
             runDynamicSimulation();
         }
 
-        // 雙寶儲存函數
         function saveKidAPrice(monthIndex, inputObj) {
             const val = parseFloat(inputObj.value);
             if(isNaN(val) || val <= 0) { delete kidAPriceMap[monthIndex]; } else { kidAPriceMap[monthIndex] = val; }
@@ -672,7 +672,6 @@
             });
         }
 
-        // ================= 動態精確模擬系統 (主帳戶) =================
         function runDynamicSimulation() {
             projectedData = []; 
             
@@ -735,7 +734,6 @@
             drawDRIPChartFromProjection();
         }
 
-        // ================= 動態精確模擬系統 (雙寶帳戶) =================
         function runKidsSimulation() {
             kidsProjectedData = [];
             
@@ -804,7 +802,6 @@
             renderKidsTable(currentSelectedYear);
         }
 
-        // ================= 共用年度切換 UI =================
         function renderYearTabs() {
             const containerMain = document.getElementById('ledger-year-tabs');
             const containerKids = document.getElementById('kids-year-tabs');
