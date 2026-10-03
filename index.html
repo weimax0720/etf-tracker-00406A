@@ -12,6 +12,12 @@
         .badge { display: inline-block; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem; font-weight: 600; }
         .tab-btn { transition: all 0.2s; }
         .tab-btn.active { background-color: #2563eb; color: #ffffff; border-color: #3b82f6; }
+        
+        /* 自訂滾動條樣式，讓表格滑動更美觀 */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -73,14 +79,14 @@
                 </div>
             </div>
 
-            <!-- 12年複利投影 (DRIP) -->
+            <!-- 12年複利投影 (DRIP) 與 成長軌跡表 -->
             <div class="card">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-green-400">🌱 12 年定投複利投影 (DRIP)</h2>
                     <span class="badge bg-green-900 text-green-300">每月投入 NT$5,000</span>
                 </div>
 
-                <!-- 💡 新增：55歲理想財務自由目標 (每月股息) 區塊 -->
+                <!-- 55歲理想財務自由目標 (每月股息) 區塊 -->
                 <div class="bg-gray-800 p-5 rounded-lg mb-6 border border-yellow-500/40 flex justify-between items-center shadow-lg">
                     <div>
                         <p class="text-sm text-yellow-500 font-bold mb-1">🎯 理想財務自由目標 (55歲時)</p>
@@ -111,7 +117,32 @@
                         <p class="text-xl font-bold text-purple-400" id="drip_value">計算中...</p>
                     </div>
                 </div>
+                
                 <canvas id="dripChart" height="100"></canvas>
+
+                <!-- 💡 新增：每月領多少的成長軌跡表 -->
+                <div class="mt-8 bg-gray-900 rounded-lg border border-gray-700 overflow-hidden">
+                    <div class="bg-gray-800 px-4 py-3 border-b border-gray-700">
+                        <h3 class="text-lg font-bold text-blue-300">📋 43歲至55歲 息收成長軌跡表</h3>
+                        <p class="text-xs text-gray-400 mt-1">紀錄定投期間，每長一歲時當年的「總市值」以及「換算每月可領股息」</p>
+                    </div>
+                    <div class="overflow-x-auto max-h-64">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="sticky top-0 bg-gray-800 shadow">
+                                <tr class="text-gray-400 text-sm">
+                                    <th class="py-2 px-4 font-medium">年紀里程碑</th>
+                                    <th class="py-2 px-4 font-medium">累積投入本金</th>
+                                    <th class="py-2 px-4 font-medium text-green-400">預估累積總市值</th>
+                                    <th class="py-2 px-4 font-medium text-yellow-400">當年月領息收 (預估)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dividend_table_body" class="text-sm divide-y divide-gray-800">
+                                <!-- 由 JavaScript 動態生成表格內容 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -318,6 +349,7 @@
                         const shares = Math.floor(5000 / currentPrice);
                         document.getElementById('buyable_shares').innerText = shares;
 
+                        // 改用正確的 Trading_money (成交金額) 欄位，若無則用 收盤價*成交股數 手動計算
                         const closeP = latestPriceObj.close || 0;
                         const volShares = latestPriceObj.Trading_Volume || latestPriceObj.volume || 0;
                         const turnoverVal = latestPriceObj.Trading_money || (closeP * volShares);
@@ -506,7 +538,7 @@
             });
         }
 
-        // 繪製 DRIP 複利圖表與計算
+        // 繪製 DRIP 複利圖表、計算 55 歲目標與生成成長軌跡表
         function drawSimulationChart() {
             const ctx = document.getElementById('dripChart').getContext('2d');
             const years = 12; // 43歲到55歲
@@ -519,17 +551,45 @@
             
             let principal = 0;
             let totalValue = 0;
+            
+            // 用來存放表格的 HTML
+            let tableHtml = '';
 
             for(let i = 0; i <= years; i++) {
-                labels.push((43 + i) + '歲');
+                let currentAge = 43 + i;
+                labels.push(currentAge + '歲');
+                
                 if(i === 0) {
                     principalData.push(0);
                     dripData.push(0);
+                    
+                    // 表格第一行 (起始年)
+                    tableHtml += `
+                        <tr class="hover:bg-gray-700/30 transition-colors">
+                            <td class="py-3 px-4 text-white">${currentAge}歲 (起始)</td>
+                            <td class="py-3 px-4 text-gray-400">NT$ 0</td>
+                            <td class="py-3 px-4 text-green-400">NT$ 0</td>
+                            <td class="py-3 px-4 text-yellow-400 font-bold">NT$ 0</td>
+                        </tr>
+                    `;
                 } else {
                     principal += (monthlyInvest * 12);
                     principalData.push(principal);
                     totalValue = totalValue * (1 + annualRate) + (monthlyInvest * 12 * (1 + annualRate/2)); 
                     dripData.push(Math.round(totalValue));
+                    
+                    // 計算當年度的「預估每月可領股息」 (總市值 * 年殖利率 / 12個月)
+                    let currentMonthlyDividend = (totalValue * annualRate) / 12;
+                    
+                    // 生成表格列
+                    tableHtml += `
+                        <tr class="hover:bg-gray-700/30 transition-colors">
+                            <td class="py-3 px-4 text-white">${currentAge}歲</td>
+                            <td class="py-3 px-4 text-gray-400">NT$ ${principal.toLocaleString()}</td>
+                            <td class="py-3 px-4 text-green-400">NT$ ${Math.round(totalValue).toLocaleString()}</td>
+                            <td class="py-3 px-4 text-yellow-400 font-bold">NT$ ${Math.round(currentMonthlyDividend).toLocaleString()}</td>
+                        </tr>
+                    `;
                 }
             }
 
@@ -537,10 +597,14 @@
             document.getElementById('est_value').innerText = `NT$ ${Math.round(totalValue).toLocaleString()}`;
             document.getElementById('drip_value').innerText = `NT$ ${Math.round(totalValue - principal).toLocaleString()}`;
 
-            // 💡 根據總市值與年化報酬，換算出 55 歲時的每月理想被動收入
+            // 更新 55 歲目標每月股息
             const targetMonthlyDividend = (totalValue * annualRate) / 12;
             document.getElementById('monthly_dividend_55').innerText = Math.round(targetMonthlyDividend).toLocaleString();
+            
+            // 將生成的表格注入到 HTML 中
+            document.getElementById('dividend_table_body').innerHTML = tableHtml;
 
+            // 繪製圖表
             new Chart(ctx, {
                 type: 'line',
                 data: {
