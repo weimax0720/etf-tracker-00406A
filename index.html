@@ -195,7 +195,7 @@
         
         let latestDividend = 0; 
         let currentPrice = 0;   
-        let rawPriceData = [];  // 儲存原始歷史股價以供日週月切換
+        let rawPriceData = [];  
         let trendChartInstance = null;
         
         window.onload = () => {
@@ -213,7 +213,6 @@
             drawSimulationChart();
         };
 
-        // 分頁切換控制
         function switchTab(tabId) {
             ['overview', 'charts', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
@@ -284,7 +283,7 @@
         async function fetchData(token) {
             const today = new Date();
             const yearStart = `${today.getFullYear()}-01-01`;
-            const monthAgoDate = new Date(today.getTime() - 90 * 24 * 60 * 60 * 1000); // 抓取 90 天以支援週月K線
+            const monthAgoDate = new Date(today.getTime() - 90 * 24 * 60 * 60 * 1000); 
             const monthAgo = monthAgoDate.toISOString().split('T')[0];
 
             try {
@@ -304,8 +303,10 @@
                         const shares = Math.floor(5000 / currentPrice);
                         document.getElementById('buyable_shares').innerText = shares;
 
-                        // 兼容處理 FinMind 各種成交額欄位大小寫
-                        const turnoverVal = latestPriceObj.Trading_turnover || latestPriceObj.turnover || (latestPriceObj.close * latestPriceObj.Trading_Volume);
+                        // 強制利用收盤價乘以成交股數來計算總成交金額 (避免 API 欄位缺失)
+                        const closeP = latestPriceObj.close || 0;
+                        const volShares = latestPriceObj.Trading_Volume || latestPriceObj.volume || 0;
+                        const turnoverVal = latestPriceObj.Trading_turnover || latestPriceObj.turnover || (closeP * volShares);
                         const turnoverInYi = turnoverVal / 100000000; 
                         
                         document.getElementById('trading_turnover').innerText = `NT$ ${turnoverInYi.toFixed(2)} 億`;
@@ -313,9 +314,12 @@
                         const safetyStatus = document.getElementById('safety_status');
                         const safetyIcon = document.getElementById('safety_icon');
 
-                        if (turnoverInYi < 5) {
+                        if (turnoverInYi > 0 && turnoverInYi < 5) {
                             safetyStatus.innerHTML = `<span class="text-red-400 font-bold">⚠ 警告：成交額低於 5 億台幣 (${turnoverInYi.toFixed(2)}億)！</span> 流動性偏低，請留意買賣滑價。`;
                             safetyIcon.innerHTML = "🚨";
+                        } else if (turnoverInYi === 0) {
+                            safetyStatus.innerHTML = `<span class="text-yellow-400 font-bold">ℹ 今日尚未結算或為非交易時段</span>`;
+                            safetyIcon.innerHTML = "⏳";
                         } else {
                             safetyStatus.innerHTML = `<span class="text-green-400 font-bold">✅ 流動性健康</span> (成交額 ${turnoverInYi.toFixed(2)} 億，大於 5 億安全門檻)`;
                             safetyIcon.innerHTML = "🛡️";
@@ -396,7 +400,6 @@
             }
         }
 
-        // 切換日、週、月走勢圖週期
         function changeTimeframe(tf) {
             ['daily', 'weekly', 'monthly'].forEach(t => {
                 const btn = document.getElementById(`tf-${t}`);
@@ -409,7 +412,6 @@
             renderTrendChart(tf);
         }
 
-        // 渲染日、週、月走勢圖
         function renderTrendChart(timeframe) {
             if(rawPriceData.length === 0) return;
 
@@ -417,12 +419,10 @@
             let dataPoints = [];
 
             if(timeframe === 'daily') {
-                // 日K：取最近 30 筆
                 const sliceData = rawPriceData.slice(-30);
-                labels = sliceData.map(d => d.date.slice(5)); // 顯示 MM-DD
+                labels = sliceData.map(d => d.date.slice(5)); 
                 dataPoints = sliceData.map(d => d.close);
             } else if(timeframe === 'weekly') {
-                // 週K：每 5 個交易日取一筆代表
                 let weeklyData = [];
                 for(let i = 0; i < rawPriceData.length; i += 5) {
                     weeklyData.push(rawPriceData[i]);
@@ -430,10 +430,9 @@
                 labels = weeklyData.map(d => d.date.slice(5));
                 dataPoints = weeklyData.map(d => d.close);
             } else if(timeframe === 'monthly') {
-                // 月K：依月份分組取最後一筆
                 let monthlyMap = {};
                 rawPriceData.forEach(d => {
-                    let monthKey = d.date.slice(0, 7); // YYYY-MM
+                    let monthKey = d.date.slice(0, 7); 
                     monthlyMap[monthKey] = d.close;
                 });
                 labels = Object.keys(monthlyMap);
@@ -471,7 +470,6 @@
             });
         }
 
-        // 繪製 DRIP 複利圖表
         function drawSimulationChart() {
             const ctx = document.getElementById('dripChart').getContext('2d');
             const years = 12; 
