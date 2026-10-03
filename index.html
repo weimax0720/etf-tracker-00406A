@@ -33,7 +33,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 55歲後停扣滑行退休</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 包含雙寶每週存股計畫</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -43,8 +43,9 @@
 
         <!-- 導覽分頁按鈕 (Tabs) -->
         <div class="flex border-b border-gray-700 space-x-2 overflow-x-auto pb-2">
-            <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn active px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-200 whitespace-nowrap">📊 資產與即時領息</button>
-            <button onclick="switchTab('ledger')" id="btn-ledger" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📝 每月存股手帳</button>
+            <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn active px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-200 whitespace-nowrap">📊 我的資產總覽</button>
+            <button onclick="switchTab('ledger')" id="btn-ledger" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📝 我的存股手帳</button>
+            <button onclick="switchTab('kids')" id="btn-kids" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-pink-400 whitespace-nowrap">👧 雙寶存股手帳</button>
             <button onclick="switchTab('charts')" id="btn-charts" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📈 走勢與日週月</button>
             <button onclick="switchTab('safety')" id="btn-safety" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">🛡️ 流動性雷達</button>
         </div>
@@ -127,16 +128,16 @@
             </div>
         </div>
 
-        <!-- ================= 分頁 2：每月存股手帳 (Ledger) ================= -->
+        <!-- ================= 分頁 2：我的存股手帳 ================= -->
         <div id="tab-ledger" class="space-y-6 hidden">
             <div class="card">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
-                        <h2 class="text-xl font-semibold text-green-400">📝 每月存股手帳 (精確股數版)</h2>
+                        <h2 class="text-xl font-semibold text-green-400">📝 我的存股手帳 (精確股數版)</h2>
                         <p class="text-sm text-gray-400 mt-1">若欄位留空會帶入預設值：前期 5000 ➔ 2027/7起 8000 ➔ 55歲後 0 (停扣)。</p>
                     </div>
                     <div class="bg-gray-900 p-2 rounded text-sm text-gray-300 border border-gray-700 text-right w-full md:w-auto">
-                        <p>手帳推算60歲最終持股</p>
+                        <p>推算60歲最終持股</p>
                         <p class="text-xl font-bold text-green-400" id="ledger_total_shares">0 股</p>
                     </div>
                 </div>
@@ -151,9 +152,9 @@
                         <thead class="bg-gray-800 border-b border-gray-700 text-sm text-gray-400">
                             <tr>
                                 <th class="py-3 px-3 font-medium">年月 (期數)</th>
-                                <th class="py-3 px-2 font-medium text-gray-300" title="若留空，系統將自行預估成長股價">買進股價 (NT$) ✏️</th>
+                                <th class="py-3 px-2 font-medium text-gray-300">買進股價 (NT$) ✏️</th>
                                 <th class="py-3 px-2 font-medium text-blue-300">定投金額 (NT$) ✏️</th>
-                                <th class="py-3 px-2 font-medium text-green-300" title="輸入配息再投入所買到的零股數">配息買股 (股) ✏️</th>
+                                <th class="py-3 px-2 font-medium text-green-300">配息買股 (股) ✏️</th>
                                 <th class="py-3 px-2 font-medium text-purple-300">額外加碼 (股) ✏️</th>
                                 <th class="py-3 px-3 font-medium text-right">累積總股數</th>
                                 <th class="py-3 px-3 font-medium text-right text-yellow-400">推算總市值</th>
@@ -167,7 +168,62 @@
             </div>
         </div>
 
-        <!-- ================= 分頁 3：走勢與日週月曲線 (Charts) ================= -->
+        <!-- ================= 分頁 3：雙寶存股手帳 ================= -->
+        <div id="tab-kids" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-800 p-5 rounded-lg border border-pink-700/50 shadow-lg relative overflow-hidden">
+                    <div class="absolute right-[-10px] top-[-10px] text-6xl opacity-10">👧</div>
+                    <p class="text-sm text-pink-300 font-bold mb-1">大寶專屬帳戶 (預估最終)</p>
+                    <p class="text-gray-400 text-xs mb-3">累積總市值與每月配息</p>
+                    <div class="flex justify-between items-end">
+                        <p class="text-3xl font-bold text-pink-400">NT$ <span id="kid_a_market_value">0</span></p>
+                        <p class="text-sm text-gray-300">月領: <span class="text-green-400 font-bold" id="kid_a_dividend">0</span></p>
+                    </div>
+                </div>
+                <div class="bg-gray-800 p-5 rounded-lg border border-blue-700/50 shadow-lg relative overflow-hidden">
+                    <div class="absolute right-[-10px] top-[-10px] text-6xl opacity-10">👶</div>
+                    <p class="text-sm text-blue-300 font-bold mb-1">二寶專屬帳戶 (預估最終)</p>
+                    <p class="text-gray-400 text-xs mb-3">累積總市值與每月配息</p>
+                    <div class="flex justify-between items-end">
+                        <p class="text-3xl font-bold text-blue-400">NT$ <span id="kid_b_market_value">0</span></p>
+                        <p class="text-sm text-gray-300">月領: <span class="text-green-400 font-bold" id="kid_b_dividend">0</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                    <div>
+                        <h2 class="text-xl font-semibold text-pink-400">👧 雙寶每週 100 元存股手帳</h2>
+                        <p class="text-sm text-gray-400 mt-1">每週 100 元，換算平均每月預算為 <span class="text-white font-bold">433 元</span>。幫她們買入後，直接在此輸入實買股數即可。</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2 mb-4" id="kids-year-tabs">
+                    <!-- JS 動態產生年份按鈕 -->
+                </div>
+
+                <div class="overflow-x-auto border border-gray-700 rounded-lg">
+                    <table class="w-full text-left border-collapse min-w-[750px]">
+                        <thead class="bg-gray-800 border-b border-gray-700 text-sm text-gray-400">
+                            <tr>
+                                <th class="py-3 px-4 font-medium">年月 (期數)</th>
+                                <th class="py-3 px-4 font-medium text-gray-300">預估股價</th>
+                                <th class="py-3 px-4 font-medium text-pink-300">大寶實買 (股) ✏️</th>
+                                <th class="py-3 px-4 font-medium text-blue-300">二寶實買 (股) ✏️</th>
+                                <th class="py-3 px-4 font-medium text-right">大寶累計總股數</th>
+                                <th class="py-3 px-4 font-medium text-right">二寶累計總股數</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kids_table_body" class="text-sm divide-y divide-gray-800 bg-gray-900">
+                            <!-- JS 動態產生該年 12 個月 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 分頁 4：走勢與日週月曲線 (Charts) ================= -->
         <div id="tab-charts" class="space-y-6 hidden">
             <div class="card">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
@@ -185,7 +241,7 @@
             </div>
         </div>
 
-        <!-- ================= 分頁 4：流動性與風險雷達 (Safety) ================= -->
+        <!-- ================= 分頁 5：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
             <div class="card flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div class="flex items-center gap-4">
@@ -258,6 +314,10 @@
         const LEDGER_DRIP_KEY = '00406A_LEDGER_DRIP';     
         const LEDGER_EXTRA_KEY = '00406A_LEDGER_EXTRA';   
         
+        // 雙寶資料儲存 Key
+        const LEDGER_KID_A_KEY = '00406A_LEDGER_KID_A';
+        const LEDGER_KID_B_KEY = '00406A_LEDGER_KID_B';
+        
         let latestDividend = 0; 
         let currentPrice = 0;   
         let rawPriceData = [];  
@@ -267,7 +327,6 @@
         
         const startYear = 2026;
         const startMonth = 10;
-        // 延長至 17 年 (12年到55歲 + 5年滑行至60歲 = 204個月)
         const totalMonths = 204; 
         
         let customInvestMap = {}; 
@@ -276,6 +335,10 @@
         let extraSharesMap = {};  
         let projectedData = [];   
         let currentSelectedYear = startYear; 
+
+        let kidAMap = {};
+        let kidBMap = {};
+        let kidsProjectedData = [];
 
         window.onload = () => {
             const savedKey = localStorage.getItem(KEY_NAME);
@@ -288,20 +351,35 @@
             if(localStorage.getItem(LEDGER_PRICE_KEY)) customPriceMap = JSON.parse(localStorage.getItem(LEDGER_PRICE_KEY));
             if(localStorage.getItem(LEDGER_DRIP_KEY)) customDripMap = JSON.parse(localStorage.getItem(LEDGER_DRIP_KEY));
             if(localStorage.getItem(LEDGER_EXTRA_KEY)) extraSharesMap = JSON.parse(localStorage.getItem(LEDGER_EXTRA_KEY));
+            
+            if(localStorage.getItem(LEDGER_KID_A_KEY)) kidAMap = JSON.parse(localStorage.getItem(LEDGER_KID_A_KEY));
+            if(localStorage.getItem(LEDGER_KID_B_KEY)) kidBMap = JSON.parse(localStorage.getItem(LEDGER_KID_B_KEY));
 
             renderYearTabs();
             runDynamicSimulation(); 
+            runKidsSimulation();
         };
 
         function switchTab(tabId) {
-            ['overview', 'ledger', 'charts', 'safety'].forEach(id => {
+            ['overview', 'ledger', 'kids', 'charts', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
                 document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
-                document.getElementById(`btn-${id}`).classList.add('text-gray-400');
+                if (id === 'kids') {
+                    document.getElementById(`btn-${id}`).classList.remove('text-pink-400');
+                } else {
+                    document.getElementById(`btn-${id}`).classList.remove('text-gray-400');
+                }
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
-            document.getElementById(`btn-${tabId}`).classList.remove('text-gray-400');
+            
+            // 恢復未選中狀態的顏色
+            ['overview', 'ledger', 'kids', 'charts', 'safety'].forEach(id => {
+                if(id !== tabId) {
+                    if (id === 'kids') document.getElementById(`btn-${id}`).classList.add('text-pink-400');
+                    else document.getElementById(`btn-${id}`).classList.add('text-gray-400');
+                }
+            });
             
             if(tabId === 'charts' && rawPriceData.length > 0) {
                 renderTrendChart(currentChartTimeframe); 
@@ -329,6 +407,7 @@
             if(isNaN(val) || val <= 0) { delete customPriceMap[monthIndex]; } else { customPriceMap[monthIndex] = val; }
             localStorage.setItem(LEDGER_PRICE_KEY, JSON.stringify(customPriceMap));
             runDynamicSimulation();
+            runKidsSimulation(); // 雙寶也跟著預估股價跑
         }
         function saveCustomInvest(monthIndex, inputObj) {
             const val = parseFloat(inputObj.value);
@@ -347,6 +426,20 @@
             if(isNaN(val) || val < 0) { delete extraSharesMap[monthIndex]; } else { extraSharesMap[monthIndex] = val; }
             localStorage.setItem(LEDGER_EXTRA_KEY, JSON.stringify(extraSharesMap));
             runDynamicSimulation();
+        }
+
+        // 雙寶儲存函數
+        function saveKidAShares(monthIndex, inputObj) {
+            const val = parseInt(inputObj.value);
+            if(isNaN(val) || val < 0) { delete kidAMap[monthIndex]; } else { kidAMap[monthIndex] = val; }
+            localStorage.setItem(LEDGER_KID_A_KEY, JSON.stringify(kidAMap));
+            runKidsSimulation();
+        }
+        function saveKidBShares(monthIndex, inputObj) {
+            const val = parseInt(inputObj.value);
+            if(isNaN(val) || val < 0) { delete kidBMap[monthIndex]; } else { kidBMap[monthIndex] = val; }
+            localStorage.setItem(LEDGER_KID_B_KEY, JSON.stringify(kidBMap));
+            runKidsSimulation();
         }
 
         function updateHoldingCalculations() {
@@ -473,6 +566,7 @@
 
                 updateHoldingCalculations();
                 runDynamicSimulation();
+                runKidsSimulation();
 
                 const invUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockInstitutionalInvestorsBuySell&data_id=00406A&start_date=${monthAgo}&token=${token}`;
                 const invRes = await fetch(invUrl);
@@ -558,7 +652,7 @@
             });
         }
 
-        // ================= 動態精確模擬系統 (升級版) =================
+        // ================= 動態精確模擬系統 (主帳戶) =================
         
         function runDynamicSimulation() {
             projectedData = []; 
@@ -574,29 +668,24 @@
             let currentM = startMonth;
 
             for(let i = 0; i < totalMonths; i++) {
-                // 1. 決定執行股價
                 let manualPrice = customPriceMap[i];
                 let execPrice = (manualPrice && manualPrice > 0) ? manualPrice : simulatedPrice;
 
-                // 2. 決定定投金額邏輯：前段5千 -> 2027/7起8千 -> 55歲後(第144期起)0元停扣
                 let defaultInvestForMonth = 0;
                 if (i < 144) {
                     defaultInvestForMonth = (currentY > 2027 || (currentY === 2027 && currentM >= 7)) ? 8000 : 5000;
                 } else {
-                    defaultInvestForMonth = 0; // 55歲後停止投入
+                    defaultInvestForMonth = 0; 
                 }
                 
                 let investAmount = (customInvestMap[i] !== undefined && customInvestMap[i] !== '') ? parseFloat(customInvestMap[i]) : defaultInvestForMonth;
                 let regularShares = Math.floor(investAmount / execPrice);
                 
-                // 3. 預估配息現金
                 let monthDividendIncome = runningShares * baseDividend;
                 
-                // 4. 決定配息買入股數 (DRIP)
                 let manualDrip = customDripMap[i];
                 let dripShares = (manualDrip !== undefined && manualDrip !== '') ? manualDrip : Math.floor(monthDividendIncome / execPrice);
                 
-                // 5. 額外加碼
                 let extraS = extraSharesMap[i] || 0;
                 
                 runningShares += (regularShares + extraS + dripShares);
@@ -616,7 +705,6 @@
                 simulatedPrice *= (1 + monthlyGrowthRate); 
             }
 
-            // 更新總覽雙目標
             const target55Data = projectedData[143] || projectedData[projectedData.length - 1]; 
             const target60Data = projectedData[projectedData.length - 1]; 
             
@@ -628,28 +716,98 @@
             drawDRIPChartFromProjection();
         }
 
+        // ================= 動態精確模擬系統 (雙寶帳戶) =================
+        function runKidsSimulation() {
+            kidsProjectedData = [];
+            
+            const basePrice = currentPrice > 0 ? currentPrice : 15.0; 
+            const baseDividend = latestDividend > 0 ? latestDividend : 0.138;
+            
+            let runningSharesA = 0; 
+            let runningSharesB = 0; 
+            
+            let simulatedPrice = basePrice;
+            const monthlyGrowthRate = Math.pow(1.065, 1/12) - 1; 
+
+            let currentY = startYear;
+            let currentM = startMonth;
+
+            // 每週 100 元，一年 5200，平均一個月約 433 元
+            const monthlyBudget = 433;
+
+            for(let i = 0; i < totalMonths; i++) {
+                // 優先取主帳戶設定的股價
+                let manualPrice = customPriceMap[i];
+                let execPrice = (manualPrice && manualPrice > 0) ? manualPrice : simulatedPrice;
+
+                // 預估本月自動買到的股數 (433元)
+                let defaultBuyShares = Math.floor(monthlyBudget / execPrice);
+
+                // 大寶
+                let manualA = kidAMap[i];
+                let divA = runningSharesA * baseDividend;
+                let dripA = Math.floor(divA / execPrice);
+                let buyA = (manualA !== undefined && manualA !== '') ? manualA : defaultBuyShares;
+                runningSharesA += (buyA + dripA);
+
+                // 二寶
+                let manualB = kidBMap[i];
+                let divB = runningSharesB * baseDividend;
+                let dripB = Math.floor(divB / execPrice);
+                let buyB = (manualB !== undefined && manualB !== '') ? manualB : defaultBuyShares;
+                runningSharesB += (buyB + dripB);
+
+                kidsProjectedData.push({
+                    index: i, year: currentY, month: currentM,
+                    execPrice: execPrice, defaultBuyShares: defaultBuyShares,
+                    buyA: buyA, totalA: runningSharesA, divA: divA, valueA: runningSharesA * execPrice, isManualA: (manualA !== undefined && manualA !== ''),
+                    buyB: buyB, totalB: runningSharesB, divB: divB, valueB: runningSharesB * execPrice, isManualB: (manualB !== undefined && manualB !== '')
+                });
+
+                currentM++;
+                if(currentM > 12) { currentM = 1; currentY++; }
+                simulatedPrice *= (1 + monthlyGrowthRate); 
+            }
+
+            const finalKids = kidsProjectedData[kidsProjectedData.length - 1];
+            
+            document.getElementById('kid_a_market_value').innerText = Math.round(finalKids.valueA).toLocaleString();
+            document.getElementById('kid_a_dividend').innerText = Math.round(finalKids.divA).toLocaleString();
+            
+            document.getElementById('kid_b_market_value').innerText = Math.round(finalKids.valueB).toLocaleString();
+            document.getElementById('kid_b_dividend').innerText = Math.round(finalKids.divB).toLocaleString();
+            
+            renderKidsTable(currentSelectedYear);
+        }
+
+        // ================= 共用年度切換 UI =================
         function renderYearTabs() {
-            const container = document.getElementById('ledger-year-tabs');
-            let html = '';
-            // 產生 17 個年份按鈕 (到 60 歲)
+            const containerMain = document.getElementById('ledger-year-tabs');
+            const containerKids = document.getElementById('kids-year-tabs');
+            let htmlMain = '';
+            let htmlKids = '';
+            
             for(let i = 0; i <= 17; i++) {
                 let y = startYear + i;
                 let age = 43 + i;
                 let activeClass = (y === currentSelectedYear) ? 'active bg-emerald-500 text-white border-emerald-600' : 'bg-gray-800 text-gray-400 border-gray-700 hover:text-white';
                 
-                // 特別標示 55 歲的轉折點
                 let phaseLabel = '';
                 if(age >= 55) phaseLabel = ' 🏖️停扣';
                 
-                html += `<button onclick="changeYear(${y})" id="tab-year-${y}" class="year-btn px-3 py-1 text-sm rounded border ${activeClass}">${y} (${age}歲${phaseLabel})</button>`;
+                let btnHtml = `<button onclick="changeYear(${y})" class="year-btn px-3 py-1 text-sm rounded border ${activeClass}">${y} (${age}歲${phaseLabel})</button>`;
+                htmlMain += btnHtml;
+                htmlKids += btnHtml;
             }
-            container.innerHTML = html;
+            containerMain.innerHTML = htmlMain;
+            containerKids.innerHTML = htmlKids;
         }
 
         function changeYear(year) {
             currentSelectedYear = year;
             renderYearTabs();
             renderLedgerTable(year);
+            renderKidsTable(year);
         }
 
         function renderLedgerTable(year) {
@@ -689,6 +847,40 @@
                         </td>
                         <td class="py-2 px-3 text-white font-bold text-right">${Math.round(d.totalShares).toLocaleString()}</td>
                         <td class="py-2 px-3 text-yellow-400 text-right">NT$ ${Math.round(d.marketValue).toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function renderKidsTable(year) {
+            const tbody = document.getElementById('kids_table_body');
+            const yearData = kidsProjectedData.filter(d => d.year === year);
+            
+            if(yearData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-gray-500">該年度無資料</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            yearData.forEach(d => {
+                let formattedMonth = d.month.toString().padStart(2, '0');
+                
+                let currentValA = d.isManualA ? d.buyA : '';
+                let currentValB = d.isManualB ? d.buyB : '';
+                
+                html += `
+                    <tr class="hover:bg-gray-700/50 transition-colors">
+                        <td class="py-2 px-4 text-white">${d.year}-${formattedMonth}</td>
+                        <td class="py-2 px-4 text-gray-400">NT$ ${d.execPrice.toFixed(2)}</td>
+                        <td class="py-2 px-4">
+                            <input type="number" onchange="saveKidAShares(${d.index}, this)" value="${currentValA}" placeholder="${d.defaultBuyShares}" class="w-20 px-2 py-1 bg-gray-900 border border-pink-800 rounded text-pink-300 text-sm focus:outline-none focus:border-pink-500">
+                        </td>
+                        <td class="py-2 px-4">
+                            <input type="number" onchange="saveKidBShares(${d.index}, this)" value="${currentValB}" placeholder="${d.defaultBuyShares}" class="w-20 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-blue-300 text-sm focus:outline-none focus:border-blue-500">
+                        </td>
+                        <td class="py-2 px-4 text-white text-right">${Math.round(d.totalA).toLocaleString()} 股</td>
+                        <td class="py-2 px-4 text-white text-right">${Math.round(d.totalB).toLocaleString()} 股</td>
                     </tr>
                 `;
             });
