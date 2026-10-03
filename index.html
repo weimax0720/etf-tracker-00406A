@@ -46,7 +46,7 @@
                 </div>
             </div>
             
-            <!-- 新增：真實持股水位輸入 -->
+            <!-- 真實持股水位輸入 -->
             <div class="bg-gray-800 p-4 rounded-lg border border-blue-700/50 flex flex-col justify-center">
                 <p class="text-sm text-blue-300">我的真實持股 (股)</p>
                 <div class="flex space-x-2 mt-2">
@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <!-- 新增：真實庫存市值試算 -->
+            <!-- 真實庫存市值試算 -->
             <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center">
                 <p class="text-sm text-gray-400">真實庫存總市值</p>
                 <div class="flex justify-between items-center mt-1">
@@ -64,13 +64,28 @@
                 </div>
             </div>
 
-            <!-- 二代健保移至下方佔滿全寬 -->
+            <!-- 新增：流動性與安全防護網警示區塊 -->
+            <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 col-span-2 md:col-span-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="text-3xl" id="safety_icon">🛡️</div>
+                    <div>
+                        <p class="text-sm text-gray-400">ETF 流動性與規模安全雷達 (交易額 & 交易量監控)</p>
+                        <p class="text-base font-bold text-white mt-1" id="safety_status">等待 API 資料載入以進行安全評估...</p>
+                    </div>
+                </div>
+                <div class="bg-gray-900 px-4 py-2 rounded border border-gray-700 text-right w-full md:w-auto">
+                    <p class="text-xs text-gray-400">最近交易額</p>
+                    <p class="text-lg font-bold text-blue-400" id="trading_turnover">NT$ -- 億</p>
+                </div>
+            </div>
+
+            <!-- 二代健保門檻自動偵測 -->
             <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex justify-between items-center col-span-2 md:col-span-4">
                 <div>
                     <p class="text-sm text-gray-400">二代健保門檻自動偵測 (依據真實持股試算)</p>
                     <p class="text-lg font-bold text-white mt-1" id="health_ins_status">等待股價與配息資料...</p>
                 </div>
-                <div class="text-3xl" id="health_ins_icon">🛡️</div>
+                <div class="text-3xl" id="health_ins_icon">🛡️️</div>
             </div>
         </div>
 
@@ -188,20 +203,18 @@
 
     <script>
         const KEY_NAME = '00406A_FINMIND_KEY';
-        const SHARES_KEY = '00406A_REAL_SHARES'; // 儲存真實股數的金鑰名稱
+        const SHARES_KEY = '00406A_REAL_SHARES';
         
         let latestDividend = 0; 
         let currentPrice = 0;   
         
         window.onload = () => {
-            // 載入 API 金鑰
             const savedKey = localStorage.getItem(KEY_NAME);
             if(savedKey) {
                 document.getElementById('api_key').value = savedKey;
                 fetchData(savedKey);
             }
             
-            // 載入真實股數
             const savedShares = localStorage.getItem(SHARES_KEY);
             if(savedShares) {
                 document.getElementById('real_shares_input').value = savedShares;
@@ -221,7 +234,6 @@
             alert('金鑰已儲存！正在抓取最新市場資料...');
         }
 
-        // 儲存並計算真實股數
         function saveShares() {
             const shares = document.getElementById('real_shares_input').value;
             if(shares === '' || shares < 0) {
@@ -229,20 +241,17 @@
                 return;
             }
             localStorage.setItem(SHARES_KEY, shares);
-            updateHoldingCalculations(); // 更新市值與健保試算
+            updateHoldingCalculations();
         }
 
-        // 更新依賴於真實股數的計算結果
         function updateHoldingCalculations() {
             const shares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
             
-            // 1. 更新真實庫存市值
             if(currentPrice > 0) {
                 const marketValue = Math.round(shares * currentPrice);
                 document.getElementById('real_market_value').innerText = marketValue.toLocaleString();
             }
 
-            // 2. 更新二代健保試算
             if(latestDividend > 0) {
                 const totalDividend = shares * latestDividend;
                 const healthInsStatus = document.getElementById('health_ins_status');
@@ -255,7 +264,7 @@
                     healthInsStatus.innerHTML = `<span class="text-red-400">達標！需扣繳 2.11% 補充保費</span> (試算單筆股利: ${Math.round(totalDividend).toLocaleString()}元)`;
                     healthInsIcon.innerHTML = "⚠️";
                 } else {
-                    healthInsStatus.innerHTML = `<span class="text-green-400">安全免扣繳</span> (試算單筆股利: ${Math.round(totalDividend).toLocaleString()}元，未達兩萬)`;
+                    healthInsStatus.innerHTML = `<span class="text-green-400">安全免扣繳</span> (試算單筆股利: ${Math.round(totalDividend).toLocaleString()}元服務，未達兩萬)`;
                     healthInsIcon.innerHTML = "✅";
                 }
             }
@@ -268,7 +277,7 @@
             const monthAgo = monthAgoDate.toISOString().split('T')[0];
 
             try {
-                // A. 獲取每日股價
+                // A. 獲取每日股價與成交額
                 const priceUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=00406A&start_date=${monthAgo}&token=${token}`;
                 const priceRes = await fetch(priceUrl);
                 const priceData = await priceRes.json();
@@ -281,8 +290,25 @@
                     // 換算 5000 元可買股數
                     const shares = Math.floor(5000 / currentPrice);
                     document.getElementById('buyable_shares').innerText = shares;
+
+                    // 計算成交額 (成交金額 turnover 或 close * volume)
+                    const turnover = latestPriceObj.Trading_turnover || (latestPriceObj.close * latestPriceObj.Trading_Volume);
+                    const turnoverInYi = turnover / 100000000; // 換算成億
                     
-                    // 股價更新後，連帶更新市值計算
+                    document.getElementById('trading_turnover').innerText = `NT$ ${turnoverInYi.toFixed(2)} 億`;
+
+                    // 流動性安全檢測 (低於 5 億發出警告)
+                    const safetyStatus = document.getElementById('safety_status');
+                    const safetyIcon = document.getElementById('safety_icon');
+
+                    if (turnoverInYi < 5) {
+                        safetyStatus.innerHTML = `<span class="text-red-400 font-bold">⚠️️ 警告：日交易額低於 5 億台幣 (${turnoverInYi.toFixed(2)}億)！</span> 流動性偏低，買賣請注意折溢價與滑價風險。`;
+                        safetyIcon.innerHTML = "🚨";
+                    } else {
+                        safetyStatus.innerHTML = `<span class="text-green-400 font-bold">✅ 流動性健康</span> (日交易額 ${turnoverInYi.toFixed(2)} 億，大於 5 億安全門檻)`;
+                        safetyIcon.innerHTML = "🛡️";
+                    }
+                    
                     updateHoldingCalculations();
                 }
 
@@ -299,7 +325,6 @@
                     document.getElementById('pay_date').innerText = latest.CashDividendPaymentDate || '無資料';
                     document.getElementById('div_amount').innerText = latestDividend + ' 元/股';
                     
-                    // 股利更新後，連帶更新二代健保計算
                     updateHoldingCalculations();
 
                     if(latest.CashExDividendTradingDate) {
