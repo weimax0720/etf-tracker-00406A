@@ -33,7 +33,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 雙 API 即時報價引擎</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | Yahoo即時報價 + 證交所官方籌碼</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -54,7 +54,6 @@
         <div id="tab-overview" class="space-y-6">
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center relative overflow-hidden">
-                    <!-- 發光特效標示即時連線 -->
                     <div id="live_indicator" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-gray-600"></div>
                     <p class="text-sm text-gray-400" id="price_label">最新股價 (讀取中...)</p>
                     <div class="flex justify-between items-center mt-1">
@@ -172,7 +171,7 @@
 
         <!-- ================= 分頁 3：雙寶存股手帳 ================= -->
         <div id="tab-kids" class="space-y-6 hidden">
-            <!-- 雙寶資訊卡 (升級為即時連動版本) -->
+            <!-- 雙寶資訊卡 -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- 大寶 -->
                 <div class="bg-gray-800 p-5 rounded-lg border border-pink-700/50 shadow-lg relative overflow-hidden">
@@ -366,7 +365,8 @@
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card relative overflow-hidden">
+                    <div class="absolute right-0 top-0 text-xs bg-blue-900/50 text-blue-300 px-2 py-1 rounded-bl">TWSE 證交所官方直連</div>
                     <h2 class="text-xl font-semibold mb-4 text-blue-400">🏛️ 法人近期買賣超</h2>
                     <p class="text-xs text-gray-400 mb-3">最新開盤日籌碼動向 (張)</p>
                     <div class="space-y-3">
@@ -580,7 +580,7 @@
             const monthAgo = monthAgoDate.toISOString().split('T')[0];
 
             try {
-                // 1. 先抓取 FinMind 的歷史走勢與籌碼資料 (做為保底與圖表使用)
+                // 1. 先抓取 FinMind 的歷史走勢 (做為保底與圖表使用)
                 const priceUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=00406A&start_date=${yearAgo}&token=${token}`;
                 const priceRes = await fetch(priceUrl);
                 const priceData = await priceRes.json();
@@ -595,7 +595,6 @@
                         document.getElementById('price_label').innerText = '歷史收盤價 (FinMind)';
                         document.getElementById('live_indicator').classList.replace('bg-green-400', 'bg-gray-600');
                         
-                        // 計算月均成交量 (抓最近20個交易日)
                         const last20Days = rawPriceData.slice(-20);
                         const totalVolumeShares = last20Days.reduce((sum, d) => sum + (d.Trading_Volume || d.volume || 0), 0);
                         const avgVolumeShares = totalVolumeShares / last20Days.length;
@@ -638,8 +637,7 @@
                     }
                 }
 
-                // ★★★ 2. 透過 Yahoo Finance API 抓取「盤中即時股價」 ★★★
-                // 採用免費的 allorigins CORS Proxy 來跨越瀏覽器限制
+                // 2. 透過 Yahoo Finance API 抓取「盤中即時股價」
                 try {
                     const yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/00406A.TW?interval=1m&range=1d';
                     const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(yahooUrl)}`;
@@ -651,13 +649,12 @@
                     if (yData && yData.chart && yData.chart.result && yData.chart.result.length > 0) {
                         const realTimePrice = yData.chart.result[0].meta.regularMarketPrice;
                         if (realTimePrice && realTimePrice > 0) {
-                            currentPrice = realTimePrice; // 成功覆蓋為即時股價
+                            currentPrice = realTimePrice; 
                             
                             document.getElementById('latest_price').innerText = currentPrice.toFixed(2);
                             document.getElementById('latest_price').classList.add('text-yellow-400');
                             document.getElementById('price_label').innerHTML = '盤中即時市價 <span class="text-xs text-yellow-500">(Yahoo即時連線)</span>';
                             
-                            // 點亮綠燈特效
                             document.getElementById('live_indicator').classList.replace('bg-gray-600', 'bg-green-400');
                             document.getElementById('live_indicator').classList.add('animate-pulse', 'shadow-[0_0_8px_rgba(74,222,128,0.8)]');
                         }
@@ -666,7 +663,6 @@
                     console.log("Yahoo即時報價抓取失敗，維持使用 FinMind 歷史收盤價", err);
                 }
 
-                // 在這裡才去更新購買力，確保用到的是最精準的 currentPrice
                 const currentYear = today.getFullYear();
                 const currentMonth = today.getMonth() + 1;
                 let currentDefaultInvest = 5000;
@@ -727,52 +723,97 @@
                 runDynamicSimulation();
                 runKidsSimulation();
 
-                // 4. 法人近期買賣超
-                const invUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockInstitutionalInvestorsBuySell&data_id=00406A&start_date=${monthAgo}&token=${token}`;
-                const invRes = await fetch(invUrl);
-                const invData = await invRes.json();
-                
-                if(invData.msg === 'success' && invData.data && invData.data.length > 0) {
-                    const openMarketInv = invData.data.filter(item => !isWeekend(item.date));
-                    if(openMarketInv.length > 0) {
-                        const latestDate = openMarketInv[openMarketInv.length - 1].date;
-                        const latestData = openMarketInv.filter(d => d.date === latestDate);
-                        
-                        let foreign = 0, trust = 0, dealer = 0;
-                        let hasMatchedData = false;
-                        
-                        latestData.forEach(d => {
-                            const net = d.buy - d.sell;
-                            if(d.name.includes('外資')) { foreign += net; hasMatchedData = true; }
-                            if(d.name.includes('投信')) { trust += net; hasMatchedData = true; }
-                            if(d.name.includes('自營商')) { dealer += net; hasMatchedData = true; }
-                        });
+                // ★★★ 4. 法人近期買賣超 - 直接串接台灣證券交易所(TWSE)官方第一手資料 ★★★
+                try {
+                    // T86 是三大法人買賣超日報，0099P 則是專門用來過濾 ETF 類別的參數
+                    const twseUrl = `https://www.twse.com.tw/rwd/zh/fund/T86?response=json&selectType=0099P`;
+                    const proxyTwseUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(twseUrl)}`;
+                    
+                    const twseRes = await fetch(proxyTwseUrl);
+                    const twseJson = await twseRes.json();
+                    const twseData = JSON.parse(twseJson.contents);
+                    
+                    let hasRealData = false;
 
-                        const formatVol = (vol) => {
-                            const shares = Math.round(vol / 1000); 
-                            if (shares > 0) return `<span class="text-red-400">買超 +${shares.toLocaleString()} 張</span>`;
-                            if (shares < 0) return `<span class="text-green-400">賣超 ${shares.toLocaleString()} 張</span>`;
-                            return `<span class="text-gray-400">0 張</span>`;
-                        };
+                    if (twseData && twseData.stat === 'OK' && twseData.data) {
+                        // 在官方全市場的 ETF 資料中，精準尋找 00406A
+                        const etfRow = twseData.data.find(row => row[0] === '00406A');
+                        
+                        if (etfRow) {
+                            hasRealData = true;
+                            // TWSE T86 欄位定義: 索引 4=外資, 10=投信, 11=自營商 (皆為原始股數，包含逗點需濾除)
+                            const foreignShares = parseInt(etfRow[4].replace(/,/g, '')) || 0;
+                            const trustShares = parseInt(etfRow[10].replace(/,/g, '')) || 0;
+                            const dealerShares = parseInt(etfRow[11].replace(/,/g, '')) || 0;
+                            
+                            const formatVol = (shares) => {
+                                const lots = Math.round(shares / 1000); // 換算成「張」
+                                if (lots > 0) return `<span class="text-red-400">買超 +${lots.toLocaleString()} 張</span>`;
+                                if (lots < 0) return `<span class="text-green-400">賣超 ${lots.toLocaleString()} 張</span>`;
+                                return `<span class="text-gray-400">0 張</span>`;
+                            };
 
-                        if(hasMatchedData) {
-                            document.getElementById('foreign_buy').innerHTML = formatVol(foreign);
-                            document.getElementById('trust_buy').innerHTML = formatVol(trust);
-                            document.getElementById('dealer_buy').innerHTML = formatVol(dealer);
-                        } else {
-                            document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">無對應籌碼</span>';
-                            document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">無對應籌碼</span>';
-                            document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">無對應籌碼</span>';
+                            document.getElementById('foreign_buy').innerHTML = formatVol(foreignShares);
+                            document.getElementById('trust_buy').innerHTML = formatVol(trustShares);
+                            document.getElementById('dealer_buy').innerHTML = formatVol(dealerShares);
                         }
-                    } else {
-                        document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">近日無資料</span>';
-                        document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">近日無資料</span>';
-                        document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">近日無資料</span>';
                     }
-                } else {
-                    document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">API 暫未支援</span>';
-                    document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">API 暫未支援</span>';
-                    document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">API 暫未支援</span>';
+
+                    // 如果 TWSE 找不到 (可能是還沒收盤結算，或是未上市)，退回 FinMind 歷史搜尋
+                    if (!hasRealData) {
+                        const invUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockInstitutionalInvestorsBuySell&data_id=00406A&start_date=${monthAgo}&token=${token}`;
+                        const invRes = await fetch(invUrl);
+                        const invData = await invRes.json();
+                        
+                        if(invData.msg === 'success' && invData.data && invData.data.length > 0) {
+                            const openMarketInv = invData.data.filter(item => !isWeekend(item.date));
+                            if(openMarketInv.length > 0) {
+                                const latestDate = openMarketInv[openMarketInv.length - 1].date;
+                                const latestData = openMarketInv.filter(d => d.date === latestDate);
+                                
+                                let foreign = 0, trust = 0, dealer = 0;
+                                let hasMatchedData = false;
+                                
+                                latestData.forEach(d => {
+                                    const net = d.buy - d.sell;
+                                    if(d.name.includes('外資')) { foreign += net; hasMatchedData = true; }
+                                    if(d.name.includes('投信')) { trust += net; hasMatchedData = true; }
+                                    if(d.name.includes('自營商')) { dealer += net; hasMatchedData = true; }
+                                });
+
+                                const formatVol = (vol) => {
+                                    const shares = Math.round(vol / 1000); 
+                                    if (shares > 0) return `<span class="text-red-400">買超 +${shares.toLocaleString()} 張</span>`;
+                                    if (shares < 0) return `<span class="text-green-400">賣超 ${shares.toLocaleString()} 張</span>`;
+                                    return `<span class="text-gray-400">0 張</span>`;
+                                };
+
+                                if(hasMatchedData) {
+                                    document.getElementById('foreign_buy').innerHTML = formatVol(foreign);
+                                    document.getElementById('trust_buy').innerHTML = formatVol(trust);
+                                    document.getElementById('dealer_buy').innerHTML = formatVol(dealer);
+                                } else {
+                                    document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">API 尚無籌碼</span>';
+                                    document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">API 尚無籌碼</span>';
+                                    document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">API 尚無籌碼</span>';
+                                }
+                            } else {
+                                document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">近日無資料</span>';
+                                document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">近日無資料</span>';
+                                document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">近日無資料</span>';
+                            }
+                        } else {
+                            // 當連 FinMind 也完全沒有資料時的最後防線
+                            document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">API 暫未支援</span>';
+                            document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">API 暫未支援</span>';
+                            document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">API 暫未支援</span>';
+                        }
+                    }
+                } catch (e) {
+                    console.error("法人籌碼獲取錯誤", e);
+                    document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">連線失敗</span>';
+                    document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">連線失敗</span>';
+                    document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">連線失敗</span>';
                 }
             } catch (e) {
                 console.error("API 獲取錯誤", e);
