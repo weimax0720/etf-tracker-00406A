@@ -33,7 +33,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 包含雙寶每週存股計畫</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 雙 API 即時報價引擎</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -53,8 +53,10 @@
         <!-- ================= 分頁 1：資產與即時領息總覽 ================= -->
         <div id="tab-overview" class="space-y-6">
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center">
-                    <p class="text-sm text-gray-400">最新收盤價</p>
+                <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center relative overflow-hidden">
+                    <!-- 發光特效標示即時連線 -->
+                    <div id="live_indicator" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-gray-600"></div>
+                    <p class="text-sm text-gray-400" id="price_label">最新股價 (讀取中...)</p>
                     <div class="flex justify-between items-center mt-1">
                         <p class="text-xl md:text-2xl font-bold text-white">NT$ <span id="latest_price">--</span></p>
                         <span class="text-lg md:text-xl">📈</span>
@@ -134,7 +136,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
                         <h2 class="text-xl font-semibold text-green-400">📝 我的存股手帳 (市值強制錨定市價版)</h2>
-                        <p class="text-sm text-gray-400 mt-1">手動輸入的「買進股價」僅用於計算實買股數，<span class="text-yellow-400 font-bold">右側「推算總市值」全面強制錨定 API 最新收盤價</span>，還原真實身價。<br>預設值：前期 5,000 ➔ 2027/07起 8,000 ➔ 2031/07起 20,000 ➔ 2033/01起 30,000 ➔ 55歲後停扣。</p>
+                        <p class="text-sm text-gray-400 mt-1">手動輸入的「買進股價」僅用於計算實買股數，<span class="text-yellow-400 font-bold">右側「推算總市值」全面強制錨定 API 最新收盤價</span>，還原真實身價。<br>預設值：前期 5,000 ➔ 2027/07起 8,000 ➔ 2031/07起 20,000 ➔ <span class="text-blue-300 font-bold">2033/01起 30,000</span> ➔ 55歲後停扣。</p>
                     </div>
                     <div class="bg-gray-900 p-2 rounded text-sm text-gray-300 border border-gray-700 text-right w-full md:w-auto">
                         <p>推算60歲最終持股</p>
@@ -170,7 +172,7 @@
 
         <!-- ================= 分頁 3：雙寶存股手帳 ================= -->
         <div id="tab-kids" class="space-y-6 hidden">
-            <!-- 雙寶資訊卡 -->
+            <!-- 雙寶資訊卡 (升級為即時連動版本) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- 大寶 -->
                 <div class="bg-gray-800 p-5 rounded-lg border border-pink-700/50 shadow-lg relative overflow-hidden">
@@ -268,7 +270,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                     <div>
                         <h2 class="text-xl font-semibold text-blue-400">📈 00406A 價格與報酬走勢分析</h2>
-                        <p class="text-xs text-gray-400 mt-1">自由切換不同週期檢視短期波動與長期趨勢 (抓取最近一年)</p>
+                        <p class="text-xs text-gray-400 mt-1">自由切換不同週期檢視短期波動與長期趨勢 (歷史走勢圖由 FinMind 提供)</p>
                     </div>
                     <div class="flex space-x-2 bg-gray-900 p-1 rounded border border-gray-700">
                         <button onclick="changeTimeframe('daily')" id="tf-daily" class="px-3 py-1 text-xs rounded font-medium bg-blue-600 text-white transition">日K趨勢</button>
@@ -327,12 +329,12 @@
                 <div class="flex items-center gap-4">
                     <div class="text-4xl" id="safety_icon">🛡️</div>
                     <div>
-                        <p class="text-sm text-gray-400">日均成交額安全雷達 (僅採計台股開盤日)</p>
+                        <p class="text-sm text-gray-400">日均成交額安全雷達 (依據 FinMind 收盤歷史估算)</p>
                         <p class="text-lg font-bold text-white mt-1" id="safety_status">等待 API 資料載入以進行安全評估...</p>
                     </div>
                 </div>
                 <div class="bg-gray-900 px-5 py-3 rounded border border-gray-700 text-right w-full md:w-auto">
-                    <p class="text-xs text-gray-400">最近開盤日成交額</p>
+                    <p class="text-xs text-gray-400">歷史最近開盤日成交額</p>
                     <p class="text-xl font-bold text-blue-400" id="trading_turnover">NT$ -- 億</p>
                 </div>
             </div>
@@ -394,7 +396,6 @@
         const LEDGER_DRIP_KEY = '00406A_LEDGER_DRIP';     
         const LEDGER_EXTRA_KEY = '00406A_LEDGER_EXTRA';   
         
-        // 雙寶資料儲存 Key
         const LEDGER_KID_A_PRICE_KEY = '00406A_LEDGER_KID_A_PRICE';
         const LEDGER_KID_A_KEY = '00406A_LEDGER_KID_A';
         const LEDGER_KID_B_PRICE_KEY = '00406A_LEDGER_KID_B_PRICE';
@@ -579,6 +580,7 @@
             const monthAgo = monthAgoDate.toISOString().split('T')[0];
 
             try {
+                // 1. 先抓取 FinMind 的歷史走勢與籌碼資料 (做為保底與圖表使用)
                 const priceUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=00406A&start_date=${yearAgo}&token=${token}`;
                 const priceRes = await fetch(priceUrl);
                 const priceData = await priceRes.json();
@@ -588,9 +590,12 @@
                     
                     if(rawPriceData.length > 0) {
                         const latestPriceObj = rawPriceData[rawPriceData.length - 1];
-                        currentPrice = latestPriceObj.close;
+                        currentPrice = latestPriceObj.close; // FinMind 的保底收盤價
                         document.getElementById('latest_price').innerText = currentPrice.toFixed(2);
+                        document.getElementById('price_label').innerText = '歷史收盤價 (FinMind)';
+                        document.getElementById('live_indicator').classList.replace('bg-green-400', 'bg-gray-600');
                         
+                        // 計算月均成交量 (抓最近20個交易日)
                         const last20Days = rawPriceData.slice(-20);
                         const totalVolumeShares = last20Days.reduce((sum, d) => sum + (d.Trading_Volume || d.volume || 0), 0);
                         const avgVolumeShares = totalVolumeShares / last20Days.length;
@@ -605,21 +610,6 @@
                             volLight.innerText = '🟢';
                             document.getElementById('risk_vol_value').className = 'text-lg font-bold text-green-400 mt-1';
                         }
-
-                        const currentYear = today.getFullYear();
-                        const currentMonth = today.getMonth() + 1;
-                        let currentDefaultInvest = 5000;
-                        if (currentYear > 2033 || (currentYear === 2033 && currentMonth >= 1)) {
-                            currentDefaultInvest = 30000;
-                        } else if (currentYear > 2031 || (currentYear === 2031 && currentMonth >= 7)) {
-                            currentDefaultInvest = 20000;
-                        } else if (currentYear > 2027 || (currentYear === 2027 && currentMonth >= 7)) {
-                            currentDefaultInvest = 8000;
-                        }
-                        
-                        const shares = Math.floor(currentDefaultInvest / currentPrice);
-                        document.getElementById('buyable_shares_label').innerText = `約 ${currentDefaultInvest / 1000} 千元購買力參考`;
-                        document.getElementById('buyable_shares').innerText = shares;
 
                         const closeP = latestPriceObj.close || 0;
                         const volSharesLatest = latestPriceObj.Trading_Volume || latestPriceObj.volume || 0;
@@ -648,6 +638,50 @@
                     }
                 }
 
+                // ★★★ 2. 透過 Yahoo Finance API 抓取「盤中即時股價」 ★★★
+                // 採用免費的 allorigins CORS Proxy 來跨越瀏覽器限制
+                try {
+                    const yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/00406A.TW?interval=1m&range=1d';
+                    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(yahooUrl)}`;
+                    
+                    const yRes = await fetch(proxyUrl);
+                    const yJson = await yRes.json();
+                    const yData = JSON.parse(yJson.contents);
+                    
+                    if (yData && yData.chart && yData.chart.result && yData.chart.result.length > 0) {
+                        const realTimePrice = yData.chart.result[0].meta.regularMarketPrice;
+                        if (realTimePrice && realTimePrice > 0) {
+                            currentPrice = realTimePrice; // 成功覆蓋為即時股價
+                            
+                            document.getElementById('latest_price').innerText = currentPrice.toFixed(2);
+                            document.getElementById('latest_price').classList.add('text-yellow-400');
+                            document.getElementById('price_label').innerHTML = '盤中即時市價 <span class="text-xs text-yellow-500">(Yahoo即時連線)</span>';
+                            
+                            // 點亮綠燈特效
+                            document.getElementById('live_indicator').classList.replace('bg-gray-600', 'bg-green-400');
+                            document.getElementById('live_indicator').classList.add('animate-pulse', 'shadow-[0_0_8px_rgba(74,222,128,0.8)]');
+                        }
+                    }
+                } catch(err) {
+                    console.log("Yahoo即時報價抓取失敗，維持使用 FinMind 歷史收盤價", err);
+                }
+
+                // 在這裡才去更新購買力，確保用到的是最精準的 currentPrice
+                const currentYear = today.getFullYear();
+                const currentMonth = today.getMonth() + 1;
+                let currentDefaultInvest = 5000;
+                if (currentYear > 2033 || (currentYear === 2033 && currentMonth >= 1)) {
+                    currentDefaultInvest = 30000;
+                } else if (currentYear > 2031 || (currentYear === 2031 && currentMonth >= 7)) {
+                    currentDefaultInvest = 20000;
+                } else if (currentYear > 2027 || (currentYear === 2027 && currentMonth >= 7)) {
+                    currentDefaultInvest = 8000;
+                }
+                const shares = Math.floor(currentDefaultInvest / currentPrice);
+                document.getElementById('buyable_shares_label').innerText = `約 ${currentDefaultInvest / 1000} 千元購買力參考`;
+                document.getElementById('buyable_shares').innerText = shares;
+
+                // 3. 抓取配息資料
                 const divUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockDividend&data_id=00406A&start_date=${yearStart}&token=${token}`;
                 const divRes = await fetch(divUrl);
                 const divData = await divRes.json();
@@ -693,6 +727,7 @@
                 runDynamicSimulation();
                 runKidsSimulation();
 
+                // 4. 法人近期買賣超
                 const invUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockInstitutionalInvestorsBuySell&data_id=00406A&start_date=${monthAgo}&token=${token}`;
                 const invRes = await fetch(invUrl);
                 const invData = await invRes.json();
@@ -802,17 +837,14 @@
             let currentY = startYear;
             let currentM = startMonth;
             
-            // 取得今日真實時間
             const today = new Date();
             const thisY = today.getFullYear();
             const thisM = today.getMonth() + 1;
 
             for(let i = 0; i < totalMonths; i++) {
                 
-                // ★★★ 市值強制錨定邏輯 ★★★
                 let isCurrentMonth = (currentY === thisY && currentM === thisM);
                 let valuationPrice = simulatedPrice;
-                // 如果是現在真實的這個月，強制把估值價格綁定「今日最新收盤價」，並從此價格向外重繪未來的曲線
                 if (isCurrentMonth && currentPrice > 0) {
                     valuationPrice = currentPrice;
                     simulatedPrice = currentPrice; 
@@ -835,7 +867,6 @@
                 
                 let investAmount = (customInvestMap[i] !== undefined && customInvestMap[i] !== '') ? parseFloat(customInvestMap[i]) : defaultInvestForMonth;
                 
-                // 手動輸入的買價 (manualPrice) 現在只會被用來當作 execPrice 計算買到了幾股
                 let manualPrice = customPriceMap[i];
                 let execPrice = (manualPrice && manualPrice > 0) ? manualPrice : valuationPrice;
                 
@@ -850,7 +881,6 @@
                 
                 runningShares += (regularShares + extraS + dripShares);
                 
-                // ★★★ 總市值強制使用 valuationPrice (市價) 來結算，不再受買價干擾 ★★★
                 let marketValue = runningShares * valuationPrice;
 
                 projectedData.push({
@@ -900,7 +930,6 @@
 
             for(let i = 0; i < totalMonths; i++) {
                 
-                // ★★★ 雙寶市值強制錨定邏輯 ★★★
                 let isCurrentMonth = (currentY === thisY && currentM === thisM);
                 let valuationPrice = simulatedPrice;
                 if (isCurrentMonth && currentPrice > 0) {
@@ -920,21 +949,18 @@
                 let defaultBuySharesA = Math.floor(monthlyBudget / execPriceA);
                 let defaultBuySharesB = Math.floor(monthlyBudget / execPriceB);
 
-                // 大寶
                 let manualA = kidAMap[i];
                 let divA = runningSharesA * baseDividend;
                 let dripA = Math.floor(divA / execPriceA);
                 let buyA = (manualA !== undefined && manualA !== '') ? manualA : defaultBuySharesA;
                 runningSharesA += (buyA + dripA);
 
-                // 二寶
                 let manualB = kidBMap[i];
                 let divB = runningSharesB * baseDividend;
                 let dripB = Math.floor(divB / execPriceB);
                 let buyB = (manualB !== undefined && manualB !== '') ? manualB : defaultBuySharesB;
                 runningSharesB += (buyB + dripB);
                 
-                // ★★★ 分離買價，以市價結算市值 ★★★
                 let valueA = runningSharesA * valuationPrice;
                 let valueB = runningSharesB * valuationPrice;
 
@@ -959,13 +985,11 @@
             let livePriceA = currentPrice > 0 ? currentPrice : currentKidsState.execPriceA;
             let livePriceB = currentPrice > 0 ? currentPrice : currentKidsState.execPriceB;
 
-            // 更新大寶資訊卡
             document.getElementById('kid_a_realtime_value').innerText = Math.round(currentKidsState.totalA * livePriceA).toLocaleString();
             document.getElementById('kid_a_current_shares').innerText = Math.round(currentKidsState.totalA).toLocaleString();
             document.getElementById('kid_a_market_value').innerText = Math.round(finalKids.valueA).toLocaleString();
             document.getElementById('kid_a_dividend').innerText = Math.round(finalKids.divA).toLocaleString();
             
-            // 更新二寶資訊卡
             document.getElementById('kid_b_realtime_value').innerText = Math.round(currentKidsState.totalB * livePriceB).toLocaleString();
             document.getElementById('kid_b_current_shares').innerText = Math.round(currentKidsState.totalB).toLocaleString();
             document.getElementById('kid_b_market_value').innerText = Math.round(finalKids.valueB).toLocaleString();
