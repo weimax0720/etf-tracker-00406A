@@ -33,7 +33,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | Yahoo即時報價 + 證交所官方籌碼</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | Yahoo即時報價 + 雙重容錯籌碼</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -366,7 +366,7 @@
                 </div>
 
                 <div class="card relative overflow-hidden">
-                    <div class="absolute right-0 top-0 text-xs bg-blue-900/50 text-blue-300 px-2 py-1 rounded-bl">TWSE 證交所官方直連</div>
+                    <div class="absolute right-0 top-0 text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded-bl transition-colors duration-300" id="chip_source_badge">資料讀取中...</div>
                     <h2 class="text-xl font-semibold mb-4 text-blue-400">🏛️ 法人近期買賣超</h2>
                     <p class="text-xs text-gray-400 mb-3">最新開盤日籌碼動向 (張)</p>
                     <div class="space-y-3">
@@ -640,23 +640,23 @@
                 // 2. 透過 Yahoo Finance API 抓取「盤中即時股價」
                 try {
                     const yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/00406A.TW?interval=1m&range=1d';
-                    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(yahooUrl)}`;
+                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
                     
-                    const yRes = await fetch(proxyUrl);
-                    const yJson = await yRes.json();
-                    const yData = JSON.parse(yJson.contents);
-                    
-                    if (yData && yData.chart && yData.chart.result && yData.chart.result.length > 0) {
-                        const realTimePrice = yData.chart.result[0].meta.regularMarketPrice;
-                        if (realTimePrice && realTimePrice > 0) {
-                            currentPrice = realTimePrice; 
-                            
-                            document.getElementById('latest_price').innerText = currentPrice.toFixed(2);
-                            document.getElementById('latest_price').classList.add('text-yellow-400');
-                            document.getElementById('price_label').innerHTML = '盤中即時市價 <span class="text-xs text-yellow-500">(Yahoo即時連線)</span>';
-                            
-                            document.getElementById('live_indicator').classList.replace('bg-gray-600', 'bg-green-400');
-                            document.getElementById('live_indicator').classList.add('animate-pulse', 'shadow-[0_0_8px_rgba(74,222,128,0.8)]');
+                    const yRes = await fetch(proxyUrl, { cache: "no-store" });
+                    if (yRes.ok) {
+                        const yData = await yRes.json();
+                        if (yData && yData.chart && yData.chart.result && yData.chart.result.length > 0) {
+                            const realTimePrice = yData.chart.result[0].meta.regularMarketPrice;
+                            if (realTimePrice && realTimePrice > 0) {
+                                currentPrice = realTimePrice; 
+                                
+                                document.getElementById('latest_price').innerText = currentPrice.toFixed(2);
+                                document.getElementById('latest_price').classList.add('text-yellow-400');
+                                document.getElementById('price_label').innerHTML = '盤中即時市價 <span class="text-xs text-yellow-500">(Yahoo即時連線)</span>';
+                                
+                                document.getElementById('live_indicator').classList.replace('bg-gray-600', 'bg-green-400');
+                                document.getElementById('live_indicator').classList.add('animate-pulse', 'shadow-[0_0_8px_rgba(74,222,128,0.8)]');
+                            }
                         }
                     }
                 } catch(err) {
@@ -723,47 +723,62 @@
                 runDynamicSimulation();
                 runKidsSimulation();
 
-                // ★★★ 4. 法人近期買賣超 - 直接串接台灣證券交易所(TWSE)官方第一手資料 ★★★
+                // ★★★ 4. 法人近期買賣超 - 雙重容錯架構 ★★★
+                let twseSuccess = false;
+                
+                // 第一層：嘗試連接 TWSE 官方資料
                 try {
-                    // T86 是三大法人買賣超日報，0099P 則是專門用來過濾 ETF 類別的參數
+                    // 改用 raw 模式，避免 proxy JSON 格式解析失敗
                     const twseUrl = `https://www.twse.com.tw/rwd/zh/fund/T86?response=json&selectType=0099P`;
-                    const proxyTwseUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(twseUrl)}`;
+                    const proxyTwseUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(twseUrl)}`;
                     
-                    const twseRes = await fetch(proxyTwseUrl);
-                    const twseJson = await twseRes.json();
-                    const twseData = JSON.parse(twseJson.contents);
+                    const twseRes = await fetch(proxyTwseUrl, { cache: "no-store" });
                     
-                    let hasRealData = false;
-
-                    if (twseData && twseData.stat === 'OK' && twseData.data) {
-                        // 在官方全市場的 ETF 資料中，精準尋找 00406A
-                        const etfRow = twseData.data.find(row => row[0] === '00406A');
+                    if (twseRes.ok) {
+                        const twseData = await twseRes.json();
                         
-                        if (etfRow) {
-                            hasRealData = true;
-                            // TWSE T86 欄位定義: 索引 4=外資, 10=投信, 11=自營商 (皆為原始股數，包含逗點需濾除)
-                            const foreignShares = parseInt(etfRow[4].replace(/,/g, '')) || 0;
-                            const trustShares = parseInt(etfRow[10].replace(/,/g, '')) || 0;
-                            const dealerShares = parseInt(etfRow[11].replace(/,/g, '')) || 0;
+                        if (twseData && twseData.stat === 'OK' && twseData.data) {
+                            const etfRow = twseData.data.find(row => row[0] === '00406A');
                             
-                            const formatVol = (shares) => {
-                                const lots = Math.round(shares / 1000); // 換算成「張」
-                                if (lots > 0) return `<span class="text-red-400">買超 +${lots.toLocaleString()} 張</span>`;
-                                if (lots < 0) return `<span class="text-green-400">賣超 ${lots.toLocaleString()} 張</span>`;
-                                return `<span class="text-gray-400">0 張</span>`;
-                            };
+                            if (etfRow) {
+                                twseSuccess = true;
+                                const foreignShares = parseInt(etfRow[4].replace(/,/g, '')) || 0;
+                                const trustShares = parseInt(etfRow[10].replace(/,/g, '')) || 0;
+                                const dealerShares = parseInt(etfRow[11].replace(/,/g, '')) || 0;
+                                
+                                const formatVol = (shares) => {
+                                    const lots = Math.round(shares / 1000); 
+                                    if (lots > 0) return `<span class="text-red-400">買超 +${lots.toLocaleString()} 張</span>`;
+                                    if (lots < 0) return `<span class="text-green-400">賣超 ${Math.abs(lots).toLocaleString()} 張</span>`;
+                                    return `<span class="text-gray-400">0 張</span>`;
+                                };
 
-                            document.getElementById('foreign_buy').innerHTML = formatVol(foreignShares);
-                            document.getElementById('trust_buy').innerHTML = formatVol(trustShares);
-                            document.getElementById('dealer_buy').innerHTML = formatVol(dealerShares);
+                                document.getElementById('foreign_buy').innerHTML = formatVol(foreignShares);
+                                document.getElementById('trust_buy').innerHTML = formatVol(trustShares);
+                                document.getElementById('dealer_buy').innerHTML = formatVol(dealerShares);
+                                
+                                // 更新資料來源標籤
+                                const badge = document.getElementById('chip_source_badge');
+                                badge.innerText = 'TWSE 官方直連';
+                                badge.className = 'absolute right-0 top-0 text-xs bg-blue-900/50 text-blue-300 px-2 py-1 rounded-bl transition-colors duration-300';
+                            }
                         }
                     }
+                } catch (e) {
+                    console.warn("TWSE 官方代理連線失敗或超時，準備降級使用備援資料庫", e);
+                }
 
-                    // 如果 TWSE 找不到 (可能是還沒收盤結算，或是未上市)，退回 FinMind 歷史搜尋
-                    if (!hasRealData) {
+                // 第二層：如果 TWSE 連線失敗或找不到該檔資料，自動降級切換至 FinMind
+                if (!twseSuccess) {
+                    try {
                         const invUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockInstitutionalInvestorsBuySell&data_id=00406A&start_date=${monthAgo}&token=${token}`;
                         const invRes = await fetch(invUrl);
                         const invData = await invRes.json();
+                        
+                        // 更新資料來源標籤為備援狀態
+                        const badge = document.getElementById('chip_source_badge');
+                        badge.innerText = 'FinMind 歷史備援';
+                        badge.className = 'absolute right-0 top-0 text-xs bg-purple-900/50 text-purple-300 px-2 py-1 rounded-bl transition-colors duration-300';
                         
                         if(invData.msg === 'success' && invData.data && invData.data.length > 0) {
                             const openMarketInv = invData.data.filter(item => !isWeekend(item.date));
@@ -784,7 +799,7 @@
                                 const formatVol = (vol) => {
                                     const shares = Math.round(vol / 1000); 
                                     if (shares > 0) return `<span class="text-red-400">買超 +${shares.toLocaleString()} 張</span>`;
-                                    if (shares < 0) return `<span class="text-green-400">賣超 ${shares.toLocaleString()} 張</span>`;
+                                    if (shares < 0) return `<span class="text-green-400">賣超 ${Math.abs(shares).toLocaleString()} 張</span>`;
                                     return `<span class="text-gray-400">0 張</span>`;
                                 };
 
@@ -793,9 +808,9 @@
                                     document.getElementById('trust_buy').innerHTML = formatVol(trust);
                                     document.getElementById('dealer_buy').innerHTML = formatVol(dealer);
                                 } else {
-                                    document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">API 尚無籌碼</span>';
-                                    document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">API 尚無籌碼</span>';
-                                    document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">API 尚無籌碼</span>';
+                                    document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">尚無籌碼資料</span>';
+                                    document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">尚無籌碼資料</span>';
+                                    document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">尚無籌碼資料</span>';
                                 }
                             } else {
                                 document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">近日無資料</span>';
@@ -803,20 +818,20 @@
                                 document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">近日無資料</span>';
                             }
                         } else {
-                            // 當連 FinMind 也完全沒有資料時的最後防線
                             document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">API 暫未支援</span>';
                             document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">API 暫未支援</span>';
                             document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">API 暫未支援</span>';
                         }
+                    } catch (e) {
+                        console.error("備援資料庫(FinMind)獲取錯誤", e);
+                        document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">雙重連線皆失敗</span>';
+                        document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">雙重連線皆失敗</span>';
+                        document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">雙重連線皆失敗</span>';
                     }
-                } catch (e) {
-                    console.error("法人籌碼獲取錯誤", e);
-                    document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">連線失敗</span>';
-                    document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">連線失敗</span>';
-                    document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">連線失敗</span>';
                 }
+                
             } catch (e) {
-                console.error("API 獲取錯誤", e);
+                console.error("總體 API 獲取錯誤", e);
             }
         }
 
