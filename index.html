@@ -133,8 +133,8 @@
             <div class="card">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
-                        <h2 class="text-xl font-semibold text-green-400">📝 我的存股手帳 (精確股數版)</h2>
-                        <p class="text-sm text-gray-400 mt-1">將每月多筆交易匯總為一筆：請修改對應月份的「定投金額」與「買進股價(平均)」。<br>自動帶入預設值：前期 5,000 ➔ 2027/07起 8,000 ➔ 2031/07起 20,000 ➔ <span class="text-blue-300 font-bold">2033/01起 30,000</span> ➔ 55歲後停扣。</p>
+                        <h2 class="text-xl font-semibold text-green-400">📝 我的存股手帳 (市值強制錨定市價版)</h2>
+                        <p class="text-sm text-gray-400 mt-1">手動輸入的「買進股價」僅用於計算實買股數，<span class="text-yellow-400 font-bold">右側「推算總市值」全面強制錨定 API 最新收盤價</span>，還原真實身價。<br>預設值：前期 5,000 ➔ 2027/07起 8,000 ➔ 2031/07起 20,000 ➔ 2033/01起 30,000 ➔ 55歲後停扣。</p>
                     </div>
                     <div class="bg-gray-900 p-2 rounded text-sm text-gray-300 border border-gray-700 text-right w-full md:w-auto">
                         <p>推算60歲最終持股</p>
@@ -157,7 +157,7 @@
                                 <th class="py-3 px-2 font-medium text-green-300">配息買股 (股) ✏️</th>
                                 <th class="py-3 px-2 font-medium text-purple-300">額外加碼 (股) ✏️</th>
                                 <th class="py-3 px-3 font-medium text-right">累積總股數</th>
-                                <th class="py-3 px-3 font-medium text-right text-yellow-400">推算總市值</th>
+                                <th class="py-3 px-3 font-medium text-right text-yellow-400">推算總市值 (依市價)</th>
                             </tr>
                         </thead>
                         <tbody id="ledger_table_body" class="text-sm divide-y divide-gray-800 bg-gray-900">
@@ -170,7 +170,7 @@
 
         <!-- ================= 分頁 3：雙寶存股手帳 ================= -->
         <div id="tab-kids" class="space-y-6 hidden">
-            <!-- 雙寶資訊卡 (升級為即時連動版本) -->
+            <!-- 雙寶資訊卡 -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- 大寶 -->
                 <div class="bg-gray-800 p-5 rounded-lg border border-pink-700/50 shadow-lg relative overflow-hidden">
@@ -231,7 +231,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
                         <h2 class="text-xl font-semibold text-pink-400">👧 雙寶每週 100 元存股手帳</h2>
-                        <p class="text-sm text-gray-400 mt-1">每週 100 元換算平均每月預算為 <span class="text-white font-bold">433 元</span>。支援獨立輸入「買價」、「實買股數」與「推算總市值」。</p>
+                        <p class="text-sm text-gray-400 mt-1">每週 100 元換算平均每月預算為 <span class="text-white font-bold">433 元</span>。支援獨立輸入「買價」、「實買股數」，<span class="text-yellow-400 font-bold">市值全面強制錨定市價</span>。</p>
                     </div>
                 </div>
 
@@ -283,7 +283,6 @@
         <!-- ================= 分頁 5：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
             
-            <!-- ★ 新增：自訂配息風險分數與燈號模組 -->
             <div class="card border border-red-900/50 shadow-lg shadow-red-900/10 mb-6">
                 <h2 class="text-xl font-semibold mb-4 text-red-400">🚨 ETF 配息與流動性風險分數預警</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -592,7 +591,6 @@
                         currentPrice = latestPriceObj.close;
                         document.getElementById('latest_price').innerText = currentPrice.toFixed(2);
                         
-                        // ★★★ 計算月均成交量 (抓最近20個交易日) ★★★
                         const last20Days = rawPriceData.slice(-20);
                         const totalVolumeShares = last20Days.reduce((sum, d) => sum + (d.Trading_Volume || d.volume || 0), 0);
                         const avgVolumeShares = totalVolumeShares / last20Days.length;
@@ -663,7 +661,6 @@
                     document.getElementById('pay_date').innerText = latest.CashDividendPaymentDate || '無資料';
                     document.getElementById('div_amount').innerText = latestDividend + ' 元/股';
 
-                    // ★★★ 配息風險分數燈號更新 ★★★
                     document.getElementById('risk_div_value').innerText = latestDividend + ' 元';
                     const divLight = document.getElementById('risk_div_light');
                     if (latestDividend < 0.10) {
@@ -727,8 +724,20 @@
                             document.getElementById('foreign_buy').innerHTML = formatVol(foreign);
                             document.getElementById('trust_buy').innerHTML = formatVol(trust);
                             document.getElementById('dealer_buy').innerHTML = formatVol(dealer);
+                        } else {
+                            document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">無對應籌碼</span>';
+                            document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">無對應籌碼</span>';
+                            document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">無對應籌碼</span>';
                         }
+                    } else {
+                        document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">近日無資料</span>';
+                        document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">近日無資料</span>';
+                        document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">近日無資料</span>';
                     }
+                } else {
+                    document.getElementById('foreign_buy').innerHTML = '<span class="text-gray-500">API 暫未支援</span>';
+                    document.getElementById('trust_buy').innerHTML = '<span class="text-gray-500">API 暫未支援</span>';
+                    document.getElementById('dealer_buy').innerHTML = '<span class="text-gray-500">API 暫未支援</span>';
                 }
             } catch (e) {
                 console.error("API 獲取錯誤", e);
@@ -792,10 +801,22 @@
 
             let currentY = startYear;
             let currentM = startMonth;
+            
+            // 取得今日真實時間
+            const today = new Date();
+            const thisY = today.getFullYear();
+            const thisM = today.getMonth() + 1;
 
             for(let i = 0; i < totalMonths; i++) {
-                let manualPrice = customPriceMap[i];
-                let execPrice = (manualPrice && manualPrice > 0) ? manualPrice : simulatedPrice;
+                
+                // ★★★ 市值強制錨定邏輯 ★★★
+                let isCurrentMonth = (currentY === thisY && currentM === thisM);
+                let valuationPrice = simulatedPrice;
+                // 如果是現在真實的這個月，強制把估值價格綁定「今日最新收盤價」，並從此價格向外重繪未來的曲線
+                if (isCurrentMonth && currentPrice > 0) {
+                    valuationPrice = currentPrice;
+                    simulatedPrice = currentPrice; 
+                }
 
                 let defaultInvestForMonth = 0;
                 if (i < 144) {
@@ -813,6 +834,11 @@
                 }
                 
                 let investAmount = (customInvestMap[i] !== undefined && customInvestMap[i] !== '') ? parseFloat(customInvestMap[i]) : defaultInvestForMonth;
+                
+                // 手動輸入的買價 (manualPrice) 現在只會被用來當作 execPrice 計算買到了幾股
+                let manualPrice = customPriceMap[i];
+                let execPrice = (manualPrice && manualPrice > 0) ? manualPrice : valuationPrice;
+                
                 let regularShares = Math.floor(investAmount / execPrice);
                 
                 let monthDividendIncome = runningShares * baseDividend;
@@ -823,7 +849,9 @@
                 let extraS = extraSharesMap[i] || 0;
                 
                 runningShares += (regularShares + extraS + dripShares);
-                let marketValue = runningShares * execPrice;
+                
+                // ★★★ 總市值強制使用 valuationPrice (市價) 來結算，不再受買價干擾 ★★★
+                let marketValue = runningShares * valuationPrice;
 
                 projectedData.push({
                     index: i, year: currentY, month: currentM, age: 43 + Math.floor(i / 12),
@@ -865,10 +893,23 @@
             let currentY = startYear;
             let currentM = startMonth;
             const monthlyBudget = 433;
+            
+            const today = new Date();
+            const thisY = today.getFullYear();
+            const thisM = today.getMonth() + 1;
 
             for(let i = 0; i < totalMonths; i++) {
+                
+                // ★★★ 雙寶市值強制錨定邏輯 ★★★
+                let isCurrentMonth = (currentY === thisY && currentM === thisM);
+                let valuationPrice = simulatedPrice;
+                if (isCurrentMonth && currentPrice > 0) {
+                    valuationPrice = currentPrice;
+                    simulatedPrice = currentPrice;
+                }
+
                 let manualMainPrice = customPriceMap[i];
-                let mainExecPrice = (manualMainPrice && manualMainPrice > 0) ? manualMainPrice : simulatedPrice;
+                let mainExecPrice = (manualMainPrice && manualMainPrice > 0) ? manualMainPrice : valuationPrice;
 
                 let manualPriceA = kidAPriceMap[i];
                 let execPriceA = (manualPriceA && manualPriceA > 0) ? manualPriceA : mainExecPrice;
@@ -892,14 +933,18 @@
                 let dripB = Math.floor(divB / execPriceB);
                 let buyB = (manualB !== undefined && manualB !== '') ? manualB : defaultBuySharesB;
                 runningSharesB += (buyB + dripB);
+                
+                // ★★★ 分離買價，以市價結算市值 ★★★
+                let valueA = runningSharesA * valuationPrice;
+                let valueB = runningSharesB * valuationPrice;
 
                 kidsProjectedData.push({
                     index: i, year: currentY, month: currentM,
                     execPriceA: execPriceA, isManualPriceA: (manualPriceA !== undefined && manualPriceA !== ''),
                     execPriceB: execPriceB, isManualPriceB: (manualPriceB !== undefined && manualPriceB !== ''),
                     defaultBuySharesA: defaultBuySharesA, defaultBuySharesB: defaultBuySharesB,
-                    buyA: buyA, totalA: runningSharesA, divA: divA, valueA: runningSharesA * execPriceA, isManualA: (manualA !== undefined && manualA !== ''),
-                    buyB: buyB, totalB: runningSharesB, divB: divB, valueB: runningSharesB * execPriceB, isManualB: (manualB !== undefined && manualB !== '')
+                    buyA: buyA, totalA: runningSharesA, divA: divA, valueA: valueA, isManualA: (manualA !== undefined && manualA !== ''),
+                    buyB: buyB, totalB: runningSharesB, divB: divB, valueB: valueB, isManualB: (manualB !== undefined && manualB !== '')
                 });
 
                 currentM++;
@@ -909,9 +954,6 @@
 
             const finalKids = kidsProjectedData[kidsProjectedData.length - 1];
             
-            const today = new Date();
-            const thisY = today.getFullYear();
-            const thisM = today.getMonth() + 1;
             let currentKidsState = kidsProjectedData.find(d => d.year === thisY && d.month === thisM) || kidsProjectedData[0];
             
             let livePriceA = currentPrice > 0 ? currentPrice : currentKidsState.execPriceA;
