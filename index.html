@@ -282,11 +282,53 @@
 
         <!-- ================= 分頁 5：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
+            
+            <!-- ★ 新增：自訂配息風險分數與燈號模組 -->
+            <div class="card border border-red-900/50 shadow-lg shadow-red-900/10 mb-6">
+                <h2 class="text-xl font-semibold mb-4 text-red-400">🚨 ETF 配息與流動性風險分數預警</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- 燈號1：月配息 -->
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex flex-col justify-center">
+                        <div class="flex justify-between items-center mb-1">
+                            <p class="text-sm text-gray-400">月配息金額預警</p>
+                            <div id="risk_div_light" class="text-2xl drop-shadow-md">⏳</div>
+                        </div>
+                        <p class="text-xs text-gray-500">觸發條件: < 0.10 元</p>
+                        <p class="text-lg font-bold text-white mt-1" id="risk_div_value">--</p>
+                    </div>
+                    <!-- 燈號2：月均成交量 -->
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex flex-col justify-center">
+                        <div class="flex justify-between items-center mb-1">
+                            <p class="text-sm text-gray-400">月均成交量預警</p>
+                            <div id="risk_vol_light" class="text-2xl drop-shadow-md">⏳</div>
+                        </div>
+                        <p class="text-xs text-gray-500">觸發條件: < 10,000 張</p>
+                        <p class="text-lg font-bold text-white mt-1" id="risk_vol_value">--</p>
+                    </div>
+                    <!-- 燈號3：規模下降 -->
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex flex-col justify-center">
+                        <div class="flex justify-between items-center mb-1">
+                            <p class="text-sm text-gray-400">基金規模下降</p>
+                            <div class="text-2xl drop-shadow-md opacity-50 grayscale">⚠️</div>
+                        </div>
+                        <p class="text-xs text-gray-500">觸發條件: > 15%</p>
+                        <p class="text-sm text-gray-400 mt-1">需手動檢視投信官網</p>
+                    </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-800 text-xs text-gray-500 flex flex-wrap gap-3">
+                    <span class="font-bold text-gray-400">評分權重指標：</span>
+                    <span>成交量衰退 20%</span> |
+                    <span>基金規模衰退 30%</span> |
+                    <span>近3月均配息下降 30%</span> |
+                    <span>折溢價異常 20%</span>
+                </div>
+            </div>
+
             <div class="card flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div class="flex items-center gap-4">
                     <div class="text-4xl" id="safety_icon">🛡️</div>
                     <div>
-                        <p class="text-sm text-gray-400">ETF 流動性與規模安全雷達 (僅採計台股開盤日)</p>
+                        <p class="text-sm text-gray-400">日均成交額安全雷達 (僅採計台股開盤日)</p>
                         <p class="text-lg font-bold text-white mt-1" id="safety_status">等待 API 資料載入以進行安全評估...</p>
                     </div>
                 </div>
@@ -550,10 +592,24 @@
                         currentPrice = latestPriceObj.close;
                         document.getElementById('latest_price').innerText = currentPrice.toFixed(2);
                         
+                        // ★★★ 計算月均成交量 (抓最近20個交易日) ★★★
+                        const last20Days = rawPriceData.slice(-20);
+                        const totalVolumeShares = last20Days.reduce((sum, d) => sum + (d.Trading_Volume || d.volume || 0), 0);
+                        const avgVolumeShares = totalVolumeShares / last20Days.length;
+                        const avgVolumeZhang = Math.round(avgVolumeShares / 1000); 
+                        
+                        document.getElementById('risk_vol_value').innerText = avgVolumeZhang.toLocaleString() + ' 張';
+                        const volLight = document.getElementById('risk_vol_light');
+                        if (avgVolumeZhang < 10000) {
+                            volLight.innerText = '🟡';
+                            document.getElementById('risk_vol_value').className = 'text-lg font-bold text-yellow-400 mt-1';
+                        } else {
+                            volLight.innerText = '🟢';
+                            document.getElementById('risk_vol_value').className = 'text-lg font-bold text-green-400 mt-1';
+                        }
+
                         const currentYear = today.getFullYear();
                         const currentMonth = today.getMonth() + 1;
-                        
-                        // ★★★ 更新單月購買力預估邏輯 (加入 30000 級距) ★★★
                         let currentDefaultInvest = 5000;
                         if (currentYear > 2033 || (currentYear === 2033 && currentMonth >= 1)) {
                             currentDefaultInvest = 30000;
@@ -568,8 +624,8 @@
                         document.getElementById('buyable_shares').innerText = shares;
 
                         const closeP = latestPriceObj.close || 0;
-                        const volShares = latestPriceObj.Trading_Volume || latestPriceObj.volume || 0;
-                        const turnoverVal = latestPriceObj.Trading_money || (closeP * volShares);
+                        const volSharesLatest = latestPriceObj.Trading_Volume || latestPriceObj.volume || 0;
+                        const turnoverVal = latestPriceObj.Trading_money || (closeP * volSharesLatest);
                         const turnoverInYi = turnoverVal / 100000000; 
                         
                         document.getElementById('trading_turnover').innerText = `NT$ ${turnoverInYi.toFixed(2)} 億`;
@@ -578,7 +634,7 @@
                         const safetyIcon = document.getElementById('safety_icon');
 
                         if (turnoverInYi > 0 && turnoverInYi < 5) {
-                            safetyStatus.innerHTML = `<span class="text-red-400 font-bold">⚠ 警告：成交額低於 5 億台幣 (${turnoverInYi.toFixed(2)}億)！</span> 流動性偏低。`;
+                            safetyStatus.innerHTML = `<span class="text-yellow-400 font-bold">⚠ 警告：單日成交額低於 5 億台幣 (${turnoverInYi.toFixed(2)}億)！</span> 流動性偏低。`;
                             safetyIcon.innerHTML = "🚨";
                         } else if (turnoverInYi === 0) {
                             safetyStatus.innerHTML = `<span class="text-yellow-400 font-bold">ℹ 今日尚未結算或為非交易時段</span>`;
@@ -606,6 +662,17 @@
                     document.getElementById('ex_div_date').innerText = latest.CashExDividendTradingDate || '無資料';
                     document.getElementById('pay_date').innerText = latest.CashDividendPaymentDate || '無資料';
                     document.getElementById('div_amount').innerText = latestDividend + ' 元/股';
+
+                    // ★★★ 配息風險分數燈號更新 ★★★
+                    document.getElementById('risk_div_value').innerText = latestDividend + ' 元';
+                    const divLight = document.getElementById('risk_div_light');
+                    if (latestDividend < 0.10) {
+                        divLight.innerText = '🔴';
+                        document.getElementById('risk_div_value').className = 'text-lg font-bold text-red-500 mt-1';
+                    } else {
+                        divLight.innerText = '🟢';
+                        document.getElementById('risk_div_value').className = 'text-lg font-bold text-green-400 mt-1';
+                    }
 
                     if(latest.CashExDividendTradingDate) {
                         const exDate = new Date(latest.CashExDividendTradingDate);
@@ -732,7 +799,6 @@
 
                 let defaultInvestForMonth = 0;
                 if (i < 144) {
-                    // ★★★ 更新手帳預設邏輯 (加入 30000 級距) ★★★
                     if (currentY > 2033 || (currentY === 2033 && currentM >= 1)) {
                         defaultInvestForMonth = 30000;
                     } else if (currentY > 2031 || (currentY === 2031 && currentM >= 7)) {
