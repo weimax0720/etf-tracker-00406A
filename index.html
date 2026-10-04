@@ -555,7 +555,9 @@
                         let currentDefaultInvest = 5000;
                         
                         // ★★★ 更新單月購買力預估邏輯 ★★★
-                        if (currentYear > 2031 || (currentYear === 2031 && currentMonth >= 7)) {
+                        if (currentYear > 2033 || (currentYear === 2033 && currentMonth >= 1)) {
+                            currentDefaultInvest = 30000;
+                        } else if (currentYear > 2031 || (currentYear === 2031 && currentMonth >= 7)) {
                             currentDefaultInvest = 20000;
                         } else if (currentYear > 2027 || (currentYear === 2027 && currentMonth >= 7)) {
                             currentDefaultInvest = 8000;
