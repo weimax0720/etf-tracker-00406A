@@ -134,7 +134,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
                         <h2 class="text-xl font-semibold text-green-400">📝 我的存股手帳 (精確股數版)</h2>
-                        <p class="text-sm text-gray-400 mt-1">將每月多筆交易匯總為一筆：請修改對應月份的「定投金額」與「買進股價(平均)」。<br>自動帶入預設值：前期 5,000 ➔ 2027/07起 8,000 ➔ <span class="text-blue-300 font-bold">2031/07起 20,000</span> ➔ 55歲後停扣。</p>
+                        <p class="text-sm text-gray-400 mt-1">將每月多筆交易匯總為一筆：請修改對應月份的「定投金額」與「買進股價(平均)」。<br>自動帶入預設值：前期 5,000 ➔ 2027/07起 8,000 ➔ 2031/07起 20,000 ➔ <span class="text-blue-300 font-bold">2033/01起 30,000</span> ➔ 55歲後停扣。</p>
                     </div>
                     <div class="bg-gray-900 p-2 rounded text-sm text-gray-300 border border-gray-700 text-right w-full md:w-auto">
                         <p>推算60歲最終持股</p>
@@ -552,9 +552,9 @@
                         
                         const currentYear = today.getFullYear();
                         const currentMonth = today.getMonth() + 1;
-                        let currentDefaultInvest = 5000;
                         
-                        // ★★★ 更新單月購買力預估邏輯 ★★★
+                        // ★★★ 更新單月購買力預估邏輯 (加入 30000 級距) ★★★
+                        let currentDefaultInvest = 5000;
                         if (currentYear > 2033 || (currentYear === 2033 && currentMonth >= 1)) {
                             currentDefaultInvest = 30000;
                         } else if (currentYear > 2031 || (currentYear === 2031 && currentMonth >= 7)) {
@@ -732,8 +732,10 @@
 
                 let defaultInvestForMonth = 0;
                 if (i < 144) {
-                    // ★★★ 更新手帳預設邏輯 ★★★
-                    if (currentY > 2031 || (currentY === 2031 && currentM >= 7)) {
+                    // ★★★ 更新手帳預設邏輯 (加入 30000 級距) ★★★
+                    if (currentY > 2033 || (currentY === 2033 && currentM >= 1)) {
+                        defaultInvestForMonth = 30000;
+                    } else if (currentY > 2031 || (currentY === 2031 && currentM >= 7)) {
                         defaultInvestForMonth = 20000;
                     } else if (currentY > 2027 || (currentY === 2027 && currentM >= 7)) {
                         defaultInvestForMonth = 8000;
