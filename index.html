@@ -271,7 +271,7 @@
                                 <th class="py-3 px-2 text-gray-300">買進股價 ✏</th>
                                 <th class="py-3 px-2 text-blue-300">定投金額 ✏️</th>
                                 <th class="py-3 px-2 text-green-300">配息買股 ✏️</th>
-                                <th class="py-3 px-2 text-purple-300">額外加碼 ✏️️</th>
+                                <th class="py-3 px-2 text-purple-300">額外加碼 ✏️</th>
                                 <th class="py-3 px-3 text-right">累積總股數</th>
                                 <th class="py-3 px-3 text-right text-yellow-400">推算總市值</th>
                             </tr>
@@ -570,7 +570,6 @@
             runDynamicSimulation();
         }
 
-        // 徹底修正：涵蓋買進與配息買入（div_buy）的精確歷史與下次除息對應
         function calculateHistoricalDividends() {
             if (!globalDivData || globalDivData.length === 0) {
                 let currentShares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
@@ -744,7 +743,7 @@
                         const safetyIcon = document.getElementById('safety_icon');
 
                         if (turnoverInYi > 0 && turnoverInYi < 5) {
-                            safetyStatus.innerHTML = `<span class="text-yellow-400 font-bold">⚠ 警告：成交額低於 5 億 (${turnoverInYi.toFixed(2)}億)！</span>`;
+                            safetyStatus.innerHTML = `<span class="text-yellow-400 font-bold">⚠ 警告 : 成交額低於 5 億 (${turnoverInYi.toFixed(2)}億)！</span>`;
                             safetyIcon.innerHTML = "🚨";
                         } else if (turnoverInYi === 0) {
                             safetyStatus.innerHTML = `<span class="text-yellow-400 font-bold">ℹ 今日非交易時段或尚未結算</span>`;
@@ -901,6 +900,7 @@
             const monthlyGrowthRate = Math.pow(1.065, 1/12) - 1; 
             let currentY = startYear; let currentM = startMonth;
             const today = new Date(); const thisY = today.getFullYear(); const thisM = today.getMonth() + 1;
+            
             for(let i = 0; i < totalMonths; i++) {
                 let valuationPrice = (currentY === thisY && currentM === thisM && currentPrice > 0) ? currentPrice : simulatedPrice;
                 if(currentY === thisY && currentM === thisM && currentPrice > 0) simulatedPrice = currentPrice;
@@ -909,7 +909,20 @@
                 let inv = (customInvestMap[i] !== undefined && customInvestMap[i] !== '') ? parseFloat(customInvestMap[i]) : defInv;
                 let execP = (customPriceMap[i] && customPriceMap[i] > 0) ? customPriceMap[i] : valuationPrice;
                 let regS = Math.floor(inv / execP);
+                
+                // 自動對應實際已發生的歷史除息金額，若無則用預估
                 let divInc = runningShares * baseDividend;
+                if (globalDivData && globalDivData.length > 0) {
+                    const matchDiv = globalDivData.find(d => {
+                        if (!d.CashDividendPaymentDate) return false;
+                        const dParts = d.CashDividendPaymentDate.split('-');
+                        return parseInt(dParts[0]) === currentY && parseInt(dParts[1]) === currentM;
+                    });
+                    if (matchDiv) {
+                        divInc = runningShares * matchDiv.CashEarningsDistribution;
+                    }
+                }
+
                 let drip = (customDripMap[i] !== undefined && customDripMap[i] !== '') ? customDripMap[i] : Math.floor(divInc / execP);
                 let extraS = extraSharesMap[i] || 0;
                 runningShares += (regS + extraS + drip);
