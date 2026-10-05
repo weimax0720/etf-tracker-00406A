@@ -34,7 +34,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 完美連動精算版</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 配息買入與除息精算版</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -218,7 +218,7 @@
                     <p class="text-sm font-bold text-white mb-3">➕ 登錄新交易紀錄</p>
                     <div class="grid grid-cols-2 md:grid-cols-6 gap-3 items-end">
                         <div class="col-span-2 md:col-span-1"><p class="text-xs text-gray-400 mb-1">交易日期</p><input type="date" id="tx_date" class="w-full px-2 py-2 bg-gray-900 border border-gray-600 rounded text-sm text-white"></div>
-                        <div><p class="text-xs text-gray-400 mb-1">類型</p><select id="tx_type" class="w-full px-2 py-2 bg-gray-900 border border-gray-600 rounded text-sm text-white"><option value="buy">🔴 買進</option><option value="sell">🟢 賣出</option></select></div>
+                        <div><p class="text-xs text-gray-400 mb-1">類型</p><select id="tx_type" class="w-full px-2 py-2 bg-gray-900 border border-gray-600 rounded text-sm text-white"><option value="buy">🔴 現金買進</option><option value="div_buy">🟢 配息買入</option><option value="sell">🔵 賣出</option></select></div>
                         <div><p class="text-xs text-gray-400 mb-1">單價 (元)</p><input type="number" step="0.01" id="tx_price" placeholder="例: 14.8" class="w-full px-2 py-2 bg-gray-900 border border-gray-600 rounded text-sm text-white"></div>
                         <div><p class="text-xs text-gray-400 mb-1">股數 (股)</p><input type="number" id="tx_shares" placeholder="例: 1000" class="w-full px-2 py-2 bg-gray-900 border border-gray-600 rounded text-sm text-white"></div>
                         <div><p class="text-xs text-gray-400 mb-1">手續費 (元)</p><input type="number" id="tx_fee" placeholder="預設: 0" class="w-full px-2 py-2 bg-gray-900 border border-gray-600 rounded text-sm text-white"></div>
@@ -459,8 +459,6 @@
             const savedKey = localStorage.getItem(KEY_NAME);
             document.getElementById('tx_date').value = new Date().toISOString().split('T')[0];
             loadTransactions();
-            
-            // 初始化時先從明細同步一次持股與成本到首頁
             syncTransactionsToHome();
 
             if(localStorage.getItem(LEDGER_INVEST_KEY)) customInvestMap = JSON.parse(localStorage.getItem(LEDGER_INVEST_KEY));
@@ -480,7 +478,6 @@
                 document.getElementById('api_key').value = savedKey; 
                 fetchData(savedKey); 
             } else {
-                // 若無API Key，至少確保首頁數據正確渲染
                 updateHoldingCalculations();
             }
         };
@@ -544,7 +541,10 @@
             const sortedTx = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
             sortedTx.forEach(tx => {
                 const fee = tx.fee || 0;
-                if(tx.type === 'buy') { totalShares += tx.shares; totalCost += (tx.price * tx.shares + fee); } 
+                if(tx.type === 'buy' || tx.type === 'div_buy') { 
+                    totalShares += tx.shares; 
+                    totalCost += (tx.price * tx.shares + fee); 
+                } 
                 else if (tx.type === 'sell') {
                     if(totalShares > 0) {
                         let currentAvg = totalCost / totalShares;
@@ -570,7 +570,7 @@
             runDynamicSimulation();
         }
 
-        // 徹底修正：精算歷史與下次除息對應持股
+        // 徹底修正：精確判斷下次除息日與歷史除息持股
         function calculateHistoricalDividends() {
             if (!globalDivData || globalDivData.length === 0) {
                 let currentShares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
@@ -579,10 +579,10 @@
             
             let totalDivs = 0;
             let details = [];
-            const today = new Date();
+            const todayStr = new Date().toISOString().split('T')[0];
 
-            // 尋找下次最近的除息日（大於今天）
-            const futureDivs = globalDivData.filter(d => d.CashExDividendTradingDate && new Date(d.CashExDividendTradingDate) >= today);
+            // 尋找下次最近的除息日（大於或等於今天）
+            const futureDivs = globalDivData.filter(d => d.CashExDividendTradingDate && d.CashExDividendTradingDate >= todayStr);
             let nextExDate = futureDivs.length > 0 ? futureDivs[0].CashExDividendTradingDate : null;
             let nextEligibleShares = 0;
 
@@ -593,9 +593,9 @@
                 let holdSharesBeforeExDate = 0;
                 if (transactions.length > 0) {
                     transactions.forEach(tx => {
-                        // 必須在除息日「前一天以前」買進才享有股利
+                        // 必須在除息日前一天以前買進才享有股利
                         if (tx.date < exDateStr) {
-                            if (tx.type === 'buy') holdSharesBeforeExDate += tx.shares;
+                            if (tx.type === 'buy' || tx.type === 'div_buy') holdSharesBeforeExDate += tx.shares;
                             if (tx.type === 'sell') holdSharesBeforeExDate -= tx.shares;
                         }
                     });
@@ -603,13 +603,13 @@
                     holdSharesBeforeExDate = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
                 }
 
-                // 抓取下次除息日的對應持股
+                // 若剛好是下次除息日，記錄對應持股
                 if (exDateStr === nextExDate) {
                     nextEligibleShares = Math.max(0, holdSharesBeforeExDate);
                 }
 
                 // 過去已除息的累積實領
-                if (new Date(exDateStr) < today && holdSharesBeforeExDate > 0) {
+                if (exDateStr < todayStr && holdSharesBeforeExDate > 0) {
                     const received = holdSharesBeforeExDate * div.CashEarningsDistribution;
                     totalDivs += received;
                     details.push({ date: exDateStr, shares: holdSharesBeforeExDate, dps: div.CashEarningsDistribution, amount: received });
@@ -628,7 +628,10 @@
             const sortedTx = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
             sortedTx.forEach(tx => {
                 const fee = tx.fee || 0;
-                if(tx.type === 'buy') { totalShares += tx.shares; totalCost += (tx.price * tx.shares + fee); } 
+                if(tx.type === 'buy' || tx.type === 'div_buy') { 
+                    totalShares += tx.shares; 
+                    totalCost += (tx.price * tx.shares + fee); 
+                } 
                 else if (tx.type === 'sell') {
                     if(totalShares > 0) {
                         let currentAvg = totalCost / totalShares;
@@ -667,9 +670,14 @@
             const sortedDisplay = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
             let html = '';
             sortedDisplay.forEach(tx => {
-                const isBuy = tx.type === 'buy';
-                const typeLabel = isBuy ? '<span class="text-red-400 bg-red-900/30 px-2 py-1 rounded text-xs">買進</span>' : '<span class="text-green-400 bg-green-900/30 px-2 py-1 rounded text-xs">賣出</span>';
+                let typeLabel = '';
+                if(tx.type === 'buy') typeLabel = '<span class="text-red-400 bg-red-900/30 px-2 py-1 rounded text-xs">現金買進</span>';
+                else if(tx.type === 'div_buy') typeLabel = '<span class="text-green-400 bg-green-900/30 px-2 py-1 rounded text-xs">配息買入</span>';
+                else typeLabel = '<span class="text-blue-400 bg-blue-900/30 px-2 py-1 rounded text-xs">賣出</span>';
+
+                const isBuy = (tx.type === 'buy' || tx.type === 'div_buy');
                 const totalAmt = isBuy ? (tx.price * tx.shares + (tx.fee || 0)) : (tx.price * tx.shares - (tx.fee || 0));
+                
                 html += `<tr class="hover:bg-gray-700/50 transition-colors">
                     <td class="py-3 px-4 text-white">${tx.date}</td><td class="py-3 px-4">${typeLabel}</td>
                     <td class="py-3 px-4 text-right text-gray-300">${tx.price.toFixed(2)}</td>
@@ -705,7 +713,6 @@
             const yearAgo = yearAgoDate.toISOString().split('T')[0];
 
             try {
-                // 1. 抓取股價
                 const priceUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=00406A&start_date=${yearAgo}&token=${token}`;
                 const priceRes = await fetch(priceUrl);
                 const priceData = await priceRes.json();
@@ -753,7 +760,6 @@
                     }
                 }
 
-                // 2. 抓取配息資料
                 const divUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockDividend&data_id=00406A&start_date=2020-01-01&token=${token}`;
                 const divRes = await fetch(divUrl);
                 const divData = await divRes.json();
@@ -774,7 +780,6 @@
                     else { divLight.innerText = '🟢'; document.getElementById('risk_div_value').className = 'text-lg font-bold text-green-400 mt-1'; }
                 }
 
-                // 重新渲染全部
                 renderTransactions();
                 updateHoldingCalculations();
                 runDynamicSimulation();
@@ -783,7 +788,6 @@
             } catch (e) { console.error("API 獲取錯誤", e); }
         }
 
-        // 總覽畫面更新
         function updateHoldingCalculations() {
             const shares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
             const avgCost = parseFloat(localStorage.getItem(COST_KEY)) || 0;
@@ -806,7 +810,6 @@
                 else pnlEl.innerHTML = `<span class="text-gray-400">NT$ 0</span>`;
             }
 
-            // 領息真實降本價
             const adjCostLabel = document.getElementById('adj_cost_label');
             const adjPriceEl = document.getElementById('adj_breakeven_price');
             
@@ -823,7 +826,6 @@
                 adjPriceEl.innerText = (shares > 0 && avgCost > 0) ? adjBreakeven.toFixed(2) : '0.00';
             }
 
-            // 下次除息預估入帳 (嚴格對應下次除息日的實際持股)
             if(latestDividend > 0) {
                 const targetSharesForNextDiv = (transactions.length > 0) ? globalNextDivEligibleShares : shares;
                 const estimatedNextDivIncome = targetSharesForNextDiv * latestDividend;
@@ -873,7 +875,6 @@
             document.getElementById('topup_result').classList.remove('hidden');
         }
 
-        // 手帳與雙寶等函數
         function saveCustomPrice(m, o) { const v=parseFloat(o.value); if(isNaN(v)||v<=0) delete customPriceMap[m]; else customPriceMap[m]=v; localStorage.setItem(LEDGER_PRICE_KEY, JSON.stringify(customPriceMap)); runDynamicSimulation(); runKidsSimulation(); }
         function saveCustomInvest(m, o) { const v=parseFloat(o.value); if(isNaN(v)||v<0) delete customInvestMap[m]; else customInvestMap[m]=v; localStorage.setItem(LEDGER_INVEST_KEY, JSON.stringify(customInvestMap)); runDynamicSimulation(); }
         function saveCustomDrip(m, o) { const v=parseInt(o.value); if(isNaN(v)||v<0) delete customDripMap[m]; else customDripMap[m]=v; localStorage.setItem(LEDGER_DRIP_KEY, JSON.stringify(customDripMap)); runDynamicSimulation(); }
