@@ -33,7 +33,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 完整手帳與逐筆明細雙模組</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 完整手帳、逐筆明細與雙寶專屬版</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -101,7 +101,7 @@
             </div>
 
             <!-- 保本與損益精算卡片 -->
-            <div class="card border border-indigo-900/50 shadow-lg shadow-indigo-900/10 relative overflow-hidden">
+            <div class="card border border-indigo-900/50 shadow-lg relative overflow-hidden">
                 <div class="absolute right-[-20px] top-[-20px] text-8xl opacity-5">🎯</div>
                 <h2 class="text-xl font-semibold text-indigo-400 mb-4">🛡️ 投資保本與損益精算</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
@@ -191,7 +191,7 @@
             </div>
         </div>
 
-        <!-- ================= 分頁 2：17年未來模擬手帳 (保留原本功能) ================= -->
+        <!-- ================= 分頁 2：17年未來模擬手帳 ================= -->
         <div id="tab-ledger" class="space-y-6 hidden">
             <div class="card">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
@@ -205,7 +205,6 @@
                     </div>
                 </div>
 
-                <!-- 年度切換列 -->
                 <div class="flex flex-wrap gap-2 mb-4" id="ledger-year-tabs"></div>
 
                 <div class="overflow-x-auto border border-gray-700 rounded-lg">
@@ -320,17 +319,23 @@
             </div>
 
             <div class="card">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                    <div>
+                        <h2 class="text-xl font-semibold text-pink-400">👧 雙寶每週 100 元存股手帳</h2>
+                        <p class="text-sm text-gray-400 mt-1">每週 100 元換算平均每月預算為 <span class="text-white font-bold">433 元</span>。支援獨立調整買價與實買股數。</p>
+                    </div>
+                </div>
                 <div class="flex flex-wrap gap-2 mb-4" id="kids-year-tabs"></div>
                 <div class="overflow-x-auto border border-gray-700 rounded-lg">
                     <table class="w-full text-left border-collapse min-w-[950px]">
                         <thead class="bg-gray-800 border-b border-gray-700 text-sm text-gray-400">
                             <tr>
-                                <th class="py-3 px-3 font-medium">年月</th>
-                                <th class="py-3 px-2 font-medium text-pink-300">大寶買價</th>
-                                <th class="py-3 px-2 font-medium text-pink-300">大寶實買</th>
+                                <th class="py-3 px-3 font-medium">年月 (期數)</th>
+                                <th class="py-3 px-2 font-medium text-pink-300">大寶買價 ✏️</th>
+                                <th class="py-3 px-2 font-medium text-pink-300">大寶實買 ✏️</th>
                                 <th class="py-3 px-2 font-medium text-pink-300 text-right">大寶市值</th>
-                                <th class="py-3 px-2 font-medium text-blue-300">二寶買價</th>
-                                <th class="py-3 px-2 font-medium text-blue-300">二寶實買</th>
+                                <th class="py-3 px-2 font-medium text-blue-300">二寶買價 ✏️</th>
+                                <th class="py-3 px-2 font-medium text-blue-300">二寶實買 ✏️</th>
                                 <th class="py-3 px-2 font-medium text-blue-300 text-right">二寶市值</th>
                                 <th class="py-3 px-3 font-medium text-right">大寶總股數</th>
                                 <th class="py-3 px-3 font-medium text-right">二寶總股數</th>
@@ -414,6 +419,11 @@
         const LEDGER_PRICE_KEY = '00406A_LEDGER_PRICE';   
         const LEDGER_DRIP_KEY = '00406A_LEDGER_DRIP';     
         const LEDGER_EXTRA_KEY = '00406A_LEDGER_EXTRA';   
+
+        const KID_A_PRICE_KEY = '00406A_KID_A_PRICE';
+        const KID_A_SHARES_KEY = '00406A_KID_A_SHARES';
+        const KID_B_PRICE_KEY = '00406A_KID_B_PRICE';
+        const KID_B_SHARES_KEY = '00406A_KID_B_SHARES';
         
         let latestDividend = 0; 
         let currentPrice = 0;   
@@ -430,6 +440,10 @@
         let projectedData = [];   
         let currentSelectedYear = 2026; 
 
+        let kidAPriceMap = {}; let kidASharesMap = {};
+        let kidBPriceMap = {}; let kidBSharesMap = {};
+        let kidsProjectedData = [];
+
         window.onload = () => {
             const savedKey = localStorage.getItem(KEY_NAME);
             if(savedKey) { document.getElementById('api_key').value = savedKey; fetchData(savedKey); }
@@ -443,7 +457,13 @@
             if(localStorage.getItem(LEDGER_DRIP_KEY)) customDripMap = JSON.parse(localStorage.getItem(LEDGER_DRIP_KEY));
             if(localStorage.getItem(LEDGER_EXTRA_KEY)) extraSharesMap = JSON.parse(localStorage.getItem(LEDGER_EXTRA_KEY));
 
+            if(localStorage.getItem(KID_A_PRICE_KEY)) kidAPriceMap = JSON.parse(localStorage.getItem(KID_A_PRICE_KEY));
+            if(localStorage.getItem(KID_A_SHARES_KEY)) kidASharesMap = JSON.parse(localStorage.getItem(KID_A_SHARES_KEY));
+            if(localStorage.getItem(KID_B_PRICE_KEY)) kidBPriceMap = JSON.parse(localStorage.getItem(KID_B_PRICE_KEY));
+            if(localStorage.getItem(KID_B_SHARES_KEY)) kidBSharesMap = JSON.parse(localStorage.getItem(KID_B_SHARES_KEY));
+
             renderYearTabs();
+            renderKidsYearTabs();
             renderTransactionsTable();
             runDynamicSimulation(); 
             runKidsSimulation();
@@ -650,6 +670,58 @@
         function saveCustomDrip(idx, el) { customDripMap[idx] = parseInt(el.value) || ''; localStorage.setItem(LEDGER_DRIP_KEY, JSON.stringify(customDripMap)); runDynamicSimulation(); }
         function saveExtraShares(idx, el) { extraSharesMap[idx] = parseInt(el.value) || ''; localStorage.setItem(LEDGER_EXTRA_KEY, JSON.stringify(extraSharesMap)); runDynamicSimulation(); }
 
+        // 雙寶存股手帳相關函數
+        function renderKidsYearTabs() {
+            const container = document.getElementById('kids-year-tabs');
+            let html = '';
+            for(let i = 0; i <= 17; i++) {
+                let y = 2026 + i;
+                let active = (y === currentSelectedYear) ? 'active bg-pink-600 text-white border-pink-500' : 'bg-gray-800 text-gray-400 border-gray-700';
+                html += `<button onclick="changeKidsYear(${y})" class="year-btn px-3 py-1 text-sm rounded border ${active}">${y}年</button>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function changeKidsYear(year) {
+            currentSelectedYear = year;
+            renderKidsYearTabs();
+            renderKidsTable(year);
+        }
+
+        function renderKidsTable(year) {
+            const tbody = document.getElementById('kids_table_body');
+            const yearData = kidsProjectedData.filter(d => d.year === year);
+            if(yearData.length === 0) { tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-gray-500">載入中...</td></tr>`; return; }
+
+            let html = '';
+            yearData.forEach(d => {
+                let priceA = kidAPriceMap[d.index] !== undefined ? kidAPriceMap[d.index] : '';
+                let sharesA = kidASharesMap[d.index] !== undefined ? kidASharesMap[d.index] : '';
+                let priceB = kidBPriceMap[d.index] !== undefined ? kidBPriceMap[d.index] : '';
+                let sharesB = kidBSharesMap[d.index] !== undefined ? kidBSharesMap[d.index] : '';
+
+                html += `
+                    <tr class="hover:bg-gray-700/50">
+                        <td class="py-2 px-3 text-white">${d.year}-${d.month.toString().padStart(2,'0')} <br><span class="text-xs text-gray-500">第${d.index+1}期</span></td>
+                        <td class="py-2 px-2"><input type="number" onchange="saveKidAPrice(${d.index}, this)" value="${priceA}" placeholder="${d.execPriceA.toFixed(2)}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-pink-800 rounded text-sm text-pink-300"></td>
+                        <td class="py-2 px-2"><input type="number" onchange="saveKidAShares(${d.index}, this)" value="${sharesA}" placeholder="${d.defaultBuySharesA}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-pink-800 rounded text-sm text-pink-300"></td>
+                        <td class="py-2 px-2 text-yellow-400 text-right">NT$ ${Math.round(d.valueA).toLocaleString()}</td>
+                        <td class="py-2 px-2"><input type="number" onchange="saveKidBPrice(${d.index}, this)" value="${priceB}" placeholder="${d.execPriceB.toFixed(2)}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-sm text-blue-300"></td>
+                        <td class="py-2 px-2"><input type="number" onchange="saveKidBShares(${d.index}, this)" value="${sharesB}" placeholder="${d.defaultBuySharesB}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-sm text-blue-300"></td>
+                        <td class="py-2 px-2 text-yellow-400 text-right">NT$ ${Math.round(d.valueB).toLocaleString()}</td>
+                        <td class="py-2 px-3 text-white font-bold text-right">${Math.round(d.totalA).toLocaleString()} 股</td>
+                        <td class="py-2 px-3 text-white font-bold text-right">${Math.round(d.totalB).toLocaleString()} 股</td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function saveKidAPrice(idx, el) { kidAPriceMap[idx] = parseFloat(el.value) || ''; localStorage.setItem(KID_A_PRICE_KEY, JSON.stringify(kidAPriceMap)); runKidsSimulation(); }
+        function saveKidAShares(idx, el) { kidASharesMap[idx] = parseInt(el.value) || ''; localStorage.setItem(KID_A_SHARES_KEY, JSON.stringify(kidASharesMap)); runKidsSimulation(); }
+        function saveKidBPrice(idx, el) { kidBPriceMap[idx] = parseFloat(el.value) || ''; localStorage.setItem(KID_B_PRICE_KEY, JSON.stringify(kidBPriceMap)); runKidsSimulation(); }
+        function saveKidBShares(idx, el) { kidBSharesMap[idx] = parseInt(el.value) || ''; localStorage.setItem(KID_B_SHARES_KEY, JSON.stringify(kidBSharesMap)); runKidsSimulation(); }
+
         function isWeekend(dateString) { const d = new Date(dateString); return d.getDay() === 0 || d.getDay() === 6; }
 
         async function fetchData(token) {
@@ -698,21 +770,26 @@
             projectedData = [];
             let runningShares = 0;
             transactions.forEach(t => { runningShares += Math.floor(t.amount / t.price); });
-            if(runningShares === 0) runningShares = 3480; // 預設
+            if(runningShares === 0) runningShares = 3480;
 
             let basePrice = currentPrice > 0 ? currentPrice : 15.0;
             let baseDiv = latestDividend > 0 ? latestDividend : 0.138;
             let simPrice = basePrice;
             let curY = 2026; let curM = 9;
+            const today = new Date();
 
             for(let i = 0; i < 205; i++) {
+                let isCurrentMonth = (curY === today.getFullYear() && curM === (today.getMonth() + 1));
+                let valuationPrice = simPrice;
+                if(isCurrentMonth && currentPrice > 0) valuationPrice = currentPrice;
+
                 let defInvest = 0;
                 if(i < 144) {
                     defInvest = (curY > 2033 || (curY === 2033 && curM >= 1)) ? 30000 : (curY > 2031 || (curY === 2031 && curM >= 7)) ? 20000 : (curY > 2027 || (curY === 2027 && curM >= 7)) ? 8000 : 5000;
                 }
                 let investAmt = (customInvestMap[i] !== undefined && customInvestMap[i] !== '') ? customInvestMap[i] : defInvest;
                 let manualPrice = customPriceMap[i];
-                let execPrice = (manualPrice && manualPrice > 0) ? manualPrice : simPrice;
+                let execPrice = (manualPrice && manualPrice > 0) ? manualPrice : valuationPrice;
                 let regShares = Math.floor(investAmt / execPrice);
                 let divInc = runningShares * baseDiv;
                 let dripShares = (customDripMap[i] !== undefined && customDripMap[i] !== '') ? customDripMap[i] : Math.floor(divInc / execPrice);
@@ -723,7 +800,7 @@
                     index: i, year: curY, month: curM, execPrice: execPrice, isManualPrice: (manualPrice !== undefined),
                     defaultInvest: defInvest, investAmount: investAmt, regularShares: regShares,
                     dividendIncome: divInc, dripShares: dripShares, isManualDrip: (customDripMap[i] !== undefined),
-                    extraShares: extraS, totalShares: runningShares, marketValue: runningShares * execPrice
+                    extraShares: extraS, totalShares: runningShares, marketValue: runningShares * valuationPrice
                 });
 
                 curM++; if(curM > 12) { curM = 1; curY++; }
@@ -739,25 +816,62 @@
         }
 
         function runKidsSimulation() {
-            let sA = 0, sB = 0; let p = currentPrice > 0 ? currentPrice : 15.0;
-            let kidsData = [];
-            for(let i = 0; i < 205; i++) {
-                let b = Math.floor(433 / p);
-                sA += (b + Math.floor((sA * 0.138) / p));
-                sB += (b + Math.floor((sB * 0.138) / p));
-                kidsData.push({ valA: sA * p, valB: sB * p, totalA: sA, totalB: sB });
-                p *= Math.pow(1.065, 1/12);
-            }
-            const final = kidsData[kidsData.length - 1];
-            document.getElementById('kid_a_realtime_value').innerText = Math.round(final.valA).toLocaleString();
-            document.getElementById('kid_a_current_shares').innerText = final.totalA.toLocaleString();
-            document.getElementById('kid_a_market_value').innerText = Math.round(final.valA).toLocaleString();
-            document.getElementById('kid_a_dividend').innerText = Math.round(final.totalA * 0.138).toLocaleString();
+            kidsProjectedData = [];
+            let sA = 0, sB = 0;
+            let basePrice = currentPrice > 0 ? currentPrice : 15.0;
+            let baseDiv = latestDividend > 0 ? latestDividend : 0.138;
+            let simPrice = basePrice;
+            let curY = 2026; let curM = 9;
+            const monthlyBudget = 433;
+            const today = new Date();
 
-            document.getElementById('kid_b_realtime_value').innerText = Math.round(final.valB).toLocaleString();
-            document.getElementById('kid_b_current_shares').innerText = final.totalB.toLocaleString();
-            document.getElementById('kid_b_market_value').innerText = Math.round(final.valB).toLocaleString();
-            document.getElementById('kid_b_dividend').innerText = Math.round(final.totalB * 0.138).toLocaleString();
+            for(let i = 0; i < 205; i++) {
+                let isCurrentMonth = (curY === today.getFullYear() && curM === (today.getMonth() + 1));
+                let valuationPrice = simPrice;
+                if(isCurrentMonth && currentPrice > 0) valuationPrice = currentPrice;
+
+                let manualPriceA = kidAPriceMap[i];
+                let execPriceA = (manualPriceA && manualPriceA > 0) ? manualPriceA : valuationPrice;
+                let manualPriceB = kidBPriceMap[i];
+                let execPriceB = (manualPriceB && manualPriceB > 0) ? manualPriceB : valuationPrice;
+
+                let defSharesA = Math.floor(monthlyBudget / execPriceA);
+                let defSharesB = Math.floor(monthlyBudget / execPriceB);
+
+                let buyA = kidASharesMap[i] !== undefined ? kidASharesMap[i] : defSharesA;
+                let divA = sA * baseDiv;
+                let dripA = Math.floor(divA / execPriceA);
+                sA += (buyA + dripA);
+
+                let buyB = kidBSharesMap[i] !== undefined ? kidBSharesMap[i] : defSharesB;
+                let divB = sB * baseDiv;
+                let dripB = Math.floor(divB / execPriceB);
+                sB += (buyB + dripB);
+
+                kidsProjectedData.push({
+                    index: i, year: curY, month: curM,
+                    execPriceA: execPriceA, defaultBuySharesA: defSharesA, totalA: sA, valueA: sA * valuationPrice, divA: divA,
+                    execPriceB: execPriceB, defaultBuySharesB: defSharesB, totalB: sB, valueB: sB * valuationPrice, divB: divB
+                });
+
+                curM++; if(curM > 12) { curM = 1; curY++; }
+                simPrice *= Math.pow(1.065, 1/12);
+            }
+
+            const currentKidsState = kidsProjectedData.find(d => d.year === today.getFullYear() && d.month === (today.getMonth()+1)) || kidsProjectedData[0];
+            const finalKids = kidsProjectedData[kidsProjectedData.length - 1];
+
+            document.getElementById('kid_a_realtime_value').innerText = Math.round(currentKidsState.totalA * (currentPrice > 0 ? currentPrice : currentKidsState.execPriceA)).toLocaleString();
+            document.getElementById('kid_a_current_shares').innerText = Math.round(currentKidsState.totalA).toLocaleString();
+            document.getElementById('kid_a_market_value').innerText = Math.round(finalKids.valueA).toLocaleString();
+            document.getElementById('kid_a_dividend').innerText = Math.round(finalKids.divA).toLocaleString();
+
+            document.getElementById('kid_b_realtime_value').innerText = Math.round(currentKidsState.totalB * (currentPrice > 0 ? currentPrice : currentKidsState.execPriceB)).toLocaleString();
+            document.getElementById('kid_b_current_shares').innerText = Math.round(currentKidsState.totalB).toLocaleString();
+            document.getElementById('kid_b_market_value').innerText = Math.round(finalKids.valueB).toLocaleString();
+            document.getElementById('kid_b_dividend').innerText = Math.round(finalKids.divB).toLocaleString();
+
+            renderKidsTable(currentSelectedYear);
         }
 
         function drawDRIPChartFromProjection() {
