@@ -34,7 +34,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 配息買入與除息精算版</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 零死角全功能完美版</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -271,7 +271,7 @@
                                 <th class="py-3 px-2 text-gray-300">買進股價 ✏</th>
                                 <th class="py-3 px-2 text-blue-300">定投金額 ✏️</th>
                                 <th class="py-3 px-2 text-green-300">配息買股 ✏️</th>
-                                <th class="py-3 px-2 text-purple-300">額外加碼 ✏️</th>
+                                <th class="py-3 px-2 text-purple-300">額外加碼 ✏️️</th>
                                 <th class="py-3 px-3 text-right">累積總股數</th>
                                 <th class="py-3 px-3 text-right text-yellow-400">推算總市值</th>
                             </tr>
@@ -570,7 +570,7 @@
             runDynamicSimulation();
         }
 
-        // 徹底修正：精確判斷下次除息日與歷史除息持股
+        // 徹底修正：涵蓋買進與配息買入（div_buy）的精確歷史與下次除息對應
         function calculateHistoricalDividends() {
             if (!globalDivData || globalDivData.length === 0) {
                 let currentShares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
@@ -581,7 +581,6 @@
             let details = [];
             const todayStr = new Date().toISOString().split('T')[0];
 
-            // 尋找下次最近的除息日（大於或等於今天）
             const futureDivs = globalDivData.filter(d => d.CashExDividendTradingDate && d.CashExDividendTradingDate >= todayStr);
             let nextExDate = futureDivs.length > 0 ? futureDivs[0].CashExDividendTradingDate : null;
             let nextEligibleShares = 0;
@@ -593,7 +592,6 @@
                 let holdSharesBeforeExDate = 0;
                 if (transactions.length > 0) {
                     transactions.forEach(tx => {
-                        // 必須在除息日前一天以前買進才享有股利
                         if (tx.date < exDateStr) {
                             if (tx.type === 'buy' || tx.type === 'div_buy') holdSharesBeforeExDate += tx.shares;
                             if (tx.type === 'sell') holdSharesBeforeExDate -= tx.shares;
@@ -603,12 +601,10 @@
                     holdSharesBeforeExDate = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
                 }
 
-                // 若剛好是下次除息日，記錄對應持股
                 if (exDateStr === nextExDate) {
                     nextEligibleShares = Math.max(0, holdSharesBeforeExDate);
                 }
 
-                // 過去已除息的累積實領
                 if (exDateStr < todayStr && holdSharesBeforeExDate > 0) {
                     const received = holdSharesBeforeExDate * div.CashEarningsDistribution;
                     totalDivs += received;
