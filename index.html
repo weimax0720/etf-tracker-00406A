@@ -22,9 +22,6 @@
         
         input[type="number"]::-webkit-inner-spin-button, 
         input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        
-        .progress-bar-bg { background-color: #374151; border-radius: 9999px; overflow: hidden; height: 0.75rem; }
-        .progress-bar-fill { height: 100%; transition: width 0.5s ease-in-out; }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -47,7 +44,6 @@
         <!-- 導覽分頁按鈕 (Tabs) -->
         <div class="flex border-b border-gray-700 space-x-2 overflow-x-auto pb-2">
             <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn active px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-200 whitespace-nowrap">📊 我的資產總覽</button>
-            <button onclick="switchTab('defense')" id="btn-defense" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-yellow-500 whitespace-nowrap">🏦 保本防禦庫</button>
             <button onclick="switchTab('ledger')" id="btn-ledger" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📝 我的存股手帳</button>
             <button onclick="switchTab('kids')" id="btn-kids" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-pink-400 whitespace-nowrap">👧 雙寶存股手帳</button>
             <button onclick="switchTab('charts')" id="btn-charts" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📈 走勢與日週月</button>
@@ -80,25 +76,62 @@
                     </div>
                 </div>
                 
-                <div class="bg-gray-800 p-4 rounded-lg border border-blue-700/50 flex flex-col justify-center">
-                    <p class="text-sm text-blue-300">我的真實起點持股 (股)</p>
-                    <div class="flex space-x-2 mt-2">
-                        <input type="number" id="real_shares_input" placeholder="輸入總股數" class="w-full px-2 py-1 bg-gray-900 border border-gray-600 rounded text-white text-base font-bold focus:outline-none focus:border-blue-500">
-                        <button onclick="saveShares()" class="bg-blue-700 hover:bg-blue-600 px-3 py-1 rounded text-sm font-medium transition">更新</button>
+                <!-- 升級版：輸入股數與均價 -->
+                <div class="bg-gray-800 p-4 rounded-lg border border-blue-700/50 flex flex-col justify-center col-span-2 md:col-span-3 shadow-lg">
+                    <div class="flex items-center gap-2 mb-3">
+                        <p class="text-sm text-blue-300 font-bold">我的真實起點部位 (用於計算保本與損益)</p>
+                    </div>
+                    <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
+                        <div class="flex-1">
+                            <p class="text-xs text-gray-400 mb-1">總股數 (股)</p>
+                            <input type="number" id="real_shares_input" placeholder="例如: 10000" class="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded text-white text-base font-bold focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-xs text-gray-400 mb-1">持有均價 (元)</p>
+                            <input type="number" step="0.01" id="real_cost_input" placeholder="例如: 14.85" class="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded text-white text-base font-bold focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="saveShares()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded text-sm font-bold transition h-[42px] shadow-lg shadow-blue-900/50">儲存並試算</button>
+                        </div>
                     </div>
                 </div>
+
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center">
-                    <p class="text-sm text-gray-400">起點庫存總市值 (攻擊部位)</p>
+                    <p class="text-sm text-gray-400">起點庫存總市值</p>
                     <div class="flex justify-between items-center mt-1">
                         <p class="text-xl md:text-2xl font-bold text-yellow-400">NT$ <span id="real_market_value">0</span></p>
                         <span class="text-lg md:text-xl">💰</span>
                     </div>
                 </div>
-                <div class="bg-gray-800 p-4 rounded-lg border border-green-700/50 flex flex-col justify-center col-span-2 md:col-span-1 shadow-lg shadow-green-900/20">
+                <div class="bg-gray-800 p-4 rounded-lg border border-green-700/50 flex flex-col justify-center col-span-2 md:col-span-2 shadow-lg shadow-green-900/20">
                     <p class="text-sm text-green-300 font-bold">本次除息預估入帳</p>
                     <div class="flex justify-between items-center mt-1">
                         <p class="text-xl md:text-2xl font-bold text-green-400">NT$ <span id="real_dividend_income">0</span></p>
                         <span class="text-lg md:text-xl">💸</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新增：保本與損益精算卡片 -->
+            <div class="card border border-indigo-900/50 shadow-lg shadow-indigo-900/10 relative overflow-hidden">
+                <div class="absolute right-[-20px] top-[-20px] text-8xl opacity-5">🎯</div>
+                <h2 class="text-xl font-semibold text-indigo-400 mb-4">🛡️ 投資保本與損益精算</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800">
+                        <p class="text-xs text-gray-400">總投入成本 (台幣)</p>
+                        <p class="text-xl font-bold text-white mt-1">NT$ <span id="total_invested_cost">0</span></p>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800">
+                        <p class="text-xs text-gray-400">原始保本價 (持有均價)</p>
+                        <p class="text-xl font-bold text-yellow-400 mt-1"><span id="breakeven_price">0.00</span> 元</p>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 relative overflow-hidden border-l-2 border-l-green-500">
+                        <p class="text-[11px] text-gray-400">領息降本價 (預估扣除本次)</p>
+                        <p class="text-xl font-bold text-green-400 mt-1"><span id="adj_breakeven_price">0.00</span> 元</p>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 col-span-2 md:col-span-1">
+                        <p class="text-xs text-gray-400">目前帳面損益 (依即時市價)</p>
+                        <p class="text-xl font-bold mt-1" id="unrealized_pnl">NT$ 0 <span class="text-sm font-normal text-gray-500">(0.00%)</span></p>
                     </div>
                 </div>
             </div>
@@ -133,102 +166,6 @@
             </div>
         </div>
 
-        <!-- ================= 分頁 X：保本防禦庫 (全新加入) ================= -->
-        <div id="tab-defense" class="space-y-6 hidden">
-            <!-- 緊急預備金雷達 -->
-            <div class="card border border-yellow-700/50 shadow-lg shadow-yellow-900/10">
-                <div class="flex items-center gap-3 mb-4">
-                    <h2 class="text-xl font-semibold text-yellow-400">🚨 家庭緊急預備金雷達</h2>
-                    <span class="badge bg-yellow-900 text-yellow-300">絕對保本底線</span>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center">
-                        <p class="text-sm text-gray-400">每月家庭基本開銷設定 (NT$)</p>
-                        <div class="flex space-x-2 mt-2">
-                            <input type="number" id="monthly_expense_input" placeholder="例如: 80000" class="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded text-white text-lg font-bold focus:outline-none focus:border-yellow-500">
-                            <button onclick="saveDefenseConfig()" class="bg-yellow-700 hover:bg-yellow-600 px-4 py-2 rounded text-sm font-medium transition">設定</button>
-                        </div>
-                        <p class="text-xs text-gray-500 mt-2">建議準備至少 6 個月的無風險現金</p>
-                    </div>
-
-                    <div class="md:col-span-2 bg-gray-900 p-5 rounded-lg border border-gray-800 relative">
-                        <div class="flex justify-between items-end mb-2">
-                            <div>
-                                <p class="text-sm text-gray-400">目標預備金 (6個月)</p>
-                                <p class="text-xl font-bold text-white">NT$ <span id="target_emergency_fund">0</span></p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm text-gray-400">目前保本現金總計</p>
-                                <p class="text-2xl font-bold text-yellow-400">NT$ <span id="current_cash_total">0</span></p>
-                            </div>
-                        </div>
-                        
-                        <div class="progress-bar-bg mt-4">
-                            <div id="emergency_progress_bar" class="progress-bar-fill bg-yellow-500" style="width: 0%;"></div>
-                        </div>
-                        <p class="text-right text-xs text-gray-400 mt-1">達成率: <span id="emergency_progress_text" class="font-bold text-white">0%</span></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 動態資產配置與防禦清單 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- 左側：資產保險箱 -->
-                <div class="card">
-                    <h2 class="text-xl font-semibold mb-4 text-blue-400">🏦 保本與防禦資產庫</h2>
-                    <p class="text-xs text-gray-400 mb-4">輸入您存放在股市以外的低風險資產，系統會自動加總並計算避險比例。</p>
-                    
-                    <div class="space-y-4">
-                        <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
-                            <div class="flex justify-between items-center mb-2">
-                                <label class="text-sm font-medium text-gray-300">💵 台幣活存 / 定存 (絕對保本)</label>
-                            </div>
-                            <input type="number" id="defense_cash_twd" onchange="saveDefenseAssets()" placeholder="輸入台幣現金總額" class="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded text-white text-lg focus:outline-none focus:border-blue-500">
-                        </div>
-
-                        <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
-                            <div class="flex justify-between items-center mb-2">
-                                <label class="text-sm font-medium text-gray-300">🗽 美元存款 / 保單 (折合台幣)</label>
-                            </div>
-                            <input type="number" id="defense_cash_usd" onchange="saveDefenseAssets()" placeholder="輸入折合台幣總額" class="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded text-white text-lg focus:outline-none focus:border-blue-500">
-                        </div>
-
-                        <div class="bg-gray-800 p-4 rounded-lg border border-gray-700">
-                            <div class="flex justify-between items-center mb-2">
-                                <label class="text-sm font-medium text-gray-300">🛡️ 債券 ETF / 避險資產 (台幣)</label>
-                                <span class="text-xs bg-gray-700 text-gray-400 px-2 py-1 rounded">波動低、收息穩定</span>
-                            </div>
-                            <input type="number" id="defense_bonds" onchange="saveDefenseAssets()" placeholder="輸入債券資產現值" class="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded text-white text-lg focus:outline-none focus:border-blue-500">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 右側：股債平衡圓餅圖 -->
-                <div class="card flex flex-col">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-semibold text-purple-400">⚖️ 股債現金配置比例 (Asset Allocation)</h2>
-                    </div>
-                    
-                    <div class="flex-grow flex flex-col justify-center items-center">
-                        <div class="w-full max-w-[250px] aspect-square relative">
-                            <canvas id="allocationChart"></canvas>
-                            <!-- 中間總資產數字 -->
-                            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                <span class="text-xs text-gray-400">總資產淨值</span>
-                                <span class="text-xl font-bold text-white" id="total_portfolio_value">0</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 bg-gray-900 p-3 rounded-lg border border-gray-800">
-                        <p class="text-sm text-gray-400 mb-1">健康度評估：<span id="allocation_status_text" class="font-bold text-white">等待資料...</span></p>
-                        <p class="text-xs text-gray-500">一般建議：股票部位(攻擊)控制在 <span class="text-blue-400">70%~80%</span>，防禦資產維持 <span class="text-yellow-400">20%~30%</span>，以應對系統性風險與心理壓力。</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- ================= 分頁 2：我的存股手帳 ================= -->
         <div id="tab-ledger" class="space-y-6 hidden">
             <div class="card">
@@ -244,9 +181,7 @@
                 </div>
 
                 <!-- 年度切換列 -->
-                <div class="flex flex-wrap gap-2 mb-4" id="ledger-year-tabs">
-                    <!-- JS 動態產生年份按鈕 -->
-                </div>
+                <div class="flex flex-wrap gap-2 mb-4" id="ledger-year-tabs"></div>
 
                 <div class="overflow-x-auto border border-gray-700 rounded-lg">
                     <table class="w-full text-left border-collapse min-w-[850px]">
@@ -262,7 +197,6 @@
                             </tr>
                         </thead>
                         <tbody id="ledger_table_body" class="text-sm divide-y divide-gray-800 bg-gray-900">
-                            <!-- JS 動態產生該年 12 個月 -->
                         </tbody>
                     </table>
                 </div>
@@ -336,9 +270,7 @@
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-2 mb-4" id="kids-year-tabs">
-                    <!-- JS 動態產生年份按鈕 -->
-                </div>
+                <div class="flex flex-wrap gap-2 mb-4" id="kids-year-tabs"></div>
 
                 <div class="overflow-x-auto border border-gray-700 rounded-lg">
                     <table class="w-full text-left border-collapse min-w-[950px]">
@@ -356,7 +288,6 @@
                             </tr>
                         </thead>
                         <tbody id="kids_table_body" class="text-sm divide-y divide-gray-800 bg-gray-900">
-                            <!-- JS 動態產生該年 12 個月 -->
                         </tbody>
                     </table>
                 </div>
@@ -383,11 +314,9 @@
 
         <!-- ================= 分頁 5：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
-            
             <div class="card border border-red-900/50 shadow-lg shadow-red-900/10 mb-6">
                 <h2 class="text-xl font-semibold mb-4 text-red-400">🚨 ETF 配息與流動性風險分數預警</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- 燈號1：月配息 -->
                     <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex flex-col justify-center">
                         <div class="flex justify-between items-center mb-1">
                             <p class="text-sm text-gray-400">月配息金額預警</p>
@@ -396,7 +325,6 @@
                         <p class="text-xs text-gray-500">觸發條件: < 0.10 元</p>
                         <p class="text-lg font-bold text-white mt-1" id="risk_div_value">--</p>
                     </div>
-                    <!-- 燈號2：月均成交量 -->
                     <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex flex-col justify-center">
                         <div class="flex justify-between items-center mb-1">
                             <p class="text-sm text-gray-400">月均成交量預警</p>
@@ -405,7 +333,6 @@
                         <p class="text-xs text-gray-500">觸發條件: < 10,000 張</p>
                         <p class="text-lg font-bold text-white mt-1" id="risk_vol_value">--</p>
                     </div>
-                    <!-- 燈號3：規模下降 -->
                     <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex flex-col justify-center">
                         <div class="flex justify-between items-center mb-1">
                             <p class="text-sm text-gray-400">基金規模下降</p>
@@ -414,13 +341,6 @@
                         <p class="text-xs text-gray-500">觸發條件: > 15%</p>
                         <p class="text-sm text-gray-400 mt-1">需手動檢視投信官網</p>
                     </div>
-                </div>
-                <div class="mt-4 pt-3 border-t border-gray-800 text-xs text-gray-500 flex flex-wrap gap-3">
-                    <span class="font-bold text-gray-400">評分權重指標：</span>
-                    <span>成交量衰退 20%</span> |
-                    <span>基金規模衰退 30%</span> |
-                    <span>近3月均配息下降 30%</span> |
-                    <span>折溢價異常 20%</span>
                 </div>
             </div>
 
@@ -489,9 +409,10 @@
     </div>
 
     <script>
-        // 本地儲存 KEY 定義
         const KEY_NAME = '00406A_FINMIND_KEY';
         const SHARES_KEY = '00406A_REAL_SHARES';
+        const COST_KEY = '00406A_REAL_COST'; // 新增：保存均價的 Key
+        
         const LEDGER_INVEST_KEY = '00406A_LEDGER_INVEST'; 
         const LEDGER_PRICE_KEY = '00406A_LEDGER_PRICE';   
         const LEDGER_DRIP_KEY = '00406A_LEDGER_DRIP';     
@@ -502,19 +423,11 @@
         const LEDGER_KID_B_PRICE_KEY = '00406A_LEDGER_KID_B_PRICE';
         const LEDGER_KID_B_KEY = '00406A_LEDGER_KID_B';
         
-        // 防禦保本庫 KEY 定義
-        const DEFENSE_EXPENSE_KEY = '00406A_DEFENSE_EXPENSE';
-        const DEFENSE_CASH_TWD_KEY = '00406A_DEFENSE_CASH_TWD';
-        const DEFENSE_CASH_USD_KEY = '00406A_DEFENSE_CASH_USD';
-        const DEFENSE_BONDS_KEY = '00406A_DEFENSE_BONDS';
-
         let latestDividend = 0; 
         let currentPrice = 0;   
         let rawPriceData = [];  
-        
         let trendChartInstance = null;
         let dripChartInstance = null;
-        let allocationChartInstance = null;
         let currentChartTimeframe = 'daily'; 
         
         const startYear = 2026;
@@ -535,54 +448,47 @@
         let kidsProjectedData = [];
 
         window.onload = () => {
-            // 讀取設定與資料
             const savedKey = localStorage.getItem(KEY_NAME);
             if(savedKey) { document.getElementById('api_key').value = savedKey; fetchData(savedKey); }
             
             const savedShares = localStorage.getItem(SHARES_KEY);
             if(savedShares) { document.getElementById('real_shares_input').value = savedShares; }
             
-            // 讀取手帳資料
+            // 讀取保存的持有均價
+            const savedCost = localStorage.getItem(COST_KEY);
+            if(savedCost) { document.getElementById('real_cost_input').value = savedCost; }
+            
             if(localStorage.getItem(LEDGER_INVEST_KEY)) customInvestMap = JSON.parse(localStorage.getItem(LEDGER_INVEST_KEY));
             if(localStorage.getItem(LEDGER_PRICE_KEY)) customPriceMap = JSON.parse(localStorage.getItem(LEDGER_PRICE_KEY));
             if(localStorage.getItem(LEDGER_DRIP_KEY)) customDripMap = JSON.parse(localStorage.getItem(LEDGER_DRIP_KEY));
             if(localStorage.getItem(LEDGER_EXTRA_KEY)) extraSharesMap = JSON.parse(localStorage.getItem(LEDGER_EXTRA_KEY));
+            
             if(localStorage.getItem(LEDGER_KID_A_PRICE_KEY)) kidAPriceMap = JSON.parse(localStorage.getItem(LEDGER_KID_A_PRICE_KEY));
             if(localStorage.getItem(LEDGER_KID_A_KEY)) kidAMap = JSON.parse(localStorage.getItem(LEDGER_KID_A_KEY));
             if(localStorage.getItem(LEDGER_KID_B_PRICE_KEY)) kidBPriceMap = JSON.parse(localStorage.getItem(LEDGER_KID_B_PRICE_KEY));
             if(localStorage.getItem(LEDGER_KID_B_KEY)) kidBMap = JSON.parse(localStorage.getItem(LEDGER_KID_B_KEY));
 
-            // 讀取防禦庫資料
-            if(localStorage.getItem(DEFENSE_EXPENSE_KEY)) document.getElementById('monthly_expense_input').value = localStorage.getItem(DEFENSE_EXPENSE_KEY);
-            if(localStorage.getItem(DEFENSE_CASH_TWD_KEY)) document.getElementById('defense_cash_twd').value = localStorage.getItem(DEFENSE_CASH_TWD_KEY);
-            if(localStorage.getItem(DEFENSE_CASH_USD_KEY)) document.getElementById('defense_cash_usd').value = localStorage.getItem(DEFENSE_CASH_USD_KEY);
-            if(localStorage.getItem(DEFENSE_BONDS_KEY)) document.getElementById('defense_bonds').value = localStorage.getItem(DEFENSE_BONDS_KEY);
-
             renderYearTabs();
             runDynamicSimulation(); 
             runKidsSimulation();
-            updateDefenseCalculations(); // 初始化防禦庫
         };
 
         function switchTab(tabId) {
-            ['overview', 'defense', 'ledger', 'kids', 'charts', 'safety'].forEach(id => {
+            ['overview', 'ledger', 'kids', 'charts', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
                 document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
-                
-                // 恢復原本的文字顏色
-                if (id === 'kids') document.getElementById(`btn-${id}`).classList.remove('text-pink-400');
-                else if (id === 'defense') document.getElementById(`btn-${id}`).classList.remove('text-yellow-500');
-                else document.getElementById(`btn-${id}`).classList.remove('text-gray-400');
+                if (id === 'kids') {
+                    document.getElementById(`btn-${id}`).classList.remove('text-pink-400');
+                } else {
+                    document.getElementById(`btn-${id}`).classList.remove('text-gray-400');
+                }
             });
-            
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
             
-            // 將沒選中的標籤上色
-            ['overview', 'defense', 'ledger', 'kids', 'charts', 'safety'].forEach(id => {
+            ['overview', 'ledger', 'kids', 'charts', 'safety'].forEach(id => {
                 if(id !== tabId) {
                     if (id === 'kids') document.getElementById(`btn-${id}`).classList.add('text-pink-400');
-                    else if (id === 'defense') document.getElementById(`btn-${id}`).classList.add('text-yellow-500');
                     else document.getElementById(`btn-${id}`).classList.add('text-gray-400');
                 }
             });
@@ -591,138 +497,6 @@
                 renderTrendChart(currentChartTimeframe); 
             }
         }
-
-        // ================= 防禦庫專用函數 =================
-        function saveDefenseConfig() {
-            const exp = document.getElementById('monthly_expense_input').value;
-            if(exp !== '' && exp >= 0) {
-                localStorage.setItem(DEFENSE_EXPENSE_KEY, exp);
-                updateDefenseCalculations();
-                alert('家庭基本開銷設定成功！');
-            }
-        }
-
-        function saveDefenseAssets() {
-            const twd = document.getElementById('defense_cash_twd').value || 0;
-            const usd = document.getElementById('defense_cash_usd').value || 0;
-            const bnd = document.getElementById('defense_bonds').value || 0;
-            
-            localStorage.setItem(DEFENSE_CASH_TWD_KEY, twd);
-            localStorage.setItem(DEFENSE_CASH_USD_KEY, usd);
-            localStorage.setItem(DEFENSE_BONDS_KEY, bnd);
-            
-            updateDefenseCalculations();
-        }
-
-        function updateDefenseCalculations() {
-            // 1. 緊急預備金計算
-            const monthlyExp = parseFloat(localStorage.getItem(DEFENSE_EXPENSE_KEY)) || 0;
-            const targetFund = monthlyExp * 6;
-            document.getElementById('target_emergency_fund').innerText = targetFund.toLocaleString();
-
-            const cashTwd = parseFloat(localStorage.getItem(DEFENSE_CASH_TWD_KEY)) || 0;
-            const cashUsd = parseFloat(localStorage.getItem(DEFENSE_CASH_USD_KEY)) || 0;
-            const totalCash = cashTwd + cashUsd; // 活存定存才算作緊急現金
-            document.getElementById('current_cash_total').innerText = totalCash.toLocaleString();
-
-            let progress = 0;
-            if (targetFund > 0) {
-                progress = Math.min((totalCash / targetFund) * 100, 100);
-            } else if (totalCash > 0 && targetFund === 0) {
-                progress = 100;
-            }
-            
-            document.getElementById('emergency_progress_bar').style.width = `${progress}%`;
-            document.getElementById('emergency_progress_text').innerText = `${progress.toFixed(1)}%`;
-            
-            if (progress >= 100) {
-                document.getElementById('emergency_progress_bar').classList.replace('bg-yellow-500', 'bg-green-500');
-                document.getElementById('emergency_progress_text').classList.replace('text-white', 'text-green-400');
-            } else {
-                document.getElementById('emergency_progress_bar').classList.replace('bg-green-500', 'bg-yellow-500');
-                document.getElementById('emergency_progress_text').classList.replace('text-green-400', 'text-white');
-            }
-
-            // 2. 資產配置 (Asset Allocation) 計算
-            const bonds = parseFloat(localStorage.getItem(DEFENSE_BONDS_KEY)) || 0;
-            const defenseTotal = totalCash + bonds; // 總防禦資產
-            
-            // 取得 00406A 攻擊部位總值
-            const shares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
-            const equityTotal = Math.round(shares * (currentPrice > 0 ? currentPrice : 15)); 
-            
-            const grandTotal = defenseTotal + equityTotal;
-            document.getElementById('total_portfolio_value').innerText = grandTotal > 0 ? (grandTotal/10000).toFixed(1) + '萬' : '0';
-
-            // 繪製圓餅圖
-            renderAllocationChart(equityTotal, defenseTotal);
-            
-            // 給予狀態評估
-            const statusEl = document.getElementById('allocation_status_text');
-            if (grandTotal === 0) {
-                statusEl.innerHTML = `<span class="text-gray-400">請輸入持股與防禦資產</span>`;
-            } else {
-                const defenseRatio = (defenseTotal / grandTotal) * 100;
-                if (defenseRatio < 10) {
-                    statusEl.innerHTML = `<span class="text-red-400">極高風險 (防禦資產不足 10%)</span> - 建議增加現金或債券部位`;
-                } else if (defenseRatio >= 20 && defenseRatio <= 40) {
-                    statusEl.innerHTML = `<span class="text-green-400">配置優良 (防禦達 ${defenseRatio.toFixed(1)}%)</span> - 股債平衡，攻守俱佳`;
-                } else if (defenseRatio > 40) {
-                    statusEl.innerHTML = `<span class="text-yellow-400">偏向保守 (防禦達 ${defenseRatio.toFixed(1)}%)</span> - 資產安全，但可能拖累長期複利`;
-                } else {
-                    statusEl.innerHTML = `<span class="text-blue-400">積極成長 (防禦達 ${defenseRatio.toFixed(1)}%)</span> - 承受風險能力高`;
-                }
-            }
-        }
-
-        function renderAllocationChart(equityVal, defenseVal) {
-            const ctx = document.getElementById('allocationChart').getContext('2d');
-            if (allocationChartInstance) { allocationChartInstance.destroy(); }
-            
-            if (equityVal === 0 && defenseVal === 0) {
-                // 空白圖
-                allocationChartInstance = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: { labels: ['尚無資料'], datasets: [{ data: [1], backgroundColor: ['#374151'], borderWidth: 0 }] },
-                    options: { cutout: '75%', plugins: { tooltip: { enabled: false }, legend: { display: false } } }
-                });
-                return;
-            }
-
-            allocationChartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['攻擊部位 (00406A)', '保本防禦 (現金+債券)'],
-                    datasets: [{
-                        data: [equityVal, defenseVal],
-                        backgroundColor: ['#3b82f6', '#eab308'], // Blue for equity, Yellow for defense
-                        borderWidth: 2,
-                        borderColor: '#1f2937'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '75%', // 甜甜圈粗細
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: '#e5e7eb', padding: 20 } },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.label || '';
-                                    if (label) { label += ': '; }
-                                    if (context.parsed !== null) {
-                                        label += 'NT$ ' + context.parsed.toLocaleString();
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-        // ===================================================
 
         function saveAndLoad() {
             const key = document.getElementById('api_key').value.trim();
@@ -734,14 +508,19 @@
 
         function saveShares() {
             const shares = document.getElementById('real_shares_input').value;
+            const cost = document.getElementById('real_cost_input').value;
+            
             if(shares === '' || shares < 0) { alert('請輸入正確的股數'); return; }
+            if(cost === '' || cost < 0) { alert('請輸入正確的持有均價'); return; }
+            
             localStorage.setItem(SHARES_KEY, shares);
+            localStorage.setItem(COST_KEY, cost);
+            
             updateHoldingCalculations();
             runDynamicSimulation(); 
-            updateDefenseCalculations(); // 同步更新防禦比例
         }
 
-        // ... (以下為原本的 custom input 儲存函數) ...
+        // ... 保留所有其他 saveXXX 功能 ...
         function saveCustomPrice(monthIndex, inputObj) {
             const val = parseFloat(inputObj.value);
             if(isNaN(val) || val <= 0) { delete customPriceMap[monthIndex]; } else { customPriceMap[monthIndex] = val; }
@@ -795,15 +574,50 @@
 
         function updateHoldingCalculations() {
             const shares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
+            const avgCost = parseFloat(localStorage.getItem(COST_KEY)) || 0;
+            
+            // 1. 計算總投入成本與保本價
+            const totalCost = shares * avgCost;
+            document.getElementById('total_invested_cost').innerText = Math.round(totalCost).toLocaleString();
+            document.getElementById('breakeven_price').innerText = avgCost > 0 ? avgCost.toFixed(2) : '0.00';
+
+            // 2. 計算即時市值與損益
             if(currentPrice > 0) {
-                const marketValue = Math.round(shares * currentPrice);
-                document.getElementById('real_market_value').innerText = marketValue.toLocaleString();
+                const marketValue = shares * currentPrice;
+                document.getElementById('real_market_value').innerText = Math.round(marketValue).toLocaleString();
+                
+                // 損益精算
+                const pnl = marketValue - totalCost;
+                const pnlPercent = totalCost > 0 ? (pnl / totalCost) * 100 : 0;
+                const pnlEl = document.getElementById('unrealized_pnl');
+                
+                if(shares === 0 || totalCost === 0) {
+                    pnlEl.innerHTML = `<span class="text-gray-500">等待輸入資料...</span>`;
+                } else if (pnl > 0) {
+                    pnlEl.innerHTML = `<span class="text-green-400">+NT$ ${Math.round(pnl).toLocaleString()} <span class="text-sm font-normal text-green-500/80">(+${pnlPercent.toFixed(2)}%)</span></span>`;
+                } else if (pnl < 0) {
+                    pnlEl.innerHTML = `<span class="text-red-400">-NT$ ${Math.abs(Math.round(pnl)).toLocaleString()} <span class="text-sm font-normal text-red-500/80">(${pnlPercent.toFixed(2)}%)</span></span>`;
+                } else {
+                    pnlEl.innerHTML = `<span class="text-gray-400">NT$ 0 <span class="text-sm font-normal">(0.00%)</span></span>`;
+                }
             }
 
+            // 3. 計算預估配息與領息降本價
             if(latestDividend > 0) {
                 const totalDividend = shares * latestDividend;
                 document.getElementById('real_dividend_income').innerText = Math.round(totalDividend).toLocaleString();
                 
+                // 領息降本價 = (總成本 - 本次配息總額) / 總股數
+                const adjCost = totalCost - totalDividend;
+                const adjBreakeven = shares > 0 ? Math.max(0, adjCost / shares) : 0;
+                
+                if (shares > 0 && avgCost > 0) {
+                    document.getElementById('adj_breakeven_price').innerText = adjBreakeven.toFixed(2);
+                } else {
+                    document.getElementById('adj_breakeven_price').innerText = '0.00';
+                }
+                
+                // 健保門檻
                 const healthInsStatus = document.getElementById('health_ins_status');
                 const healthInsIcon = document.getElementById('health_ins_icon');
 
@@ -834,7 +648,7 @@
             const monthAgo = monthAgoDate.toISOString().split('T')[0];
 
             try {
-                // 1. FinMind 歷史走勢 (保底)
+                // 1. 先抓取 FinMind 的歷史走勢 (做為保底與圖表使用)
                 const priceUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=00406A&start_date=${yearAgo}&token=${token}`;
                 const priceRes = await fetch(priceUrl);
                 const priceData = await priceRes.json();
@@ -844,7 +658,7 @@
                     
                     if(rawPriceData.length > 0) {
                         const latestPriceObj = rawPriceData[rawPriceData.length - 1];
-                        currentPrice = latestPriceObj.close; 
+                        currentPrice = latestPriceObj.close; // FinMind 的保底收盤價
                         document.getElementById('latest_price').innerText = currentPrice.toFixed(2);
                         document.getElementById('price_label').innerText = '歷史收盤價 (FinMind)';
                         document.getElementById('live_indicator').classList.replace('bg-green-400', 'bg-gray-600');
@@ -891,7 +705,7 @@
                     }
                 }
 
-                // 2. Yahoo Finance 盤中即時股價
+                // 2. 透過 Yahoo Finance API 抓取「盤中即時股價」
                 try {
                     const yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/00406A.TW?interval=1m&range=1d';
                     const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
@@ -914,10 +728,9 @@
                         }
                     }
                 } catch(err) {
-                    console.log("Yahoo即時報價抓取失敗", err);
+                    console.log("Yahoo即時報價抓取失敗，維持使用 FinMind 歷史收盤價", err);
                 }
 
-                // 根據最終價格更新全站計算
                 const currentYear = today.getFullYear();
                 const currentMonth = today.getMonth() + 1;
                 let currentDefaultInvest = 5000;
@@ -932,7 +745,7 @@
                 document.getElementById('buyable_shares_label').innerText = `約 ${currentDefaultInvest / 1000} 千元購買力參考`;
                 document.getElementById('buyable_shares').innerText = shares;
 
-                // 3. 配息資料
+                // 3. 抓取配息資料
                 const divUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockDividend&data_id=00406A&start_date=${yearStart}&token=${token}`;
                 const divRes = await fetch(divUrl);
                 const divData = await divRes.json();
@@ -974,22 +787,25 @@
                     }
                 }
 
-                updateHoldingCalculations();
+                updateHoldingCalculations(); // 在所有價格都抓好後更新損益
                 runDynamicSimulation();
                 runKidsSimulation();
-                updateDefenseCalculations(); // 更新價格後，連帶更新防禦配置比例圖
 
-                // 4. 法人買賣超 - 雙重容錯
+                // 4. 法人近期買賣超 - 雙重容錯架構
                 let twseSuccess = false;
+                
                 try {
                     const twseUrl = `https://www.twse.com.tw/rwd/zh/fund/T86?response=json&selectType=0099P`;
                     const proxyTwseUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(twseUrl)}`;
+                    
                     const twseRes = await fetch(proxyTwseUrl, { cache: "no-store" });
                     
                     if (twseRes.ok) {
                         const twseData = await twseRes.json();
+                        
                         if (twseData && twseData.stat === 'OK' && twseData.data) {
                             const etfRow = twseData.data.find(row => row[0] === '00406A');
+                            
                             if (etfRow) {
                                 twseSuccess = true;
                                 const foreignShares = parseInt(etfRow[4].replace(/,/g, '')) || 0;
@@ -1014,7 +830,7 @@
                         }
                     }
                 } catch (e) {
-                    console.warn("TWSE 連線失敗，切換至 FinMind 備援");
+                    console.warn("TWSE 官方代理連線失敗或超時，準備降級使用備援資料庫", e);
                 }
 
                 if (!twseSuccess) {
