@@ -34,7 +34,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 逐筆精算修正版</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 完美連動精算版</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -88,11 +88,11 @@
                     <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
                         <div class="flex-1">
                             <p class="text-xs text-gray-400 mb-1">目前總股數 (股)</p>
-                            <input type="number" id="real_shares_input" placeholder="可手動輸入或由明細連動" class="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded text-white text-base font-bold focus:outline-none focus:border-blue-500 transition-colors">
+                            <input type="number" id="real_shares_input" placeholder="由明細自動連動" class="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded text-white text-base font-bold focus:outline-none focus:border-blue-500">
                         </div>
                         <div class="flex-1">
                             <p class="text-xs text-gray-400 mb-1">券商持有均價 (含息/含手續費)</p>
-                            <input type="number" step="0.01" id="real_cost_input" placeholder="可手動輸入或由明細連動" class="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded text-white text-base font-bold focus:outline-none focus:border-blue-500 transition-colors">
+                            <input type="number" step="0.01" id="real_cost_input" placeholder="由明細自動連動" class="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded text-white text-base font-bold focus:outline-none focus:border-blue-500">
                         </div>
                         <div class="flex items-end">
                             <button onclick="saveShares()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded text-sm font-bold transition h-[42px] shadow-lg shadow-blue-900/50">儲存並試算</button>
@@ -121,7 +121,7 @@
                 <div class="absolute right-[-20px] top-[-20px] text-8xl opacity-5">🎯</div>
                 <h2 class="text-xl font-semibold text-indigo-400 mb-4">🛡️ 投資保本與損益精算</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 relative">
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800">
                         <p class="text-xs text-gray-400">總投入成本 (含手續費)</p>
                         <p class="text-xl font-bold text-white mt-1">NT$ <span id="total_invested_cost">0</span></p>
                     </div>
@@ -133,7 +133,7 @@
                         <p class="text-[11px] text-green-400/80 mb-1" id="adj_cost_label">領息真實降本價</p>
                         <p class="text-xl font-bold text-green-400 mt-1"><span id="adj_breakeven_price">0.00</span> 元</p>
                     </div>
-                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 col-span-2 md:col-span-1 relative">
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 col-span-2 md:col-span-1">
                         <p class="text-xs text-gray-400">目前帳面損益 (依即時市價)</p>
                         <p class="text-xl font-bold mt-1" id="unrealized_pnl">NT$ 0 <span class="text-sm font-normal text-gray-500">(0.00%)</span></p>
                     </div>
@@ -256,7 +256,6 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
                         <h2 class="text-xl font-semibold text-green-400">📝 我的存股手帳 (市值強制錨定市價版)</h2>
-                        <p class="text-sm text-gray-400 mt-1">推算總市值全面強制錨定 API 最新收盤價。</p>
                     </div>
                     <div class="bg-gray-900 p-2 rounded text-sm text-gray-300 border border-gray-700 text-right w-full md:w-auto">
                         <p>推算60歲最終持股</p>
@@ -268,11 +267,11 @@
                     <table class="w-full text-left border-collapse min-w-[850px]">
                         <thead class="bg-gray-800 border-b border-gray-700 text-sm text-gray-400">
                             <tr>
-                                <th class="py-3 px-3 font-medium">年月</th>
-                                <th class="py-3 px-2 font-medium text-gray-300">買進股價 ✏️️</th>
-                                <th class="py-3 px-2 font-medium text-blue-300">定投金額 ✏️</th>
-                                <th class="py-3 px-2 font-medium text-green-300">配息買股 ✏️</th>
-                                <th class="py-3 px-2 font-medium text-purple-300">額外加碼 ✏️</th>
+                                <th class="py-3 px-3">年月</th>
+                                <th class="py-3 px-2 text-gray-300">買進股價 ✏</th>
+                                <th class="py-3 px-2 text-blue-300">定投金額 ✏️</th>
+                                <th class="py-3 px-2 text-green-300">配息買股 ✏️</th>
+                                <th class="py-3 px-2 text-purple-300">額外加碼 ✏️</th>
                                 <th class="py-3 px-3 text-right">累積總股數</th>
                                 <th class="py-3 px-3 text-right text-yellow-400">推算總市值</th>
                             </tr>
@@ -439,7 +438,7 @@
         let rawPriceData = [];  
         let globalDivData = []; 
         let globalCalculatedHistDivs = 0; 
-        let globalNextDivEligibleShares = 0; // ★ 儲存下次除息日的對應持股
+        let globalNextDivEligibleShares = 0; 
         
         let trendChartInstance = null;
         let dripChartInstance = null;
@@ -458,16 +457,12 @@
 
         window.onload = () => {
             const savedKey = localStorage.getItem(KEY_NAME);
-            if(savedKey) { document.getElementById('api_key').value = savedKey; fetchData(savedKey); }
-            
             document.getElementById('tx_date').value = new Date().toISOString().split('T')[0];
             loadTransactions();
             
-            const savedShares = localStorage.getItem(SHARES_KEY);
-            if(savedShares) document.getElementById('real_shares_input').value = savedShares;
-            const savedCost = localStorage.getItem(COST_KEY);
-            if(savedCost) document.getElementById('real_cost_input').value = savedCost;
-            
+            // 初始化時先從明細同步一次持股與成本到首頁
+            syncTransactionsToHome();
+
             if(localStorage.getItem(LEDGER_INVEST_KEY)) customInvestMap = JSON.parse(localStorage.getItem(LEDGER_INVEST_KEY));
             if(localStorage.getItem(LEDGER_PRICE_KEY)) customPriceMap = JSON.parse(localStorage.getItem(LEDGER_PRICE_KEY));
             if(localStorage.getItem(LEDGER_DRIP_KEY)) customDripMap = JSON.parse(localStorage.getItem(LEDGER_DRIP_KEY));
@@ -480,6 +475,14 @@
             renderYearTabs();
             runDynamicSimulation(); 
             runKidsSimulation();
+
+            if(savedKey) { 
+                document.getElementById('api_key').value = savedKey; 
+                fetchData(savedKey); 
+            } else {
+                // 若無API Key，至少確保首頁數據正確渲染
+                updateHoldingCalculations();
+            }
         };
 
         function switchTab(tabId) {
@@ -506,7 +509,6 @@
         function loadTransactions() {
             const savedTx = localStorage.getItem(TX_KEY);
             if(savedTx) transactions = JSON.parse(savedTx);
-            renderTransactions();
         }
 
         function addTransaction() {
@@ -537,10 +539,7 @@
             }
         }
 
-        function saveAndSyncTransactions() {
-            localStorage.setItem(TX_KEY, JSON.stringify(transactions));
-            renderTransactions();
-
+        function syncTransactionsToHome() {
             let totalShares = 0; let totalCost = 0;
             const sortedTx = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
             sortedTx.forEach(tx => {
@@ -561,30 +560,29 @@
             document.getElementById('real_cost_input').value = avgCost.toFixed(2);
             localStorage.setItem(SHARES_KEY, totalShares);
             localStorage.setItem(COST_KEY, avgCost.toFixed(2));
-
-            updateHoldingCalculations();
-            runDynamicSimulation();
-
-            const inputShares = document.getElementById('real_shares_input');
-            const inputCost = document.getElementById('real_cost_input');
-            inputShares.classList.add('bg-indigo-900', 'border-indigo-400');
-            inputCost.classList.add('bg-indigo-900', 'border-indigo-400');
-            setTimeout(() => {
-                inputShares.classList.remove('bg-indigo-900', 'border-indigo-400');
-                inputCost.classList.remove('bg-indigo-900', 'border-indigo-400');
-            }, 1000);
         }
 
-        // ★ 核心修復：精算歷史配息與「下次除息日對應持股」
+        function saveAndSyncTransactions() {
+            localStorage.setItem(TX_KEY, JSON.stringify(transactions));
+            syncTransactionsToHome();
+            renderTransactions();
+            updateHoldingCalculations();
+            runDynamicSimulation();
+        }
+
+        // 徹底修正：精算歷史與下次除息對應持股
         function calculateHistoricalDividends() {
-            if (!globalDivData || globalDivData.length === 0) return { total: 0, details: [], nextDivEligibleShares: 0 };
+            if (!globalDivData || globalDivData.length === 0) {
+                let currentShares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
+                return { total: 0, details: [], nextDivEligibleShares: currentShares };
+            }
             
             let totalDivs = 0;
             let details = [];
             const today = new Date();
 
-            // 找下次最近的除息日
-            const futureDivs = globalDivData.filter(d => d.CashExDividendTradingDate && new Date(d.CashExDividendTradingDate) > today);
+            // 尋找下次最近的除息日（大於今天）
+            const futureDivs = globalDivData.filter(d => d.CashExDividendTradingDate && new Date(d.CashExDividendTradingDate) >= today);
             let nextExDate = futureDivs.length > 0 ? futureDivs[0].CashExDividendTradingDate : null;
             let nextEligibleShares = 0;
 
@@ -595,28 +593,30 @@
                 let holdSharesBeforeExDate = 0;
                 if (transactions.length > 0) {
                     transactions.forEach(tx => {
+                        // 必須在除息日「前一天以前」買進才享有股利
                         if (tx.date < exDateStr) {
                             if (tx.type === 'buy') holdSharesBeforeExDate += tx.shares;
                             if (tx.type === 'sell') holdSharesBeforeExDate -= tx.shares;
                         }
                     });
+                } else {
+                    holdSharesBeforeExDate = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
                 }
 
-                // 若是未來的除息日（下次除息），記錄其對應持股
+                // 抓取下次除息日的對應持股
                 if (exDateStr === nextExDate) {
                     nextEligibleShares = Math.max(0, holdSharesBeforeExDate);
                 }
 
-                // 若是過去已發生的除息日，且有持股，計入已領股息
-                if (new Date(exDateStr) <= today && holdSharesBeforeExDate > 0) {
+                // 過去已除息的累積實領
+                if (new Date(exDateStr) < today && holdSharesBeforeExDate > 0) {
                     const received = holdSharesBeforeExDate * div.CashEarningsDistribution;
                     totalDivs += received;
                     details.push({ date: exDateStr, shares: holdSharesBeforeExDate, dps: div.CashEarningsDistribution, amount: received });
                 }
             });
 
-            // 如果沒有明細，下次除息預設抓首頁輸入的總股數
-            if (transactions.length === 0) {
+            if (nextEligibleShares === 0 && transactions.length === 0) {
                 nextEligibleShares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
             }
 
@@ -624,8 +624,6 @@
         }
 
         function renderTransactions() {
-            const tbody = document.getElementById('tx_table_body');
-            
             let totalShares = 0; let totalCost = 0;
             const sortedTx = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
             sortedTx.forEach(tx => {
@@ -660,6 +658,7 @@
                 list.innerHTML = '';
             }
 
+            const tbody = document.getElementById('tx_table_body');
             if(transactions.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-gray-500">尚無交易紀錄</td></tr>`;
                 return;
@@ -700,14 +699,13 @@
             runDynamicSimulation(); 
         }
 
-        // ★ 核心修復：流動性雷達與智慧成交額計算
         async function fetchData(token) {
             const today = new Date();
-            const yearStart = `${today.getFullYear()}-01-01`;
             const yearAgoDate = new Date(today.getTime() - 365 * 24 * 60 * 60 * 1000); 
             const yearAgo = yearAgoDate.toISOString().split('T')[0];
 
             try {
+                // 1. 抓取股價
                 const priceUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=00406A&start_date=${yearAgo}&token=${token}`;
                 const priceRes = await fetch(priceUrl);
                 const priceData = await priceRes.json();
@@ -721,7 +719,6 @@
                         document.getElementById('price_label').innerText = '歷史收盤價 (FinMind)';
                         document.getElementById('live_indicator').classList.replace('bg-green-400', 'bg-gray-600');
                         
-                        // 月均量計算
                         const last20Days = rawPriceData.slice(-20);
                         const totalVolumeShares = last20Days.reduce((sum, d) => sum + (d.Trading_Volume || d.volume || 0), 0);
                         const avgVolumeZhang = Math.round((totalVolumeShares / last20Days.length) / 1000); 
@@ -732,11 +729,8 @@
                             volLight.innerText = '🟡'; document.getElementById('risk_vol_value').className = 'text-lg font-bold text-yellow-400 mt-1';
                         } else if(avgVolumeZhang >= 10000) {
                             volLight.innerText = '🟢'; document.getElementById('risk_vol_value').className = 'text-lg font-bold text-green-400 mt-1';
-                        } else {
-                            volLight.innerText = '⏳';
                         }
 
-                        // 成交額智慧計算（若 API 無 Trading_money 欄位，自動用 收盤價 × 成交量）
                         const closeP = latestPriceObj.close || 0;
                         const volSharesLatest = latestPriceObj.Trading_Volume || latestPriceObj.volume || 0;
                         const turnoverVal = latestPriceObj.Trading_money || (closeP * volSharesLatest);
@@ -747,39 +741,19 @@
                         const safetyIcon = document.getElementById('safety_icon');
 
                         if (turnoverInYi > 0 && turnoverInYi < 5) {
-                            safetyStatus.innerHTML = `<span class="text-yellow-400 font-bold">⚠ 警告：單日成交額低於 5 億 (${turnoverInYi.toFixed(2)}億)！</span>`;
+                            safetyStatus.innerHTML = `<span class="text-yellow-400 font-bold">⚠ 警告：成交額低於 5 億 (${turnoverInYi.toFixed(2)}億)！</span>`;
                             safetyIcon.innerHTML = "🚨";
                         } else if (turnoverInYi === 0) {
-                            safetyStatus.innerHTML = `<span class="text-yellow-400 font-bold">ℹ 今日為非交易時段或資料尚未結算</span>`;
+                            safetyStatus.innerHTML = `<span class="text-yellow-400 font-bold">ℹ 今日非交易時段或尚未結算</span>`;
                             safetyIcon.innerHTML = "⏳";
                         } else {
-                            safetyStatus.innerHTML = `<span class="text-green-400 font-bold">✅ 流動性健康</span> (成交額 ${turnoverInYi.toFixed(2)} 億)`;
+                            safetyStatus.innerHTML = `<span class="text-green-400 font-bold">✅ 流動性健康</span> (${turnoverInYi.toFixed(2)}億)`;
                             safetyIcon.innerHTML = "🛡️";
                         }
-
-                        if(!document.getElementById('tab-charts').classList.contains('hidden')) renderTrendChart(currentChartTimeframe);
                     }
                 }
 
-                // Yahoo 即時報價備援
-                try {
-                    const yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/00406A.TW?interval=1m&range=1d';
-                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
-                    const yRes = await fetch(proxyUrl, { cache: "no-store" });
-                    if (yRes.ok) {
-                        const yData = await yRes.json();
-                        const realTimePrice = yData?.chart?.result?.[0]?.meta?.regularMarketPrice;
-                        if (realTimePrice && realTimePrice > 0) {
-                            currentPrice = realTimePrice; 
-                            document.getElementById('latest_price').innerText = currentPrice.toFixed(2);
-                            document.getElementById('latest_price').classList.add('text-yellow-400');
-                            document.getElementById('price_label').innerHTML = '盤中即時市價 <span class="text-xs text-yellow-500">(Yahoo)</span>';
-                            document.getElementById('live_indicator').classList.replace('bg-gray-600', 'bg-green-400');
-                        }
-                    }
-                } catch(err) {}
-
-                // 抓取配息資料
+                // 2. 抓取配息資料
                 const divUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockDividend&data_id=00406A&start_date=2020-01-01&token=${token}`;
                 const divRes = await fetch(divUrl);
                 const divData = await divRes.json();
@@ -800,6 +774,7 @@
                     else { divLight.innerText = '🟢'; document.getElementById('risk_div_value').className = 'text-lg font-bold text-green-400 mt-1'; }
                 }
 
+                // 重新渲染全部
                 renderTransactions();
                 updateHoldingCalculations();
                 runDynamicSimulation();
@@ -808,7 +783,7 @@
             } catch (e) { console.error("API 獲取錯誤", e); }
         }
 
-        // ★ 核心修復：總覽領息計算對應下次除息日持股
+        // 總覽畫面更新
         function updateHoldingCalculations() {
             const shares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
             const avgCost = parseFloat(localStorage.getItem(COST_KEY)) || 0;
@@ -826,8 +801,8 @@
                 const pnlEl = document.getElementById('unrealized_pnl');
                 
                 if(shares === 0 || totalCost === 0) pnlEl.innerHTML = `<span class="text-gray-500">等待資料...</span>`;
-                else if (pnl > 0) pnlEl.innerHTML = `<span class="text-green-400">+NT$ ${Math.round(pnl).toLocaleString()} <span class="text-sm font-normal text-green-500/80">(+${pnlPercent.toFixed(2)}%)</span></span>`;
-                else if (pnl < 0) pnlEl.innerHTML = `<span class="text-red-400">-NT$ ${Math.abs(Math.round(pnl)).toLocaleString()} <span class="text-sm font-normal text-red-500/80">(${pnlPercent.toFixed(2)}%)</span></span>`;
+                else if (pnl > 0) pnlEl.innerHTML = `<span class="text-green-400">+NT$ ${Math.round(pnl).toLocaleString()} (+${pnlPercent.toFixed(2)}%)</span>`;
+                else if (pnl < 0) pnlEl.innerHTML = `<span class="text-red-400">-NT$ ${Math.abs(Math.round(pnl)).toLocaleString()} (${pnlPercent.toFixed(2)}%)</span>`;
                 else pnlEl.innerHTML = `<span class="text-gray-400">NT$ 0</span>`;
             }
 
@@ -848,13 +823,13 @@
                 adjPriceEl.innerText = (shares > 0 && avgCost > 0) ? adjBreakeven.toFixed(2) : '0.00';
             }
 
-            // 下次除息預估入帳：嚴格使用明細在除息日前的對應持股 (`globalNextDivEligibleShares`)
+            // 下次除息預估入帳 (嚴格對應下次除息日的實際持股)
             if(latestDividend > 0) {
                 const targetSharesForNextDiv = (transactions.length > 0) ? globalNextDivEligibleShares : shares;
                 const estimatedNextDivIncome = targetSharesForNextDiv * latestDividend;
                 
                 document.getElementById('real_dividend_income').innerText = Math.round(estimatedNextDivIncome).toLocaleString();
-                document.getElementById('next_div_label').innerText = `下次除息預估入帳 (依持股 ${targetSharesForNextDiv.toLocaleString()} 股計算)`;
+                document.getElementById('next_div_label').innerText = `下次除息預估入帳 (依除息日持股 ${targetSharesForNextDiv.toLocaleString()} 股)`;
 
                 const healthInsStatus = document.getElementById('health_ins_status');
                 const healthInsIcon = document.getElementById('health_ins_icon');
@@ -862,10 +837,10 @@
                     healthInsStatus.innerHTML = `<span class="text-gray-400">請先建立明細或輸入持股。</span>`;
                     healthInsIcon.innerHTML = "🛡️";
                 } else if(estimatedNextDivIncome > 20000) {
-                    healthInsStatus.innerHTML = `<span class="text-red-400">達標！需扣繳 2.11% 補充保費</span> (試算單筆: ${Math.round(estimatedNextDivIncome).toLocaleString()}元)`;
-                    healthInsIcon.innerHTML = "⚠️️";
+                    healthInsStatus.innerHTML = `<span class="text-red-400">達標！需扣繳 2.11% 補充保費</span> (試算: ${Math.round(estimatedNextDivIncome).toLocaleString()}元)`;
+                    healthInsIcon.innerHTML = "⚠";
                 } else {
-                    healthInsStatus.innerHTML = `<span class="text-green-400">安全免扣繳</span> (試算單筆: ${Math.round(estimatedNextDivIncome).toLocaleString()}元)`;
+                    healthInsStatus.innerHTML = `<span class="text-green-400">安全免扣繳</span> (試算: ${Math.round(estimatedNextDivIncome).toLocaleString()}元)`;
                     healthInsIcon.innerHTML = "✅";
                 }
             }
@@ -898,7 +873,7 @@
             document.getElementById('topup_result').classList.remove('hidden');
         }
 
-        // 其它輔助函數維持原樣
+        // 手帳與雙寶等函數
         function saveCustomPrice(m, o) { const v=parseFloat(o.value); if(isNaN(v)||v<=0) delete customPriceMap[m]; else customPriceMap[m]=v; localStorage.setItem(LEDGER_PRICE_KEY, JSON.stringify(customPriceMap)); runDynamicSimulation(); runKidsSimulation(); }
         function saveCustomInvest(m, o) { const v=parseFloat(o.value); if(isNaN(v)||v<0) delete customInvestMap[m]; else customInvestMap[m]=v; localStorage.setItem(LEDGER_INVEST_KEY, JSON.stringify(customInvestMap)); runDynamicSimulation(); }
         function saveCustomDrip(m, o) { const v=parseInt(o.value); if(isNaN(v)||v<0) delete customDripMap[m]; else customDripMap[m]=v; localStorage.setItem(LEDGER_DRIP_KEY, JSON.stringify(customDripMap)); runDynamicSimulation(); }
