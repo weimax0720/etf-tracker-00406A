@@ -14,6 +14,8 @@
         .tab-btn.active { background-color: #2563eb; color: #ffffff; border-color: #3b82f6; }
         .year-btn { transition: all 0.2s; }
         .year-btn.active { background-color: #10b981; color: #ffffff; border-color: #059669; }
+        .filter-btn { transition: all 0.2s; border: 1px solid transparent; }
+        .filter-btn.active { border-color: #3b82f6; background-color: #1e3a8a; font-weight: bold; color: white;}
         
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #1f2937; }
@@ -33,7 +35,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 家族多帳戶記帳整合版</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 家族多帳戶獨立檢視版</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -232,7 +234,7 @@
                     <span class="badge bg-green-900 text-green-300">多帳戶自動分類計算</span>
                 </div>
                 
-                <!-- 新增/編輯 交易表單 (加入帳戶選擇) -->
+                <!-- 新增/編輯 交易表單 -->
                 <div class="grid grid-cols-2 md:grid-cols-7 gap-3 mb-6 bg-gray-800 p-4 rounded-lg border border-gray-700 shadow-lg relative">
                     <div class="col-span-2 md:col-span-1">
                         <label class="text-xs text-gray-400 block mb-1">歸屬帳戶</label>
@@ -292,8 +294,18 @@
                     </div>
                 </div>
 
+                <!-- ★★★ 全新過濾按鈕區塊 ★★★ -->
+                <div class="mt-6 mb-2 flex items-center justify-between border-b border-gray-700 pb-2">
+                    <p class="text-sm text-gray-400 font-bold">歷史交易明細</p>
+                    <div class="flex gap-2">
+                        <button onclick="setTxFilter('all')" id="filter-btn-all" class="filter-btn active px-3 py-1 bg-gray-800 rounded text-xs text-gray-300">顯示全部</button>
+                        <button onclick="setTxFilter('main')" id="filter-btn-main" class="filter-btn px-3 py-1 bg-gray-800 rounded text-xs text-blue-300">僅看主帳戶</button>
+                        <button onclick="setTxFilter('kids')" id="filter-btn-kids" class="filter-btn px-3 py-1 bg-gray-800 rounded text-xs text-pink-300">僅看雙寶</button>
+                    </div>
+                </div>
+
                 <!-- 表格 -->
-                <div class="overflow-x-auto border border-gray-700 rounded-lg shadow-lg mt-6">
+                <div class="overflow-x-auto border border-gray-700 rounded-lg shadow-lg">
                     <table class="w-full text-left border-collapse min-w-[850px]">
                         <thead class="bg-gray-800 border-b border-gray-700 text-sm text-gray-400">
                             <tr>
@@ -607,6 +619,7 @@
         
         let transactionLog = []; 
         let editingTxId = null; 
+        let currentTxFilter = 'all'; // ★ 預設過濾狀態為「全部」
 
         window.onload = () => {
             const savedKey = localStorage.getItem(KEY_NAME);
@@ -620,7 +633,6 @@
                 transactionLog = JSON.parse(localStorage.getItem(TX_KEY));
                 let updated = false;
                 transactionLog.forEach(t => {
-                    // 自動轉移舊版資料庫結構
                     if (t.type === 'buy') { t.type = 'buy_regular'; updated = true; }
                     if (!t.account) { t.account = 'main'; updated = true; }
                 });
@@ -674,7 +686,7 @@
             alert('金鑰已儲存！正在抓取最新市場資料...');
         }
 
-        // ================= ★ 逐筆交易紀錄引擎 (支援多帳戶) ★ =================
+        // ================= ★ 逐筆交易紀錄引擎 (含過濾功能) ★ =================
         function addTransaction() {
             const account = document.getElementById('tx_account').value;
             const date = document.getElementById('tx_date').value;
@@ -725,7 +737,7 @@
             
             const btnAdd = document.getElementById('btn_add_tx');
             btnAdd.innerText = '儲存修改';
-            btnAdd.className = 'flex-1 bg-yellow-600 hover:bg-yellow-500 py-1.5 rounded text-sm font-bold transition shadow-lg shadow-yellow-900/40 text-white';
+            btnAdd.className = 'flex-1 bg-yellow-600 hover:bg-yellow-500 py-1.5 rounded text-sm font-bold transition shadow-lg shadow-yellow-900/40 text-white h-[34px]';
             document.getElementById('btn_cancel_tx').classList.remove('hidden');
             
             document.getElementById('tab-transactions').scrollIntoView({ behavior: 'smooth' });
@@ -739,7 +751,7 @@
             
             const btnAdd = document.getElementById('btn_add_tx');
             btnAdd.innerText = '新增';
-            btnAdd.className = 'flex-1 bg-blue-600 hover:bg-blue-500 py-1.5 rounded text-sm font-bold transition shadow-lg shadow-blue-900/40';
+            btnAdd.className = 'flex-1 bg-blue-600 hover:bg-blue-500 py-1.5 rounded text-sm font-bold transition shadow-lg shadow-blue-900/40 h-[34px]';
             document.getElementById('btn_cancel_tx').classList.add('hidden');
         }
 
@@ -752,19 +764,64 @@
             }
         }
 
+        // ★ 新增：切換過濾器按鈕狀態
+        function setTxFilter(filterType) {
+            currentTxFilter = filterType;
+            
+            ['all', 'main', 'kids'].forEach(id => {
+                const btn = document.getElementById(`filter-btn-${id}`);
+                btn.classList.remove('active', 'border-blue-500', 'bg-blue-900/50', 'text-white');
+                if (id === 'main') btn.classList.add('text-blue-300');
+                else if (id === 'kids') btn.classList.add('text-pink-300');
+                else btn.classList.add('text-gray-300');
+            });
+            
+            const activeBtn = document.getElementById(`filter-btn-${filterType}`);
+            activeBtn.classList.add('active', 'border-blue-500', 'bg-blue-900/50', 'text-white');
+            
+            updateTransactions(); // 重新渲染表格
+        }
+
         function updateTransactions() {
             transactionLog.sort((a, b) => {
                 if(a.date !== b.date) return new Date(a.date) - new Date(b.date);
                 return a.id - b.id;
             });
 
-            // 分別統計各帳戶資料
+            // 分別統計各帳戶資料 (這部分不受過濾器影響，總是計算全域數字)
             let curShares = { main: 0, kid_a: 0, kid_b: 0 };
             let curTotalCost = { main: 0, kid_a: 0, kid_b: 0 };
+            
+            transactionLog.forEach(t => {
+                let acc = t.account || 'main';
+                let netAmount = 0;
+                
+                if(t.type === 'buy_regular' || t.type === 'buy_extra' || t.type === 'dividend') {
+                    netAmount = (t.price * t.shares) + t.fee;
+                    curTotalCost[acc] += netAmount;
+                    curShares[acc] += t.shares;
+                } else if(t.type === 'sell') {
+                    netAmount = (t.price * t.shares) - t.fee;
+                    const avgPrice = curShares[acc] > 0 ? (curTotalCost[acc] / curShares[acc]) : 0;
+                    const costOfSold = avgPrice * t.shares;
+                    curTotalCost[acc] -= costOfSold;
+                    curShares[acc] -= t.shares;
+                }
+            });
+
+            // ★ 表格渲染：根據 currentTxFilter 過濾要顯示的項目
             let html = '';
+            let displayedCount = 0;
 
             transactionLog.forEach(t => {
                 let acc = t.account || 'main';
+                
+                // 過濾邏輯
+                if (currentTxFilter === 'main' && acc !== 'main') return;
+                if (currentTxFilter === 'kids' && acc === 'main') return;
+                
+                displayedCount++;
+
                 let typeHtml = '';
                 let isPositive = true;
                 let netAmount = 0;
@@ -773,23 +830,13 @@
                     if(t.type === 'buy_regular') typeHtml = '<span class="text-red-400 bg-red-900/40 px-2 py-0.5 rounded text-xs font-bold border border-red-800">買進(定投)</span>';
                     else if(t.type === 'buy_extra') typeHtml = '<span class="text-purple-400 bg-purple-900/40 px-2 py-0.5 rounded text-xs font-bold border border-purple-800">加碼買進</span>';
                     else typeHtml = '<span class="text-blue-400 bg-blue-900/40 px-2 py-0.5 rounded text-xs font-bold border border-blue-800">配息買入</span>';
-                    
                     netAmount = (t.price * t.shares) + t.fee;
-                    curTotalCost[acc] += netAmount;
-                    curShares[acc] += t.shares;
                 } else if(t.type === 'sell') {
                     typeHtml = '<span class="text-green-400 bg-green-900/40 px-2 py-0.5 rounded text-xs font-bold border border-green-800">賣出</span>';
                     isPositive = false;
-                    
                     netAmount = (t.price * t.shares) - t.fee;
-                    const avgPrice = curShares[acc] > 0 ? (curTotalCost[acc] / curShares[acc]) : 0;
-                    const costOfSold = avgPrice * t.shares;
-                    
-                    curTotalCost[acc] -= costOfSold;
-                    curShares[acc] -= t.shares;
                 }
 
-                // 帳戶標籤
                 let accBadge = acc === 'main' ? '<span class="text-blue-300 bg-blue-900/40 px-2 py-0.5 rounded text-xs border border-blue-800 font-bold">主帳戶</span>' :
                                acc === 'kid_a' ? '<span class="text-pink-300 bg-pink-900/40 px-2 py-0.5 rounded text-xs border border-pink-800 font-bold">大寶</span>' :
                                '<span class="text-indigo-300 bg-indigo-900/40 px-2 py-0.5 rounded text-xs border border-indigo-800 font-bold">二寶</span>';
@@ -811,8 +858,8 @@
                 `;
             });
 
-            if(transactionLog.length === 0) {
-                html = `<tr><td colspan="8" class="text-center py-8 text-gray-500">尚無交易紀錄，請在上方新增</td></tr>`;
+            if(displayedCount === 0) {
+                html = `<tr><td colspan="8" class="text-center py-8 text-gray-500">該分類尚無交易紀錄</td></tr>`;
             }
             document.getElementById('tx_table_body').innerHTML = html;
 
@@ -820,7 +867,6 @@
             const avgKidA = curShares.kid_a > 0 ? curTotalCost.kid_a / curShares.kid_a : 0;
             const avgKidB = curShares.kid_b > 0 ? curTotalCost.kid_b / curShares.kid_b : 0;
 
-            // 更新預覽卡片
             document.getElementById('tx_main_shares').innerText = curShares.main.toLocaleString() + ' 股';
             document.getElementById('tx_main_cost').innerText = avgMain.toFixed(2);
             document.getElementById('tx_kida_shares').innerText = curShares.kid_a.toLocaleString() + ' 股';
@@ -828,7 +874,6 @@
             document.getElementById('tx_kidb_shares').innerText = curShares.kid_b.toLocaleString() + ' 股';
             document.getElementById('tx_kidb_cost').innerText = avgKidB.toFixed(2);
 
-            // 更新至全域變數 (MAX主帳戶)
             localStorage.setItem(SHARES_KEY, curShares.main);
             localStorage.setItem(COST_KEY, avgMain);
             
@@ -839,7 +884,7 @@
 
             updateHoldingCalculations();
             runDynamicSimulation();
-            runKidsSimulation(); // 確保雙寶手帳即時同步
+            runKidsSimulation();
         }
 
         // ================= 加碼攤平試算器 =================
@@ -921,7 +966,6 @@
 
             if(latestDividend > 0) {
                 let eligibleShares = 0;
-                // 只過濾 MAX (主帳戶) 的除息基準
                 if (currentExDivDate && transactionLog.length > 0) {
                     transactionLog.forEach(t => {
                         if (t.account !== 'main') return;
@@ -972,6 +1016,7 @@
             const monthAgo = monthAgoDate.toISOString().split('T')[0];
 
             try {
+                // 1. FinMind
                 const priceUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=00406A&start_date=${yearAgo}&token=${token}`;
                 const priceRes = await fetch(priceUrl);
                 const priceData = await priceRes.json();
@@ -1008,6 +1053,7 @@
                     }
                 }
 
+                // 2. Yahoo
                 try {
                     const yRes = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/chart/00406A.TW?interval=1m&range=1d')}`, { cache: "no-store" });
                     if (yRes.ok) {
@@ -1020,7 +1066,7 @@
                                 document.getElementById('latest_price').classList.add('text-yellow-400');
                                 document.getElementById('price_label').innerHTML = '盤中即時市價 <span class="text-xs text-yellow-500">(Yahoo即時)</span>';
                                 document.getElementById('live_indicator').classList.replace('bg-gray-600', 'bg-green-400');
-                                document.getElementById('live_indicator').classList.add('animate-pulse', 'shadow-[0_0_8px_rgba(74,222,128,0.8)]');
+                                document.getElementById('live_indicator').classList.add('animate-pulse');
                             }
                         }
                     }
@@ -1032,10 +1078,10 @@
                 if (currentYear > 2033 || (currentYear === 2033 && currentMonth >= 1)) currentDefaultInvest = 30000;
                 else if (currentYear > 2031 || (currentYear === 2031 && currentMonth >= 7)) currentDefaultInvest = 20000;
                 else if (currentYear > 2027 || (currentYear === 2027 && currentMonth >= 7)) currentDefaultInvest = 8000;
-                
                 document.getElementById('buyable_shares_label').innerText = `約 ${currentDefaultInvest / 1000} 千元購買力參考`;
                 document.getElementById('buyable_shares').innerText = Math.floor(currentDefaultInvest / currentPrice);
 
+                // 3. Dividend
                 const divRes = await fetch(`https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockDividend&data_id=00406A&start_date=${yearStart}&token=${token}`);
                 const divData = await divRes.json();
                 
@@ -1067,6 +1113,7 @@
                 runDynamicSimulation();
                 runKidsSimulation();
                 
+                // 4. TWSE
                 let twseSuccess = false;
                 try {
                     const twseRes = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent('https://www.twse.com.tw/rwd/zh/fund/T86?response=json&selectType=0099P')}`, { cache: "no-store" });
@@ -1233,7 +1280,6 @@
             drawDRIPChartFromProjection();
         }
 
-        // ★★★ 全新升級：雙寶虛實整合模擬引擎 ★★★
         function runKidsSimulation() {
             kidsProjectedData = [];
             const basePrice = currentPrice > 0 ? currentPrice : 15.0; 
@@ -1289,7 +1335,7 @@
                     let totalBuySharesA = aggA.regShares + aggA.extraShares;
                     let totalBuyCostA = aggA.regCost + aggA.extraCost;
                     execPriceA = totalBuySharesA > 0 ? (totalBuyCostA / totalBuySharesA) : valuationPrice;
-                    divA = 0; // 手帳不需算虛擬息
+                    divA = 0; 
                     dripA = aggA.divShares;
                     buyA = aggA.regShares + aggA.extraShares;
                     runningSharesA += (buyA + dripA - aggA.sellShares);
@@ -1451,7 +1497,6 @@
             yearData.forEach(d => {
                 let formattedMonth = d.month.toString().padStart(2, '0');
                 
-                // 大寶渲染區塊
                 let kidAHtml = d.isHistoricalA ? `
                     <td class="py-2 px-2 border-l border-gray-700 text-center bg-gray-800/30">
                         <span class="text-pink-300 font-bold">${d.execPriceA > 0 ? d.execPriceA.toFixed(2) : '-'}</span> <span class="text-[10px]">🔒</span>
@@ -1469,7 +1514,6 @@
                     </td>
                 `;
 
-                // 二寶渲染區塊
                 let kidBHtml = d.isHistoricalB ? `
                     <td class="py-2 px-2 border-l border-gray-700 text-center bg-gray-800/30">
                         <span class="text-blue-300 font-bold">${d.execPriceB > 0 ? d.execPriceB.toFixed(2) : '-'}</span> <span class="text-[10px]">🔒</span>
@@ -1531,7 +1575,6 @@
             });
         }
 
-        // 手動輸入資料儲存
         function saveCustomPrice(monthIndex, inputObj) { const val = parseFloat(inputObj.value); if(isNaN(val) || val <= 0) delete customPriceMap[monthIndex]; else customPriceMap[monthIndex] = val; localStorage.setItem(LEDGER_PRICE_KEY, JSON.stringify(customPriceMap)); runDynamicSimulation(); runKidsSimulation(); }
         function saveCustomInvest(monthIndex, inputObj) { const val = parseFloat(inputObj.value); if(isNaN(val) || val < 0) delete customInvestMap[monthIndex]; else customInvestMap[monthIndex] = val; localStorage.setItem(LEDGER_INVEST_KEY, JSON.stringify(customInvestMap)); runDynamicSimulation(); }
         function saveCustomDrip(monthIndex, inputObj) { const val = parseInt(inputObj.value); if(isNaN(val) || val < 0) delete customDripMap[monthIndex]; else customDripMap[monthIndex] = val; localStorage.setItem(LEDGER_DRIP_KEY, JSON.stringify(customDripMap)); runDynamicSimulation(); }
