@@ -253,7 +253,7 @@
                         <select id="tx_type" class="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
                             <option value="buy_regular">買進 (定期定額)</option>
                             <option value="buy_extra">買進 (額外加碼)</option>
-                            <option value="dividend">配息買入</option>
+                            <option value="dividend">配息買進</option>
                             <option value="sell">賣出</option>
                         </select>
                     </div>
@@ -350,7 +350,7 @@
                                 <th class="py-3 px-3 font-medium">年月 (期數)</th>
                                 <th class="py-3 px-2 font-medium text-center text-gray-300">買進股價 (NT$) ✏️</th>
                                 <th class="py-3 px-2 font-medium text-center text-blue-300">定投金額 (NT$) ✏️</th>
-                                <th class="py-3 px-2 font-medium text-center text-green-300">配息買股 (股) ✏️</th>
+                                <th class="py-3 px-2 font-medium text-center text-green-300">配息買進 (股) ✏️</th>
                                 <th class="py-3 px-2 font-medium text-center text-purple-300">額外加碼 (股) ✏️</th>
                                 <th class="py-3 px-3 font-medium text-right">累積總股數</th>
                                 <th class="py-3 px-3 font-medium text-right text-yellow-400">期底總市值 (依市價)</th>
@@ -465,10 +465,10 @@
                                 <th class="py-3 px-3 font-medium">年月 (期數)</th>
                                 <th class="py-3 px-2 font-medium text-center text-pink-300">大寶均價 ✏️</th>
                                 <th class="py-3 px-2 font-medium text-center text-pink-300">大寶買進 ✏️</th>
-                                <th class="py-3 px-2 font-medium text-center text-pink-300">大寶配息 ✏️</th>
+                                <th class="py-3 px-2 font-medium text-center text-pink-300">大寶配息買進 ✏️</th>
                                 <th class="py-3 px-2 font-medium text-center text-blue-300">二寶均價 ✏️</th>
                                 <th class="py-3 px-2 font-medium text-center text-blue-300">二寶買進 ✏️</th>
-                                <th class="py-3 px-2 font-medium text-center text-blue-300">二寶配息 ✏️</th>
+                                <th class="py-3 px-2 font-medium text-center text-blue-300">二寶配息買進 ✏️</th>
                                 <th class="py-3 px-3 font-medium text-right text-white">大寶總股/市值</th>
                                 <th class="py-3 px-3 font-medium text-right text-white">二寶總股/市值</th>
                             </tr>
@@ -614,10 +614,10 @@
         
         const LEDGER_KID_A_PRICE_KEY = '00406A_LEDGER_KID_A_PRICE';
         const LEDGER_KID_A_KEY = '00406A_LEDGER_KID_A';
-        const LEDGER_KID_A_DRIP_KEY = '00406A_LEDGER_KID_A_DRIP'; // 新增
+        const LEDGER_KID_A_DRIP_KEY = '00406A_LEDGER_KID_A_DRIP'; 
         const LEDGER_KID_B_PRICE_KEY = '00406A_LEDGER_KID_B_PRICE';
         const LEDGER_KID_B_KEY = '00406A_LEDGER_KID_B';
-        const LEDGER_KID_B_DRIP_KEY = '00406A_LEDGER_KID_B_DRIP'; // 新增
+        const LEDGER_KID_B_DRIP_KEY = '00406A_LEDGER_KID_B_DRIP'; 
         
         let latestDividend = 0; 
         let currentExDivDate = ''; 
@@ -658,7 +658,7 @@
                 let updated = false;
                 transactionLog.forEach(t => {
                     if (t.type === 'buy') { t.type = 'buy_regular'; updated = true; }
-                    if (!t.account) { t.account = 'main'; updated = true; } // 升級舊資料
+                    if (!t.account) { t.account = 'main'; updated = true; } 
                 });
                 if(updated) localStorage.setItem(TX_KEY, JSON.stringify(transactionLog));
             }
@@ -796,7 +796,6 @@
                 return a.id - b.id;
             });
 
-            // ★ 同時結算三個帳戶的全域真實資料
             let balances = {
                 main: { shares: 0, cost: 0, pnl: 0 },
                 kidA: { shares: 0, cost: 0, pnl: 0 },
@@ -820,7 +819,6 @@
                 }
             });
 
-            // 儲存全域資料至 localStorage 供其他模組使用
             const mainAvg = balances.main.shares > 0 ? balances.main.cost / balances.main.shares : 0;
             localStorage.setItem(SHARES_KEY, balances.main.shares);
             localStorage.setItem(COST_KEY, mainAvg);
@@ -833,20 +831,18 @@
             localStorage.setItem(KIDB_SHARES_KEY, balances.kidB.shares);
             localStorage.setItem(KIDB_COST_KEY, kidBAvg);
 
-            // 更新畫面總覽 (主帳戶)
             if (document.getElementById('overview_shares_display')) {
                 document.getElementById('overview_shares_display').innerText = balances.main.shares.toLocaleString() + ' 股';
                 document.getElementById('overview_cost_display').innerText = mainAvg.toFixed(2);
             }
 
-            // ★ 更新逐筆紀錄的 UI (受 Filter 影響)
             const filterAcc = document.getElementById('tx_filter').value;
             let html = '';
             
             const accNames = { main: '<span class="text-blue-300">我的帳戶</span>', kidA: '<span class="text-pink-300">大寶</span>', kidB: '<span class="text-cyan-300">二寶</span>' };
 
             transactionLog.forEach(t => {
-                if(filterAcc !== 'all' && (t.account||'main') !== filterAcc) return; // 過濾
+                if(filterAcc !== 'all' && (t.account||'main') !== filterAcc) return; 
 
                 let typeHtml = ''; let isPositive = true; let netAmount = 0;
                 if(t.type === 'buy_regular') { typeHtml = '<span class="text-red-400 bg-red-900/40 px-2 py-0.5 rounded text-xs font-bold border border-red-800">定投買進</span>'; netAmount = (t.price * t.shares) + t.fee; }
@@ -874,7 +870,6 @@
             if(html === '') html = `<tr><td colspan="8" class="text-center py-8 text-gray-500">尚無對應交易紀錄，請在上方新增</td></tr>`;
             document.getElementById('tx_table_body').innerHTML = html;
 
-            // 更新記帳頁面上方統計數字 (若選 ALL 則顯示主帳戶代表)
             let viewAcc = filterAcc === 'all' ? 'main' : filterAcc;
             let vName = filterAcc === 'all' ? '(主帳戶)' : '';
             document.getElementById('tx_sum_label1').innerText = vName;
@@ -891,7 +886,6 @@
             else if(vPnl < 0) pnlEl.innerHTML = `<span class="text-red-400">-NT$ ${Math.abs(Math.round(vPnl)).toLocaleString()}</span>`;
             else pnlEl.innerText = '0 元';
 
-            // 觸發全系統更新
             updateHoldingCalculations();
             runDynamicSimulation();
             runKidsSimulation();
@@ -934,7 +928,6 @@
             document.getElementById('topup_result').classList.remove('hidden');
         }
 
-        // ================= ★★★ 升級核心：券商損益平衡價精算 & 獨立帳戶除息計算 ★★★ =================
         function updateHoldingCalculations() {
             // -- 1. 主帳戶計算 --
             const shares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
@@ -965,7 +958,6 @@
 
             // -- 2. 除息基準獨立判定 --
             if(latestDividend > 0) {
-                // 主帳戶
                 let eligibleShares = 0;
                 if (currentExDivDate && transactionLog.length > 0) {
                     transactionLog.forEach(t => {
@@ -988,11 +980,10 @@
                 
                 const healthInsStatus = document.getElementById('health_ins_status');
                 const healthInsIcon = document.getElementById('health_ins_icon');
-                if (shares === 0) { healthInsStatus.innerHTML = `<span class="text-gray-400">尚無庫存部位可算。</span>`; healthInsIcon.innerHTML = "🛡️"; } 
-                else if(totalDividend > 20000) { healthInsStatus.innerHTML = `<span class="text-red-400">達標！需扣繳 2.11% 補充保費</span> (試算: ${Math.round(totalDividend).toLocaleString()}元)`; healthInsIcon.innerHTML = "⚠️"; } 
+                if (shares === 0) { healthInsStatus.innerHTML = `<span class="text-gray-400">尚無庫存。</span>`; healthInsIcon.innerHTML = "🛡️"; } 
+                else if(totalDividend > 20000) { healthInsStatus.innerHTML = `<span class="text-red-400">達標！扣 2.11%</span> (試算: ${Math.round(totalDividend).toLocaleString()}元)`; healthInsIcon.innerHTML = "⚠️"; } 
                 else { healthInsStatus.innerHTML = `<span class="text-green-400">安全免扣繳</span> (試算: ${Math.round(totalDividend).toLocaleString()}元)`; healthInsIcon.innerHTML = "✅"; }
 
-                // 雙寶帳戶除息精算
                 let eligibleA = 0; let eligibleB = 0;
                 if (currentExDivDate && transactionLog.length > 0) {
                     transactionLog.forEach(t => {
@@ -1023,6 +1014,11 @@
                 document.getElementById('kid_a_avg_cost').innerText = avgCostA > 0 ? avgCostA.toFixed(2) : '0.00';
                 document.getElementById('kid_b_avg_cost').innerText = avgCostB > 0 ? avgCostB.toFixed(2) : '0.00';
             }
+        }
+
+        function isWeekend(dateString) {
+            const date = new Date(dateString);
+            return date.getDay() === 0 || date.getDay() === 6;
         }
 
         async function fetchData(token) {
@@ -1113,6 +1109,7 @@
                     document.getElementById('pay_date').innerText = latest.CashDividendPaymentDate || '無資料';
                     document.getElementById('div_amount').innerText = latestDividend + ' 元/股';
                     document.getElementById('risk_div_value').innerText = latestDividend + ' 元';
+                    
                     if (latestDividend < 0.10) { document.getElementById('risk_div_light').innerText = '🔴'; document.getElementById('risk_div_value').className = 'text-lg font-bold text-red-500 mt-1'; } 
                     else { document.getElementById('risk_div_light').innerText = '🟢'; document.getElementById('risk_div_value').className = 'text-lg font-bold text-green-400 mt-1'; }
 
@@ -1130,7 +1127,7 @@
                 runDynamicSimulation();
                 runKidsSimulation();
                 
-                // 4. TWSE / Institutional 
+                // 4. TWSE / Institutional
                 try {
                     const twseRes = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent('https://www.twse.com.tw/rwd/zh/fund/T86?response=json&selectType=0099P')}`, { cache: "no-store" });
                     if (twseRes.ok) {
@@ -1163,6 +1160,7 @@
         function renderTrendChart(timeframe) {
             if(rawPriceData.length === 0) return;
             let labels = []; let dataPoints = [];
+            
             if(timeframe === 'daily') {
                 const sliceData = rawPriceData.slice(-30); labels = sliceData.map(d => d.date.slice(5)); dataPoints = sliceData.map(d => d.close);
             } else if(timeframe === 'weekly') {
@@ -1171,6 +1169,7 @@
                 let monthlyMap = {}; rawPriceData.forEach(d => { monthlyMap[d.date.slice(0, 7)] = d.close; });
                 labels = Object.keys(monthlyMap); dataPoints = Object.values(monthlyMap);
             }
+            
             const ctx = document.getElementById('trendChart').getContext('2d');
             if(trendChartInstance) trendChartInstance.destroy(); 
             trendChartInstance = new Chart(ctx, {
@@ -1179,17 +1178,18 @@
             });
         }
 
+        // ================= 升級核心：逐筆交易資料聚合至手帳 =================
         function runDynamicSimulation() {
             projectedData = []; 
             const basePrice = currentPrice > 0 ? currentPrice : 15.0; 
             const baseDividend = latestDividend > 0 ? latestDividend : 0.138;
             
-            // 聚合主帳戶真實紀錄
             let monthlyAgg = {};
             transactionLog.forEach(t => {
                 if((t.account||'main') !== 'main') return;
-                const ym = t.date.substring(0, 7);
+                const ym = t.date.substring(0, 7); 
                 if (!monthlyAgg[ym]) monthlyAgg[ym] = { regCost: 0, regShares: 0, extraCost: 0, extraShares: 0, divShares: 0, sellShares: 0 };
+                
                 if (t.type === 'buy_regular') { monthlyAgg[ym].regCost += (t.price * t.shares); monthlyAgg[ym].regShares += t.shares; } 
                 else if (t.type === 'buy_extra') { monthlyAgg[ym].extraCost += (t.price * t.shares); monthlyAgg[ym].extraShares += t.shares; } 
                 else if (t.type === 'dividend') { monthlyAgg[ym].divShares += t.shares; } 
@@ -1222,6 +1222,7 @@
                     let totalBuyShares = agg.regShares + agg.extraShares;
                     let totalBuyCost = agg.regCost + agg.extraCost;
                     let avgBuyPrice = totalBuyShares > 0 ? (totalBuyCost / totalBuyShares) : valuationPrice;
+                    
                     runningShares += (agg.regShares + agg.extraShares + agg.divShares - agg.sellShares);
                     
                     projectedData.push({
@@ -1230,7 +1231,8 @@
                         regularShares: agg.regShares, dividendIncome: 0, dripShares: agg.divShares,
                         extraShares: agg.extraShares, totalShares: runningShares, marketValue: runningShares * valuationPrice
                     });
-                } else {
+                } 
+                else {
                     let defaultInvestForMonth = 0;
                     if (i < 144) {
                         if (currentY > 2033 || (currentY === 2033 && currentM >= 1)) defaultInvestForMonth = 30000;
@@ -1240,13 +1242,17 @@
                     }
                     
                     let investAmount = (customInvestMap[i] !== undefined && customInvestMap[i] !== '') ? parseFloat(customInvestMap[i]) : defaultInvestForMonth;
-                    let manualPrice = customPriceMap[i]; let execPrice = (manualPrice && manualPrice > 0) ? manualPrice : valuationPrice;
+                    let manualPrice = customPriceMap[i];
+                    let execPrice = (manualPrice && manualPrice > 0) ? manualPrice : valuationPrice;
                     let regularShares = Math.floor(investAmount / execPrice);
+                    
                     let monthDividendIncome = runningShares * baseDividend;
-                    let manualDrip = customDripMap[i]; let dripShares = (manualDrip !== undefined && manualDrip !== '') ? manualDrip : Math.floor(monthDividendIncome / execPrice);
+                    let manualDrip = customDripMap[i];
+                    let dripShares = (manualDrip !== undefined && manualDrip !== '') ? manualDrip : Math.floor(monthDividendIncome / execPrice);
                     let extraS = extraSharesMap[i] || 0;
                     
                     runningShares += (regularShares + extraS + dripShares);
+
                     projectedData.push({
                         index: i, year: currentY, month: currentM, age: 43 + Math.floor(i / 12),
                         isHistorical: false, execPrice: execPrice, isManualPrice: (manualPrice !== undefined && manualPrice !== ''),
@@ -1255,12 +1261,14 @@
                         extraShares: extraS, totalShares: runningShares, marketValue: runningShares * valuationPrice
                     });
                 }
+
                 currentM++; if(currentM > 12) { currentM = 1; currentY++; }
                 simulatedPrice *= (1 + monthlyGrowthRate); 
             }
 
             const target55Data = projectedData[143] || projectedData[projectedData.length - 1]; 
             const target60Data = projectedData[projectedData.length - 1]; 
+            
             document.getElementById('monthly_dividend_55').innerText = Math.round(target55Data.dividendIncome || (target55Data.totalShares * baseDividend)).toLocaleString();
             document.getElementById('monthly_dividend_60').innerText = Math.round(target60Data.dividendIncome || (target60Data.totalShares * baseDividend)).toLocaleString();
             document.getElementById('ledger_total_shares').innerText = Math.round(target60Data.totalShares).toLocaleString() + " 股";
@@ -1269,7 +1277,6 @@
             drawDRIPChartFromProjection();
         }
 
-        // ================= ★★★ 雙寶虛實整合核心 ★★★ =================
         function runKidsSimulation() {
             kidsProjectedData = [];
             const basePrice = currentPrice > 0 ? currentPrice : 15.0; 
@@ -1317,11 +1324,11 @@
                 let execPriceA, buyA, dripA, divA;
                 let execPriceB, buyB, dripB, divB;
 
-                // 大寶邏輯
+                // 大寶
                 if (aggA && (aggA.shares > 0 || aggA.divShares > 0 || aggA.sellShares > 0)) {
                     isHistA = true;
                     execPriceA = aggA.shares > 0 ? (aggA.cost / aggA.shares) : valuationPrice;
-                    buyA = aggA.shares; dripA = aggA.divShares; divA = 0; // 真實發生
+                    buyA = aggA.shares; dripA = aggA.divShares; divA = 0; 
                     runningSharesA += (aggA.shares + aggA.divShares - aggA.sellShares);
                 } else {
                     let manualMainPrice = customPriceMap[i]; let mainExecPrice = (manualMainPrice && manualMainPrice > 0) ? manualMainPrice : valuationPrice;
@@ -1333,7 +1340,7 @@
                     runningSharesA += (buyA + dripA);
                 }
 
-                // 二寶邏輯
+                // 二寶
                 if (aggB && (aggB.shares > 0 || aggB.divShares > 0 || aggB.sellShares > 0)) {
                     isHistB = true;
                     execPriceB = aggB.shares > 0 ? (aggB.cost / aggB.shares) : valuationPrice;
@@ -1408,14 +1415,17 @@
         function renderLedgerTable(year) {
             const tbody = document.getElementById('ledger_table_body');
             const yearData = projectedData.filter(d => d.year === year);
-            if(yearData.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-gray-500">該年度無資料</td></tr>`; return; }
+            if(yearData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-gray-500">該年度無資料</td></tr>`;
+                return;
+            }
             let html = '';
             yearData.forEach(d => {
                 let formattedMonth = d.month.toString().padStart(2, '0');
                 if (d.isHistorical) {
                     html += `
                         <tr class="hover:bg-gray-700/50 transition-colors bg-blue-900/10 border-l-2 border-l-blue-500">
-                            <td class="py-3 px-3 text-white">${d.year}-${formattedMonth} <br><span class="text-[10px] bg-blue-900 text-blue-300 px-1 py-0.5 rounded border border-blue-800">✔️ 逐筆帶入</span></td>
+                            <td class="py-3 px-3 text-white">${d.year}-${formattedMonth} <br><span class="text-[10px] bg-blue-900 text-blue-300 px-1 py-0.5 rounded shadow-sm border border-blue-800">✔️ 逐筆帶入</span></td>
                             <td class="py-3 px-2 text-center text-gray-300 font-bold bg-gray-800/30">${d.execPrice > 0 ? d.execPrice.toFixed(2) : '-'} <span class="text-xs font-normal">🔒</span></td>
                             <td class="py-3 px-2 text-center text-blue-300 font-bold bg-gray-800/30">NT$ ${Math.round(d.investAmount).toLocaleString()}<div class="text-xs text-gray-500 mt-1">實買 ${d.regularShares} 股</div></td>
                             <td class="py-3 px-2 text-center text-green-300 font-bold bg-gray-800/30">${d.dripShares > 0 ? d.dripShares : '-'} 股 <span class="text-xs font-normal">🔒</span></td>
@@ -1445,7 +1455,6 @@
             tbody.innerHTML = html;
         }
 
-        // ================= ★ 雙寶手帳表格更新 (支援鎖定顯示與精簡欄位) ★ =================
         function renderKidsTable(year) {
             const tbody = document.getElementById('kids_table_body');
             const yearData = kidsProjectedData.filter(d => d.year === year);
@@ -1454,12 +1463,10 @@
             yearData.forEach(d => {
                 let formattedMonth = d.month.toString().padStart(2, '0');
                 
-                // 大寶區塊
                 let aPriceHtml = d.isHistoricalA ? `<span class="text-gray-300 font-bold">${d.execPriceA>0?d.execPriceA.toFixed(2):'-'}</span><span class="text-[10px] ml-1">🔒</span>` : `<input type="number" onchange="saveKidAPrice(${d.index}, this)" value="${d.isManualPriceA?d.execPriceA:''}" placeholder="${d.execPriceA.toFixed(2)}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-pink-800 rounded text-pink-300 text-sm focus:outline-none text-center">`;
                 let aBuyHtml = d.isHistoricalA ? `<span class="text-pink-300 font-bold">${d.buyA}</span><span class="text-[10px] ml-1">🔒</span>` : `<input type="number" onchange="saveKidAShares(${d.index}, this)" value="${(kidAMap[d.index]!==undefined)?kidAMap[d.index]:''}" placeholder="${d.defaultBuySharesA}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-pink-800 rounded text-pink-300 text-sm focus:outline-none text-center">`;
                 let aDripHtml = d.isHistoricalA ? `<span class="text-green-300 font-bold">${d.dripA}</span><span class="text-[10px] ml-1">🔒</span>` : `<input type="number" onchange="saveKidADrip(${d.index}, this)" value="${(kidADripMap[d.index]!==undefined)?kidADripMap[d.index]:''}" placeholder="${d.dripA}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-green-800 rounded text-green-300 text-sm focus:outline-none text-center">`;
 
-                // 二寶區塊
                 let bPriceHtml = d.isHistoricalB ? `<span class="text-gray-300 font-bold">${d.execPriceB>0?d.execPriceB.toFixed(2):'-'}</span><span class="text-[10px] ml-1">🔒</span>` : `<input type="number" onchange="saveKidBPrice(${d.index}, this)" value="${d.isManualPriceB?d.execPriceB:''}" placeholder="${d.execPriceB.toFixed(2)}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-blue-300 text-sm focus:outline-none text-center">`;
                 let bBuyHtml = d.isHistoricalB ? `<span class="text-blue-300 font-bold">${d.buyB}</span><span class="text-[10px] ml-1">🔒</span>` : `<input type="number" onchange="saveKidBShares(${d.index}, this)" value="${(kidBMap[d.index]!==undefined)?kidBMap[d.index]:''}" placeholder="${d.defaultBuySharesB}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-blue-300 text-sm focus:outline-none text-center">`;
                 let bDripHtml = d.isHistoricalB ? `<span class="text-green-300 font-bold">${d.dripB}</span><span class="text-[10px] ml-1">🔒</span>` : `<input type="number" onchange="saveKidBDrip(${d.index}, this)" value="${(kidBDripMap[d.index]!==undefined)?kidBDripMap[d.index]:''}" placeholder="${d.dripB}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-green-800 rounded text-green-300 text-sm focus:outline-none text-center">`;
@@ -1515,7 +1522,6 @@
             });
         }
 
-        // 手動輸入資料儲存
         function saveCustomPrice(monthIndex, inputObj) { const val = parseFloat(inputObj.value); if(isNaN(val) || val <= 0) delete customPriceMap[monthIndex]; else customPriceMap[monthIndex] = val; localStorage.setItem(LEDGER_PRICE_KEY, JSON.stringify(customPriceMap)); runDynamicSimulation(); runKidsSimulation(); }
         function saveCustomInvest(monthIndex, inputObj) { const val = parseFloat(inputObj.value); if(isNaN(val) || val < 0) delete customInvestMap[monthIndex]; else customInvestMap[monthIndex] = val; localStorage.setItem(LEDGER_INVEST_KEY, JSON.stringify(customInvestMap)); runDynamicSimulation(); }
         function saveCustomDrip(monthIndex, inputObj) { const val = parseInt(inputObj.value); if(isNaN(val) || val < 0) delete customDripMap[monthIndex]; else customDripMap[monthIndex] = val; localStorage.setItem(LEDGER_DRIP_KEY, JSON.stringify(customDripMap)); runDynamicSimulation(); }
