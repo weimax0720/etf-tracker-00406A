@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +33,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 虛實整合手帳連動版</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">家庭財富旗艦版 (43歲 ➔ 60歲) | 雙寶獨立記帳連動</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -43,7 +44,7 @@
         <!-- 導覽分頁按鈕 (Tabs) -->
         <div class="flex border-b border-gray-700 space-x-2 overflow-x-auto pb-2">
             <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn active px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-200 whitespace-nowrap">📊 我的資產總覽</button>
-            <button onclick="switchTab('transactions')" id="btn-transactions" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-green-400 whitespace-nowrap">📓 逐筆記帳 (連動)</button>
+            <button onclick="switchTab('transactions')" id="btn-transactions" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-green-400 whitespace-nowrap">📓 家庭記帳中心</button>
             <button onclick="switchTab('ledger')" id="btn-ledger" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📝 我的存股手帳</button>
             <button onclick="switchTab('kids')" id="btn-kids" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-pink-400 whitespace-nowrap">👧 雙寶存股手帳</button>
             <button onclick="switchTab('charts')" id="btn-charts" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📈 走勢與日週月</button>
@@ -76,11 +77,10 @@
                     </div>
                 </div>
                 
-                <!-- 升級版：全自動連動逐筆紀錄 -->
                 <div class="bg-gray-800 p-4 rounded-lg border border-blue-700/50 flex flex-col justify-center col-span-2 md:col-span-3 shadow-lg relative overflow-hidden">
-                    <div class="absolute right-0 top-0 text-xs bg-blue-900/50 text-blue-300 px-3 py-1 rounded-bl">已連動逐筆紀錄</div>
+                    <div class="absolute right-0 top-0 text-xs bg-blue-900/50 text-blue-300 px-3 py-1 rounded-bl">已連動記帳中心</div>
                     <div class="flex items-center gap-2 mb-3">
-                        <p class="text-sm text-blue-300 font-bold">我的真實起點部位 (由「逐筆紀錄」自動統整計算)</p>
+                        <p class="text-sm text-blue-300 font-bold">我的主帳戶起點部位 (由「逐筆紀錄」自動統整)</p>
                     </div>
                     <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4 items-center">
                         <div class="flex-1 bg-gray-900 p-3 rounded border border-gray-700 w-full">
@@ -88,7 +88,7 @@
                             <p class="text-xl md:text-2xl font-bold text-white" id="overview_shares_display">0 股</p>
                         </div>
                         <div class="flex-1 bg-gray-900 p-3 rounded border border-gray-700 w-full">
-                            <p class="text-xs text-gray-400 mb-1">券商持有均價 (含手續費攤平)</p>
+                            <p class="text-xs text-gray-400 mb-1">純買進均價 (含買進手續費)</p>
                             <p class="text-xl md:text-2xl font-bold text-white"><span id="overview_cost_display">0.00</span> <span class="text-sm text-gray-400 font-normal">元</span></p>
                         </div>
                         <div class="flex items-center w-full md:w-auto mt-2 md:mt-0">
@@ -107,7 +107,6 @@
                         <span class="text-lg md:text-xl">💰</span>
                     </div>
                 </div>
-                <!-- 除息基準日判定標籤 -->
                 <div class="bg-gray-800 p-4 rounded-lg border border-green-700/50 flex flex-col justify-center col-span-2 md:col-span-2 shadow-lg shadow-green-900/20 relative">
                     <div class="flex justify-between items-center mb-1">
                         <p class="text-sm text-green-300 font-bold">本次除息預估入帳</p>
@@ -120,34 +119,41 @@
                 </div>
             </div>
 
-            <!-- 保本與損益精算卡片 -->
             <div class="card border border-indigo-900/50 shadow-lg shadow-indigo-900/10 relative overflow-hidden">
                 <div class="absolute right-[-20px] top-[-20px] text-8xl opacity-5">🎯</div>
-                <h2 class="text-xl font-semibold text-indigo-400 mb-4">🛡️ 投資保本與損益精算</h2>
+                <h2 class="text-xl font-semibold text-indigo-400 mb-4">🛡️ 主帳戶保本與損益精算</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800">
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex flex-col justify-center">
                         <p class="text-xs text-gray-400">總投入成本 (台幣)</p>
                         <p class="text-xl font-bold text-white mt-1">NT$ <span id="total_invested_cost">0</span></p>
                     </div>
-                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800">
-                        <p class="text-xs text-gray-400">原始保本價 (持有均價)</p>
-                        <p class="text-xl font-bold text-yellow-400 mt-1"><span id="breakeven_price">0.00</span> 元</p>
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex flex-col justify-center relative group">
+                        <p class="text-xs text-gray-400 flex items-center gap-1">券商損益平衡價 <span class="text-[10px] text-indigo-400 cursor-help" title="券商邏輯：純買進均價 + 預估賣出證交稅與手續費">ℹ️</span></p>
+                        <div class="flex items-end justify-between mt-1">
+                            <p class="text-xl font-bold text-yellow-400"><span id="breakeven_price">0.00</span> <span class="text-sm font-normal text-yellow-500">元</span></p>
+                            <div class="flex flex-col items-end">
+                                <p class="text-[9px] text-gray-500 mb-0.5">純均價: <span id="pure_avg_cost">0.00</span></p>
+                                <div class="flex items-center gap-1 bg-gray-800 px-1 py-0.5 rounded border border-gray-700 opacity-60 hover:opacity-100 transition-opacity" title="預估賣出稅費比例(%)，微調此數值即可對齊券商平衡價">
+                                    <span class="text-[9px] text-gray-400">賣出費</span>
+                                    <input type="number" id="sell_tax_fee_pct" value="0.30" step="0.01" class="w-10 bg-transparent border-none p-0 text-[10px] text-center text-yellow-400 focus:ring-0" onchange="updateHoldingCalculations()">
+                                    <span class="text-[9px] text-gray-400">%</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 relative overflow-hidden border-l-2 border-l-green-500">
-                        <p class="text-[11px] text-gray-400">領息降本價 (預估扣除本次)</p>
-                        <p class="text-xl font-bold text-green-400 mt-1"><span id="adj_breakeven_price">0.00</span> 元</p>
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex flex-col justify-center relative overflow-hidden border-l-2 border-l-green-500">
+                        <p class="text-[11px] text-gray-400">領息降本價 (扣除本次配息)</p>
+                        <p class="text-xl font-bold text-green-400 mt-1"><span id="adj_breakeven_price">0.00</span> <span class="text-sm font-normal text-green-500">元</span></p>
                     </div>
-                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 col-span-2 md:col-span-1">
-                        <p class="text-xs text-gray-400">目前帳面損益 (依即時市價)</p>
+                    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex flex-col justify-center col-span-2 md:col-span-1">
+                        <p class="text-xs text-gray-400 flex items-center gap-1">目前帳面損益 <span class="text-[10px] text-gray-500">(已扣賣出費)</span></p>
                         <p class="text-xl font-bold mt-1" id="unrealized_pnl">NT$ 0 <span class="text-sm font-normal text-gray-500">(0.00%)</span></p>
                     </div>
                 </div>
 
-                <!-- 預估加碼攤平計算機 -->
                 <div class="pt-4 border-t border-indigo-800/50">
                     <p class="text-sm text-indigo-300 font-bold mb-2 flex items-center gap-2">
-                        <span>➕ 預估加碼攤平計算機</span>
-                        <span class="text-xs font-normal text-gray-400">(買進前先算算看均價會變多少)</span>
+                        <span>➕ 主帳戶加碼攤平計算機</span>
                     </p>
                     <div class="flex flex-col md:flex-row gap-3">
                         <div class="flex-1">
@@ -158,8 +164,6 @@
                         </div>
                         <button onclick="calculateTopup()" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-500 px-6 py-2 rounded text-sm font-bold whitespace-nowrap transition shadow-lg shadow-indigo-900/50">試算新均價</button>
                     </div>
-                    
-                    <!-- 試算結果顯示區 -->
                     <div id="topup_result" class="mt-4 hidden bg-indigo-950/40 p-4 rounded-lg border border-indigo-700/50">
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                             <div>
@@ -171,7 +175,7 @@
                                 <p class="text-lg font-bold text-gray-300 mt-1" id="res_topup_cost">--</p>
                             </div>
                             <div class="border-l border-indigo-800/50 pl-2">
-                                <p class="text-xs text-indigo-300 font-bold">加碼後新均價</p>
+                                <p class="text-xs text-indigo-300 font-bold">加碼後新平衡價</p>
                                 <p class="text-xl font-bold text-yellow-400 mt-1" id="res_new_avg">--</p>
                             </div>
                             <div>
@@ -211,73 +215,87 @@
             </div>
         </div>
 
-        <!-- ================= 分頁 2：逐筆交易紀錄 ================= -->
+        <!-- ================= 分頁 2：家庭記帳中心 (支援雙寶帳戶) ================= -->
         <div id="tab-transactions" class="space-y-6 hidden">
             <div class="card">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
-                        <h2 class="text-xl font-semibold text-blue-400">📓 逐筆交易紀錄 (支援編輯)</h2>
-                        <p class="text-sm text-gray-400 mt-1">此處資料將<span class="text-white font-bold">自動寫入「我的存股手帳」對應月份</span>，取代未來模擬數值。</p>
+                        <h2 class="text-xl font-semibold text-blue-400">📓 家庭記帳中心 (支援多帳戶編輯)</h2>
+                        <p class="text-sm text-gray-400 mt-1">主帳戶與雙寶帳戶的真實交易皆在此登錄，系統將<span class="text-white font-bold">自動分發寫入對應的存股手帳</span>中。</p>
                     </div>
-                    <span class="badge bg-green-900 text-green-300">全自動計算與手帳連動</span>
+                    <span class="badge bg-green-900 text-green-300">全自動分戶計算與連動</span>
                 </div>
                 
                 <!-- 新增/編輯 交易表單 -->
-                <div class="grid grid-cols-2 md:grid-cols-6 gap-3 mb-6 bg-gray-800 p-4 rounded-lg border border-gray-700 shadow-lg relative">
+                <div class="grid grid-cols-2 md:grid-cols-7 gap-3 mb-6 bg-gray-800 p-4 rounded-lg border border-gray-700 shadow-lg relative">
                     <div class="col-span-2 md:col-span-1">
                         <label class="text-xs text-gray-400 block mb-1">交易日期</label>
                         <input type="date" id="tx_date" class="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div class="col-span-1">
+                        <label class="text-xs text-gray-400 block mb-1">選擇帳戶</label>
+                        <select id="tx_account" class="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
+                            <option value="main">我的主帳戶</option>
+                            <option value="kidA">👧 大寶帳戶</option>
+                            <option value="kidB">👶 二寶帳戶</option>
+                        </select>
                     </div>
                     <div class="col-span-1">
                         <label class="text-xs text-gray-400 block mb-1">類型</label>
                         <select id="tx_type" class="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
                             <option value="buy_regular">買進 (定期定額)</option>
                             <option value="buy_extra">買進 (額外加碼)</option>
-                            <option value="dividend">配息買入</option>
+                            <option value="dividend">配息買入 (滴水穿石)</option>
                             <option value="sell">賣出</option>
                         </select>
                     </div>
                     <div class="col-span-1">
                         <label class="text-xs text-gray-400 block mb-1">成交股價 (元)</label>
-                        <input type="number" step="0.01" id="tx_price" placeholder="例如 15.2" class="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
+                        <input type="number" step="0.01" id="tx_price" placeholder="例: 15.2" class="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
                     </div>
                     <div class="col-span-1">
-                        <label class="text-xs text-gray-400 block mb-1">股數 (股)</label>
-                        <input type="number" id="tx_shares" placeholder="例如 1000" class="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
+                        <label class="text-xs text-gray-400 block mb-1">實收付股數</label>
+                        <input type="number" id="tx_shares" placeholder="例: 1000" class="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
                     </div>
                     <div class="col-span-1">
                         <label class="text-xs text-gray-400 block mb-1">手續費/稅 (元)</label>
                         <input type="number" id="tx_fee" value="0" placeholder="0" class="w-full px-2 py-1.5 bg-gray-900 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
                     </div>
-                    <div class="col-span-2 md:col-span-1 flex items-end gap-2">
-                        <button id="btn_add_tx" onclick="addTransaction()" class="flex-1 bg-blue-600 hover:bg-blue-500 py-2 rounded text-sm font-bold transition shadow-lg shadow-blue-900/40">新增紀錄</button>
-                        <button id="btn_cancel_tx" onclick="cancelEditTx()" class="hidden bg-gray-600 hover:bg-gray-500 px-3 py-2 rounded text-sm font-bold transition shadow-lg">取消</button>
+                    <div class="col-span-2 md:col-span-1 flex items-end gap-1">
+                        <button id="btn_add_tx" onclick="addTransaction()" class="flex-1 bg-blue-600 hover:bg-blue-500 py-1.5 rounded text-sm font-bold transition shadow-lg shadow-blue-900/40">新增</button>
+                        <button id="btn_cancel_tx" onclick="cancelEditTx()" class="hidden bg-gray-600 hover:bg-gray-500 px-2 py-1.5 rounded text-sm font-bold transition shadow-lg">取消</button>
                     </div>
                 </div>
 
-                <!-- 統計資訊 -->
+                <!-- 分戶統計資訊 -->
                 <div class="grid grid-cols-3 gap-4 mb-4">
-                    <div class="bg-gray-900 p-3 rounded-lg border border-gray-700 text-center">
-                        <p class="text-xs text-gray-400">目前總股數</p>
-                        <p class="text-lg md:text-xl font-bold text-white mt-1" id="tx_total_shares">0 股</p>
+                    <div class="bg-gray-900 p-3 rounded-lg border border-gray-700 text-center relative overflow-hidden">
+                        <div class="absolute -right-2 -top-2 text-4xl opacity-10">👨</div>
+                        <p class="text-xs text-gray-400">主帳戶 總股數 / 均價</p>
+                        <p class="text-lg md:text-xl font-bold text-white mt-1"><span id="tx_main_shares">0</span> <span class="text-sm font-normal">股</span></p>
+                        <p class="text-sm text-yellow-400 mt-1" id="tx_main_cost">0.00 元</p>
                     </div>
-                    <div class="bg-gray-900 p-3 rounded-lg border border-gray-700 text-center border-b-2 border-b-yellow-500">
-                        <p class="text-xs text-gray-400">移動平均成本 (含手續費)</p>
-                        <p class="text-lg md:text-xl font-bold text-yellow-400 mt-1" id="tx_avg_cost">0.00 元</p>
+                    <div class="bg-gray-900 p-3 rounded-lg border border-pink-900/50 text-center relative overflow-hidden">
+                        <div class="absolute -right-2 -top-2 text-4xl opacity-10">👧</div>
+                        <p class="text-xs text-gray-400">大寶 總股數 / 均價</p>
+                        <p class="text-lg md:text-xl font-bold text-pink-300 mt-1"><span id="tx_kida_shares">0</span> <span class="text-sm font-normal">股</span></p>
+                        <p class="text-sm text-pink-500 mt-1" id="tx_kida_cost">0.00 元</p>
                     </div>
-                    <div class="bg-gray-900 p-3 rounded-lg border border-gray-700 text-center">
-                        <p class="text-xs text-gray-400">歷史已實現損益</p>
-                        <p class="text-lg md:text-xl font-bold text-white mt-1" id="tx_realized_pnl">0 元</p>
+                    <div class="bg-gray-900 p-3 rounded-lg border border-blue-900/50 text-center relative overflow-hidden">
+                        <div class="absolute -right-2 -top-2 text-4xl opacity-10">👶</div>
+                        <p class="text-xs text-gray-400">二寶 總股數 / 均價</p>
+                        <p class="text-lg md:text-xl font-bold text-blue-300 mt-1"><span id="tx_kidb_shares">0</span> <span class="text-sm font-normal">股</span></p>
+                        <p class="text-sm text-blue-500 mt-1" id="tx_kidb_cost">0.00 元</p>
                     </div>
                 </div>
 
                 <!-- 表格 -->
                 <div class="overflow-x-auto border border-gray-700 rounded-lg shadow-lg">
-                    <table class="w-full text-left border-collapse min-w-[750px]">
+                    <table class="w-full text-left border-collapse min-w-[800px]">
                         <thead class="bg-gray-800 border-b border-gray-700 text-sm text-gray-400">
                             <tr>
                                 <th class="py-3 px-4">交易日期</th>
-                                <th class="py-3 px-4">類型</th>
+                                <th class="py-3 px-4">帳戶與類型</th>
                                 <th class="py-3 px-4 text-right">成交價</th>
                                 <th class="py-3 px-4 text-right">股數</th>
                                 <th class="py-3 px-4 text-right">手續費/稅</th>
@@ -286,7 +304,6 @@
                             </tr>
                         </thead>
                         <tbody id="tx_table_body" class="text-sm divide-y divide-gray-800 bg-gray-900">
-                            <!-- JS 動態生成 -->
                         </tbody>
                     </table>
                 </div>
@@ -300,8 +317,8 @@
                     <div>
                         <h2 class="text-xl font-semibold text-green-400">📝 我的存股手帳 (虛實整合版)</h2>
                         <p class="text-sm text-gray-400 mt-1">
-                            <span class="text-blue-300 font-bold">✔️ 逐筆帶入：</span>若該月份已有真實交易紀錄，本表將自動鎖定並顯示當月<span class="text-white font-bold">真實發生</span>的投入與股數。<br>
-                            <span class="text-gray-400 font-bold">✏️ 未來模擬：</span>尚未發生的月份，可手動輸入模擬參數。市值全面強制錨定最新收盤價。
+                            <span class="text-blue-300 font-bold">✔️ 逐筆帶入：</span>當月若有真實交易，本表將自動鎖定並顯示真實數值。<br>
+                            <span class="text-gray-400 font-bold">✏️ 未來模擬：</span>未來月份可手動模擬參數。市值一律強制錨定最新收盤價。
                         </p>
                     </div>
                     <div class="bg-gray-900 p-2 rounded text-sm text-gray-300 border border-gray-700 text-right w-full md:w-auto shadow-lg">
@@ -310,7 +327,6 @@
                     </div>
                 </div>
 
-                <!-- 年度切換列 -->
                 <div class="flex flex-wrap gap-2 mb-4" id="ledger-year-tabs"></div>
 
                 <div class="overflow-x-auto border border-gray-700 rounded-lg shadow-lg">
@@ -359,8 +375,13 @@
                         </div>
                         <div>
                             <p class="text-[10px] md:text-xs text-gray-400">終極月配息</p>
-                            <p class="text-sm text-green-400 font-bold">NT$<span id="kid_a_dividend">0</span></p>
+                            <p class="text-sm text-green-400 font-bold">NT$<span id="kid_a_ult_dividend">0</span></p>
                         </div>
+                    </div>
+                    <!-- 本次配息獨立顯示 -->
+                    <div class="mt-3 pt-2 border-t border-pink-900/50 flex justify-between items-center">
+                        <p class="text-xs text-pink-300">本次除息預估入帳 (精算資格)</p>
+                        <p class="text-sm text-green-400 font-bold">NT$ <span id="kid_a_next_div">0</span></p>
                     </div>
                 </div>
                 
@@ -386,8 +407,12 @@
                         </div>
                         <div>
                             <p class="text-[10px] md:text-xs text-gray-400">終極月配息</p>
-                            <p class="text-sm text-green-400 font-bold">NT$<span id="kid_b_dividend">0</span></p>
+                            <p class="text-sm text-green-400 font-bold">NT$<span id="kid_b_ult_dividend">0</span></p>
                         </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-blue-900/50 flex justify-between items-center">
+                        <p class="text-xs text-blue-300">本次除息預估入帳 (精算資格)</p>
+                        <p class="text-sm text-green-400 font-bold">NT$ <span id="kid_b_next_div">0</span></p>
                     </div>
                 </div>
             </div>
@@ -395,26 +420,32 @@
             <div class="card">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                     <div>
-                        <h2 class="text-xl font-semibold text-pink-400">👧 雙寶每週 100 元存股手帳</h2>
-                        <p class="text-sm text-gray-400 mt-1">每週 100 元換算平均每月預算為 <span class="text-white font-bold">433 元</span>。支援獨立輸入「買價」、「實買股數」，<span class="text-yellow-400 font-bold">市值全面強制錨定市價</span>。</p>
+                        <h2 class="text-xl font-semibold text-pink-400">👧 雙寶每週 100 元存股手帳 (虛實整合版)</h2>
+                        <p class="text-sm text-gray-400 mt-1">每月預算 433 元。<span class="text-white font-bold">新增配息獨立欄位</span>，有真實交易紀錄的月份將自動上鎖帶入。</p>
                     </div>
                 </div>
 
                 <div class="flex flex-wrap gap-2 mb-4" id="kids-year-tabs"></div>
 
-                <div class="overflow-x-auto border border-gray-700 rounded-lg">
+                <div class="overflow-x-auto border border-gray-700 rounded-lg shadow-lg">
                     <table class="w-full text-left border-collapse min-w-[950px]">
                         <thead class="bg-gray-800 border-b border-gray-700 text-sm text-gray-400">
                             <tr>
-                                <th class="py-3 px-3 font-medium">年月 (期數)</th>
-                                <th class="py-3 px-2 font-medium text-pink-300">大寶買價 ✏️</th>
-                                <th class="py-3 px-2 font-medium text-pink-300">大寶實買 ✏</th>
-                                <th class="py-3 px-2 font-medium text-pink-300 text-right">大寶期底市值</th>
-                                <th class="py-3 px-2 font-medium text-blue-300">二寶買價 ✏️</th>
-                                <th class="py-3 px-2 font-medium text-blue-300">二寶實買 ✏️</th>
-                                <th class="py-3 px-2 font-medium text-blue-300 text-right">二寶期底市值</th>
-                                <th class="py-3 px-3 font-medium text-right">大寶總股數</th>
-                                <th class="py-3 px-3 font-medium text-right">二寶總股數</th>
+                                <th class="py-2 px-3 border-r border-gray-700 bg-gray-900"></th>
+                                <th colspan="3" class="py-2 text-center text-pink-300 border-r border-gray-700 bg-pink-900/10">👧 大寶帳戶</th>
+                                <th colspan="3" class="py-2 text-center text-blue-300 border-r border-gray-700 bg-blue-900/10">👶 二寶帳戶</th>
+                                <th colspan="2" class="py-2 text-center text-yellow-300 bg-yellow-900/10">累積資產 (依市價)</th>
+                            </tr>
+                            <tr class="text-xs border-b border-gray-700">
+                                <th class="py-2 px-3 font-medium border-r border-gray-700">年月 (期數)</th>
+                                <th class="py-2 px-2 font-medium text-center">買價 ✏️</th>
+                                <th class="py-2 px-2 font-medium text-center">買進 ✏️</th>
+                                <th class="py-2 px-2 font-medium text-center border-r border-gray-700">配息 ✏️</th>
+                                <th class="py-2 px-2 font-medium text-center">買價 ✏️</th>
+                                <th class="py-2 px-2 font-medium text-center">買進 ✏️</th>
+                                <th class="py-2 px-2 font-medium text-center border-r border-gray-700">配息 ✏️</th>
+                                <th class="py-2 px-3 font-medium text-right">大寶總股/市值</th>
+                                <th class="py-2 px-3 font-medium text-right">二寶總股/市值</th>
                             </tr>
                         </thead>
                         <tbody id="kids_table_body" class="text-sm divide-y divide-gray-800 bg-gray-900">
@@ -543,6 +574,7 @@
         const SHARES_KEY = '00406A_REAL_SHARES';
         const COST_KEY = '00406A_REAL_COST'; 
         const TX_KEY = '00406A_TX_LOG'; 
+        const SELL_PCT_KEY = '00406A_SELL_COST_PCT'; 
         
         const LEDGER_INVEST_KEY = '00406A_LEDGER_INVEST'; 
         const LEDGER_PRICE_KEY = '00406A_LEDGER_PRICE';   
@@ -551,8 +583,10 @@
         
         const LEDGER_KID_A_PRICE_KEY = '00406A_LEDGER_KID_A_PRICE';
         const LEDGER_KID_A_KEY = '00406A_LEDGER_KID_A';
+        const LEDGER_KID_A_DRIP_KEY = '00406A_LEDGER_KID_A_DRIP';
         const LEDGER_KID_B_PRICE_KEY = '00406A_LEDGER_KID_B_PRICE';
         const LEDGER_KID_B_KEY = '00406A_LEDGER_KID_B';
+        const LEDGER_KID_B_DRIP_KEY = '00406A_LEDGER_KID_B_DRIP';
         
         let latestDividend = 0; 
         let currentExDivDate = ''; 
@@ -573,25 +607,25 @@
         let projectedData = [];   
         let currentSelectedYear = startYear; 
 
-        let kidAPriceMap = {};
-        let kidAMap = {};
-        let kidBPriceMap = {};
-        let kidBMap = {};
+        let kidAPriceMap = {}; let kidAMap = {}; let kidADripMap = {};
+        let kidBPriceMap = {}; let kidBMap = {}; let kidBDripMap = {};
         let kidsProjectedData = [];
         
         let transactionLog = []; 
-        let editingTxId = null; // ★ 編輯狀態變數
+        let editingTxId = null; 
 
         window.onload = () => {
             const savedKey = localStorage.getItem(KEY_NAME);
             if(savedKey) { document.getElementById('api_key').value = savedKey; fetchData(savedKey); }
             
+            if(localStorage.getItem(SELL_PCT_KEY)) { document.getElementById('sell_tax_fee_pct').value = localStorage.getItem(SELL_PCT_KEY); }
+
             if(localStorage.getItem(TX_KEY)) {
                 transactionLog = JSON.parse(localStorage.getItem(TX_KEY));
-                // 自動轉移舊版 buy 為 buy_regular
                 let updated = false;
-                transactionLog.forEach(t => {
+                transactionLog.forEach(t => { 
                     if (t.type === 'buy') { t.type = 'buy_regular'; updated = true; }
+                    if (!t.account) { t.account = 'main'; updated = true; }
                 });
                 if(updated) localStorage.setItem(TX_KEY, JSON.stringify(transactionLog));
             }
@@ -605,8 +639,10 @@
             
             if(localStorage.getItem(LEDGER_KID_A_PRICE_KEY)) kidAPriceMap = JSON.parse(localStorage.getItem(LEDGER_KID_A_PRICE_KEY));
             if(localStorage.getItem(LEDGER_KID_A_KEY)) kidAMap = JSON.parse(localStorage.getItem(LEDGER_KID_A_KEY));
+            if(localStorage.getItem(LEDGER_KID_A_DRIP_KEY)) kidADripMap = JSON.parse(localStorage.getItem(LEDGER_KID_A_DRIP_KEY));
             if(localStorage.getItem(LEDGER_KID_B_PRICE_KEY)) kidBPriceMap = JSON.parse(localStorage.getItem(LEDGER_KID_B_PRICE_KEY));
             if(localStorage.getItem(LEDGER_KID_B_KEY)) kidBMap = JSON.parse(localStorage.getItem(LEDGER_KID_B_KEY));
+            if(localStorage.getItem(LEDGER_KID_B_DRIP_KEY)) kidBDripMap = JSON.parse(localStorage.getItem(LEDGER_KID_B_DRIP_KEY));
 
             renderYearTabs();
             runDynamicSimulation(); 
@@ -631,7 +667,6 @@
                     else document.getElementById(`btn-${id}`).classList.add('text-gray-400');
                 }
             });
-            
             if(tabId === 'charts' && rawPriceData.length > 0) renderTrendChart(currentChartTimeframe); 
         }
 
@@ -643,9 +678,10 @@
             alert('金鑰已儲存！正在抓取最新市場資料...');
         }
 
-        // ================= 逐筆交易紀錄引擎 (含編輯功能) =================
+        // ================= ★ 逐筆交易紀錄引擎 (含家庭多帳戶支援) =================
         function addTransaction() {
             const date = document.getElementById('tx_date').value;
+            const account = document.getElementById('tx_account').value;
             const type = document.getElementById('tx_type').value;
             const price = parseFloat(document.getElementById('tx_price').value);
             const shares = parseInt(document.getElementById('tx_shares').value);
@@ -657,27 +693,21 @@
             }
 
             if(editingTxId) {
-                // 儲存編輯
                 const idx = transactionLog.findIndex(x => x.id === editingTxId);
-                if(idx !== -1) {
-                    transactionLog[idx] = { id: editingTxId, date, type, price, shares, fee };
-                }
-                cancelEditTx(); // 重設表單狀態
+                if(idx !== -1) transactionLog[idx] = { id: editingTxId, date, account, type, price, shares, fee };
+                cancelEditTx(); 
             } else {
-                // 新增
                 const id = new Date().getTime();
-                transactionLog.push({ id, date, type, price, shares, fee });
+                transactionLog.push({ id, date, account, type, price, shares, fee });
             }
             
             localStorage.setItem(TX_KEY, JSON.stringify(transactionLog));
             
-            // 清空輸入框 (保留日期與類型)
             if(!editingTxId) {
                 document.getElementById('tx_price').value = '';
                 document.getElementById('tx_shares').value = '';
                 document.getElementById('tx_fee').value = '0';
             }
-            
             updateTransactions();
         }
 
@@ -686,20 +716,17 @@
             if(!tx) return;
             
             document.getElementById('tx_date').value = tx.date;
+            document.getElementById('tx_account').value = tx.account || 'main';
             document.getElementById('tx_type').value = tx.type;
             document.getElementById('tx_price').value = tx.price;
             document.getElementById('tx_shares').value = tx.shares;
-            document.getElementById('tx_fee').value = tx.fee;
+            document.getElementById('tx_fee').value = tx.fee || 0;
             
             editingTxId = id;
-            
-            // 變更按鈕外觀
             const btnAdd = document.getElementById('btn_add_tx');
             btnAdd.innerText = '儲存修改';
-            btnAdd.className = 'flex-1 bg-yellow-600 hover:bg-yellow-500 py-2 rounded text-sm font-bold transition shadow-lg shadow-yellow-900/40 text-white';
+            btnAdd.className = 'flex-1 bg-yellow-600 hover:bg-yellow-500 py-1.5 rounded text-sm font-bold transition shadow-lg shadow-yellow-900/40 text-white';
             document.getElementById('btn_cancel_tx').classList.remove('hidden');
-            
-            // 捲動至頂部
             document.getElementById('tab-transactions').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -710,8 +737,8 @@
             document.getElementById('tx_fee').value = '0';
             
             const btnAdd = document.getElementById('btn_add_tx');
-            btnAdd.innerText = '新增紀錄';
-            btnAdd.className = 'flex-1 bg-blue-600 hover:bg-blue-500 py-2 rounded text-sm font-bold transition shadow-lg shadow-blue-900/40';
+            btnAdd.innerText = '新增';
+            btnAdd.className = 'flex-1 bg-blue-600 hover:bg-blue-500 py-1.5 rounded text-sm font-bold transition shadow-lg shadow-blue-900/40';
             document.getElementById('btn_cancel_tx').classList.add('hidden');
         }
 
@@ -730,44 +757,53 @@
                 return a.id - b.id;
             });
 
-            let currentShares = 0;
-            let currentTotalCost = 0;
-            let realizedPnl = 0;
+            let sharesMain = 0, costMain = 0;
+            let sharesA = 0, costA = 0;
+            let sharesB = 0, costB = 0;
             let html = '';
 
             transactionLog.forEach(t => {
-                let typeHtml = '';
-                let isPositive = true;
-                let netAmount = 0;
+                const acc = t.account || 'main';
+                let typeHtml = ''; let isPositive = true; let netAmount = 0;
                 
                 if(t.type === 'buy_regular' || t.type === 'buy_extra' || t.type === 'dividend') {
-                    if(t.type === 'buy_regular') typeHtml = '<span class="text-red-400 bg-red-900/40 px-2 py-0.5 rounded text-xs font-bold border border-red-800">買進(定投)</span>';
-                    else if(t.type === 'buy_extra') typeHtml = '<span class="text-purple-400 bg-purple-900/40 px-2 py-0.5 rounded text-xs font-bold border border-purple-800">加碼買進</span>';
-                    else typeHtml = '<span class="text-blue-400 bg-blue-900/40 px-2 py-0.5 rounded text-xs font-bold border border-blue-800">配息買入</span>';
+                    if(t.type === 'buy_regular') typeHtml = '<span class="text-red-400 bg-red-900/40 px-1 py-0.5 rounded text-[10px] font-bold border border-red-800">定投買進</span>';
+                    else if(t.type === 'buy_extra') typeHtml = '<span class="text-purple-400 bg-purple-900/40 px-1 py-0.5 rounded text-[10px] font-bold border border-purple-800">加碼買進</span>';
+                    else typeHtml = '<span class="text-blue-400 bg-blue-900/40 px-1 py-0.5 rounded text-[10px] font-bold border border-blue-800">配息買入</span>';
                     
-                    netAmount = (t.price * t.shares) + t.fee;
-                    currentTotalCost += netAmount;
-                    currentShares += t.shares;
+                    netAmount = (t.price * t.shares) + (t.fee||0);
+                    if (acc === 'main') { costMain += netAmount; sharesMain += t.shares; }
+                    else if (acc === 'kidA') { costA += netAmount; sharesA += t.shares; }
+                    else if (acc === 'kidB') { costB += netAmount; sharesB += t.shares; }
                 } else if(t.type === 'sell') {
-                    typeHtml = '<span class="text-green-400 bg-green-900/40 px-2 py-0.5 rounded text-xs font-bold border border-green-800">賣出</span>';
+                    typeHtml = '<span class="text-green-400 bg-green-900/40 px-1 py-0.5 rounded text-[10px] font-bold border border-green-800">賣出</span>';
                     isPositive = false;
+                    netAmount = (t.price * t.shares) - (t.fee||0);
                     
-                    netAmount = (t.price * t.shares) - t.fee;
-                    const avgPrice = currentShares > 0 ? (currentTotalCost / currentShares) : 0;
-                    const costOfSold = avgPrice * t.shares;
-                    
-                    currentTotalCost -= costOfSold;
-                    currentShares -= t.shares;
-                    realizedPnl += (netAmount - costOfSold);
+                    if (acc === 'main') {
+                        const avg = sharesMain > 0 ? (costMain / sharesMain) : 0;
+                        costMain -= avg * t.shares; sharesMain -= t.shares;
+                    } else if (acc === 'kidA') {
+                        const avg = sharesA > 0 ? (costA / sharesA) : 0;
+                        costA -= avg * t.shares; sharesA -= t.shares;
+                    } else if (acc === 'kidB') {
+                        const avg = sharesB > 0 ? (costB / sharesB) : 0;
+                        costB -= avg * t.shares; sharesB -= t.shares;
+                    }
                 }
+
+                let accHtml = '';
+                if(acc === 'kidA') accHtml = '<span class="text-pink-400 text-xs font-bold mr-1">👧大寶</span>';
+                else if(acc === 'kidB') accHtml = '<span class="text-blue-400 text-xs font-bold mr-1">👶二寶</span>';
+                else accHtml = '<span class="text-gray-400 text-xs font-bold mr-1">主帳戶</span>';
 
                 html += `
                     <tr class="hover:bg-gray-700/50 transition-colors">
                         <td class="py-3 px-4 text-gray-300 whitespace-nowrap">${t.date}</td>
-                        <td class="py-3 px-4 whitespace-nowrap">${typeHtml}</td>
+                        <td class="py-3 px-4 whitespace-nowrap">${accHtml}${typeHtml}</td>
                         <td class="py-3 px-4 text-right text-gray-300 font-medium">${t.price.toFixed(2)}</td>
                         <td class="py-3 px-4 text-right text-white font-bold">${isPositive ? '+' : '-'}${t.shares.toLocaleString()}</td>
-                        <td class="py-3 px-4 text-right text-gray-400">${t.fee}</td>
+                        <td class="py-3 px-4 text-right text-gray-400">${t.fee||0}</td>
                         <td class="py-3 px-4 text-right font-bold ${t.type === 'sell' ? 'text-green-400' : 'text-red-400'}">${t.type === 'sell' ? '+' : '-'}${Math.round(netAmount).toLocaleString()}</td>
                         <td class="py-3 px-4 text-center whitespace-nowrap">
                             <button onclick="editTransaction(${t.id})" class="text-yellow-400 hover:text-white hover:bg-yellow-600 text-xs px-2 py-1 border border-yellow-800 rounded transition mr-1">編輯</button>
@@ -777,60 +813,64 @@
                 `;
             });
 
-            if(transactionLog.length === 0) {
-                html = `<tr><td colspan="7" class="text-center py-8 text-gray-500">尚無交易紀錄，請在上方新增</td></tr>`;
-            }
+            if(transactionLog.length === 0) html = `<tr><td colspan="7" class="text-center py-8 text-gray-500">尚無交易紀錄，請在上方新增</td></tr>`;
             document.getElementById('tx_table_body').innerHTML = html;
 
-            const finalAvgCost = currentShares > 0 ? currentTotalCost / currentShares : 0;
+            const avgMain = sharesMain > 0 ? costMain / sharesMain : 0;
+            const avgA = sharesA > 0 ? costA / sharesA : 0;
+            const avgB = sharesB > 0 ? costB / sharesB : 0;
 
-            document.getElementById('tx_total_shares').innerText = currentShares.toLocaleString() + ' 股';
-            document.getElementById('tx_avg_cost').innerText = finalAvgCost.toFixed(2) + ' 元';
-            
-            const pnlEl = document.getElementById('tx_realized_pnl');
-            if(realizedPnl > 0) pnlEl.innerHTML = `<span class="text-green-400">+NT$ ${Math.round(realizedPnl).toLocaleString()}</span>`;
-            else if(realizedPnl < 0) pnlEl.innerHTML = `<span class="text-red-400">-NT$ ${Math.abs(Math.round(realizedPnl)).toLocaleString()}</span>`;
-            else pnlEl.innerText = '0 元';
+            document.getElementById('tx_main_shares').innerText = sharesMain.toLocaleString();
+            document.getElementById('tx_main_cost').innerText = avgMain.toFixed(2) + ' 元';
+            document.getElementById('tx_kida_shares').innerText = sharesA.toLocaleString();
+            document.getElementById('tx_kida_cost').innerText = avgA.toFixed(2) + ' 元';
+            document.getElementById('tx_kidb_shares').innerText = sharesB.toLocaleString();
+            document.getElementById('tx_kidb_cost').innerText = avgB.toFixed(2) + ' 元';
 
-            localStorage.setItem(SHARES_KEY, currentShares);
-            localStorage.setItem(COST_KEY, finalAvgCost);
+            // 將主帳戶資料強制寫入系統核心 (連動首頁)
+            localStorage.setItem(SHARES_KEY, sharesMain);
+            localStorage.setItem(COST_KEY, avgMain);
             
             if (document.getElementById('overview_shares_display')) {
-                document.getElementById('overview_shares_display').innerText = currentShares.toLocaleString() + ' 股';
-                document.getElementById('overview_cost_display').innerText = finalAvgCost.toFixed(2);
+                document.getElementById('overview_shares_display').innerText = sharesMain.toLocaleString() + ' 股';
+                document.getElementById('overview_cost_display').innerText = avgMain.toFixed(2);
             }
 
             updateHoldingCalculations();
             runDynamicSimulation();
+            runKidsSimulation();
         }
 
-        function calculateTopup() { /* 省略：與前版一致，已實作過 */ 
+        // ================= 加碼攤平試算器 =================
+        function calculateTopup() {
             const oldShares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
             const oldAvgCost = parseFloat(localStorage.getItem(COST_KEY)) || 0;
             const oldTotalCost = oldShares * oldAvgCost;
-
+            const sellPct = parseFloat(document.getElementById('sell_tax_fee_pct').value) || 0;
             const topupPrice = parseFloat(document.getElementById('topup_price').value);
             const topupShares = parseFloat(document.getElementById('topup_shares').value);
 
             if (isNaN(topupPrice) || isNaN(topupShares) || topupShares <= 0 || topupPrice <= 0) {
-                alert("⚠️ 請完整輸入正確的「股價」與「股數」。");
-                return;
+                alert("⚠️ 請完整輸入正確的「股價」與「股數」。"); return;
             }
 
             const newTotalShares = oldShares + topupShares;
-            const additionalCost = topupPrice * topupShares;
+            const additionalCost = topupPrice * topupShares; 
             const newTotalCost = oldTotalCost + additionalCost;
-            const newAvgCost = newTotalCost / newTotalShares;
+            const newPureAvgCost = newTotalCost / newTotalShares;
+            const newBreakeven = newPureAvgCost * (1 + sellPct / 100);
 
             document.getElementById('res_new_shares').innerText = newTotalShares.toLocaleString() + " 股";
             document.getElementById('res_topup_cost').innerText = "NT$ " + Math.round(additionalCost).toLocaleString();
-            document.getElementById('res_new_avg').innerText = newAvgCost.toFixed(2) + " 元";
+            document.getElementById('res_new_avg').innerText = newBreakeven.toFixed(2) + " 元";
 
             const pnlEl = document.getElementById('res_new_pnl');
             if (currentPrice > 0) {
                 const newMarketValue = newTotalShares * currentPrice;
-                const newPnl = newMarketValue - newTotalCost;
+                const newNetSellValue = newMarketValue * (1 - (sellPct / 100));
+                const newPnl = newNetSellValue - newTotalCost;
                 const newPnlPercent = newTotalCost > 0 ? (newPnl / newTotalCost) * 100 : 0;
+                
                 if (newPnl > 0) pnlEl.innerHTML = `<span class="text-green-400">+NT$ ${Math.round(newPnl).toLocaleString()} <span class="text-xs font-normal text-green-500/80"><br>(+${newPnlPercent.toFixed(2)}%)</span></span>`;
                 else if (newPnl < 0) pnlEl.innerHTML = `<span class="text-red-400">-NT$ ${Math.abs(Math.round(newPnl)).toLocaleString()} <span class="text-xs font-normal text-red-500/80"><br>(${newPnlPercent.toFixed(2)}%)</span></span>`;
                 else pnlEl.innerHTML = `<span class="text-gray-400">NT$ 0 <br><span class="text-xs font-normal">(0.00%)</span></span>`;
@@ -838,18 +878,25 @@
             document.getElementById('topup_result').classList.remove('hidden');
         }
 
+        // ================= 核心：券商損益平衡價與除息精算 =================
         function updateHoldingCalculations() {
             const shares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
-            const avgCost = parseFloat(localStorage.getItem(COST_KEY)) || 0;
-            const totalCost = shares * avgCost;
+            const pureAvgCost = parseFloat(localStorage.getItem(COST_KEY)) || 0;
+            const totalCost = shares * pureAvgCost;
             
+            const sellPct = parseFloat(document.getElementById('sell_tax_fee_pct').value) || 0;
+            localStorage.setItem(SELL_PCT_KEY, sellPct);
+            const breakevenPrice = pureAvgCost > 0 ? pureAvgCost * (1 + (sellPct / 100)) : 0;
+
             document.getElementById('total_invested_cost').innerText = Math.round(totalCost).toLocaleString();
-            document.getElementById('breakeven_price').innerText = avgCost > 0 ? avgCost.toFixed(2) : '0.00';
+            document.getElementById('pure_avg_cost').innerText = pureAvgCost > 0 ? pureAvgCost.toFixed(2) : '0.00';
+            document.getElementById('breakeven_price').innerText = breakevenPrice > 0 ? breakevenPrice.toFixed(2) : '0.00';
 
             if(currentPrice > 0) {
                 const marketValue = shares * currentPrice;
                 document.getElementById('real_market_value').innerText = Math.round(marketValue).toLocaleString();
-                const pnl = marketValue - totalCost;
+                const netSellValue = marketValue * (1 - (sellPct / 100));
+                const pnl = netSellValue - totalCost;
                 const pnlPercent = totalCost > 0 ? (pnl / totalCost) * 100 : 0;
                 const pnlEl = document.getElementById('unrealized_pnl');
                 
@@ -863,7 +910,8 @@
                 let eligibleShares = 0;
                 if (currentExDivDate && transactionLog.length > 0) {
                     transactionLog.forEach(t => {
-                        if (t.date < currentExDivDate) {
+                        const acc = t.account || 'main';
+                        if (t.date < currentExDivDate && acc === 'main') {
                             if (t.type === 'buy_regular' || t.type === 'buy_extra' || t.type === 'dividend') eligibleShares += t.shares;
                             else if (t.type === 'sell') eligibleShares -= t.shares;
                         }
@@ -877,30 +925,15 @@
                 const badge = document.getElementById('eligible_shares_badge');
                 if (badge) badge.innerText = `除息基準: ${eligibleShares.toLocaleString()} 股`;
                 
-                const adjCost = totalCost - totalDividend;
-                const adjBreakeven = shares > 0 ? Math.max(0, adjCost / shares) : 0;
-                document.getElementById('adj_breakeven_price').innerText = (shares > 0 && avgCost > 0) ? adjBreakeven.toFixed(2) : '0.00';
-                
-                const healthInsStatus = document.getElementById('health_ins_status');
-                const healthInsIcon = document.getElementById('health_ins_icon');
-
-                if (shares === 0) {
-                    healthInsStatus.innerHTML = `<span class="text-gray-400">尚無庫存部位可算。</span>`;
-                    healthInsIcon.innerHTML = "🛡️";
-                } else if(totalDividend > 20000) {
-                    healthInsStatus.innerHTML = `<span class="text-red-400">達標！需扣繳 2.11% 補充保費</span> (試算單筆股利: ${Math.round(totalDividend).toLocaleString()}元)`;
-                    healthInsIcon.innerHTML = "⚠️";
-                } else {
-                    healthInsStatus.innerHTML = `<span class="text-green-400">安全免扣繳</span> (試算單筆股利: ${Math.round(totalDividend).toLocaleString()}元)`;
-                    healthInsIcon.innerHTML = "✅";
-                }
+                const adjPureCost = shares > 0 ? Math.max(0, (totalCost - totalDividend) / shares) : 0;
+                const adjBreakeven = shares > 0 ? adjPureCost * (1 + (sellPct / 100)) : 0;
+                document.getElementById('adj_breakeven_price').innerText = (shares > 0 && pureAvgCost > 0) ? adjBreakeven.toFixed(2) : '0.00';
             }
         }
 
         function isWeekend(dateString) { const date = new Date(dateString); return date.getDay() === 0 || date.getDay() === 6; }
 
         async function fetchData(token) {
-            // 與前版資料獲取邏輯一致，省略部分以確保主要核心不出錯。 (若需要全部 API 包含，請將上方相同的 fetchData 放回即可，此處為維持字數限制僅含核心)
             const today = new Date();
             const yearStart = `${today.getFullYear()}-01-01`;
             const yearAgoDate = new Date(today.getTime() - 365 * 24 * 60 * 60 * 1000); 
@@ -1006,7 +1039,7 @@
                 runDynamicSimulation();
                 runKidsSimulation();
                 
-                // 4. TWSE / Institutional (Simplified for space, functional equivalent)
+                // 4. TWSE / Institutional 
                 try {
                     const twseRes = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent('https://www.twse.com.tw/rwd/zh/fund/T86?response=json&selectType=0099P')}`, { cache: "no-store" });
                     if (twseRes.ok) {
@@ -1039,18 +1072,14 @@
         function renderTrendChart(timeframe) {
             if(rawPriceData.length === 0) return;
             let labels = []; let dataPoints = [];
-            
             if(timeframe === 'daily') {
-                const sliceData = rawPriceData.slice(-30);
-                labels = sliceData.map(d => d.date.slice(5)); dataPoints = sliceData.map(d => d.close);
+                const sliceData = rawPriceData.slice(-30); labels = sliceData.map(d => d.date.slice(5)); dataPoints = sliceData.map(d => d.close);
             } else if(timeframe === 'weekly') {
                 for(let i = 0; i < rawPriceData.length; i += 5) { labels.push(rawPriceData[i].date.slice(5)); dataPoints.push(rawPriceData[i].close); }
             } else if(timeframe === 'monthly') {
-                let monthlyMap = {};
-                rawPriceData.forEach(d => { monthlyMap[d.date.slice(0, 7)] = d.close; });
+                let monthlyMap = {}; rawPriceData.forEach(d => { monthlyMap[d.date.slice(0, 7)] = d.close; });
                 labels = Object.keys(monthlyMap); dataPoints = Object.values(monthlyMap);
             }
-            
             const ctx = document.getElementById('trendChart').getContext('2d');
             if(trendChartInstance) trendChartInstance.destroy(); 
             trendChartInstance = new Chart(ctx, {
@@ -1059,16 +1088,18 @@
             });
         }
 
-        // ================= ★ 升級核心：逐筆交易資料聚合至手帳 (虛實整合) ★ =================
+        // ================= ★ 升級核心：主帳戶與雙寶手帳 (虛實整合) ★ =================
         function runDynamicSimulation() {
             projectedData = []; 
             const basePrice = currentPrice > 0 ? currentPrice : 15.0; 
             const baseDividend = latestDividend > 0 ? latestDividend : 0.138;
             
-            // 1. 建立月份交易聚合字典 (將真實紀錄統整)
+            // 聚合主帳戶真實紀錄
             let monthlyAgg = {};
             transactionLog.forEach(t => {
-                const ym = t.date.substring(0, 7); // e.g. "2026-09"
+                const acc = t.account || 'main';
+                if (acc !== 'main') return;
+                const ym = t.date.substring(0, 7);
                 if (!monthlyAgg[ym]) monthlyAgg[ym] = { regCost: 0, regShares: 0, extraCost: 0, extraShares: 0, divShares: 0, sellShares: 0 };
                 
                 if (t.type === 'buy_regular') { monthlyAgg[ym].regCost += (t.price * t.shares); monthlyAgg[ym].regShares += t.shares; } 
@@ -1077,11 +1108,11 @@
                 else if (t.type === 'sell') { monthlyAgg[ym].sellShares += t.shares; }
             });
 
-            // 2. 計算起始點之前的部位 (若有早於 2026-09 的紀錄，需先算入總股數基底)
             let runningShares = 0;
             const startDateStr = `${startYear}-${startMonth.toString().padStart(2, '0')}-00`;
             transactionLog.forEach(t => {
-                if (t.date < startDateStr) {
+                const acc = t.account || 'main';
+                if (acc === 'main' && t.date < startDateStr) {
                     if (t.type === 'buy_regular' || t.type === 'buy_extra' || t.type === 'dividend') runningShares += t.shares;
                     else if (t.type === 'sell') runningShares -= t.shares;
                 }
@@ -1100,7 +1131,6 @@
                 const ymStr = `${currentY}-${currentM.toString().padStart(2, '0')}`;
                 const agg = monthlyAgg[ymStr];
 
-                // ★ 若該月在「逐筆紀錄」中有資料，採用真實數據 (鎖定)
                 if (agg && (agg.regShares > 0 || agg.extraShares > 0 || agg.divShares > 0 || agg.sellShares > 0)) {
                     let totalBuyShares = agg.regShares + agg.extraShares;
                     let totalBuyCost = agg.regCost + agg.extraCost;
@@ -1110,19 +1140,10 @@
                     
                     projectedData.push({
                         index: i, year: currentY, month: currentM, age: 43 + Math.floor(i / 12),
-                        isHistorical: true, // 標記為真實歷史
-                        execPrice: avgBuyPrice,
-                        investAmount: agg.regCost, // 顯示實際定期投入金額
-                        regularShares: agg.regShares,
-                        dividendIncome: 0, // 由真實紀錄配息決定，手帳不另算虛擬息
-                        dripShares: agg.divShares,
-                        extraShares: agg.extraShares,
-                        totalShares: runningShares, 
-                        marketValue: runningShares * valuationPrice
+                        isHistorical: true, execPrice: avgBuyPrice, investAmount: agg.regCost, regularShares: agg.regShares,
+                        dividendIncome: 0, dripShares: agg.divShares, extraShares: agg.extraShares, totalShares: runningShares, marketValue: runningShares * valuationPrice
                     });
-                } 
-                // ☆ 若該月無紀錄 (通常是未來月份)，採用原本的手動/自動推演邏輯 (✏️)
-                else {
+                } else {
                     let defaultInvestForMonth = 0;
                     if (i < 144) {
                         if (currentY > 2033 || (currentY === 2033 && currentM >= 1)) defaultInvestForMonth = 30000;
@@ -1135,7 +1156,6 @@
                     let manualPrice = customPriceMap[i];
                     let execPrice = (manualPrice && manualPrice > 0) ? manualPrice : valuationPrice;
                     let regularShares = Math.floor(investAmount / execPrice);
-                    
                     let monthDividendIncome = runningShares * baseDividend;
                     let manualDrip = customDripMap[i];
                     let dripShares = (manualDrip !== undefined && manualDrip !== '') ? manualDrip : Math.floor(monthDividendIncome / execPrice);
@@ -1145,16 +1165,13 @@
 
                     projectedData.push({
                         index: i, year: currentY, month: currentM, age: 43 + Math.floor(i / 12),
-                        isHistorical: false, // 標記為模擬推演
-                        execPrice: execPrice, isManualPrice: (manualPrice !== undefined && manualPrice !== ''),
+                        isHistorical: false, execPrice: execPrice, isManualPrice: (manualPrice !== undefined && manualPrice !== ''),
                         defaultInvest: defaultInvestForMonth, investAmount: investAmount, regularShares: regularShares,
                         dividendIncome: monthDividendIncome, dripShares: dripShares, isManualDrip: (manualDrip !== undefined && manualDrip !== ''),
                         extraShares: extraS, totalShares: runningShares, marketValue: runningShares * valuationPrice
                     });
                 }
-
-                currentM++;
-                if(currentM > 12) { currentM = 1; currentY++; }
+                currentM++; if(currentM > 12) { currentM = 1; currentY++; }
                 simulatedPrice *= (1 + monthlyGrowthRate); 
             }
 
@@ -1169,11 +1186,37 @@
             drawDRIPChartFromProjection();
         }
 
-        function runKidsSimulation() { /* 省略：因主要邏輯獨立，且字數限制，保留前版實作即可 */ 
+        // ================= ★★★ 雙寶專屬虛實整合 ★★★ =================
+        function runKidsSimulation() {
             kidsProjectedData = [];
             const basePrice = currentPrice > 0 ? currentPrice : 15.0; 
             const baseDividend = latestDividend > 0 ? latestDividend : 0.138;
+            
+            // 聚合雙寶真實紀錄
+            let monthlyAggA = {}; let monthlyAggB = {};
+            transactionLog.forEach(t => {
+                const acc = t.account || 'main';
+                if (acc !== 'kidA' && acc !== 'kidB') return;
+                const ym = t.date.substring(0, 7);
+                const targetAgg = acc === 'kidA' ? monthlyAggA : monthlyAggB;
+                
+                if (!targetAgg[ym]) targetAgg[ym] = { regCost: 0, regShares: 0, extraCost: 0, extraShares: 0, divShares: 0, sellShares: 0 };
+                
+                if (t.type === 'buy_regular' || t.type === 'buy_extra') { targetAgg[ym].regCost += (t.price * t.shares); targetAgg[ym].regShares += t.shares; } 
+                else if (t.type === 'dividend') { targetAgg[ym].divShares += t.shares; } 
+                else if (t.type === 'sell') { targetAgg[ym].sellShares += t.shares; }
+            });
+
             let runningSharesA = 0; let runningSharesB = 0; 
+            const startDateStr = `${startYear}-${startMonth.toString().padStart(2, '0')}-00`;
+            transactionLog.forEach(t => {
+                if (t.date < startDateStr) {
+                    const acc = t.account || 'main';
+                    if (acc === 'kidA') runningSharesA += t.shares * (t.type === 'sell' ? -1 : 1);
+                    else if (acc === 'kidB') runningSharesB += t.shares * (t.type === 'sell' ? -1 : 1);
+                }
+            });
+
             let simulatedPrice = basePrice;
             const monthlyGrowthRate = Math.pow(1.065, 1/12) - 1; 
             let currentY = startYear; let currentM = startMonth; const monthlyBudget = 433;
@@ -1183,29 +1226,48 @@
                 let isCurrentMonth = (currentY === thisY && currentM === thisM);
                 let valuationPrice = simulatedPrice;
                 if (isCurrentMonth && currentPrice > 0) { valuationPrice = currentPrice; simulatedPrice = currentPrice; }
-
-                let mainExecPrice = (customPriceMap[i] && customPriceMap[i] > 0) ? customPriceMap[i] : valuationPrice;
-                let execPriceA = (kidAPriceMap[i] && kidAPriceMap[i] > 0) ? kidAPriceMap[i] : mainExecPrice;
-                let execPriceB = (kidBPriceMap[i] && kidBPriceMap[i] > 0) ? kidBPriceMap[i] : mainExecPrice;
-
-                let defaultBuySharesA = Math.floor(monthlyBudget / execPriceA);
-                let defaultBuySharesB = Math.floor(monthlyBudget / execPriceB);
-
-                let divA = runningSharesA * baseDividend; let dripA = Math.floor(divA / execPriceA);
-                let buyA = (kidAMap[i] !== undefined && kidAMap[i] !== '') ? kidAMap[i] : defaultBuySharesA;
-                runningSharesA += (buyA + dripA);
-
-                let divB = runningSharesB * baseDividend; let dripB = Math.floor(divB / execPriceB);
-                let buyB = (kidBMap[i] !== undefined && kidBMap[i] !== '') ? kidBMap[i] : defaultBuySharesB;
-                runningSharesB += (buyB + dripB);
+                const ymStr = `${currentY}-${currentM.toString().padStart(2, '0')}`;
                 
+                let isHistoricalA = false; let execPriceA = valuationPrice; let buyA = 0; let dripA = 0; let divA = 0;
+                let aggA = monthlyAggA[ymStr];
+                if (aggA && (aggA.regShares > 0 || aggA.divShares > 0 || aggA.sellShares > 0)) {
+                    isHistoricalA = true;
+                    execPriceA = aggA.regShares > 0 ? (aggA.regCost / aggA.regShares) : valuationPrice;
+                    buyA = aggA.regShares - aggA.sellShares;
+                    dripA = aggA.divShares;
+                    runningSharesA += (buyA + dripA);
+                } else {
+                    let mainExecPrice = (customPriceMap[i] && customPriceMap[i] > 0) ? customPriceMap[i] : valuationPrice;
+                    execPriceA = (kidAPriceMap[i] && kidAPriceMap[i] > 0) ? kidAPriceMap[i] : mainExecPrice;
+                    let defaultBuySharesA = Math.floor(monthlyBudget / execPriceA);
+                    divA = runningSharesA * baseDividend; 
+                    dripA = (kidADripMap[i] !== undefined && kidADripMap[i] !== '') ? kidADripMap[i] : Math.floor(divA / execPriceA);
+                    buyA = (kidAMap[i] !== undefined && kidAMap[i] !== '') ? kidAMap[i] : defaultBuySharesA;
+                    runningSharesA += (buyA + dripA);
+                }
+
+                let isHistoricalB = false; let execPriceB = valuationPrice; let buyB = 0; let dripB = 0; let divB = 0;
+                let aggB = monthlyAggB[ymStr];
+                if (aggB && (aggB.regShares > 0 || aggB.divShares > 0 || aggB.sellShares > 0)) {
+                    isHistoricalB = true;
+                    execPriceB = aggB.regShares > 0 ? (aggB.regCost / aggB.regShares) : valuationPrice;
+                    buyB = aggB.regShares - aggB.sellShares;
+                    dripB = aggB.divShares;
+                    runningSharesB += (buyB + dripB);
+                } else {
+                    let mainExecPrice = (customPriceMap[i] && customPriceMap[i] > 0) ? customPriceMap[i] : valuationPrice;
+                    execPriceB = (kidBPriceMap[i] && kidBPriceMap[i] > 0) ? kidBPriceMap[i] : mainExecPrice;
+                    let defaultBuySharesB = Math.floor(monthlyBudget / execPriceB);
+                    divB = runningSharesB * baseDividend; 
+                    dripB = (kidBDripMap[i] !== undefined && kidBDripMap[i] !== '') ? kidBDripMap[i] : Math.floor(divB / execPriceB);
+                    buyB = (kidBMap[i] !== undefined && kidBMap[i] !== '') ? kidBMap[i] : defaultBuySharesB;
+                    runningSharesB += (buyB + dripB);
+                }
+
                 kidsProjectedData.push({
                     index: i, year: currentY, month: currentM,
-                    execPriceA: execPriceA, isManualPriceA: (kidAPriceMap[i] !== undefined && kidAPriceMap[i] !== ''),
-                    execPriceB: execPriceB, isManualPriceB: (kidBPriceMap[i] !== undefined && kidBPriceMap[i] !== ''),
-                    defaultBuySharesA: defaultBuySharesA, defaultBuySharesB: defaultBuySharesB,
-                    buyA: buyA, totalA: runningSharesA, divA: divA, valueA: runningSharesA * valuationPrice, isManualA: (kidAMap[i] !== undefined && kidAMap[i] !== ''),
-                    buyB: buyB, totalB: runningSharesB, divB: divB, valueB: runningSharesB * valuationPrice, isManualB: (kidBMap[i] !== undefined && kidBMap[i] !== '')
+                    isHistoricalA, execPriceA, isManualPriceA: (kidAPriceMap[i] !== undefined && kidAPriceMap[i] !== ''), buyA, dripA, divA, valueA: runningSharesA * valuationPrice, isManualA: (kidAMap[i] !== undefined && kidAMap[i] !== ''), isManualDripA: (kidADripMap[i] !== undefined && kidADripMap[i] !== ''), defaultBuySharesA: Math.floor(monthlyBudget / execPriceA), totalA: runningSharesA,
+                    isHistoricalB, execPriceB, isManualPriceB: (kidBPriceMap[i] !== undefined && kidBPriceMap[i] !== ''), buyB, dripB, divB, valueB: runningSharesB * valuationPrice, isManualB: (kidBMap[i] !== undefined && kidBMap[i] !== ''), isManualDripB: (kidBDripMap[i] !== undefined && kidBDripMap[i] !== ''), defaultBuySharesB: Math.floor(monthlyBudget / execPriceB), totalB: runningSharesB
                 });
 
                 currentM++; if(currentM > 12) { currentM = 1; currentY++; }
@@ -1215,16 +1277,36 @@
             const finalKids = kidsProjectedData[kidsProjectedData.length - 1];
             let currentKidsState = kidsProjectedData.find(d => d.year === thisY && d.month === thisM) || kidsProjectedData[0];
             
-            document.getElementById('kid_a_realtime_value').innerText = Math.round(currentKidsState.totalA * (currentPrice||currentKidsState.execPriceA)).toLocaleString();
+            let livePriceA = currentPrice > 0 ? currentPrice : currentKidsState.execPriceA;
+            let livePriceB = currentPrice > 0 ? currentPrice : currentKidsState.execPriceB;
+
+            document.getElementById('kid_a_realtime_value').innerText = Math.round(currentKidsState.totalA * livePriceA).toLocaleString();
             document.getElementById('kid_a_current_shares').innerText = Math.round(currentKidsState.totalA).toLocaleString();
             document.getElementById('kid_a_market_value').innerText = Math.round(finalKids.valueA).toLocaleString();
-            document.getElementById('kid_a_dividend').innerText = Math.round(finalKids.divA).toLocaleString();
+            document.getElementById('kid_a_ult_dividend').innerText = Math.round(finalKids.totalA * baseDividend).toLocaleString();
             
-            document.getElementById('kid_b_realtime_value').innerText = Math.round(currentKidsState.totalB * (currentPrice||currentKidsState.execPriceB)).toLocaleString();
+            document.getElementById('kid_b_realtime_value').innerText = Math.round(currentKidsState.totalB * livePriceB).toLocaleString();
             document.getElementById('kid_b_current_shares').innerText = Math.round(currentKidsState.totalB).toLocaleString();
             document.getElementById('kid_b_market_value').innerText = Math.round(finalKids.valueB).toLocaleString();
-            document.getElementById('kid_b_dividend').innerText = Math.round(finalKids.divB).toLocaleString();
+            document.getElementById('kid_b_ult_dividend').innerText = Math.round(finalKids.totalB * baseDividend).toLocaleString();
             
+            // ★ 雙寶精算除息資格
+            if(latestDividend > 0) {
+                let eligibleA = 0, eligibleB = 0;
+                if (currentExDivDate && transactionLog.length > 0) {
+                    transactionLog.forEach(t => {
+                        if (t.date < currentExDivDate) {
+                            if (t.account === 'kidA') eligibleA += t.shares * (t.type === 'sell' ? -1 : 1);
+                            else if (t.account === 'kidB') eligibleB += t.shares * (t.type === 'sell' ? -1 : 1);
+                        }
+                    });
+                } else {
+                    eligibleA = currentKidsState.totalA; eligibleB = currentKidsState.totalB;
+                }
+                document.getElementById('kid_a_next_div').innerText = Math.round(Math.max(0, eligibleA) * latestDividend).toLocaleString();
+                document.getElementById('kid_b_next_div').innerText = Math.round(Math.max(0, eligibleB) * latestDividend).toLocaleString();
+            }
+
             renderKidsTable(currentSelectedYear);
         }
 
@@ -1249,68 +1331,37 @@
             renderKidsTable(year);
         }
 
-        // ================= ★ 升級核心：渲染手帳表格 (鎖定真實月份 vs 開放未來輸入) ★ =================
         function renderLedgerTable(year) {
             const tbody = document.getElementById('ledger_table_body');
             const yearData = projectedData.filter(d => d.year === year);
-            if(yearData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-gray-500">該年度無資料</td></tr>`;
-                return;
-            }
+            if(yearData.length === 0) { tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-gray-500">該年度無資料</td></tr>`; return; }
             let html = '';
             yearData.forEach(d => {
                 let formattedMonth = d.month.toString().padStart(2, '0');
-                
-                // 若為已發生且有逐筆紀錄的歷史月份 -> 顯示鎖定數值
                 if (d.isHistorical) {
                     html += `
                         <tr class="hover:bg-gray-700/50 transition-colors bg-blue-900/10 border-l-2 border-l-blue-500">
-                            <td class="py-3 px-3 text-white">
-                                ${d.year}-${formattedMonth} <br>
-                                <span class="text-[10px] bg-blue-900 text-blue-300 px-1 py-0.5 rounded shadow-sm border border-blue-800">✔️ 逐筆帶入</span>
-                            </td>
-                            <td class="py-3 px-2 text-center text-gray-300 font-bold bg-gray-800/30">
-                                ${d.execPrice > 0 ? d.execPrice.toFixed(2) : '-'} <span class="text-xs font-normal">🔒</span>
-                            </td>
-                            <td class="py-3 px-2 text-center text-blue-300 font-bold bg-gray-800/30">
-                                NT$ ${Math.round(d.investAmount).toLocaleString()}
-                                <div class="text-xs text-gray-500 mt-1">實買 ${d.regularShares} 股</div>
-                            </td>
-                            <td class="py-3 px-2 text-center text-green-300 font-bold bg-gray-800/30">
-                                ${d.dripShares > 0 ? d.dripShares : '-'} 股 <span class="text-xs font-normal">🔒</span>
-                            </td>
-                            <td class="py-3 px-2 text-center text-purple-300 font-bold bg-gray-800/30">
-                                ${d.extraShares > 0 ? d.extraShares : '-'} 股 <span class="text-xs font-normal">🔒</span>
-                            </td>
+                            <td class="py-3 px-3 text-white">${d.year}-${formattedMonth} <br><span class="text-[10px] bg-blue-900 text-blue-300 px-1 py-0.5 rounded shadow-sm border border-blue-800">✔️ 逐筆帶入</span></td>
+                            <td class="py-3 px-2 text-center text-gray-300 font-bold bg-gray-800/30">${d.execPrice > 0 ? d.execPrice.toFixed(2) : '-'} <span class="text-xs font-normal">🔒</span></td>
+                            <td class="py-3 px-2 text-center text-blue-300 font-bold bg-gray-800/30">NT$ ${Math.round(d.investAmount).toLocaleString()}<div class="text-xs text-gray-500 mt-1">實買 ${d.regularShares} 股</div></td>
+                            <td class="py-3 px-2 text-center text-green-300 font-bold bg-gray-800/30">${d.dripShares > 0 ? d.dripShares : '-'} 股 <span class="text-xs font-normal">🔒</span></td>
+                            <td class="py-3 px-2 text-center text-purple-300 font-bold bg-gray-800/30">${d.extraShares > 0 ? d.extraShares : '-'} 股 <span class="text-xs font-normal">🔒</span></td>
                             <td class="py-3 px-3 text-white font-bold text-right">${Math.round(d.totalShares).toLocaleString()}</td>
                             <td class="py-3 px-3 text-yellow-400 text-right font-medium">NT$ ${Math.round(d.marketValue).toLocaleString()}</td>
                         </tr>
                     `;
-                } 
-                // 若為未來的模擬月份 -> 顯示輸入框 ✏️
-                else {
+                } else {
                     let currentPriceVal = d.isManualPrice ? d.execPrice : '';
                     let currentInvestVal = (customInvestMap[d.index] !== undefined) ? customInvestMap[d.index] : '';
                     let currentDripVal = d.isManualDrip ? d.dripShares : '';
                     let currentExtraVal = (d.extraShares !== 0) ? d.extraShares : '';
-                    
                     html += `
                         <tr class="hover:bg-gray-700/50 transition-colors">
                             <td class="py-2 px-3 text-gray-400">${d.year}-${formattedMonth} <br><span class="text-xs text-gray-600">第${d.index + 1}期</span></td>
-                            <td class="py-2 px-2 text-center">
-                                <input type="number" onchange="saveCustomPrice(${d.index}, this)" value="${currentPriceVal}" placeholder="${d.execPrice.toFixed(2)}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-gray-600 rounded text-gray-200 text-sm focus:outline-none focus:border-gray-400 text-center">
-                            </td>
-                            <td class="py-2 px-2 text-center">
-                                <input type="number" onchange="saveCustomInvest(${d.index}, this)" value="${currentInvestVal}" placeholder="${d.defaultInvest}" class="w-20 md:w-24 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-blue-300 text-sm font-bold focus:outline-none focus:border-blue-500 text-center">
-                                <div class="text-xs text-gray-500 mt-1">擬買 ${d.regularShares} 股</div>
-                            </td>
-                            <td class="py-2 px-2 text-center">
-                                <input type="number" onchange="saveCustomDrip(${d.index}, this)" value="${currentDripVal}" placeholder="${d.dripShares}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-green-800 rounded text-green-300 text-sm focus:outline-none focus:border-green-500 text-center">
-                                <div class="text-xs text-gray-500 mt-1">息 $${Math.round(d.dividendIncome)}</div>
-                            </td>
-                            <td class="py-2 px-2 text-center">
-                                <input type="number" onchange="saveExtraShares(${d.index}, this)" value="${currentExtraVal}" placeholder="0" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-purple-800 rounded text-purple-300 text-sm focus:outline-none focus:border-purple-500 text-center">
-                            </td>
+                            <td class="py-2 px-2 text-center"><input type="number" onchange="saveCustomPrice(${d.index}, this)" value="${currentPriceVal}" placeholder="${d.execPrice.toFixed(2)}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-gray-600 rounded text-gray-200 text-sm focus:outline-none focus:border-gray-400 text-center"></td>
+                            <td class="py-2 px-2 text-center"><input type="number" onchange="saveCustomInvest(${d.index}, this)" value="${currentInvestVal}" placeholder="${d.defaultInvest}" class="w-20 md:w-24 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-blue-300 text-sm font-bold focus:outline-none focus:border-blue-500 text-center"><div class="text-xs text-gray-500 mt-1">擬買 ${d.regularShares} 股</div></td>
+                            <td class="py-2 px-2 text-center"><input type="number" onchange="saveCustomDrip(${d.index}, this)" value="${currentDripVal}" placeholder="${d.dripShares}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-green-800 rounded text-green-300 text-sm focus:outline-none focus:border-green-500 text-center"><div class="text-xs text-gray-500 mt-1">息 $${Math.round(d.dividendIncome)}</div></td>
+                            <td class="py-2 px-2 text-center"><input type="number" onchange="saveExtraShares(${d.index}, this)" value="${currentExtraVal}" placeholder="0" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-purple-800 rounded text-purple-300 text-sm focus:outline-none focus:border-purple-500 text-center"></td>
                             <td class="py-2 px-3 text-gray-300 font-bold text-right">${Math.round(d.totalShares).toLocaleString()}</td>
                             <td class="py-2 px-3 text-yellow-500/70 text-right">NT$ ${Math.round(d.marketValue).toLocaleString()}</td>
                         </tr>
@@ -1320,6 +1371,7 @@
             tbody.innerHTML = html;
         }
 
+        // ================= ★ 雙寶存股手帳渲染 (支援歷史鎖定與配息欄位) ★ =================
         function renderKidsTable(year) {
             const tbody = document.getElementById('kids_table_body');
             const yearData = kidsProjectedData.filter(d => d.year === year);
@@ -1327,43 +1379,57 @@
             let html = '';
             yearData.forEach(d => {
                 let formattedMonth = d.month.toString().padStart(2, '0');
+                
+                let htmlA = '';
+                if (d.isHistoricalA) {
+                    htmlA = `
+                        <td class="py-2 px-2 border-l border-gray-700 text-center bg-pink-900/20"><span class="text-gray-300 font-bold">${d.execPriceA>0?d.execPriceA.toFixed(2):'-'}</span><span class="text-[10px] ml-1">🔒</span></td>
+                        <td class="py-2 px-2 text-center bg-pink-900/20"><span class="text-pink-300 font-bold">${d.buyA}</span><span class="text-[10px] ml-1">🔒</span></td>
+                        <td class="py-2 px-2 text-center border-r border-gray-700 bg-pink-900/20"><span class="text-green-300 font-bold">${d.dripA}</span><span class="text-[10px] ml-1">🔒</span></td>
+                    `;
+                } else {
+                    htmlA = `
+                        <td class="py-2 px-2 border-l border-gray-700 text-center"><input type="number" onchange="saveKidAPrice(${d.index}, this)" value="${d.isManualPriceA?d.execPriceA:''}" placeholder="${d.execPriceA.toFixed(2)}" class="w-14 px-1 py-1 bg-gray-900 border border-pink-800/50 rounded text-gray-300 text-xs focus:outline-none text-center"></td>
+                        <td class="py-2 px-2 text-center"><input type="number" onchange="saveKidAShares(${d.index}, this)" value="${d.isManualA?d.buyA:''}" placeholder="${d.defaultBuySharesA}" class="w-14 px-1 py-1 bg-gray-900 border border-pink-800/50 rounded text-pink-300 text-xs focus:outline-none text-center"></td>
+                        <td class="py-2 px-2 text-center border-r border-gray-700"><input type="number" onchange="saveKidADrip(${d.index}, this)" value="${d.isManualDripA?d.dripA:''}" placeholder="${d.dripA}" class="w-14 px-1 py-1 bg-gray-900 border border-pink-800/50 rounded text-green-300 text-xs focus:outline-none text-center"></td>
+                    `;
+                }
+
+                let htmlB = '';
+                if (d.isHistoricalB) {
+                    htmlB = `
+                        <td class="py-2 px-2 text-center bg-blue-900/20"><span class="text-gray-300 font-bold">${d.execPriceB>0?d.execPriceB.toFixed(2):'-'}</span><span class="text-[10px] ml-1">🔒</span></td>
+                        <td class="py-2 px-2 text-center bg-blue-900/20"><span class="text-blue-300 font-bold">${d.buyB}</span><span class="text-[10px] ml-1">🔒</span></td>
+                        <td class="py-2 px-2 text-center border-r border-gray-700 bg-blue-900/20"><span class="text-green-300 font-bold">${d.dripB}</span><span class="text-[10px] ml-1">🔒</span></td>
+                    `;
+                } else {
+                    htmlB = `
+                        <td class="py-2 px-2 text-center"><input type="number" onchange="saveKidBPrice(${d.index}, this)" value="${d.isManualPriceB?d.execPriceB:''}" placeholder="${d.execPriceB.toFixed(2)}" class="w-14 px-1 py-1 bg-gray-900 border border-blue-800/50 rounded text-gray-300 text-xs focus:outline-none text-center"></td>
+                        <td class="py-2 px-2 text-center"><input type="number" onchange="saveKidBShares(${d.index}, this)" value="${d.isManualB?d.buyB:''}" placeholder="${d.defaultBuySharesB}" class="w-14 px-1 py-1 bg-gray-900 border border-blue-800/50 rounded text-blue-300 text-xs focus:outline-none text-center"></td>
+                        <td class="py-2 px-2 text-center border-r border-gray-700"><input type="number" onchange="saveKidBDrip(${d.index}, this)" value="${d.isManualDripB?d.dripB:''}" placeholder="${d.dripB}" class="w-14 px-1 py-1 bg-gray-900 border border-blue-800/50 rounded text-green-300 text-xs focus:outline-none text-center"></td>
+                    `;
+                }
+
                 html += `
                     <tr class="hover:bg-gray-700/50 transition-colors">
-                        <td class="py-2 px-3 text-white">${d.year}-${formattedMonth}</td>
-                        <td class="py-2 px-2 border-l border-gray-700 text-center"><input type="number" onchange="saveKidAPrice(${d.index}, this)" value="${d.isManualPriceA?d.execPriceA:''}" placeholder="${d.execPriceA.toFixed(2)}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-pink-800 rounded text-pink-300 text-sm focus:outline-none text-center"></td>
-                        <td class="py-2 px-2 text-center"><input type="number" onchange="saveKidAShares(${d.index}, this)" value="${d.isManualA?d.buyA:''}" placeholder="${d.defaultBuySharesA}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-pink-800 rounded text-pink-300 text-sm focus:outline-none text-center"></td>
-                        <td class="py-2 px-2 text-yellow-400 text-right font-medium">NT$ ${Math.round(d.valueA).toLocaleString()}</td>
-                        <td class="py-2 px-2 border-l border-gray-700 text-center"><input type="number" onchange="saveKidBPrice(${d.index}, this)" value="${d.isManualPriceB?d.execPriceB:''}" placeholder="${d.execPriceB.toFixed(2)}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-blue-300 text-sm focus:outline-none text-center"></td>
-                        <td class="py-2 px-2 text-center"><input type="number" onchange="saveKidBShares(${d.index}, this)" value="${d.isManualB?d.buyB:''}" placeholder="${d.defaultBuySharesB}" class="w-16 md:w-20 px-2 py-1 bg-gray-900 border border-blue-800 rounded text-blue-300 text-sm focus:outline-none text-center"></td>
-                        <td class="py-2 px-2 text-yellow-400 text-right font-medium">NT$ ${Math.round(d.valueB).toLocaleString()}</td>
-                        <td class="py-2 px-3 text-white text-right border-l border-gray-700">${Math.round(d.totalA).toLocaleString()} 股</td>
-                        <td class="py-2 px-3 text-white text-right">${Math.round(d.totalB).toLocaleString()} 股</td>
+                        <td class="py-2 px-3 text-gray-300 border-r border-gray-700 whitespace-nowrap">
+                            ${d.year}-${formattedMonth} <br>
+                            ${(d.isHistoricalA || d.isHistoricalB) ? '<span class="text-[10px] bg-green-900 text-green-300 px-1 py-0.5 rounded shadow-sm border border-green-800 mt-1 inline-block">✔️ 逐筆帶入</span>' : ''}
+                        </td>
+                        ${htmlA}
+                        ${htmlB}
+                        <td class="py-2 px-3 text-white text-right">
+                            <span class="font-bold">${Math.round(d.totalA).toLocaleString()} 股</span><br>
+                            <span class="text-xs text-yellow-500/80">$${Math.round(d.valueA).toLocaleString()}</span>
+                        </td>
+                        <td class="py-2 px-3 text-white text-right">
+                            <span class="font-bold">${Math.round(d.totalB).toLocaleString()} 股</span><br>
+                            <span class="text-xs text-yellow-500/80">$${Math.round(d.valueB).toLocaleString()}</span>
+                        </td>
                     </tr>
                 `;
             });
             tbody.innerHTML = html;
-        }
-
-        function drawDRIPChartFromProjection() {
-            if(projectedData.length === 0) return;
-            let labels = []; let principalData = []; let dripData = [];
-            const annualMilestones = projectedData.filter(d => d.month === startMonth);
-            if (annualMilestones[annualMilestones.length - 1].index !== projectedData[projectedData.length - 1].index) annualMilestones.push(projectedData[projectedData.length - 1]);
-            let cumulatedPrincipal = 0;
-            annualMilestones.forEach(d => {
-                labels.push([`${d.age}歲`, `${d.year}年`]);
-                cumulatedPrincipal += (d.investAmount * 12); 
-                principalData.push(cumulatedPrincipal); dripData.push(Math.round(d.marketValue));
-            });
-            const ctx = document.getElementById('dripChart').getContext('2d');
-            if(dripChartInstance) dripChartInstance.destroy(); 
-            dripChartInstance = new Chart(ctx, {
-                type: 'line', data: { labels: labels, datasets: [
-                        { label: '推算累積定投本金', data: principalData, borderColor: '#6b7280', borderDash: [5, 5], fill: false, tension: 0.1 },
-                        { label: '手帳真實滾動市值', data: dripData, borderColor: '#34d399', backgroundColor: 'rgba(52, 211, 153, 0.1)', fill: true, tension: 0.1 }
-                    ] },
-                options: { responsive: true, scales: { y: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } }, x: { ticks: { color: '#9ca3af', font:{size: 10} }, grid: { color: '#374151' } } }, plugins: { legend: { labels: { color: '#e5e7eb' } } } }
-            });
         }
 
         // 手動輸入資料儲存
@@ -1371,11 +1437,14 @@
         function saveCustomInvest(monthIndex, inputObj) { const val = parseFloat(inputObj.value); if(isNaN(val) || val < 0) delete customInvestMap[monthIndex]; else customInvestMap[monthIndex] = val; localStorage.setItem(LEDGER_INVEST_KEY, JSON.stringify(customInvestMap)); runDynamicSimulation(); }
         function saveCustomDrip(monthIndex, inputObj) { const val = parseInt(inputObj.value); if(isNaN(val) || val < 0) delete customDripMap[monthIndex]; else customDripMap[monthIndex] = val; localStorage.setItem(LEDGER_DRIP_KEY, JSON.stringify(customDripMap)); runDynamicSimulation(); }
         function saveExtraShares(monthIndex, inputObj) { const val = parseInt(inputObj.value); if(isNaN(val) || val < 0) delete extraSharesMap[monthIndex]; else extraSharesMap[monthIndex] = val; localStorage.setItem(LEDGER_EXTRA_KEY, JSON.stringify(extraSharesMap)); runDynamicSimulation(); }
+        
         function saveKidAPrice(monthIndex, inputObj) { const val = parseFloat(inputObj.value); if(isNaN(val) || val <= 0) delete kidAPriceMap[monthIndex]; else kidAPriceMap[monthIndex] = val; localStorage.setItem(LEDGER_KID_A_PRICE_KEY, JSON.stringify(kidAPriceMap)); runKidsSimulation(); }
         function saveKidAShares(monthIndex, inputObj) { const val = parseInt(inputObj.value); if(isNaN(val) || val < 0) delete kidAMap[monthIndex]; else kidAMap[monthIndex] = val; localStorage.setItem(LEDGER_KID_A_KEY, JSON.stringify(kidAMap)); runKidsSimulation(); }
+        function saveKidADrip(monthIndex, inputObj) { const val = parseInt(inputObj.value); if(isNaN(val) || val < 0) delete kidADripMap[monthIndex]; else kidADripMap[monthIndex] = val; localStorage.setItem(LEDGER_KID_A_DRIP_KEY, JSON.stringify(kidADripMap)); runKidsSimulation(); }
+        
         function saveKidBPrice(monthIndex, inputObj) { const val = parseFloat(inputObj.value); if(isNaN(val) || val <= 0) delete kidBPriceMap[monthIndex]; else kidBPriceMap[monthIndex] = val; localStorage.setItem(LEDGER_KID_B_PRICE_KEY, JSON.stringify(kidBPriceMap)); runKidsSimulation(); }
         function saveKidBShares(monthIndex, inputObj) { const val = parseInt(inputObj.value); if(isNaN(val) || val < 0) delete kidBMap[monthIndex]; else kidBMap[monthIndex] = val; localStorage.setItem(LEDGER_KID_B_KEY, JSON.stringify(kidBMap)); runKidsSimulation(); }
+        function saveKidBDrip(monthIndex, inputObj) { const val = parseInt(inputObj.value); if(isNaN(val) || val < 0) delete kidBDripMap[monthIndex]; else kidBDripMap[monthIndex] = val; localStorage.setItem(LEDGER_KID_B_DRIP_KEY, JSON.stringify(kidBDripMap)); runKidsSimulation(); }
     </script>
 </body>
 </html>
-
