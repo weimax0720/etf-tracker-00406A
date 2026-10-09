@@ -108,8 +108,6 @@
 
         <!-- ================= 分頁 1：資產與即時領息總覽 ================= -->
         <div id="tab-overview" class="space-y-6 pt-2">
-            
-            <!-- 首列：主控台核心數據 (大卡片) -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- 總資產與損益 -->
                 <div class="glass-card p-6 md:col-span-2 relative overflow-hidden group">
@@ -121,7 +119,7 @@
                             <p class="text-4xl md:text-5xl font-bold text-white mt-1 tracking-tight">NT$ <span id="real_market_value">0</span></p>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs text-slate-400 mb-1">未實現損益 (扣除賣出費率)</p>
+                            <p class="text-xs text-slate-400 mb-1">未實現損益 (已扣賣出費率)</p>
                             <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 backdrop-blur-md">
                                 <span class="text-lg md:text-xl font-bold" id="unrealized_pnl">
                                     <span class="text-slate-400">NT$ 0</span>
@@ -149,6 +147,8 @@
                                     <span class="text-[9px] text-slate-400">%</span>
                                 </div>
                             </div>
+                            <!-- 純均價顯示隱藏在 title 裡面，保持畫面乾淨 -->
+                            <span class="hidden" id="pure_avg_cost">0.00</span>
                         </div>
                         <div>
                             <p class="text-[11px] text-emerald-400/80 mb-1">領息降本價 (預估)</p>
@@ -170,17 +170,17 @@
                             <span class="text-slate-500">📈</span>
                         </div>
                         <p class="text-3xl font-bold text-white mt-2">NT$ <span id="latest_price">--</span></p>
-                        <p class="text-xs text-slate-500 mt-2" id="buyable_shares_label">約 5 千元可買: <span class="text-slate-300 font-medium ml-1" id="buyable_shares">--</span> 股</p>
+                        <p class="text-xs text-slate-500 mt-2" id="buyable_shares_label">約定投可買: <span class="text-slate-300 font-medium ml-1" id="buyable_shares">--</span> 股</p>
                     </div>
 
                     <div class="glass-card p-5 flex-1 flex flex-col justify-center bg-gradient-to-br from-emerald-900/20 to-transparent border-emerald-500/20">
                         <div class="flex justify-between items-start mb-1">
                             <p class="text-sm text-emerald-400/90 font-medium">本次預估配息</p>
-                            <span class="text-xs bg-emerald-900/50 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800/50" id="eligible_shares_badge">基準: -- 股</span>
+                            <span class="text-[10px] bg-emerald-900/50 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800/50" id="eligible_shares_badge">基準: -- 股</span>
                         </div>
                         <p class="text-3xl font-bold text-emerald-400 mt-1">NT$ <span id="real_dividend_income">0</span></p>
                         <p class="text-xs text-slate-400 mt-2 flex justify-between">
-                            <span>每股配息: <span class="text-white font-medium ml-1" id="latest_dividend_overview">--</span> 元</span>
+                            <span>配息: <span class="text-white font-medium ml-1" id="latest_dividend_overview">--</span></span>
                             <span id="ex_div_countdown">-- 天</span>
                         </p>
                     </div>
@@ -200,7 +200,7 @@
                     <div class="flex flex-1 md:max-w-md gap-2">
                         <div class="relative flex-1">
                             <span class="absolute inset-y-0 left-3 flex items-center text-slate-500 text-xs">$</span>
-                            <input type="number" step="0.01" id="topup_price" placeholder="買進股價" class="w-full pl-6 pr-3 py-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                            <input type="number" step="0.01" id="topup_price" placeholder="買進價" class="w-full pl-6 pr-3 py-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500 transition">
                         </div>
                         <div class="relative flex-1">
                             <input type="number" id="topup_shares" placeholder="買進股數" class="w-full pl-3 pr-8 py-2.5 bg-slate-900 border border-slate-600 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500 transition">
@@ -210,7 +210,6 @@
                     </div>
                 </div>
                 
-                <!-- 試算結果顯示區 -->
                 <div id="topup_result" class="hidden bg-slate-900/50 p-4 rounded-xl border border-indigo-500/30">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center divide-x divide-slate-700/50">
                         <div>
@@ -263,8 +262,8 @@
                     </div>
                 </div>
                 
-                <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800">
-                    <canvas id="dripChart" height="90"></canvas>
+                <div class="bg-slate-900/50 rounded-xl p-4 border border-slate-800 h-[180px]">
+                    <canvas id="dripChart"></canvas>
                 </div>
             </div>
         </div>
@@ -274,22 +273,19 @@
             <div class="glass-card p-6 border-blue-500/20">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                     <div>
-                        <h2 class="text-xl font-semibold text-blue-400 flex items-center gap-2">
-                            📓 家族多帳戶交易總帳本
-                        </h2>
-                        <p class="text-sm text-slate-400 mt-1">真實金流紀錄中心。此處資料將<span class="text-white font-medium">自動同步</span>寫入各專屬手帳對應月份，無縫接軌未來推演。</p>
+                        <h2 class="text-xl font-semibold text-blue-400 flex items-center gap-2">📓 家族多帳戶交易總帳本</h2>
+                        <p class="text-sm text-slate-400 mt-1">真實金流紀錄中心。此處資料將<span class="text-white font-medium">自動同步</span>寫入各專屬手帳對應月份。</p>
                     </div>
                     <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-full font-semibold">資料庫自動連動中</span>
                 </div>
                 
-                <!-- 新增/編輯 交易表單 -->
                 <div class="bg-slate-900/80 p-5 rounded-xl border border-slate-700 shadow-inner relative mb-8">
                     <div class="absolute top-0 left-6 -mt-3 bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">✍️ 記一筆交易</div>
                     <div class="grid grid-cols-2 md:grid-cols-7 gap-4">
                         <div class="col-span-2 md:col-span-1">
                             <label class="text-[11px] font-semibold text-slate-400 block mb-1 uppercase tracking-wider">歸屬帳戶</label>
                             <select id="tx_account" class="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-blue-500 transition cursor-pointer">
-                                <option value="main" class="font-bold text-blue-300">👨 主帳戶 (MAX)</option>
+                                <option value="main" class="font-bold text-blue-300">👨 主帳戶</option>
                                 <option value="kid_a" class="font-bold text-pink-300">👧 大寶</option>
                                 <option value="kid_b" class="font-bold text-indigo-300">👶 二寶</option>
                             </select>
@@ -326,7 +322,6 @@
                     </div>
                 </div>
 
-                <!-- 各帳戶統計預覽 (迷你面板) -->
                 <div class="grid grid-cols-3 gap-3 md:gap-6 mb-8">
                     <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700/50 text-center relative overflow-hidden group">
                         <div class="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
@@ -348,7 +343,6 @@
                     </div>
                 </div>
 
-                <!-- 過濾器與表格 -->
                 <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4 mt-4">
                     <h3 class="text-sm font-semibold text-slate-300">明細清單</h3>
                     <div class="flex gap-2 bg-slate-900/50 p-1 rounded-lg border border-slate-700">
@@ -374,7 +368,6 @@
                                 </tr>
                             </thead>
                             <tbody id="tx_table_body" class="text-sm divide-y divide-slate-800">
-                                <!-- JS 動態生成 -->
                             </tbody>
                         </table>
                     </div>
@@ -393,7 +386,7 @@
                         </h2>
                         <p class="text-sm text-slate-400 mt-2 leading-relaxed">
                             <span class="inline-flex items-center gap-1 bg-slate-800 px-2 py-0.5 rounded text-blue-300 font-medium text-xs border border-slate-700 mr-2"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>歷史鎖定</span> 過去月份自動帶入真實紀錄。<br>
-                            <span class="inline-flex items-center gap-1 bg-slate-800 px-2 py-0.5 rounded text-yellow-300 font-medium text-xs border border-slate-700 mr-2 mt-1 md:mt-0">✏️ 未來模擬</span> 尚未發生的月份開放手動調整參數。
+                            <span class="inline-flex items-center gap-1 bg-slate-800 px-2 py-0.5 rounded text-yellow-300 font-medium text-xs border border-slate-700 mt-1 md:mt-0">✏️ 未來模擬</span> 尚未發生的月份開放手動調整參數。
                         </p>
                     </div>
                     <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-4 rounded-xl border border-slate-700 text-right min-w-[160px] shadow-lg">
@@ -402,7 +395,6 @@
                     </div>
                 </div>
 
-                <!-- 年度切換列 -->
                 <div class="flex flex-wrap gap-2 mb-5 p-1 bg-slate-900/50 rounded-lg" id="ledger-year-tabs"></div>
 
                 <div class="overflow-hidden border border-slate-700 rounded-xl shadow-lg bg-slate-900/50">
@@ -429,7 +421,6 @@
 
         <!-- ================= 分頁 4：雙寶存股手帳 ================= -->
         <div id="tab-kids" class="space-y-6 hidden pt-2">
-            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 大寶 -->
                 <div class="glass-card p-6 border-pink-500/20 relative overflow-hidden group">
@@ -457,7 +448,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <!-- 二寶 -->
                 <div class="glass-card p-6 border-indigo-500/20 relative overflow-hidden group">
                     <div class="absolute right-[-20px] top-[-20px] text-8xl opacity-5 group-hover:scale-110 transition-transform duration-500">👶</div>
@@ -535,15 +525,14 @@
                         <button onclick="changeTimeframe('monthly')" id="tf-monthly" class="px-4 py-1.5 text-xs rounded-md font-semibold text-slate-400 hover:text-white transition">月 K</button>
                     </div>
                 </div>
-                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-                    <canvas id="trendChart" height="100"></canvas>
+                <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800 h-[300px]">
+                    <canvas id="trendChart"></canvas>
                 </div>
             </div>
         </div>
 
         <!-- ================= 分頁 6：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden pt-2">
-            <!-- 評分模型 -->
             <div class="glass-card p-6 border-red-500/20 relative overflow-hidden">
                 <div class="absolute right-[-20px] top-[-20px] text-8xl opacity-5 pointer-events-none">🚨</div>
                 <h2 class="text-xl font-semibold text-red-400 mb-6">ETF 配息與流動性風險預警</h2>
@@ -605,7 +594,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- 股利時程表 -->
                 <div class="glass-card p-6">
                     <h2 class="text-lg font-semibold text-emerald-400 mb-5 flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -632,7 +620,6 @@
                     </div>
                 </div>
 
-                <!-- 法人籌碼 -->
                 <div class="glass-card p-6 relative overflow-hidden">
                     <div class="absolute right-0 top-0 text-[10px] font-bold bg-slate-700/80 text-slate-300 px-3 py-1 rounded-bl-lg shadow-sm" id="chip_source_badge">資料連線中</div>
                     <h2 class="text-lg font-semibold text-blue-400 mb-1 flex items-center gap-2">
@@ -744,7 +731,6 @@
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`btn-${tabId}`);
             
-            // 移除可能殘留的低飽和色
             activeBtn.classList.remove('text-slate-300', 'text-pink-400/80', 'text-green-400/80');
             
             if(tabId === 'kids') activeBtn.classList.add('active', 'text-pink-400', 'bg-pink-900/10');
@@ -1043,7 +1029,7 @@
                         
                         const ind = document.getElementById('live_indicator');
                         ind.classList.replace('bg-green-400', 'bg-slate-600');
-                        ind.innerHTML = ''; // 移除脈衝動畫
+                        ind.innerHTML = ''; 
 
                         const last20Days = rawPriceData.slice(-20);
                         const totalVolumeShares = last20Days.reduce((sum, d) => sum + (d.Trading_Volume || d.volume || 0), 0);
@@ -1457,7 +1443,7 @@
                 let formattedMonth = d.month.toString().padStart(2, '0');
                 if (d.isHistorical) {
                     html += `
-                        <tr class="hover:bg-slate-800/40 transition-colors group">
+                        <tr class="hover:bg-slate-800/40 transition-colors group border-b border-slate-800/50">
                             <td class="py-4 px-4 text-white border-l-2 border-l-blue-500 bg-blue-900/10 whitespace-nowrap">
                                 <span class="font-bold">${d.year}-${formattedMonth}</span> <br>
                                 <span class="text-[10px] text-blue-400 font-medium">✔️ 歷史鎖定</span>
@@ -1487,15 +1473,13 @@
                     let currentDripVal = d.isManualDrip ? d.dripShares : '';
                     let currentExtraVal = (d.extraShares !== 0) ? d.extraShares : '';
                     html += `
-                        <tr class="hover:bg-slate-800/60 transition-colors group">
+                        <tr class="hover:bg-slate-800/60 transition-colors group border-b border-slate-800/50">
                             <td class="py-3 px-4 whitespace-nowrap">
                                 <span class="text-slate-400 font-semibold">${d.year}-${formattedMonth}</span> <br>
                                 <span class="text-[10px] text-slate-500">第${d.index + 1}期</span>
                             </td>
                             <td class="py-3 px-3 text-center">
-                                <div class="relative group/input">
-                                    <input type="number" onchange="saveCustomPrice(${d.index}, this)" value="${currentPriceVal}" placeholder="${d.execPrice.toFixed(2)}" class="w-[70px] bg-slate-900 border border-slate-700 rounded-md text-slate-300 text-xs py-1.5 px-2 focus:outline-none focus:border-blue-500 text-center transition placeholder-slate-600">
-                                </div>
+                                <input type="number" onchange="saveCustomPrice(${d.index}, this)" value="${currentPriceVal}" placeholder="${d.execPrice.toFixed(2)}" class="w-[70px] bg-slate-900 border border-slate-700 rounded-md text-slate-300 text-xs py-1.5 px-2 focus:outline-none focus:border-blue-500 text-center transition placeholder-slate-600">
                             </td>
                             <td class="py-3 px-3 text-center">
                                 <input type="number" onchange="saveCustomInvest(${d.index}, this)" value="${currentInvestVal}" placeholder="${d.defaultInvest}" class="w-[80px] bg-slate-900 border border-blue-900/50 rounded-md text-blue-300 font-bold text-xs py-1.5 px-2 focus:outline-none focus:border-blue-500 text-center transition placeholder-blue-900">
