@@ -1774,5 +1774,275 @@
         function saveKidBPrice(monthIndex, inputObj) { const val = parseFloat(inputObj.value); if(isNaN(val) || val <= 0) delete kidBPriceMap[monthIndex]; else kidBPriceMap[monthIndex] = val; localStorage.setItem(LEDGER_KID_B_PRICE_KEY, JSON.stringify(kidBPriceMap)); updateAll(); }
         function saveKidBShares(monthIndex, inputObj) { const val = parseInt(inputObj.value); if(isNaN(val) || val < 0) delete kidBMap[monthIndex]; else kidBMap[monthIndex] = val; localStorage.setItem(LEDGER_KID_B_KEY, JSON.stringify(kidBMap)); updateAll(); }
     </script>
+    <script>
+(() => {
+  const BANNER_ID = 'sync-banner-fix';
+
+  function ensureBanner() {
+    let el = document.getElementById(BANNER_ID);
+    if (el) return el;
+
+    el = document.createElement('div');
+    el.id = BANNER_ID;
+    el.style.cssText = [
+      'position:fixed',
+      'top:16px',
+      'right:16px',
+      'z-index:99999',
+      'max-width:360px',
+      'padding:12px 14px',
+      'border-radius:12px',
+      'font-size:13px',
+      'line-height:1.5',
+      'color:#fff',
+      'background:rgba(15,23,42,.95)',
+      'border:1px solid rgba(148,163,184,.25)',
+      'box-shadow:0 12px 30px rgba(0,0,0,.35)',
+      'display:none'
+    ].join(';');
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function showBanner(message, type = 'info') {
+    const el = ensureBanner();
+    const bg = type === 'error'
+      ? 'rgba(127,29,29,.95)'
+      : type === 'success'
+      ? 'rgba(6,78,59,.95)'
+      : 'rgba(15,23,42,.95)';
+
+    el.style.background = bg;
+    el.textContent = message;
+    el.style.display = 'block';
+
+    clearTimeout(window.__syncBannerTimer);
+    window.__syncBannerTimer = setTimeout(() => {
+      el.style.display = 'none';
+    }, 3500);
+  }
+
+  function fmtErr(err) {
+    if (!err) return '未知錯誤';
+    if (typeof err === 'string') return err;
+    return err.message || String(err);
+  }
+
+  // 讓更新不要因單一區塊壞掉而整頁失效
+  window.updateAll = function updateAllFixed() {
+    try { updateHoldingCalculations(); } catch (e) { console.error('Error in holding calcs', e); }
+    try { runDynamicSimulation(); } catch (e) { console.error('Error in dynamic sim', e); }
+    try { runKidsSimulation(); } catch (e) { console.error('Error in kids sim', e); }
+  };
+
+  // 讓按鈕真的等同步結果，再回報成功/失敗
+  window.saveAndLoad = async function saveAndLoadFixed() {
+    const keyEl = document.getElementById('api_key');
+    const key = (keyEl?.value || '').trim();
+
+    if (!key) {
+      alert('請先輸入 API 金鑰！');
+      return;
+    }
+
+    localStorage.setItem(KEY_NAME, key);
+    showBanner('開始同步資料…');
+
+    try {
+      await window.fetchData(key);
+      showBanner('同步完成', 'success');
+    } catch (err) {
+      console.error(err);
+      showBanner(`同步失敗：${fmtErr(err)}`, 'error');
+      alert(`同步失敗：${fmtErr(err)}`);
+    }
+  };
+
+  // Yahoo 即時價獨立處理，不要被 FinMind 成敗綁住
+  window.fetchYahooRealTime = async function fetchYahooRealTimeFixed() {
+    try {
+      const yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/00406A.TW?interval=1m&range=1d';
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(yahooUrl)}`;
+
+      const res = await fetch(proxyUrl, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`Yahoo proxy HTTP ${res.status}`);
+
+      const yData = await res.json();
+      const price = yData?.chart?.result?.[0]?.meta?.regularMarketPrice;
+
+      if (price && price > 0) {
+        currentPrice = price;
+
+        const latest = document.getElementById('latest_price');
+        if (latest) {
+          latest.innerText = currentPrice.toFixed(2);
+          latest.classList.add('text-yellow-400');
+        }
+
+        const label = document.getElementById('price_label');
+        if (label) {
+          label.innerHTML = '盤中市價 <span class="text-[10px] text-yellow-500 ml-1 border border-yellow-500/50 px-1 py-0.5 rounded">Yahoo即時連線</span>';
+        }
+
+        const ind = document.getElementById('live_indicator');
+        if (ind) {
+          ind.classList.remove('bg-slate-600');
+          ind.classList.add('bg-green-400');
+          ind.innerHTML = '<div class="absolute inset-0 rounded-full bg-green-400 opacity-50 animate-pulse-slow"></div>';
+        }
+
+        updateAll();
+        return true;
+      }
+
+      return false;
+    } catch (err) {
+      console.log('Yahoo即時報價抓取失敗，維持使用 FinMind 歷史收盤價');
+      return false;
+    }
+  };
+
+  // 重新整理資料：價格、配息、籌碼分開抓，互不拖累
+  window.fetchData = async function fetchDataFixed(token) {
+    const today = new Date();
+    const yearStart = `${today.getFullYear()}-01-01`;
+    const yearAgoDate = new Date(today.getTime() - 365 * 24 * 60 * 60 * 1000);
+    const yearAgo = yearAgoDate.toISOString().split('T')[0];
+    const monthAgoDate = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const monthAgo = monthAgoDate.toISOString().split('T')[0];
+
+    let priceLoaded = false;
+    let dividendLoaded = false;
+
+    // 1) FinMind 歷史價格
+    try {
+      const priceRes = await fetch(
+        `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockPrice&data_id=00406A&start_date=${yearAgo}&token=${token}`
+      );
+      const priceData = await priceRes.json();
+
+      if (priceData?.msg === 'success' && Array.isArray(priceData.data) && priceData.data.length > 0) {
+        rawPriceData = priceData.data.filter(item => !isWeekend(item.date));
+        if (rawPriceData.length > 0) {
+          const latestPriceObj = rawPriceData[rawPriceData.length - 1];
+          currentPrice = Number(latestPriceObj.close) || 0;
+          priceLoaded = true;
+
+          const latest = document.getElementById('latest_price');
+          if (latest) latest.innerText = currentPrice.toFixed(2);
+
+          const label = document.getElementById('price_label');
+          if (label) label.innerText = '歷史收盤價 (FinMind)';
+
+          const ind = document.getElementById('live_indicator');
+          if (ind) {
+            ind.classList.remove('bg-green-400');
+            ind.classList.add('bg-slate-600');
+            ind.innerHTML = '';
+          }
+
+          const last20Days = rawPriceData.slice(-20);
+          const totalVolumeShares = last20Days.reduce((sum, d) => sum + (d.Trading_Volume || d.volume || 0), 0);
+          const avgVolumeZhang = last20Days.length ? Math.round((totalVolumeShares / last20Days.length) / 1000) : 0;
+
+          const riskVolValue = document.getElementById('risk_vol_value');
+          if (riskVolValue) {
+            riskVolValue.innerText = avgVolumeZhang.toLocaleString() + ' 張';
+            if (avgVolumeZhang < 10000) {
+              const light = document.getElementById('risk_vol_light');
+              if (light) light.innerText = '🟡';
+              riskVolValue.className = 'text-2xl font-bold text-yellow-400';
+            } else {
+              const light = document.getElementById('risk_vol_light');
+              if (light) light.innerText = '🟢';
+              riskVolValue.className = 'text-2xl font-bold text-emerald-400';
+            }
+          }
+
+          const closeP = Number(latestPriceObj.close) || 0;
+          const turnoverInYi = (Number(latestPriceObj.Trading_money) || (closeP * (latestPriceObj.Trading_Volume || 0))) / 100000000;
+          const turnover = document.getElementById('trading_turnover');
+          if (turnover) turnover.innerText = `NT$ ${turnoverInYi.toFixed(2)} 億`;
+
+          updateAll();
+        }
+      }
+    } catch (err) {
+      console.error('FinMind Price Error:', err);
+    }
+
+    // 2) Yahoo 即時價備援：不管上面成功失敗都試
+    try {
+      await window.fetchYahooRealTime();
+    } catch (err) {
+      console.error('Yahoo fallback failed:', err);
+    }
+
+    // 3) FinMind 配息
+    try {
+      const divRes = await fetch(
+        `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockDividend&data_id=00406A&start_date=${yearStart}&token=${token}`
+      );
+      const divData = await divRes.json();
+
+      if (divData?.msg === 'success' && Array.isArray(divData.data) && divData.data.length > 0) {
+        const latest = divData.data[divData.data.length - 1];
+        latestDividend = Number(latest.CashEarningsDistribution) || 0;
+        currentExDivDate = latest.CashExDividendTradingDate || '';
+        dividendLoaded = true;
+
+        const divValue = document.getElementById('risk_div_value');
+        if (divValue) {
+          divValue.innerText = latestDividend.toFixed(3);
+          if (latestDividend < 0.10) {
+            const light = document.getElementById('risk_div_light');
+            if (light) light.innerText = '🔴';
+            divValue.className = 'text-2xl font-bold text-rose-500';
+          } else {
+            const light = document.getElementById('risk_div_light');
+            if (light) light.innerText = '🟢';
+            divValue.className = 'text-2xl font-bold text-emerald-400';
+          }
+        }
+
+        const exDateStr = latest.CashExDividendTradingDate;
+        const countdownEl = document.getElementById('ex_div_countdown');
+        if (exDateStr && countdownEl) {
+          const exDate = new Date(exDateStr);
+          const diffDays = Math.ceil((exDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+          if (diffDays > 0) {
+            countdownEl.innerText = `剩 ${diffDays} 天`;
+            countdownEl.className = 'text-xs bg-rose-900/50 border border-rose-800 text-rose-300 px-3 py-1 rounded-full shadow-inner tracking-wider';
+          } else if (diffDays === 0) {
+            countdownEl.innerText = '今日除息';
+            countdownEl.className = 'text-xs bg-yellow-600/50 border border-yellow-500 text-yellow-200 px-3 py-1 rounded-full shadow-inner tracking-wider';
+          } else {
+            countdownEl.innerText = '已過除息日';
+            countdownEl.className = 'text-xs bg-slate-700/50 border border-slate-600 text-slate-300 px-3 py-1 rounded-full shadow-inner tracking-wider';
+          }
+        }
+
+        updateAll();
+      }
+    } catch (err) {
+      console.error('FinMind Div Error:', err);
+    }
+
+    // 4) 籌碼
+    try {
+      await fetchChips(token, monthAgo);
+    } catch (err) {
+      console.error('Fetch chips failed:', err);
+    }
+
+    // 5) 最後再統一重算一次
+    updateAll();
+
+    if (!priceLoaded && !dividendLoaded) {
+      showBanner('已同步完成，但目前沒有拿到有效市場資料', 'error');
+    }
+  };
+})();
+</script>
 </body>
 </html>
