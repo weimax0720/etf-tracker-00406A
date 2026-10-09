@@ -36,6 +36,7 @@
         .filter-btn { transition: all 0.2s ease; border: 1px solid transparent; }
         .filter-btn.active { border-color: #3b82f6; background-color: rgba(30, 58, 138, 0.8); font-weight: 600; color: white; box-shadow: inset 0 0 10px rgba(59, 130, 246, 0.3); }
         
+        /* 現代化滾動條 */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(71, 85, 105, 0.8); border-radius: 4px; }
@@ -66,7 +67,7 @@
                     <p class="text-slate-400 text-sm mt-1 flex items-center gap-2">
                         <span>專屬 Coast FIRE 退休計畫</span>
                         <span class="w-1 h-1 rounded-full bg-slate-500"></span>
-                        <span class="text-emerald-400 text-xs bg-emerald-400/10 px-2 py-0.5 rounded-full border border-emerald-400/20">即時精算防護版</span>
+                        <span class="text-emerald-400 text-xs bg-emerald-400/10 px-2 py-0.5 rounded-full border border-emerald-400/20">按月過濾 ＆ 獨立手帳版</span>
                     </p>
                 </div>
             </div>
@@ -119,7 +120,7 @@
                             <p class="text-4xl md:text-5xl font-bold text-white mt-1 tracking-tight">NT$ <span id="real_market_value">0</span></p>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs text-slate-400 mb-1">未實現損益 (已扣賣出稅費)</p>
+                            <p class="text-xs text-slate-400 mb-1">未實現損益 (扣除賣出費率)</p>
                             <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 backdrop-blur-md">
                                 <span class="text-lg md:text-xl font-bold" id="unrealized_pnl">
                                     <span class="text-slate-400">NT$ 0</span>
@@ -141,12 +142,13 @@
                             <p class="text-[11px] text-slate-400 mb-1 border-b border-dashed border-slate-600 inline-block">券商損益平衡價</p>
                             <div class="flex items-center gap-2">
                                 <p class="text-lg font-semibold text-yellow-400"><span id="breakeven_price">0.00</span></p>
-                                <div class="flex items-center bg-slate-800/80 px-1.5 py-0.5 rounded border border-slate-700" title="微調券商賣出稅費比例(%)">
+                                <div class="flex items-center bg-slate-800/80 px-1.5 py-0.5 rounded border border-slate-700" title="微調券商賣出費率(%)">
                                     <span class="text-[9px] text-slate-400 mr-1">稅費</span>
                                     <input type="number" id="sell_tax_fee_pct" value="0.30" step="0.01" class="w-9 bg-transparent border-none p-0 text-[10px] text-center text-yellow-400 focus:ring-0" onchange="updateHoldingCalculations()">
                                     <span class="text-[9px] text-slate-400">%</span>
                                 </div>
                             </div>
+                            <span class="hidden" id="pure_avg_cost">0.00</span>
                         </div>
                         <div>
                             <p class="text-[11px] text-emerald-400/80 mb-1">領息降本價 (預估)</p>
@@ -183,7 +185,7 @@
                 </div>
             </div>
 
-            <!-- 加碼精算機 -->
+            <!-- 第二列：加碼精算機 -->
             <div class="glass-card p-6 border-indigo-500/20">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
                     <div>
@@ -206,7 +208,6 @@
                     </div>
                 </div>
                 
-                <!-- 試算結果顯示區 -->
                 <div id="topup_result" class="hidden bg-slate-900/50 p-4 rounded-xl border border-indigo-500/30">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center divide-x divide-slate-700/50">
                         <div>
@@ -229,7 +230,7 @@
                 </div>
             </div>
 
-            <!-- CoastFIRE 投影 -->
+            <!-- 第三列：CoastFIRE 投影 -->
             <div class="glass-card p-6">
                 <div class="flex justify-between items-center mb-6">
                     <div>
@@ -323,7 +324,7 @@
                 </div>
 
                 <!-- 各帳戶統計預覽 (迷你面板) -->
-                <div class="grid grid-cols-3 gap-3 md:gap-6 mb-8">
+                <div class="grid grid-cols-3 gap-3 md:gap-6 mb-4">
                     <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700/50 text-center relative overflow-hidden group">
                         <div class="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
                         <p class="text-xs text-blue-400 font-bold mb-1 uppercase tracking-widest">主帳戶</p>
@@ -344,13 +345,18 @@
                     </div>
                 </div>
 
-                <!-- 過濾器與表格 -->
-                <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4 mt-4">
+                <!-- ★★★ 全新月份下拉過濾器 ★★★ -->
+                <div class="flex flex-col md:flex-row items-center justify-between border-b border-slate-700 pb-3 mb-4 mt-6 gap-3">
                     <h3 class="text-sm font-semibold text-slate-300">明細清單</h3>
-                    <div class="flex gap-2 bg-slate-900/50 p-1 rounded-lg border border-slate-700">
-                        <button onclick="setTxFilter('all')" id="filter-btn-all" class="filter-btn active px-4 py-1.5 rounded-md text-xs text-slate-400">全部</button>
-                        <button onclick="setTxFilter('main')" id="filter-btn-main" class="filter-btn px-4 py-1.5 rounded-md text-xs text-blue-400/70 hover:text-blue-400">主帳戶</button>
-                        <button onclick="setTxFilter('kids')" id="filter-btn-kids" class="filter-btn px-4 py-1.5 rounded-md text-xs text-pink-400/70 hover:text-pink-400">雙寶</button>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex gap-2 bg-slate-900/50 p-1 rounded-lg border border-slate-700">
+                            <button onclick="setTxFilter('all')" id="filter-btn-all" class="filter-btn active px-4 py-1.5 rounded-md text-xs text-slate-400">全部</button>
+                            <button onclick="setTxFilter('main')" id="filter-btn-main" class="filter-btn px-4 py-1.5 rounded-md text-xs text-blue-400/70 hover:text-blue-400">主帳戶</button>
+                            <button onclick="setTxFilter('kids')" id="filter-btn-kids" class="filter-btn px-4 py-1.5 rounded-md text-xs text-pink-400/70 hover:text-pink-400">雙寶</button>
+                        </div>
+                        <select id="tx_month_filter" onchange="updateTransactions()" class="bg-slate-900/50 border border-slate-700 text-slate-300 text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer shadow-inner font-bold">
+                            <option value="all">全月份紀錄</option>
+                        </select>
                     </div>
                 </div>
 
@@ -398,7 +404,6 @@
                     </div>
                 </div>
 
-                <!-- 年度切換列 -->
                 <div class="flex flex-wrap gap-2 mb-5 p-1 bg-slate-900/50 rounded-lg" id="ledger-year-tabs"></div>
 
                 <div class="overflow-hidden border border-slate-700 rounded-xl shadow-lg bg-slate-900/50">
@@ -482,37 +487,53 @@
             </div>
 
             <div class="glass-card p-6">
-                <div class="mb-5">
-                    <h2 class="text-xl font-semibold text-slate-200 mb-2">雙寶未來存股試算表</h2>
-                    <p class="text-sm text-slate-400 leading-relaxed">
-                        與主帳戶相同，歷史月份將被<span class="text-blue-300 font-medium">逐筆紀錄鎖定</span>。<br>
-                        未來預設模型為每週存下 100 元 (每月系統帶入 <span class="text-white font-semibold border-b border-dashed border-slate-500">433 元</span> 預算試算)。
-                    </p>
+                <!-- ★★★ 全新雙寶子分頁隔離按鈕 ★★★ -->
+                <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-5">
+                    <div class="flex gap-2 bg-slate-900/50 p-1 rounded-lg border border-slate-700">
+                        <button onclick="setKidTab('kida')" id="btn-kida-tab" class="filter-btn active px-6 py-2 rounded-md text-sm text-pink-400 font-bold border-pink-500 bg-pink-900/20">👧 大寶專屬手帳</button>
+                        <button onclick="setKidTab('kidb')" id="btn-kidb-tab" class="filter-btn px-6 py-2 rounded-md text-sm text-indigo-400/70 hover:text-indigo-400 font-bold">👶 二寶專屬手帳</button>
+                    </div>
+                    <p class="text-xs text-slate-400 hidden md:block">未來模型：每週 100 元 (月均 433 元)</p>
                 </div>
 
                 <div class="flex flex-wrap gap-2 mb-5 p-1 bg-slate-900/50 rounded-lg" id="kids-year-tabs"></div>
 
-                <div class="overflow-hidden border border-slate-700 rounded-xl shadow-lg bg-slate-900/50">
+                <!-- 大寶專屬表格 -->
+                <div id="kida-table-container" class="overflow-hidden border border-pink-500/30 rounded-xl shadow-lg bg-slate-900/50">
                     <div class="overflow-x-auto max-h-[600px] scrollbar-hide">
-                        <table class="w-full text-left border-collapse min-w-[1000px]">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
                             <thead class="bg-slate-800/90 text-[11px] text-slate-400 uppercase tracking-wider">
                                 <tr>
-                                    <th class="py-4 px-4 font-semibold w-24 border-r border-slate-700/50">年月</th>
-                                    <th class="py-4 px-3 font-semibold text-center text-pink-400/80">大寶買價</th>
-                                    <th class="py-4 px-3 font-semibold text-center text-pink-400/80">大寶實買</th>
-                                    <th class="py-4 px-4 font-semibold text-right text-pink-500/80 border-r border-slate-700/50">期底估值</th>
-                                    <th class="py-4 px-3 font-semibold text-center text-indigo-400/80">二寶買價</th>
-                                    <th class="py-4 px-3 font-semibold text-center text-indigo-400/80">二寶實買</th>
-                                    <th class="py-4 px-4 font-semibold text-right text-indigo-500/80 border-r border-slate-700/50">期底估值</th>
-                                    <th class="py-4 px-3 font-semibold text-right w-20">大寶庫存</th>
-                                    <th class="py-4 px-4 font-semibold text-right w-20">二寶庫存</th>
+                                    <th class="py-4 px-4 font-semibold w-24">年月 (期數)</th>
+                                    <th class="py-4 px-3 font-semibold text-center text-pink-400/80">買進股價 ✏️</th>
+                                    <th class="py-4 px-3 font-semibold text-center text-pink-400/80">實買股數 ✏️</th>
+                                    <th class="py-4 px-3 font-semibold text-right w-24">累積庫存</th>
+                                    <th class="py-4 px-4 font-semibold text-right text-yellow-500/80 w-32">期底估值</th>
                                 </tr>
                             </thead>
-                            <tbody id="kids_table_body" class="text-sm divide-y divide-slate-800/60">
-                            </tbody>
+                            <tbody id="kida_table_body" class="text-sm divide-y divide-slate-800/60"></tbody>
                         </table>
                     </div>
                 </div>
+
+                <!-- 二寶專屬表格 -->
+                <div id="kidb-table-container" class="hidden overflow-hidden border border-indigo-500/30 rounded-xl shadow-lg bg-slate-900/50">
+                    <div class="overflow-x-auto max-h-[600px] scrollbar-hide">
+                        <table class="w-full text-left border-collapse min-w-[700px]">
+                            <thead class="bg-slate-800/90 text-[11px] text-slate-400 uppercase tracking-wider">
+                                <tr>
+                                    <th class="py-4 px-4 font-semibold w-24">年月 (期數)</th>
+                                    <th class="py-4 px-3 font-semibold text-center text-indigo-400/80">買進股價 ✏️</th>
+                                    <th class="py-4 px-3 font-semibold text-center text-indigo-400/80">實買股數 ✏️</th>
+                                    <th class="py-4 px-3 font-semibold text-right w-24">累積庫存</th>
+                                    <th class="py-4 px-4 font-semibold text-right text-yellow-500/80 w-32">期底估值</th>
+                                </tr>
+                            </thead>
+                            <tbody id="kidb_table_body" class="text-sm divide-y divide-slate-800/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -690,8 +711,9 @@
         let transactionLog = []; 
         let editingTxId = null; 
         let currentTxFilter = 'all';
+        let currentKidTab = 'kida'; // ★ 雙寶子分頁狀態
 
-        // ★★★ 取得當前帳戶狀態 (純淨無副作用，取代 localStorage 抓取) ★★★
+        // 取得當前帳戶狀態 
         function getAccountStats(accName) {
             let shares = 0; let totalCost = 0;
             if(Array.isArray(transactionLog)) {
@@ -709,7 +731,7 @@
             return { shares, totalCost, avgCost: shares > 0 ? totalCost / shares : 0 };
         }
 
-        // ★★★ 防閃退全域更新引擎 ★★★
+        // 防閃退全域更新引擎 
         function updateAll() {
             try { updateHoldingCalculations(); } catch(e) { console.error('Error in holding calcs', e); }
             try { runDynamicSimulation(); } catch(e) { console.error('Error in dynamic sim', e); }
@@ -721,7 +743,8 @@
             if(savedKey) document.getElementById('api_key').value = savedKey;
             
             if(localStorage.getItem(SELL_PCT_KEY)) {
-                document.getElementById('sell_tax_fee_pct').value = localStorage.getItem(SELL_PCT_KEY);
+                const el = document.getElementById('sell_tax_fee_pct');
+                if(el) el.value = localStorage.getItem(SELL_PCT_KEY);
             }
 
             // 防呆讀取歷史記帳資料
@@ -734,7 +757,6 @@
                         if (!t) return;
                         if (t.type === 'buy') { t.type = 'buy_regular'; updated = true; }
                         if (!t.account) { t.account = 'main'; updated = true; }
-                        // 安全校正數值 (防字串閃退)
                         t.price = parseFloat(t.price) || 0;
                         t.shares = parseInt(t.shares) || 0;
                         t.fee = parseFloat(t.fee) || 0;
@@ -745,10 +767,11 @@
                     transactionLog = [];
                 }
             }
-            document.getElementById('tx_date').valueAsDate = new Date();
+            const dateEl = document.getElementById('tx_date');
+            if(dateEl) dateEl.valueAsDate = new Date();
             updateTransactions(); 
             
-            // 安全讀取手動參數 (防字串閃退)
+            // 安全讀取手動參數
             try { if(localStorage.getItem(LEDGER_INVEST_KEY)) customInvestMap = JSON.parse(localStorage.getItem(LEDGER_INVEST_KEY)) || {}; } catch(e){}
             try { if(localStorage.getItem(LEDGER_PRICE_KEY)) customPriceMap = JSON.parse(localStorage.getItem(LEDGER_PRICE_KEY)) || {}; } catch(e){}
             try { if(localStorage.getItem(LEDGER_DRIP_KEY)) customDripMap = JSON.parse(localStorage.getItem(LEDGER_DRIP_KEY)) || {}; } catch(e){}
@@ -760,32 +783,57 @@
             try { if(localStorage.getItem(LEDGER_KID_B_KEY)) kidBMap = JSON.parse(localStorage.getItem(LEDGER_KID_B_KEY)) || {}; } catch(e){}
 
             renderYearTabs();
-            updateAll(); // 初始化畫面
+            setKidTab('kida'); // 預設顯示大寶
+            updateAll(); 
             
-            // 如果有 key，啟動非同步抓取
             if(savedKey) fetchData(savedKey);
         };
 
         function switchTab(tabId) {
             ['overview', 'transactions', 'ledger', 'kids', 'charts', 'safety'].forEach(id => {
-                document.getElementById(`tab-${id}`).classList.add('hidden');
+                const el = document.getElementById(`tab-${id}`);
+                if(el) el.classList.add('hidden');
                 const btn = document.getElementById(`btn-${id}`);
-                btn.classList.remove('active', 'text-blue-400', 'text-pink-400', 'text-green-400', 'bg-slate-800/50');
-                
-                if (id === 'kids') btn.classList.add('text-pink-400/80');
-                else if (id === 'transactions') btn.classList.add('text-green-400/80');
-                else btn.classList.add('text-slate-300');
+                if(btn) {
+                    btn.classList.remove('active', 'text-blue-400', 'text-pink-400', 'text-green-400', 'bg-slate-800/50');
+                    if (id === 'kids') btn.classList.add('text-pink-400/80');
+                    else if (id === 'transactions') btn.classList.add('text-green-400/80');
+                    else btn.classList.add('text-slate-300');
+                }
             });
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const contentEl = document.getElementById(`tab-${tabId}`);
+            if(contentEl) contentEl.classList.remove('hidden');
             const activeBtn = document.getElementById(`btn-${tabId}`);
-            
-            activeBtn.classList.remove('text-slate-300', 'text-pink-400/80', 'text-green-400/80');
-            
-            if(tabId === 'kids') activeBtn.classList.add('active', 'text-pink-400', 'bg-pink-900/10');
-            else if (tabId === 'transactions') activeBtn.classList.add('active', 'text-green-400', 'bg-green-900/10');
-            else activeBtn.classList.add('active', 'text-blue-400', 'bg-blue-900/10');
-            
+            if(activeBtn) {
+                activeBtn.classList.remove('text-slate-300', 'text-pink-400/80', 'text-green-400/80');
+                if(tabId === 'kids') activeBtn.classList.add('active', 'text-pink-400', 'bg-pink-900/10');
+                else if (tabId === 'transactions') activeBtn.classList.add('active', 'text-green-400', 'bg-green-900/10');
+                else activeBtn.classList.add('active', 'text-blue-400', 'bg-blue-900/10');
+            }
             if(tabId === 'charts' && rawPriceData.length > 0) renderTrendChart(currentChartTimeframe); 
+        }
+
+        // ★★★ 雙寶專屬手帳 子分頁切換邏輯 ★★★
+        function setKidTab(kid) {
+            currentKidTab = kid;
+            const btnA = document.getElementById('btn-kida-tab');
+            const btnB = document.getElementById('btn-kidb-tab');
+            const boxA = document.getElementById('kida-table-container');
+            const boxB = document.getElementById('kidb-table-container');
+            
+            if(!btnA || !btnB || !boxA || !boxB) return;
+
+            if (kid === 'kida') {
+                btnA.className = 'filter-btn active px-6 py-2 rounded-md text-sm text-pink-400 font-bold border-pink-500 bg-pink-900/20';
+                btnB.className = 'filter-btn px-6 py-2 rounded-md text-sm text-indigo-400/70 hover:text-indigo-400 font-bold';
+                boxA.classList.remove('hidden');
+                boxB.classList.add('hidden');
+            } else {
+                btnA.className = 'filter-btn px-6 py-2 rounded-md text-sm text-pink-400/70 hover:text-pink-400 font-bold';
+                btnB.className = 'filter-btn active px-6 py-2 rounded-md text-sm text-indigo-400 font-bold border-indigo-500 bg-indigo-900/20';
+                boxA.classList.add('hidden');
+                boxB.classList.remove('hidden');
+            }
         }
 
         function saveAndLoad() {
@@ -818,7 +866,11 @@
             }
             
             localStorage.setItem(TX_KEY, JSON.stringify(transactionLog));
-            if(!editingTxId) { document.getElementById('tx_price').value = ''; document.getElementById('tx_shares').value = ''; document.getElementById('tx_fee').value = '0'; }
+            if(!editingTxId) { 
+                document.getElementById('tx_price').value = ''; 
+                document.getElementById('tx_shares').value = ''; 
+                document.getElementById('tx_fee').value = '0'; 
+            }
             updateTransactions();
         }
 
@@ -864,53 +916,80 @@
             currentTxFilter = filterType;
             ['all', 'main', 'kids'].forEach(id => {
                 const btn = document.getElementById(`filter-btn-${id}`);
-                btn.classList.remove('active', 'border-blue-500', 'bg-blue-900/50', 'text-white');
-                if (id === 'main') btn.classList.add('text-blue-400/70');
-                else if (id === 'kids') btn.classList.add('text-pink-400/70');
-                else btn.classList.add('text-slate-400');
+                if(btn) {
+                    btn.classList.remove('active', 'border-blue-500', 'bg-blue-900/50', 'text-white');
+                    if (id === 'main') btn.classList.add('text-blue-400/70');
+                    else if (id === 'kids') btn.classList.add('text-pink-400/70');
+                    else btn.classList.add('text-slate-400');
+                }
             });
             const activeBtn = document.getElementById(`filter-btn-${filterType}`);
-            activeBtn.classList.add('active', 'border-blue-500', 'bg-blue-900/50', 'text-white');
+            if(activeBtn) activeBtn.classList.add('active', 'border-blue-500', 'bg-blue-900/50', 'text-white');
             updateTransactions(); 
         }
 
+        // ★★★ 逐筆紀錄核心：按月過濾與渲染 ★★★
         function updateTransactions() {
             transactionLog.sort((a, b) => { 
                 const da = String(a.date || ''); const db = String(b.date || '');
-                if(da !== db) return new Date(da) - new Date(db); 
-                return a.id - b.id; 
+                if(da !== db) return new Date(db) - new Date(da); // 改為由新到舊排序更直覺
+                return b.id - a.id; 
             });
 
+            // 統計總數據
             let curShares = { main: 0, kid_a: 0, kid_b: 0 };
             let curTotalCost = { main: 0, kid_a: 0, kid_b: 0 };
+            const monthsSet = new Set();
             
             transactionLog.forEach(t => {
                 if (!t) return;
                 let acc = t.account || 'main';
-                let netAmount = 0;
                 let tprice = parseFloat(t.price) || 0;
                 let tshares = parseInt(t.shares) || 0;
                 let tfee = parseFloat(t.fee) || 0;
 
                 if(t.type === 'buy_regular' || t.type === 'buy_extra' || t.type === 'dividend') {
-                    netAmount = (tprice * tshares) + tfee; 
-                    curTotalCost[acc] += netAmount; 
+                    curTotalCost[acc] += (tprice * tshares) + tfee; 
                     curShares[acc] += tshares;
                 } else if(t.type === 'sell') {
-                    netAmount = (tprice * tshares) - tfee;
                     const avgPrice = curShares[acc] > 0 ? (curTotalCost[acc] / curShares[acc]) : 0;
-                    const costOfSold = avgPrice * tshares;
-                    curTotalCost[acc] -= costOfSold; 
+                    curTotalCost[acc] -= avgPrice * tshares; 
                     curShares[acc] -= tshares;
                 }
+                
+                if(t.date && String(t.date).length >= 7) {
+                    monthsSet.add(String(t.date).substring(0, 7));
+                }
             });
+
+            // 建立月份下拉過濾器
+            const monthFilterEl = document.getElementById('tx_month_filter');
+            let selectedMonth = monthFilterEl ? monthFilterEl.value : 'all';
+            const sortedMonths = Array.from(monthsSet).sort((a, b) => b.localeCompare(a));
+            
+            if (monthFilterEl) {
+                // 如果原本選的月份不在新列表裡，退回全月份
+                if (selectedMonth !== 'all' && !sortedMonths.includes(selectedMonth)) selectedMonth = 'all';
+                let opts = '<option value="all">全月份紀錄</option>';
+                sortedMonths.forEach(m => {
+                    opts += `<option value="${m}" ${selectedMonth === m ? 'selected' : ''}>${m} 紀錄</option>`;
+                });
+                monthFilterEl.innerHTML = opts;
+            }
 
             let html = ''; let displayedCount = 0;
             transactionLog.forEach(t => {
                 if (!t) return;
                 let acc = t.account || 'main';
+                let tDateStr = String(t.date || '');
+                
+                // 帳戶過濾
                 if (currentTxFilter === 'main' && acc !== 'main') return;
                 if (currentTxFilter === 'kids' && acc === 'main') return;
+                
+                // 月份過濾
+                if (selectedMonth !== 'all' && tDateStr.substring(0, 7) !== selectedMonth) return;
+                
                 displayedCount++;
 
                 let typeHtml = ''; let isPositive = true; let netAmount = 0;
@@ -935,7 +1014,7 @@
                 html += `
                     <tr class="hover:bg-slate-800/60 transition-colors group">
                         <td class="py-3 px-5 whitespace-nowrap">${accBadge}</td>
-                        <td class="py-3 px-5 text-slate-300 text-xs tracking-wider whitespace-nowrap">${t.date || '--'}</td>
+                        <td class="py-3 px-5 text-slate-300 text-xs tracking-wider whitespace-nowrap">${tDateStr || '--'}</td>
                         <td class="py-3 px-5 whitespace-nowrap">${typeHtml}</td>
                         <td class="py-3 px-5 text-right text-slate-300 font-medium">${tprice.toFixed(2)}</td>
                         <td class="py-3 px-5 text-right text-white font-bold">${isPositive ? '+' : '-'}${tshares.toLocaleString()}</td>
@@ -965,7 +1044,7 @@
             if(document.getElementById('tx_kidb_shares')) document.getElementById('tx_kidb_shares').innerText = curShares.kid_b.toLocaleString() + ' 股'; 
             if(document.getElementById('tx_kidb_cost')) document.getElementById('tx_kidb_cost').innerText = avgKidB.toFixed(2);
 
-            // 更新預覽卡片
+            // 更新至全域變數
             if (document.getElementById('overview_shares_display')) { 
                 document.getElementById('overview_shares_display').innerText = curShares.main.toLocaleString() + ' 股'; 
                 document.getElementById('overview_cost_display').innerText = avgMain.toFixed(2); 
@@ -978,7 +1057,6 @@
         function calculateTopup() {
             const stats = getAccountStats('main');
             const oldShares = stats.shares;
-            const oldAvgCost = stats.avgCost;
             const oldTotalCost = stats.totalCost;
             
             let sellPctObj = document.getElementById('sell_tax_fee_pct');
@@ -1103,8 +1181,6 @@
                 }
             }
         }
-
-        function isWeekend(dateString) { const date = new Date(dateString); return date.getDay() === 0 || date.getDay() === 6; }
 
         async function fetchData(token) {
             const today = new Date();
@@ -1265,18 +1341,6 @@
                             }
                         }).catch(e => console.error("FinMind Chips Error", e));
                 });
-        }
-
-        function changeTimeframe(tf) {
-            currentChartTimeframe = tf; 
-            ['daily', 'weekly', 'monthly'].forEach(t => {
-                const btn = document.getElementById(`tf-${t}`);
-                if (btn) {
-                    if(t === tf) btn.className = 'px-4 py-1.5 text-xs rounded-md font-semibold bg-blue-600 text-white transition shadow-sm';
-                    else btn.className = 'px-4 py-1.5 text-xs rounded-md font-semibold text-slate-400 hover:text-white transition';
-                }
-            });
-            renderTrendChart(tf);
         }
 
         function renderTrendChart(timeframe) {
@@ -1670,72 +1734,72 @@
         }
 
         function renderKidsTable(year) {
-            const tbody = document.getElementById('kids_table_body');
-            if(!tbody) return;
+            const tbodyA = document.getElementById('kida_table_body');
+            const tbodyB = document.getElementById('kidb_table_body');
+            if(!tbodyA || !tbodyB) return;
 
             try {
                 const yearData = kidsProjectedData.filter(d => d.year === year);
-                if(yearData.length === 0) { tbody.innerHTML = `<tr><td colspan="9" class="text-center py-10 text-slate-500">該年度尚無推演資料</td></tr>`; return; }
-                let html = '';
+                if(yearData.length === 0) { 
+                    tbodyA.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-500">該年度尚無推演資料</td></tr>`; 
+                    tbodyB.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-500">該年度尚無推演資料</td></tr>`; 
+                    return; 
+                }
+                
+                let htmlA = ''; let htmlB = '';
                 yearData.forEach(d => {
                     let formattedMonth = d.month.toString().padStart(2, '0');
-                    
-                    let kidAHtml = d.isHistoricalA ? `
-                        <td class="py-3 px-2 border-l border-slate-700/50 text-center bg-pink-900/10">
-                            <span class="text-pink-300 font-bold">${(Number(d.execPriceA)||0) > 0 ? (Number(d.execPriceA)||0).toFixed(2) : '-'}</span>
-                        </td>
-                        <td class="py-3 px-2 text-center bg-pink-900/10">
-                            <span class="text-pink-300 font-bold">${Number(d.buyA||0) + Number(d.dripA||0)}</span> <span class="text-[10px] text-pink-500/50">🔒</span>
-                            <div class="text-[10px] text-slate-500 mt-0.5">實${Number(d.buyA)||0}/息${Number(d.dripA)||0}</div>
-                        </td>
-                    ` : `
-                        <td class="py-3 px-2 border-l border-slate-700/50 text-center">
-                            <input type="number" onchange="saveKidAPrice(${d.index}, this)" value="${d.isManualPriceA?d.execPriceA:''}" placeholder="${(Number(d.execPriceA)||0).toFixed(2)}" class="w-[70px] bg-slate-900 border border-slate-700 rounded-md text-pink-300 text-xs py-1.5 px-2 focus:outline-none focus:border-pink-500 text-center placeholder-slate-600">
-                        </td>
-                        <td class="py-3 px-2 text-center">
-                            <input type="number" onchange="saveKidAShares(${d.index}, this)" value="${d.isManualA?d.buyA:''}" placeholder="${Number(d.defaultBuySharesA)||0}" class="w-[70px] bg-slate-900 border border-pink-900/50 rounded-md text-pink-300 text-xs font-bold py-1.5 px-2 focus:outline-none focus:border-pink-500 text-center placeholder-pink-900">
-                        </td>
+                    const monthLabel = `
+                        <span class="font-semibold text-slate-300">${d.year}-${formattedMonth}</span>
+                        ${d.isHistoricalA ? '<br><span class="text-[10px] text-emerald-400 font-medium">✔️ 歷史鎖定</span>' : ''}
+                    `;
+                    const monthLabelB = `
+                        <span class="font-semibold text-slate-300">${d.year}-${formattedMonth}</span>
+                        ${d.isHistoricalB ? '<br><span class="text-[10px] text-emerald-400 font-medium">✔️ 歷史鎖定</span>' : ''}
                     `;
 
-                    let kidBHtml = d.isHistoricalB ? `
-                        <td class="py-3 px-2 border-l border-slate-700/50 text-center bg-indigo-900/10">
-                            <span class="text-indigo-300 font-bold">${(Number(d.execPriceB)||0) > 0 ? (Number(d.execPriceB)||0).toFixed(2) : '-'}</span>
-                        </td>
-                        <td class="py-3 px-2 text-center bg-indigo-900/10">
-                            <span class="text-indigo-300 font-bold">${Number(d.buyB||0) + Number(d.dripB||0)}</span> <span class="text-[10px] text-indigo-500/50">🔒</span>
-                            <div class="text-[10px] text-slate-500 mt-0.5">實${Number(d.buyB)||0}/息${Number(d.dripB)||0}</div>
-                        </td>
-                    ` : `
-                        <td class="py-3 px-2 border-l border-slate-700/50 text-center">
-                            <input type="number" onchange="saveKidBPrice(${d.index}, this)" value="${d.isManualPriceB?d.execPriceB:''}" placeholder="${(Number(d.execPriceB)||0).toFixed(2)}" class="w-[70px] bg-slate-900 border border-slate-700 rounded-md text-indigo-300 text-xs py-1.5 px-2 focus:outline-none focus:border-indigo-500 text-center placeholder-slate-600">
-                        </td>
-                        <td class="py-3 px-2 text-center">
-                            <input type="number" onchange="saveKidBShares(${d.index}, this)" value="${d.isManualB?d.buyB:''}" placeholder="${Number(d.defaultBuySharesB)||0}" class="w-[70px] bg-slate-900 border border-indigo-900/50 rounded-md text-indigo-300 text-xs font-bold py-1.5 px-2 focus:outline-none focus:border-indigo-500 text-center placeholder-indigo-900">
-                        </td>
-                    `;
+                    // 大寶列
+                    htmlA += `<tr class="hover:bg-slate-800/60 transition-colors group border-b border-slate-800/50">`;
+                    htmlA += `<td class="py-4 px-4 text-white whitespace-nowrap border-l-2 ${d.isHistoricalA ? 'border-l-emerald-500 bg-emerald-900/10' : 'border-l-transparent'}">${monthLabel}</td>`;
+                    if (d.isHistoricalA) {
+                        htmlA += `
+                            <td class="py-4 px-3 text-center text-pink-300 font-bold bg-slate-800/20">${(Number(d.execPriceA)||0) > 0 ? (Number(d.execPriceA)||0).toFixed(2) : '-'} <span class="text-[10px] text-slate-500 ml-1 opacity-0 group-hover:opacity-100 transition-opacity">🔒</span></td>
+                            <td class="py-4 px-3 text-center text-pink-300 font-bold bg-slate-800/20">${Number(d.buyA||0) + Number(d.dripA||0)} <span class="text-[10px] text-slate-500 ml-1 opacity-0 group-hover:opacity-100 transition-opacity">🔒</span><div class="text-[10px] text-slate-500 mt-0.5 font-normal">實${Number(d.buyA)||0}/息${Number(d.dripA)||0}</div></td>
+                        `;
+                    } else {
+                        htmlA += `
+                            <td class="py-3 px-3 text-center"><input type="number" onchange="saveKidAPrice(${d.index}, this)" value="${d.isManualPriceA?d.execPriceA:''}" placeholder="${(Number(d.execPriceA)||0).toFixed(2)}" class="w-[80px] bg-slate-900 border border-slate-700 rounded-md text-pink-300 text-xs py-1.5 px-2 focus:outline-none focus:border-pink-500 text-center placeholder-slate-600"></td>
+                            <td class="py-3 px-3 text-center"><input type="number" onchange="saveKidAShares(${d.index}, this)" value="${d.isManualA?d.buyA:''}" placeholder="${Number(d.defaultBuySharesA)||0}" class="w-[80px] bg-slate-900 border border-pink-900/50 rounded-md text-pink-300 text-xs font-bold py-1.5 px-2 focus:outline-none focus:border-pink-500 text-center placeholder-pink-900"></td>
+                        `;
+                    }
+                    htmlA += `<td class="py-4 px-3 text-white font-bold text-right text-base">${Math.round(Number(d.totalA)||0).toLocaleString()}</td>`;
+                    htmlA += `<td class="py-4 px-4 text-yellow-400/90 text-right font-bold text-base bg-gradient-to-r from-transparent to-yellow-900/10 border-r border-slate-700/50">$${Math.round(Number(d.valueA)||0).toLocaleString()}</td></tr>`;
 
-                    html += `
-                        <tr class="hover:bg-slate-800/60 transition-colors group border-b border-slate-800/50">
-                            <td class="py-3 px-4 text-white border-r border-slate-700/50 whitespace-nowrap">
-                                <span class="font-semibold text-slate-300">${d.year}-${formattedMonth}</span>
-                                ${(d.isHistoricalA || d.isHistoricalB) ? '<br><span class="text-[10px] text-emerald-400 font-medium">✔️ 歷史鎖定</span>' : ''}
-                            </td>
-                            
-                            ${kidAHtml}
-                            <td class="py-3 px-4 text-yellow-400/90 text-right font-semibold border-r border-slate-700/50 ${d.isHistoricalA?'bg-pink-900/10':''}">$${Math.round(Number(d.valueA)||0).toLocaleString()}</td>
-                            
-                            ${kidBHtml}
-                            <td class="py-3 px-4 text-yellow-400/90 text-right font-semibold border-r border-slate-700/50 ${d.isHistoricalB?'bg-indigo-900/10':''}">$${Math.round(Number(d.valueB)||0).toLocaleString()}</td>
-                            
-                            <td class="py-3 px-3 text-pink-100 font-bold text-right">${Math.round(Number(d.totalA)||0).toLocaleString()}</td>
-                            <td class="py-3 px-4 text-indigo-100 font-bold text-right">${Math.round(Number(d.totalB)||0).toLocaleString()}</td>
-                        </tr>
-                    `;
+                    // 二寶列
+                    htmlB += `<tr class="hover:bg-slate-800/60 transition-colors group border-b border-slate-800/50">`;
+                    htmlB += `<td class="py-4 px-4 text-white whitespace-nowrap border-l-2 ${d.isHistoricalB ? 'border-l-emerald-500 bg-emerald-900/10' : 'border-l-transparent'}">${monthLabelB}</td>`;
+                    if (d.isHistoricalB) {
+                        htmlB += `
+                            <td class="py-4 px-3 text-center text-indigo-300 font-bold bg-slate-800/20">${(Number(d.execPriceB)||0) > 0 ? (Number(d.execPriceB)||0).toFixed(2) : '-'} <span class="text-[10px] text-slate-500 ml-1 opacity-0 group-hover:opacity-100 transition-opacity">🔒</span></td>
+                            <td class="py-4 px-3 text-center text-indigo-300 font-bold bg-slate-800/20">${Number(d.buyB||0) + Number(d.dripB||0)} <span class="text-[10px] text-slate-500 ml-1 opacity-0 group-hover:opacity-100 transition-opacity">🔒</span><div class="text-[10px] text-slate-500 mt-0.5 font-normal">實${Number(d.buyB)||0}/息${Number(d.dripB)||0}</div></td>
+                        `;
+                    } else {
+                        htmlB += `
+                            <td class="py-3 px-3 text-center"><input type="number" onchange="saveKidBPrice(${d.index}, this)" value="${d.isManualPriceB?d.execPriceB:''}" placeholder="${(Number(d.execPriceB)||0).toFixed(2)}" class="w-[80px] bg-slate-900 border border-slate-700 rounded-md text-indigo-300 text-xs py-1.5 px-2 focus:outline-none focus:border-indigo-500 text-center placeholder-slate-600"></td>
+                            <td class="py-3 px-3 text-center"><input type="number" onchange="saveKidBShares(${d.index}, this)" value="${d.isManualB?d.buyB:''}" placeholder="${Number(d.defaultBuySharesB)||0}" class="w-[80px] bg-slate-900 border border-indigo-900/50 rounded-md text-indigo-300 text-xs font-bold py-1.5 px-2 focus:outline-none focus:border-indigo-500 text-center placeholder-indigo-900"></td>
+                        `;
+                    }
+                    htmlB += `<td class="py-4 px-3 text-white font-bold text-right text-base">${Math.round(Number(d.totalB)||0).toLocaleString()}</td>`;
+                    htmlB += `<td class="py-4 px-4 text-yellow-400/90 text-right font-bold text-base bg-gradient-to-r from-transparent to-yellow-900/10 border-r border-slate-700/50">$${Math.round(Number(d.valueB)||0).toLocaleString()}</td></tr>`;
                 });
-                tbody.innerHTML = html;
+                
+                tbodyA.innerHTML = htmlA;
+                tbodyB.innerHTML = htmlB;
+                
             } catch (e) {
                 console.error("渲染雙寶表格失敗", e);
-                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-10 text-red-500">表格繪製發生錯誤，請重新整理</td></tr>`;
+                tbodyA.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-red-500">表格繪製發生錯誤，請重新整理</td></tr>`;
+                tbodyB.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-red-500">表格繪製發生錯誤，請重新整理</td></tr>`;
             }
         }
 
