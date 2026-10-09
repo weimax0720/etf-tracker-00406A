@@ -33,7 +33,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 逐筆紀錄連動完整版</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 除息日資格精算版</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -108,8 +108,12 @@
                         <span class="text-lg md:text-xl">💰</span>
                     </div>
                 </div>
-                <div class="bg-gray-800 p-4 rounded-lg border border-green-700/50 flex flex-col justify-center col-span-2 md:col-span-2 shadow-lg shadow-green-900/20">
-                    <p class="text-sm text-green-300 font-bold">本次除息預估入帳</p>
+                <!-- ★ 本次升級：除息基準日判定標籤 ★ -->
+                <div class="bg-gray-800 p-4 rounded-lg border border-green-700/50 flex flex-col justify-center col-span-2 md:col-span-2 shadow-lg shadow-green-900/20 relative">
+                    <div class="flex justify-between items-center mb-1">
+                        <p class="text-sm text-green-300 font-bold">本次除息預估入帳</p>
+                        <span class="text-[11px] md:text-xs bg-green-900 text-green-300 px-2 py-1 rounded border border-green-800" id="eligible_shares_badge">除息基準: -- 股</span>
+                    </div>
                     <div class="flex justify-between items-center mt-1">
                         <p class="text-xl md:text-2xl font-bold text-green-400">NT$ <span id="real_dividend_income">0</span></p>
                         <span class="text-lg md:text-xl">💸</span>
@@ -148,7 +152,6 @@
                     </p>
                     <div class="flex flex-col md:flex-row gap-3">
                         <div class="flex-1">
-                            <!-- 加上了 placeholder 防呆提示 -->
                             <input type="number" step="0.01" id="topup_price" placeholder="欲加碼股價 (例如: 15.2)" class="w-full px-3 py-2 bg-gray-900 border border-indigo-700/50 rounded text-sm text-white focus:outline-none focus:border-indigo-500">
                         </div>
                         <div class="flex-1">
@@ -186,7 +189,6 @@
                     <h2 class="text-xl font-semibold text-green-400">🌱 17 年動態複利投影 (55歲後停扣滑行)</h2>
                     <span class="badge bg-green-900 text-green-300">Coast FIRE 模式</span>
                 </div>
-
                 <div class="bg-gray-800 p-5 rounded-lg mb-6 border border-yellow-500/40 grid grid-cols-1 md:grid-cols-2 gap-4 shadow-lg">
                     <div>
                         <p class="text-sm text-yellow-500 font-bold mb-1">🎯 55歲階段目標 (停扣新資金時)</p>
@@ -206,7 +208,6 @@
                         </div>
                     </div>
                 </div>
-                
                 <canvas id="dripChart" height="100"></canvas>
             </div>
         </div>
@@ -214,8 +215,11 @@
         <!-- ================= 分頁 2：逐筆交易紀錄 ================= -->
         <div id="tab-transactions" class="space-y-6 hidden">
             <div class="card">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-blue-400">📓 逐筆交易紀錄</h2>
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+                    <div>
+                        <h2 class="text-xl font-semibold text-blue-400">📓 逐筆交易紀錄</h2>
+                        <p class="text-sm text-gray-400 mt-1">配息資格嚴格比對：系統將以最新除息日為界，自動過濾配息資格。</p>
+                    </div>
                     <span class="badge bg-green-900 text-green-300">全自動計算成本與餘額</span>
                 </div>
                 
@@ -547,6 +551,7 @@
         const LEDGER_KID_B_KEY = '00406A_LEDGER_KID_B';
         
         let latestDividend = 0; 
+        let currentExDivDate = ''; // ★ 新增：儲存 API 抓到的除息日
         let currentPrice = 0;   
         let rawPriceData = [];  
         let trendChartInstance = null;
@@ -782,7 +787,7 @@
             document.getElementById('topup_result').classList.remove('hidden');
         }
 
-        // ================= 更新持有試算 =================
+        // ================= ★ 升級核心：依據除息日精算持有與配息 ★ =================
         function updateHoldingCalculations() {
             const shares = parseFloat(localStorage.getItem(SHARES_KEY)) || 0;
             const avgCost = parseFloat(localStorage.getItem(COST_KEY)) || 0;
@@ -791,6 +796,7 @@
             document.getElementById('total_invested_cost').innerText = Math.round(totalCost).toLocaleString();
             document.getElementById('breakeven_price').innerText = avgCost > 0 ? avgCost.toFixed(2) : '0.00';
 
+            // 即時帳面損益計算
             if(currentPrice > 0) {
                 const marketValue = shares * currentPrice;
                 document.getElementById('real_market_value').innerText = Math.round(marketValue).toLocaleString();
@@ -810,10 +816,42 @@
                 }
             }
 
+            // ★ 除息基準判定邏輯 ★
             if(latestDividend > 0) {
-                const totalDividend = shares * latestDividend;
+                let eligibleShares = 0;
+
+                // 若 API 已經抓到除息日，而且使用者有逐筆紀錄
+                if (currentExDivDate && transactionLog.length > 0) {
+                    transactionLog.forEach(t => {
+                        // 【關鍵邏輯】交易日期必須 < 除息日 (T-1日買進) 才能領息
+                        if (t.date < currentExDivDate) {
+                            if (t.type === 'buy' || t.type === 'dividend') {
+                                eligibleShares += t.shares;
+                            } else if (t.type === 'sell') {
+                                eligibleShares -= t.shares;
+                            }
+                        }
+                    });
+                } else {
+                    // 若無除息日資料或無逐筆紀錄，則退回預設總股數
+                    eligibleShares = shares;
+                }
+                
+                // 確保股數不會變負數
+                eligibleShares = Math.max(0, eligibleShares);
+                
+                // 真實預估配息總額
+                const totalDividend = eligibleShares * latestDividend;
+                
                 document.getElementById('real_dividend_income').innerText = Math.round(totalDividend).toLocaleString();
                 
+                // 更新除息基準標籤
+                const badge = document.getElementById('eligible_shares_badge');
+                if (badge) {
+                    badge.innerText = `除息基準: ${eligibleShares.toLocaleString()} 股`;
+                }
+                
+                // 領息降本價 (只扣除即將獲得的真實股利)
                 const adjCost = totalCost - totalDividend;
                 const adjBreakeven = shares > 0 ? Math.max(0, adjCost / shares) : 0;
                 
@@ -823,6 +861,7 @@
                     document.getElementById('adj_breakeven_price').innerText = '0.00';
                 }
                 
+                // 二代健保判定 (使用除息日計算出的真實股利作判定)
                 const healthInsStatus = document.getElementById('health_ins_status');
                 const healthInsIcon = document.getElementById('health_ins_icon');
 
@@ -943,7 +982,7 @@
                 document.getElementById('buyable_shares_label').innerText = `約 ${currentDefaultInvest / 1000} 千元購買力參考`;
                 document.getElementById('buyable_shares').innerText = Math.floor(currentDefaultInvest / currentPrice);
 
-                // 3. 抓取配息資料
+                // 3. 抓取配息與除息日資料
                 const divUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockDividend&data_id=00406A&start_date=${yearStart}&token=${token}`;
                 const divRes = await fetch(divUrl);
                 const divData = await divRes.json();
@@ -951,6 +990,8 @@
                 if(divData.msg === 'success' && divData.data.length > 0) {
                     const latest = divData.data[divData.data.length - 1];
                     latestDividend = latest.CashEarningsDistribution || 0;
+                    currentExDivDate = latest.CashExDividendTradingDate || ''; // ★ 儲存最新除息日
+                    
                     document.getElementById('latest_dividend_overview').innerText = latestDividend;
                     document.getElementById('ex_div_date').innerText = latest.CashExDividendTradingDate || '無資料';
                     document.getElementById('pay_date').innerText = latest.CashDividendPaymentDate || '無資料';
@@ -984,7 +1025,8 @@
                     }
                 }
 
-                updateHoldingCalculations(); // 更新損益
+                // ★ 在抓取完所有資料(包含除息日)後，進行連動試算
+                updateHoldingCalculations(); 
                 runDynamicSimulation();
                 runKidsSimulation();
                 
