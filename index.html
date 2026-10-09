@@ -291,6 +291,17 @@
                     </div>
                 </div>
 
+                <!-- 表格上方新增：月份篩選器 -->
+                <div class="flex justify-between items-end mb-2 mt-6">
+                    <h3 class="text-sm font-bold text-gray-400">交易明細列表</h3>
+                    <div class="flex items-center gap-2">
+                        <label class="text-xs text-gray-500">篩選月份:</label>
+                        <select id="tx_month_filter" onchange="updateTransactions()" class="px-3 py-1.5 bg-gray-800 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
+                            <option value="all">顯示全部月份</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="overflow-x-auto border border-gray-700 rounded-lg shadow-lg">
                     <table class="w-full text-left border-collapse min-w-[750px]">
                         <thead class="bg-gray-900 border-b border-gray-700 text-sm text-gray-400">
@@ -319,7 +330,7 @@
                         <h2 class="text-xl font-semibold text-green-400">📝 我的存股手帳 (主帳戶虛實整合版)</h2>
                         <p class="text-sm text-gray-400 mt-1">
                             <span class="text-blue-300 font-bold">✔️ 逐筆帶入：</span>若該月份已有真實交易紀錄，本表將自動鎖定並顯示當月<span class="text-white font-bold">真實發生</span>的投入與股數。<br>
-                            <span class="text-gray-400 font-bold">✏️ 未來模擬：</span>尚未發生的月份，可手手動輸入模擬參數。市值全面強制錨定最新收盤價。
+                            <span class="text-gray-400 font-bold">✏️ 未來模擬：</span>尚未發生的月份，可手動輸入模擬參數。市值全面強制錨定最新收盤價。
                         </p>
                     </div>
                     <div class="bg-gray-900 p-2 rounded text-sm text-gray-300 border border-gray-700 text-right w-full md:w-auto shadow-lg">
@@ -787,7 +798,7 @@
         }
 
         function updateTransactions() {
-            // 先用時間正序來正確計算均價與損益
+            // 先用時間正序來正確計算均價與損益（不受篩選影響，永遠計算全局）
             let calcLog = [...transactionLog].sort((a, b) => new Date(a.date) - new Date(b.date));
             
             let currentShares = 0;
@@ -812,16 +823,41 @@
                 }
             });
 
+            // 處理月份下拉選單的選項與狀態
+            const filterEl = document.getElementById('tx_month_filter');
+            let currentFilter = filterEl ? filterEl.value : 'all';
+            const uniqueMonths = [...new Set(transactionLog.map(t => t.date.substring(0, 7)))].sort((a, b) => b.localeCompare(a));
+
+            if (filterEl) {
+                let opts = '<option value="all">顯示全部月份</option>';
+                uniqueMonths.forEach(m => {
+                    const [y, mm] = m.split('-');
+                    opts += `<option value="${m}">${y} 年 ${mm} 月</option>`;
+                });
+                filterEl.innerHTML = opts;
+                
+                // 保持使用者選取的狀態
+                if (currentFilter === 'all' || uniqueMonths.includes(currentFilter)) {
+                    filterEl.value = currentFilter;
+                } else {
+                    filterEl.value = 'all'; // 若選取的月份被刪光了，預設跳回全部
+                }
+            }
+            currentFilter = filterEl ? filterEl.value : 'all';
+
             // 為了畫面的清單顯示，改為時間倒序 (最新在最上面)
-            transactionLog.sort((a, b) => {
+            let displayLog = [...transactionLog].sort((a, b) => {
                 if(a.date !== b.date) return new Date(b.date) - new Date(a.date);
                 return b.id - a.id;
             });
 
-            // 按月份進行分組
+            // 按月份進行分組並套用篩選
             const grouped = {};
-            transactionLog.forEach(t => {
+            displayLog.forEach(t => {
                 const monthKey = t.date.substring(0, 7);
+                // 篩選邏輯：如果選擇了特定月份，且該筆資料不符，則跳過
+                if (currentFilter !== 'all' && monthKey !== currentFilter) return;
+
                 if(!grouped[monthKey]) grouped[monthKey] = [];
                 grouped[monthKey].push(t);
             });
@@ -830,7 +866,11 @@
             const sortedMonths = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
 
             if(sortedMonths.length === 0) {
-                html = `<tr><td colspan="7" class="text-center py-10 text-gray-500">尚無交易紀錄，請在上方新增</td></tr>`;
+                if (transactionLog.length === 0) {
+                    html = `<tr><td colspan="7" class="text-center py-10 text-gray-500">尚無交易紀錄，請在上方新增</td></tr>`;
+                } else {
+                    html = `<tr><td colspan="7" class="text-center py-10 text-gray-500">該月份尚無交易紀錄</td></tr>`;
+                }
             } else {
                 sortedMonths.forEach(month => {
                     const [yyyy, mm] = month.split('-');
