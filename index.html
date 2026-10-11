@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R25｜MAX 的追蹤儀表板</title>
+    <title>00406A Tracker R26｜MAX 的追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -50,6 +50,7 @@
             <button onclick="switchTab('charts')" id="btn-charts" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📈 走勢與日週月</button>
             <button onclick="switchTab('dividends')" id="btn-dividends" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-emerald-400 whitespace-nowrap">💰 R24 配息中心</button>
             <button onclick="switchTab('assets')" id="btn-assets" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-amber-300 whitespace-nowrap">🎯 R25 資產分析</button>
+            <button onclick="switchTab('topup')" id="btn-topup" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-violet-300 whitespace-nowrap">🧮 R26 智慧加碼</button>
             <button onclick="switchTab('safety')" id="btn-safety" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">🛡️ 流動性雷達</button>
         </div>
 
@@ -58,7 +59,7 @@
             <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
             <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R25 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
+                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R26 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
                     <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
                 </div>
                 <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
@@ -84,6 +85,11 @@
             <div class="bg-gray-800 border border-amber-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
                 <div><p class="text-sm font-bold text-amber-300">🎯 R25 主帳戶資產快覽</p><p id="r25_home_brief" class="text-xs text-gray-300 mt-1">等待交易紀錄及行情</p></div>
                 <button type="button" onclick="switchTab('assets')" class="rounded bg-amber-700 hover:bg-amber-600 px-3 py-2 text-sm font-medium">開啟資產分析 →</button>
+            </div>
+            <!-- R26 快捷入口（僅試算，不寫入交易紀錄） -->
+            <div class="bg-gray-800 border border-violet-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div><p class="text-sm font-bold text-violet-300">🧮 R26 智慧加碼試算</p><p id="r26_home_brief" class="text-xs text-gray-300 mt-1">5,000／10,000／30,000／50,000 元多方案比較，試算不會買進或修改交易資料。</p></div>
+                <button type="button" onclick="switchTab('topup')" class="rounded bg-violet-700 hover:bg-violet-600 px-3 py-2 text-sm font-medium">開啟智慧加碼 →</button>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center relative overflow-hidden">
@@ -190,6 +196,7 @@
                 <div class="pt-4 border-t border-indigo-800/50">
                     <p class="text-sm text-indigo-300 font-bold mb-2 flex items-center gap-2">
                         <span>➕ 主帳戶預估加碼攤平計算機</span>
+                        <button type="button" onclick="switchTab('topup')" class="ml-auto text-xs rounded bg-violet-700 hover:bg-violet-600 px-3 py-1.5 text-white">⚡ R26 金額快捷比較 →</button>
                     </p>
                     <div class="flex flex-col md:flex-row gap-3">
                         <div class="flex-1">
@@ -650,6 +657,87 @@
             </div>
         </section>
 
+        <!-- ================= R26：智慧加碼模擬器 ================= -->
+        <section id="tab-topup" class="space-y-5 hidden" aria-label="R26 主帳戶智慧加碼模擬器">
+            <div class="card border border-violet-800/60">
+                <div class="flex flex-wrap justify-between items-start gap-3">
+                    <div><h2 class="text-xl font-bold text-violet-300">🧮 R26 智慧加碼模擬器</h2>
+                        <p class="text-sm text-gray-400 mt-2">連動主帳戶 R25 庫存成本；一次比較多種投入金額、新均價、損益平衡價與帳面損益。<strong class="text-violet-200">純試算，不會新增買賣紀錄。</strong></p></div>
+                    <span id="r26_data_status" class="text-xs rounded bg-gray-900 border border-gray-700 px-3 py-2 text-gray-300" role="status">等待資料載入</span>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
+                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">目前主帳戶持股</p><p id="r26_holding_shares" class="text-lg font-bold mt-1">--</p></div>
+                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">現有平均成本（含買入費）</p><p id="r26_holding_avg" class="text-lg font-bold mt-1">--</p></div>
+                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">目前估算損益平衡價</p><p id="r26_holding_break" class="text-lg font-bold mt-1">--</p></div>
+                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">行情參考價</p><p id="r26_reference" class="text-lg font-bold mt-1 text-yellow-300">--</p></div>
+                </div>
+            </div>
+
+            <div class="card border border-indigo-900/70">
+                <h3 class="text-lg font-bold text-indigo-300 mb-1">① 設定模擬條件</h3>
+                <p class="text-xs text-gray-400 mb-4">每筆預算包含預估買入手續費；若成交價高於參考市價，新增部位的當下損益可能為負。</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <label class="block text-xs text-gray-300">假設買入成交價（元／股）
+                        <input id="r26_buy_price" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="輸入買入價格" oninput="r26Render()" class="w-full mt-2 bg-gray-900 border border-indigo-700 rounded px-3 py-3 text-base text-white">
+                    </label>
+                    <label class="block text-xs text-gray-300">每筆預估買進手續費（元）
+                        <input id="r26_buy_fee" type="number" min="0" step="0.01" inputmode="decimal" value="0" oninput="r26Render()" class="w-full mt-2 bg-gray-900 border border-indigo-700 rounded px-3 py-3 text-base text-white">
+                    </label>
+                    <label class="block text-xs text-gray-300">自訂投入總預算（元）
+                        <input id="r26_custom_amount" type="number" min="1" max="100000000" step="1" inputmode="numeric" value="10000" oninput="r26SetBudgetFromInput()" class="w-full mt-2 bg-gray-900 border border-indigo-700 rounded px-3 py-3 text-base text-white">
+                    </label>
+                </div>
+                <div class="mt-4"><p class="text-sm font-medium text-gray-300 mb-2">② 一鍵選擇加碼預算</p>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" aria-label="常用加碼金額">
+                        <button type="button" id="r26_budget_5000" onclick="r26SelectBudget(5000)" class="r26-budget rounded border border-violet-800 bg-gray-900 hover:bg-violet-900 px-3 py-3 font-bold">NT$ 5,000</button>
+                        <button type="button" id="r26_budget_10000" onclick="r26SelectBudget(10000)" class="r26-budget rounded border border-violet-800 bg-violet-800 hover:bg-violet-700 px-3 py-3 font-bold">NT$ 10,000</button>
+                        <button type="button" id="r26_budget_30000" onclick="r26SelectBudget(30000)" class="r26-budget rounded border border-violet-800 bg-gray-900 hover:bg-violet-900 px-3 py-3 font-bold">NT$ 30,000</button>
+                        <button type="button" id="r26_budget_50000" onclick="r26SelectBudget(50000)" class="r26-budget rounded border border-violet-800 bg-gray-900 hover:bg-violet-900 px-3 py-3 font-bold">NT$ 50,000</button>
+                    </div>
+                </div>
+                <div class="flex flex-wrap justify-between items-center gap-2 mt-4">
+                    <button type="button" onclick="r26UseMarketPrice()" class="text-sm bg-gray-700 hover:bg-gray-600 rounded px-4 py-2">↩ 使用最新參考市價</button>
+                    <p id="r26_input_note" class="text-sm text-gray-400" aria-live="polite">依目前行情自動帶入價格；可自行修改。</p>
+                </div>
+            </div>
+
+            <div class="card border border-violet-800/60">
+                <h3 class="text-lg font-bold text-violet-300">③ 所選金額試算結果</h3>
+                <p id="r26_selected_label" class="text-sm text-gray-400 mt-1">預算 NT$ 10,000</p>
+                <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">預計增加股數</p><p id="r26_new_shares" class="text-lg font-bold mt-2">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">買入實付成本（含費用）</p><p id="r26_spent" class="text-lg font-bold mt-2">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">預算剩餘未使用</p><p id="r26_leftover" class="text-lg font-bold mt-2">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">加碼後總股數</p><p id="r26_total_shares" class="text-lg font-bold mt-2">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">加碼後平均成本</p><p id="r26_new_avg" class="text-lg font-bold text-cyan-300 mt-2">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">加碼後估算平衡價</p><p id="r26_new_break" class="text-lg font-bold text-amber-300 mt-2">--</p></div>
+                </div>
+                <div class="bg-gray-900 rounded p-4 mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div><p class="text-xs text-gray-400">以目前參考市價估算加碼後未實現損益</p><p id="r26_after_pnl" class="text-xl font-bold mt-2">--</p></div>
+                    <div><p class="text-xs text-gray-400">與加碼前未實現損益的差額</p><p id="r26_pnl_delta" class="text-xl font-bold mt-2">--</p></div>
+                </div>
+                <p id="r26_result_note" class="text-sm text-gray-400 mt-3" aria-live="polite">尚未計算。</p>
+            </div>
+
+            <div class="card">
+                <div class="flex flex-wrap justify-between items-center gap-3 mb-3">
+                    <div><h3 class="text-lg font-bold text-blue-300">④ 五種投入金額一覽比較</h3><p class="text-xs text-gray-400 mt-1">點選列可切換所選方案；四種固定預算與自訂金額一起比較。</p></div>
+                    <button type="button" onclick="r26ExportCsv()" id="r26_export" class="text-sm rounded bg-blue-700 hover:bg-blue-600 disabled:opacity-40 px-3 py-2" disabled>下載試算 CSV</button>
+                </div>
+                <div class="overflow-x-auto border border-gray-700 rounded">
+                    <table class="w-full text-sm min-w-[820px] text-right"><thead class="bg-gray-900 text-gray-400"><tr>
+                        <th class="text-left px-3 py-3">投入總預算</th><th class="px-3 py-3">買入股數</th><th class="px-3 py-3">買入實付（含費）</th><th class="px-3 py-3">加碼後均價</th><th class="px-3 py-3">加碼後平衡價</th><th class="px-3 py-3">未實現損益</th><th class="px-3 py-3">剩餘預算</th>
+                    </tr></thead><tbody id="r26_compare_body" class="divide-y divide-gray-700"><tr><td colspan="7" class="p-5 text-center text-gray-500">等待有效買入價格</td></tr></tbody></table>
+                </div>
+            </div>
+            <div class="card">
+                <h3 class="font-bold text-emerald-300 mb-2">⑤ 股價變動情境（非價格預測）</h3>
+                <p class="text-xs text-gray-400 mb-3">假設加碼已成交，並將整體庫存按「參考價下跌 5%／不變／上漲 5%」試算淨變現損益；這不是未來漲跌預測。</p>
+                <div id="r26_sensitivity" class="grid grid-cols-1 md:grid-cols-3 gap-3"><p class="text-sm text-gray-400">須有有效的行情參考價才能比較。</p></div>
+            </div>
+            <p class="text-xs text-gray-400 px-2">⚠️ R26 只用既有交易計算平均成本，沒有買賣下單、沒有自動加碼、沒有保存輸入價格或金額。實際成交仍可能因價格、交易單位、券商手續費、滑價與稅費而不同，請以券商帳務為準。</p>
+        </section>
+
         <!-- ================= 分頁 7：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
             <div class="card border border-red-900/50 shadow-lg shadow-red-900/10 mb-6">
@@ -825,13 +913,15 @@
             runKidsSimulation();
             r24Init();
             r25Init();
+            r26Init();
         };
 
         function switchTab(tabId) {
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
                 document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
-                if (id === 'assets') document.getElementById(`btn-${id}`).classList.remove('text-amber-300');
+                if (id === 'topup') document.getElementById(`btn-${id}`).classList.remove('text-violet-300');
+                else if (id === 'assets') document.getElementById(`btn-${id}`).classList.remove('text-amber-300');
                 else if (id === 'dividends') document.getElementById(`btn-${id}`).classList.remove('text-emerald-400');
                 else if (id === 'kids') document.getElementById(`btn-${id}`).classList.remove('text-pink-400');
                 else if (id === 'transactions') document.getElementById(`btn-${id}`).classList.remove('text-green-400');
@@ -840,9 +930,10 @@
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
             
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'safety'].forEach(id => {
                 if(id !== tabId) {
-                    if (id === 'assets') document.getElementById(`btn-${id}`).classList.add('text-amber-300');
+                    if (id === 'topup') document.getElementById(`btn-${id}`).classList.add('text-violet-300');
+                    else if (id === 'assets') document.getElementById(`btn-${id}`).classList.add('text-amber-300');
                     else if (id === 'dividends') document.getElementById(`btn-${id}`).classList.add('text-emerald-400');
                     else if (id === 'kids') document.getElementById(`btn-${id}`).classList.add('text-pink-400');
                     else if (id === 'transactions') document.getElementById(`btn-${id}`).classList.add('text-green-400');
@@ -851,7 +942,8 @@
             });
             
             if(tabId === 'charts' && rawPriceData.length > 0) renderTrendChart(currentChartTimeframe);
-            if(tabId === 'dividends') r24DrawChart(); 
+            if(tabId === 'dividends') r24DrawChart();
+            if(tabId === 'topup') r26Render(); 
         }
 
         function saveAndLoad() {
@@ -2493,10 +2585,10 @@
                     const key=localStorage.key(i);
                     if(key&&key.startsWith('00406A_')&&key!==KEY_NAME)data[key]=localStorage.getItem(key);
                 }
-                const payload={format:'00406A-Tracker-Backup',schema:1,createdAt:new Date().toISOString(),version:'R25',data};
+                const payload={format:'00406A-Tracker-Backup',schema:1,createdAt:new Date().toISOString(),version:'R26',data};
                 const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
                 const url=URL.createObjectURL(blob),a=document.createElement('a');
-                a.href=url;a.download='00406A_R25_帳務備份_'+r25Today()+'.json';document.body.appendChild(a);a.click();a.remove();
+                a.href=url;a.download='00406A_R26_帳務備份_'+r25Today()+'.json';document.body.appendChild(a);a.click();a.remove();
                 setTimeout(()=>URL.revokeObjectURL(url),3000);
                 r25Write('r25_backup_status',`已準備備份 ${Object.keys(data).length} 類本機資料（不含 API 金鑰），請確認檔案有存到手機。`);
             }catch(e){alert('備份失敗：'+e.message);}
@@ -2521,6 +2613,152 @@
             }catch(e){alert('無法還原：'+e.message);r25Write('r25_backup_status','匯入失敗：'+e.message);}
             finally{input.value='';}
         }
+
+        // ===== R26 智慧加碼：完全唯讀，沿用 R25 平均成本法與帳務驗證 =====
+        const R26_PRESETS = Object.freeze([5000,10000,30000,50000]);
+        let r26ChosenBudget = 10000;
+        let r26LatestScenarios = [];
+        let r26RenderedSelected = null;
+        const r26Fmt = n => Number.isFinite(n) ? n.toLocaleString('zh-TW',{maximumFractionDigits:0}) : '—';
+        const r26Px = n => Number.isFinite(n) ? 'NT$ '+n.toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:4}) : '—';
+        const r26Get = id => document.getElementById(id);
+        const r26Text = (id, txt) => { const e=r26Get(id);if(e)e.textContent=txt; };
+        // budget 包含手續費；不支持負數、NaN、非整數股數、超大金額，避免 UI 誤導。
+        function r26Simulate(holding,budget,price,fee,sellPct,marketPrice){
+            if(!holding || holding.oversold || !Number.isFinite(holding.shares) || holding.shares<0 || !Number.isFinite(holding.basis) || holding.basis<0){return {error:'主帳戶交易紀錄異常，請先到逐筆記帳或 R25 資產分析修正。'};}
+            if(!Number.isFinite(budget)||budget<=0||budget>1e8)return {error:'請設定 1～100,000,000 元的有效投入總預算。'};
+            if(!Number.isFinite(price)||price<=0||price>1e7)return {error:'請輸入有效的假設成交價（必須大於 0）。'};
+            if(!Number.isFinite(fee)||fee<0||fee>1e7)return {error:'預估手續費必須為 0 或正數。'};
+            if(!Number.isFinite(sellPct)||sellPct<0||sellPct>=100)return {error:'賣出費率無效，請至首頁調整。'};
+            if(fee>=budget)return {error:'預估買入手續費必須小於總預算。'};
+            const added=Math.floor((budget-fee+1e-8)/price);
+            if(!Number.isSafeInteger(added)||added<1)return {error:'這筆預算不足購買 1 股（已含預估手續費）。'};
+            const spent=added*price+fee;
+            const remainder=budget-spent;
+            const newShares=holding.shares+added;
+            const basis=holding.basis+spent;
+            const avg=basis/newShares;
+            const breakEven=avg/(1-sellPct/100);
+            const validMarket=Number.isFinite(marketPrice) && marketPrice>0;
+            const pnl=validMarket ? newShares*marketPrice*(1-sellPct/100)-basis : null;
+            const before=validMarket ? holding.shares*marketPrice*(1-sellPct/100)-holding.basis : null;
+            return {budget,price,fee,added,spent,remainder:Math.max(0,remainder),newShares,basis,avg,breakEven,pnl,before,pnlDelta:pnl===null?null:pnl-before,sellPct};
+        }
+        function r26State(){
+            const fee=Number(r26Get('sell_tax_fee_pct')?.value);
+            const price=currentPrice;
+            return {holding:r25Compute(transactionLog,r25CashRows,price,fee),sellPct:fee,marketPrice:price};
+        }
+        function r26Init(){
+            r26ChosenBudget=10000;
+            const input=r26Get('r26_custom_amount');if(input)input.value='10000';
+            r26UseMarketPrice();
+            r26Render();
+        }
+        function r26UseMarketPrice(){
+            const field=r26Get('r26_buy_price');
+            if(field && Number.isFinite(currentPrice)&&currentPrice>0)field.value=Number(currentPrice).toFixed(2);
+            else if(field)field.value='';
+            r26Render();
+        }
+        function r26SelectBudget(amount){
+            r26ChosenBudget=amount;
+            // 保留使用者先前輸入的自訂金額，以便比較預算方案。
+            r26Render();
+        }
+        function r26SetBudgetFromInput(){
+            const val=Number(r26Get('r26_custom_amount')?.value);
+            r26ChosenBudget=val;
+            r26Render();
+        }
+        function r26Render(){
+            const {holding,sellPct,marketPrice}=r26State();
+            const priceField=r26Get('r26_buy_price');
+            const price=priceField?.value.trim()?Number(priceField.value):NaN;
+            const feeField=r26Get('r26_buy_fee');
+            const fee=feeField?.value.trim()?Number(feeField.value):NaN;
+            const customField=r26Get('r26_custom_amount');
+            const custom=customField?.value.trim()?Number(customField.value):NaN;
+            const hasMarket=Number.isFinite(marketPrice)&&marketPrice>0;
+            const validAccount=!holding.oversold && holding.shares>=0;
+            r26Text('r26_holding_shares',validAccount?r26Fmt(holding.shares)+' 股':'紀錄異常');
+            r26Text('r26_holding_avg',validAccount&&holding.avg!==null?r26Px(holding.avg):holding.shares===0?'尚未持股':'—');
+            r26Text('r26_holding_break',validAccount&&holding.breakeven!==null?r26Px(holding.breakeven):'—');
+            r26Text('r26_reference',hasMarket?r26Px(marketPrice):'行情未載入');
+            r26Text('r26_data_status',!validAccount?'⚠ 交易資料異常':hasMarket?'主帳戶 R25 帳務已連動 · 參考行情':'主帳戶 R25 帳務已連動 · 行情待載入');
+            r26Text('r26_home_brief',validAccount?`目前主帳戶 ${r26Fmt(holding.shares)} 股；${hasMarket?'參考價 '+marketPrice.toFixed(2)+' 元':'需手動輸入買入價'}。多方案試算不會修改交易紀錄。`:'交易資料異常，請先檢查 R25。');
+            const uniqueBudgets=[...new Set([...R26_PRESETS,...(Number.isFinite(custom)&&custom>0&&custom<=1e8?[custom]:[])])];
+            const scenarios=uniqueBudgets.map(amount=>r26Simulate(holding,amount,price,fee,sellPct,marketPrice));
+            const selected=r26Simulate(holding,r26ChosenBudget,price,fee,sellPct,marketPrice);
+            r26RenderedSelected=selected.error?null:selected;
+            r26LatestScenarios=scenarios.filter(x=>!x.error);
+            for(const amount of R26_PRESETS){
+                const btn=r26Get('r26_budget_'+amount);
+                if(btn){ const selectedPreset=r26ChosenBudget===amount;
+                    btn.className='r26-budget rounded border border-violet-800 hover:bg-violet-900 px-3 py-3 font-bold '+(selectedPreset?'bg-violet-800 text-white ring-2 ring-violet-400':'bg-gray-900 text-gray-200');
+                    btn.setAttribute('aria-pressed',String(selectedPreset));
+                }
+            }
+            r26Text('r26_selected_label','所選投入預算：'+r25Money(r26ChosenBudget));
+            const fields=['r26_new_shares','r26_spent','r26_leftover','r26_total_shares','r26_new_avg','r26_new_break','r26_after_pnl','r26_pnl_delta'];
+            if(selected.error){
+                fields.forEach(id=>r26Text(id,'—'));
+                r26Text('r26_input_note',selected.error);
+                r26Text('r26_result_note','需先補齊有效條件，試算才會顯示；不會修改任何持股紀錄。');
+            }else{
+                r26Text('r26_new_shares','+'+r26Fmt(selected.added)+' 股');
+                r26Text('r26_spent',r25Money2(selected.spent));
+                r26Text('r26_leftover',r25Money2(selected.remainder));
+                r26Text('r26_total_shares',r26Fmt(selected.newShares)+' 股');
+                r26Text('r26_new_avg',r26Px(selected.avg));
+                r26Text('r26_new_break',r26Px(selected.breakEven));
+                r26Text('r26_after_pnl',selected.pnl===null?'行情未載入':r25Signed(selected.pnl));
+                r26Text('r26_pnl_delta',selected.pnlDelta===null?'行情未載入':r25Signed(selected.pnlDelta));
+                r26Text('r26_input_note',`成交價 ${r26Px(price)}；買入費 ${r25Money2(fee)}。使用單筆預算扣手續費後購買整股／零股。`);
+                r26Text('r26_result_note',`成本法：R25 原庫存成本 ${r25Money2(holding.basis)} + 本次預估實付 ${r25Money2(selected.spent)}。買入後的損益以「目前參考市價」估算，未反映未來價格變動；平均成本降低並不代表當下獲利增加。`);
+            }
+            const body=r26Get('r26_compare_body');
+            if(body){
+                body.innerHTML=scenarios.map((sc,i)=>{
+                    const amount=uniqueBudgets[i];
+                    const chosen=amount===r26ChosenBudget;
+                    const td=cls=>'px-3 py-3 '+cls;
+                    return `<tr class="${chosen?'bg-violet-900/50':'hover:bg-gray-700/40'}" ${sc.error?'':`data-budget="${amount}"`}>
+                        <td class="${td('text-left font-semibold whitespace-nowrap')}"><button type="button" class="${chosen?'text-violet-200 underline':'text-blue-300 underline'}" onclick="r26SelectBudget(${amount})" ${sc.error?'disabled':''}>${r25Money(amount)} ${chosen?'✓':''}</button>${!R26_PRESETS.includes(amount)?'<span class="text-xs text-gray-400"> 自訂</span>':''}</td>
+                        <td class="${td('')}">${sc.error?'—':r26Fmt(sc.added)}</td><td class="${td('')}">${sc.error?'—':r25Money2(sc.spent)}</td>
+                        <td class="${td('text-cyan-300')}">${sc.error?'—':r26Px(sc.avg)}</td><td class="${td('text-amber-300')}">${sc.error?'—':r26Px(sc.breakEven)}</td>
+                        <td class="${td('')}">${sc.error?'—':sc.pnl===null?'行情待載入':r25Signed(sc.pnl)}</td><td class="${td('')}">${sc.error?'—':r25Money2(sc.remainder)}</td>
+                    </tr>`;
+                }).join('');
+            }
+            const exportBtn=r26Get('r26_export');if(exportBtn)exportBtn.disabled=r26LatestScenarios.length===0;
+            const stress=r26Get('r26_sensitivity');
+            if(stress){
+                if(selected.error || !hasMarket){stress.innerHTML='<p class="text-sm text-gray-400">先取得行情參考價，並輸入有效金額與成交價後即可比較。</p>';}
+                else stress.innerHTML=[{label:'參考價下跌 5%',factor:.95},{label:'參考價不變',factor:1},{label:'參考價上漲 5%',factor:1.05}].map(x=>{
+                    const val=marketPrice*x.factor;
+                    const pnl=selected.newShares*val*(1-sellPct/100)-selected.basis;
+                    const old=holding.shares*val*(1-sellPct/100)-holding.basis;
+                    return `<div class="rounded bg-gray-900 p-4 border border-gray-700"><p class="text-sm text-gray-400">${x.label}</p><p class="text-lg font-bold mt-1">${r26Px(val)}／股</p><p class="text-sm mt-3">加碼後淨損益：<span class="${pnl>=0?'text-emerald-300':'text-rose-300'} font-semibold">${r25Signed(pnl)}</span></p><p class="text-xs text-gray-500 mt-1">對比未加碼：${r25Signed(pnl-old)}</p></div>`;
+                }).join('');
+            }
+        }
+        function r26ExportCsv(){
+            if(!r26LatestScenarios.length)return;
+            const rows=[['投入總預算','假設買入價','買進手續費','新增加股數','實際買入成本','剩餘預算','加碼後總股數','加碼後平均成本','加碼後損益平衡價','加碼後未實現損益']];
+            r26LatestScenarios.forEach(s=>rows.push([s.budget,s.price,s.fee,s.added,s.spent,s.remainder,s.newShares,s.avg.toFixed(4),s.breakEven.toFixed(4),s.pnl===null?'':s.pnl.toFixed(2)]));
+            const csv='\ufeff'+rows.map(arr=>arr.join(',')).join('\r\n');
+            const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+            a.href=url;a.download='00406A_R26_加碼方案_'+r25Today()+'.csv';document.body.appendChild(a);a.click();a.remove();
+            setTimeout(()=>URL.revokeObjectURL(url),3000);
+        }
+        // 在原有行情、交易、損益刷新後同步更新 R26，但不改動原始資料。
+        const r26PriorTransactions=updateTransactions;
+        updateTransactions=function(...args){const v=r26PriorTransactions.apply(this,args);r26Render();return v;};
+        const r26PriorHolding=updateHoldingCalculations;
+        updateHoldingCalculations=function(...args){const v=r26PriorHolding.apply(this,args);r26Render();return v;};
+        const r26PriorFetch=fetchData;
+        fetchData=async function(...args){const v=await r26PriorFetch.apply(this,args);const field=r26Get('r26_buy_price');if(field&&!field.value.trim()&&Number.isFinite(currentPrice)&&currentPrice>0)field.value=currentPrice.toFixed(2);r26Render();return v;};
 
     </script>
 </body>
