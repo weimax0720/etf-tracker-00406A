@@ -177,6 +177,21 @@
           body.r38-print-active #tab-efficiency table{font-size:9px!important;width:100%!important;}
           body.r38-print-active #tab-efficiency td,body.r38-print-active #tab-efficiency th{padding:4px!important;border-bottom:1px solid #cbd5e1;}
         }
+
+        /* R39：桌面分組及手機兩層式選單，不變更資料處理和既有分頁。 */
+        #r39_category_nav{margin-bottom:0;}
+        #r39_category_buttons button{border:1px solid #475569;border-radius:10px;background:#1f2937;color:#d1d5db;padding:12px 6px;min-height:52px;font-size:14px;font-weight:650;}
+        #r39_category_buttons button.r39-selected{background:#1e40af;color:#fff;border-color:#60a5fa;}
+        #r39_category_buttons button:focus-visible,#r39_menu_categories button:focus-visible,#r39_menu_content button:focus-visible{outline:2px solid #67e8f9;outline-offset:2px;}
+        #r33_top_tabs>button.r39-tab-hidden{display:none!important;}
+        #r33_top_tabs{gap:6px;flex-wrap:wrap;overflow-x:visible;}
+        #r33_top_tabs>button{border-radius:8px;border:1px solid #374151;padding:10px 12px;}
+        #r39_menu_categories button{min-height:74px;}
+        #r39_menu_categories .r39-category-card{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;}
+        #r39_menu_content button[data-target]{min-height:56px;text-align:left;}
+        #r39_menu_search{font-size:16px;color-scheme:dark;}
+        @media (max-width:767px){#r39_category_nav{display:none!important;}}
+        @media print{#r39_category_nav{display:none!important;}}
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -188,7 +203,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 家族全連動旗艦版</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 家族全連動旗艦版 · 分類導覽優化版</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -196,7 +211,12 @@
             </div>
         </div>
 
-        <!-- 導覽分頁按鈕 (Tabs) -->
+        <!-- R39：分類式導覽。原有 19 個頁面與 id 原封保留，僅收合導覽入口。 -->
+        <nav id="r39_category_nav" class="r39-no-print" aria-label="功能分類">
+          <div id="r39_category_buttons" class="grid grid-cols-3 lg:grid-cols-5 gap-2" role="group" aria-label="選擇功能分類"></div>
+          <p id="r39_current_path" class="text-xs text-gray-400 mt-2" aria-live="polite">常用 · 資產總覽</p>
+        </nav>
+        <!-- 導覽分頁按鈕 (Tabs)，根據 R39 分類只呈現當組功能 -->
         <div id="r33_top_tabs" class="flex border-b border-gray-700 space-x-2 overflow-x-auto pb-2">
             <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn active px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-200 whitespace-nowrap">📊 我的資產總覽</button>
             <button onclick="switchTab('transactions')" id="btn-transactions" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-green-400 whitespace-nowrap">📓 逐筆記帳 (連動)</button>
@@ -1740,12 +1760,12 @@
       <button id="r33_nav_transactions" type="button" onclick="r33NavGo('transactions')" aria-label="開啟逐筆記帳"><span aria-hidden="true">📓</span><span class="r33-tab-label">記帳</span></button>
       <button id="r33_nav_quick" type="button" onclick="r33OpenQuick()" aria-label="快速新增交易" class="text-cyan-300"><span aria-hidden="true">➕</span><span class="r33-tab-label">新增</span></button>
       <button id="r33_nav_records" type="button" onclick="r33NavGo('records')" aria-label="開啟搜尋"><span aria-hidden="true">🔎</span><span class="r33-tab-label">搜尋</span></button>
-      <button id="r33_nav_more" type="button" onclick="r33OpenMore()" aria-label="顯示全部功能"><span aria-hidden="true">☰</span><span class="r33-tab-label">更多</span></button>
+      <button id="r33_nav_more" type="button" onclick="r33OpenMore()" aria-label="開啟功能分類"><span aria-hidden="true">☰</span><span class="r33-tab-label">更多</span></button>
     </nav>
-    <div id="r33_more_overlay" role="dialog" aria-modal="true" aria-label="所有 Tracker 分頁" aria-hidden="true">
+    <div id="r33_more_overlay" role="dialog" aria-modal="true" aria-label="Tracker 功能分類" aria-hidden="true">
       <div class="r33-backdrop" onclick="r33ClosePanels()"></div>
       <div class="r33-sheet" tabindex="-1">
-        <div class="flex items-center justify-between gap-3 mb-4"><div><h2 class="text-xl font-bold text-cyan-300">☰ 全部功能</h2><p class="text-xs text-gray-400 mt-1">選擇後會直接前往該分頁</p></div><button type="button" onclick="r33ClosePanels()" class="rounded bg-gray-700 px-4 py-3 text-sm">✕ 關閉</button></div>
+        <div class="flex items-center justify-between gap-3 mb-4"><div><h2 class="text-xl font-bold text-cyan-300">☰ 功能分類</h2><p class="text-xs text-gray-400 mt-1">先選分類，再選需要的功能</p></div><button type="button" onclick="r33ClosePanels()" class="rounded bg-gray-700 px-4 py-3 text-sm">✕ 關閉</button></div>
         <div id="r33_more_items" class="space-y-4"></div>
       </div>
     </div>
@@ -1859,6 +1879,7 @@
             r35Init();
             r37Init();
             r38Init();
+            r39Init();
         };
 
         function switchTab(tabId) {
@@ -1920,6 +1941,7 @@
             if(tabId === 'performance') r37Render();
             if(tabId === 'efficiency') r38Render();
             r33AfterTab(tabId);
+            r39AfterTab(tabId);
         }
 
         function saveAndLoad() {
@@ -4964,7 +4986,7 @@
             }
             if(window.matchMedia('(max-width:767px)').matches)window.scrollTo({top:0,behavior:'instant'});
         }
-        function r33OpenMore(){r33ShowPanel('r33_more_overlay');}
+        function r33OpenMore(){r39MobileHome();r33ShowPanel('r33_more_overlay');}
         function r33ChangeOwner(){
             const owner=r33El('r33_q_owner').value;
             r33El('r33_q_type').innerHTML=R33_TYPES[owner].map(([type,label])=>`<option value="${type}">${label}</option>`).join('');
@@ -5058,8 +5080,8 @@
         function r33Init(){
             const host=r33El('r33_more_items');
             if(!host)return;
-            host.innerHTML=R33_MENU.map(([group,items])=>`<section><h3 class="text-xs font-bold text-gray-400 mb-2">${group}</h3><div class="grid grid-cols-2 gap-2">${items.map(([id,label])=>`<button type="button" data-target="${id}" class="r33-menu-button rounded border border-gray-600 bg-gray-900 hover:bg-gray-700 px-3 py-3 text-sm text-gray-100">${label}</button>`).join('')}</div></section>`).join('');
-            host.addEventListener('click',e=>{const b=e.target.closest('button[data-target]');if(b)r33NavGo(b.dataset.target);});
+            host.innerHTML=r39MobileMenuHtml();
+            host.addEventListener('click',e=>r39MobileMenuClick(e));
             document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(r33El('r33_quick_overlay').classList.contains('r33-open')||r33El('r33_more_overlay').classList.contains('r33-open')))r33ClosePanels();});
             r33El('r33_q_type').innerHTML=R33_TYPES.main.map(([type,label])=>`<option value="${type}">${label}</option>`).join('');
             r33Initialized=true;r33AfterTab('overview');
@@ -5986,6 +6008,84 @@
         r25Render=function(...args){const value=r38PriorCash.apply(this,args);r38RefreshIfOpen();return value;};
         const r38PriorKidCash=r35Render;
         r35Render=function(...args){const value=r38PriorKidCash.apply(this,args);r38RefreshIfOpen();if(r31Node('r31_list'))r31Render();return value;};
+
+        /* ===== R39 FINAL 分類式導覽：19 功能保留、五組收合、手機搜尋 ===== */
+        const R39_GROUPS=[
+          {id:'frequent',icon:'🏠',name:'常用',desc:'首頁、記帳、搜尋、提醒',pages:[['overview','資產總覽'],['transactions','逐筆記帳'],['records','資料管理'],['reminders','智慧提醒']]},
+          {id:'accounts',icon:'👨‍👧‍👦',name:'帳戶與領息',desc:'三帳戶分開管理',pages:[['ledger','主帳戶手帳'],['kids','雙寶存股手帳'],['family','帳戶資產總覽'],['cashflow','實收股息與現金流'],['assets','主帳戶資產分析']]},
+          {id:'analysis',icon:'📊',name:'投資分析',desc:'績效、行情、試算',pages:[['charts','價格走勢'],['dividends','公告配息'],['performance','帳戶績效趨勢'],['efficiency','XIRR 年化績效'],['topup','智慧加碼'],['retirement','退休目標']]},
+          {id:'reports',icon:'🗓️',name:'月報／年報',desc:'查看與匯出報表',pages:[['report','智慧月報'],['annual','年度總結']]},
+          {id:'security',icon:'🔐',name:'安全與風險',desc:'備份、風險監測',pages:[['security','資料安全與備份'],['safety','流動性雷達']]}
+        ];
+        const R39_PAGE_GROUP=Object.fromEntries(R39_GROUPS.flatMap(g=>g.pages.map(([id])=>[id,g.id])));
+        let r39ActiveGroup='frequent';
+        const r39El=id=>document.getElementById(id);
+        function r39Group(id){return R39_GROUPS.find(g=>g.id===id)||R39_GROUPS[0];}
+        function r39DisplayGroup(groupId){
+            const g=r39Group(groupId);r39ActiveGroup=g.id;
+            for(const b of r39El('r39_category_buttons')?.querySelectorAll('button[data-r39-group]')||[]){
+                const on=b.dataset.r39Group===g.id;b.classList.toggle('r39-selected',on);b.setAttribute('aria-pressed',String(on));
+            }
+            for(const b of r39El('r33_top_tabs')?.querySelectorAll('button[id^="btn-"]')||[]){
+                const target=b.id.slice(4),show=R39_PAGE_GROUP[target]===g.id;
+                b.classList.toggle('r39-tab-hidden',!show);
+                b.setAttribute('aria-hidden',String(!show));
+                if(show)b.removeAttribute('tabindex');else b.setAttribute('tabindex','-1');
+            }
+        }
+        function r39AfterTab(pageId){
+            const groupId=R39_PAGE_GROUP[pageId];if(!groupId)return;
+            if(r39El('r39_category_buttons'))r39DisplayGroup(groupId);
+            const group=r39Group(groupId),p=group.pages.find(([id])=>id===pageId);
+            if(r39El('r39_current_path'))r39El('r39_current_path').textContent=group.icon+' '+group.name+' / '+(p?.[1]||pageId);
+        }
+        function r39ChooseCategory(id){
+            const group=r39Group(id);r39DisplayGroup(id);
+            // 點選分類即顯示該類第一個功能，不會停留在別的分類頁面。
+            switchTab(group.pages[0][0]);
+        }
+        function r39MobileMenuHtml(){
+            const cards=R39_GROUPS.map(g=>`<button type="button" data-r39-category="${g.id}" class="r39-category-card bg-gray-900 hover:bg-gray-700 border border-gray-600 rounded-xl p-4 text-left"><span class="text-lg font-bold text-white">${g.icon} ${g.name}</span><span class="text-xs text-gray-400">${g.pages.length} 項 · ${g.desc}</span></button>`).join('');
+            const panels=R39_GROUPS.map(g=>`<div id="r39_menu_group_${g.id}" class="r39-menu-group hidden grid grid-cols-1 sm:grid-cols-2 gap-2">${g.pages.map(([id,name])=>`<button type="button" data-target="${id}" class="rounded-lg border border-gray-600 bg-gray-900 hover:bg-gray-700 px-4 py-3 text-sm text-gray-100">${name} →</button>`).join('')}</div>`).join('');
+            return `<label class="block text-sm text-gray-300 mb-3">🔎 快速找功能<input type="search" id="r39_menu_search" autocomplete="off" placeholder="搜尋：配息、XIRR、月報…" oninput="r39Search(this.value)" class="block w-full mt-2 px-3 py-3 rounded-lg border border-gray-600 bg-gray-900 text-white"></label>
+              <div id="r39_menu_categories" class="grid grid-cols-2 gap-3">${cards}</div>
+              <div id="r39_menu_detail" class="hidden"><div class="flex items-center gap-3 border-b border-gray-700 pb-3 mb-3"><button type="button" data-r39-back="1" class="rounded-lg border border-gray-600 bg-gray-700 px-3 py-2 text-sm">← 分類</button><strong id="r39_menu_title" class="text-emerald-300"></strong></div>${panels}</div>
+              <div id="r39_menu_results" class="hidden"><p id="r39_menu_search_note" class="text-sm text-gray-400 mb-3"></p><div id="r39_menu_result_items" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div></div>`;
+        }
+        function r39MobileHome(){
+            const host=r39El('r33_more_items');if(!host)return;
+            const search=r39El('r39_menu_search');if(search)search.value='';
+            r39El('r39_menu_categories')?.classList.remove('hidden');
+            r39El('r39_menu_detail')?.classList.add('hidden');
+            r39El('r39_menu_results')?.classList.add('hidden');
+            r39El('r39_menu_result_items')?.replaceChildren();
+            for(const p of host.querySelectorAll('.r39-menu-group'))p.classList.add('hidden');
+        }
+        function r39MobileCategory(id){
+            const g=r39Group(id);r39El('r39_menu_categories').classList.add('hidden');
+            r39El('r39_menu_results').classList.add('hidden');
+            r39El('r39_menu_detail').classList.remove('hidden');
+            r39El('r39_menu_title').textContent=g.icon+' '+g.name;
+            for(const p of r39El('r33_more_items').querySelectorAll('.r39-menu-group'))p.classList.toggle('hidden',p.id!=='r39_menu_group_'+g.id);
+        }
+        function r39Search(value){
+            const q=String(value||'').trim().toLocaleLowerCase();if(!q){r39MobileHome();return;}
+            r39El('r39_menu_categories').classList.add('hidden');r39El('r39_menu_detail').classList.add('hidden');r39El('r39_menu_results').classList.remove('hidden');
+            const matches=R39_GROUPS.flatMap(g=>g.pages.map(([id,name])=>({id,name,group:g.name}))).filter(x=>(x.name+' '+x.group+' '+x.id).toLocaleLowerCase().includes(q));
+            r39El('r39_menu_search_note').textContent=matches.length?'找到 '+matches.length+' 項功能':'沒有符合的功能，可換個關鍵字';
+            r39El('r39_menu_result_items').innerHTML=matches.map(x=>`<button type="button" data-target="${x.id}" class="rounded-lg border border-gray-600 bg-gray-900 px-4 py-3 text-sm text-left">${x.name}<span class="text-xs text-gray-400 ml-2">${x.group}</span> →</button>`).join('');
+        }
+        function r39MobileMenuClick(event){
+            const target=event.target.closest('button[data-target]');if(target){r33NavGo(target.dataset.target);return;}
+            const cat=event.target.closest('button[data-r39-category]');if(cat){r39MobileCategory(cat.dataset.r39Category);return;}
+            if(event.target.closest('button[data-r39-back]'))r39MobileHome();
+        }
+        function r39Init(){
+            const node=r39El('r39_category_buttons');if(!node)return;
+            node.innerHTML=R39_GROUPS.map(g=>`<button type="button" data-r39-group="${g.id}" aria-pressed="false"><span aria-hidden="true">${g.icon}</span> ${g.name}</button>`).join('');
+            node.addEventListener('click',e=>{const b=e.target.closest('button[data-r39-group]');if(b)r39ChooseCategory(b.dataset.r39Group);});
+            r39AfterTab('overview');
+        }
 
     </script>
 </body>
