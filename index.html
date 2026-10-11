@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAX的 00406A 追蹤儀表板</title>
+    <title>00406A Tracker R23｜MAX 的追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -53,6 +53,27 @@
 
         <!-- ================= 分頁 1：資產與即時領息總覽 ================= -->
         <div id="tab-overview" class="space-y-6">
+            <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
+            <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R23 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
+                    <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
+                </div>
+                <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶持股</p><p class="text-lg font-semibold" id="r23_shares">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">參考市值</p><p class="text-lg font-semibold" id="r23_value">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">距損益平衡價</p><p class="text-lg font-semibold" id="r23_gap">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">本月定投紀錄</p><p class="text-lg font-semibold" id="r23_regular">--</p></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-900 rounded p-4"><div class="flex justify-between items-center"><h3 class="font-semibold text-green-300">📋 資料健康度</h3><span id="r23_score" class="font-bold text-lg">待計算</span></div><div class="w-full h-2 bg-gray-700 rounded mt-3 mb-2 overflow-hidden"><div id="r23_score_bar" class="bg-green-500 h-full" style="width:0%"></div></div><p id="r23_score_note" class="text-xs text-gray-400">只對已取得的資料評分；缺失資料不計分。</p><p class="text-xs text-gray-500 mt-2">僅代表監測指標，不代表 ETF 投資安全或未來報酬。</p></div>
+                    <div class="bg-gray-900 rounded p-4"><h3 class="font-semibold text-blue-300">📍近一年價格區間位置</h3><p id="r23_position" class="text-lg mt-2">等待歷史收盤資料</p><p id="r23_range" class="text-xs text-gray-400 mt-2">區間位置並非基本面估值，也不代表便宜或昂貴。</p></div>
+                    <div class="bg-gray-900 rounded p-4"><h3 class="font-semibold text-yellow-300">📅 除息與定投提醒</h3><p id="r23_reminder" class="text-sm text-gray-300 mt-2">等待行情與交易紀錄</p></div>
+                    <div class="bg-gray-900 rounded p-4"><h3 class="font-semibold text-purple-300">💡 今日觀察</h3><p id="r23_advice" class="text-sm text-gray-300 mt-2">尚無足夠資料</p></div>
+                </div>
+            </section>
+
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center relative overflow-hidden">
                     <div id="live_indicator" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-gray-600"></div>
@@ -1897,6 +1918,90 @@
             localStorage.setItem(LEDGER_KID_B_KEY, JSON.stringify(kidBMap));
             runKidsSimulation();
         }
+
+        // ===== R23: 保留舊版 localStorage 格式與所有原始功能 =====
+        let r23LastMarketSuccess = null;
+        let r23Refreshing = false;
+        const r23Num = n => Number.isFinite(+n) ? (+n).toLocaleString('zh-TW',{maximumFractionDigits:0}) : '--';
+        const r23Text = (id, value) => { const el=document.getElementById(id); if(el) el.textContent=value; };
+        function r23Render() {
+            try {
+                const shares = Number(localStorage.getItem(SHARES_KEY)) || 0;
+                const avg = Number(localStorage.getItem(COST_KEY)) || 0;
+                const fee = Number(document.getElementById('sell_tax_fee_pct').value) || 0;
+                const today = new Date();
+                const month = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}`;
+                const regular = transactionLog.some(t=>t.type==='buy_regular' && String(t.date).slice(0,7)===month);
+                const priceOK = Number.isFinite(currentPrice) && currentPrice>0;
+                const breakEven=avg*(1+fee/100);
+                const currentWorth=priceOK ? shares*currentPrice : null;
+                r23Text('r23_shares',r23Num(shares)+' 股');
+                r23Text('r23_value',currentWorth===null?'行情未載入':'NT$ '+r23Num(currentWorth));
+                r23Text('r23_gap',priceOK && shares>0 && avg>0 ? (currentPrice-breakEven>=0?'+':'')+(currentPrice-breakEven).toFixed(2)+' 元' : '資料不足');
+                r23Text('r23_regular',regular?'已登錄定投':'尚無定投紀錄');
+                const closes=rawPriceData.map(x=>Number(x.close)).filter(x=>Number.isFinite(x)&&x>0);
+                if (closes.length>=20 && priceOK) {
+                    const lo=Math.min(...closes), hi=Math.max(...closes);
+                    const pct=hi===lo?50:(currentPrice-lo)/(hi-lo)*100;
+                    r23Text('r23_position',hi===lo?'區間價格無變化':`${pct.toFixed(1)}%（${pct<=20?'接近區間低位':pct>=80?'接近區間高位':'區間中段'}）`);
+                    r23Text('r23_range',`歷史收盤低 ${lo.toFixed(2)} / 高 ${hi.toFixed(2)} 元；目前參考價 ${currentPrice.toFixed(2)} 元。${currentPrice<lo||currentPrice>hi?'目前價格超出歷史收盤範圍。':''}不是估值及買賣建議。`);
+                } else { r23Text('r23_position','歷史行情不足'); r23Text('r23_range','至少需要 20 筆有效歷史收盤價；不將區間位置當成合理價值。'); }
+                const scoreParts=[];
+                if(rawPriceData.length>=20){
+                    const vols=rawPriceData.slice(-20).map(x=>Number(x.Trading_Volume ?? x.volume)).filter(x=>Number.isFinite(x)&&x>=0);
+                    if(vols.length>=15){let av=vols.reduce((a,b)=>a+b,0)/vols.length/1000;scoreParts.push({label:'近20交易日成交量',earned:av>=10000?20:av>=5000?10:0,total:20});}
+                    const last=rawPriceData[rawPriceData.length-1];const v=Number(last.Trading_money);
+                    const turnover=Number.isFinite(v)&&v>0?v:Number(last.close)*Number(last.Trading_Volume ?? last.volume);
+                    if(Number.isFinite(turnover)&&turnover>0)scoreParts.push({label:'最近成交額',earned:turnover>=5e8?20:turnover>=1e8?10:0,total:20});
+                }
+                if(latestDividend>0) scoreParts.push({label:'最新公告配息門檻',earned:latestDividend>=0.1?20:0,total:20});
+                if(transactionLog.length>0)scoreParts.push({label:'本月定投登錄',earned:regular?15:0,total:15});
+                // 不以股價高低或帳面損益作為「安全」分數，以免誤導。
+                if(transactionLog.length>=2){
+                    const buys=transactionLog.filter(t=>String(t.date).slice(0,7)===month&&!String(t.type).includes('sell'));
+                    scoreParts.push({label:'本月有新增持股紀錄',earned:buys.length?15:0,total:15});
+                }
+                const earned=scoreParts.reduce((a,b)=>a+b.earned,0), total=scoreParts.reduce((a,b)=>a+b.total,0);
+                r23Text('r23_score',total?`${Math.round(earned/total*100)} / 100`:'待取得資料');
+                document.getElementById('r23_score_bar').style.width=(total?earned/total*100:0)+'%';
+                r23Text('r23_score_note',total?`已評估權重 ${total}/90；${scoreParts.map(x=>x.label+' '+x.earned+'/'+x.total).join('、')}。未取得資料不計入。`:'尚無足夠可評分資料。');
+                const ex = /^\d{4}-\d{2}-\d{2}$/.test(currentExDivDate)?new Date(currentExDivDate+'T00:00:00'):null;
+                const todayStart=new Date(today.getFullYear(),today.getMonth(),today.getDate());
+                const days=ex?Math.round((ex-todayStart)/86400000):null;
+                const exMsg=days===null?'尚無除息日期':days>0?`距公告除息日 ${days} 天`:days===0?'今日為公告除息日':'最近取得的除息日期已過';
+                r23Text('r23_reminder',`${exMsg}；${regular?'本月有定投紀錄':'本月尚無主帳戶定投紀錄'}。${days!==null&&days>0?'欲參與除息請確認交易所及投信公告。':''}`);
+                const signals=[];
+                if(!priceOK)signals.push('行情尚未取得，暫不判斷價格');
+                else if(shares>0&&avg>0)signals.push(currentPrice<breakEven?'目前參考價低於估算損益平衡價':'目前參考價不低於估算損益平衡價');
+                if(latestDividend>0 && latestDividend<0.1)signals.push('最新取得配息低於 0.10 元，請查核公告');
+                const recent=rawPriceData.slice(-20).map(x=>Number(x.Trading_Volume ?? x.volume)).filter(x=>Number.isFinite(x)&&x>=0);
+                if(recent.length>=15&&recent.reduce((a,b)=>a+b,0)/recent.length/1000<10000)signals.push('近期成交量低於設定警示門檻');
+                r23Text('r23_advice',(signals.length?signals.join('；'):'目前沒有足夠的行情風險訊號')+'。持續按既定投資計畫評估，不依此卡自動加碼或賣出。');
+                r23Text('r23_summary',`${today.toLocaleDateString('zh-TW')}｜主帳戶 ${r23Num(shares)} 股；${priceOK?'參考價 '+currentPrice.toFixed(2)+' 元':'尚無行情'}；${latestDividend>0?'最近取得配息 '+latestDividend+' 元':'配息待更新'}。`);
+            } catch(e) {console.warn('R23 儀表板更新失敗',e);r23Text('r23_summary','智慧摘要暫無法計算；原有交易與手帳資料不受影響。');}
+        }
+        async function r23Refresh() {
+            const key=document.getElementById('api_key').value.trim();
+            if(!key){alert('請先輸入 FinMind API 金鑰，再更新行情。');return;}
+            if(r23Refreshing)return;
+            r23Refreshing=true;
+            const btn=document.getElementById('r23_refresh');btn.disabled=true;btn.textContent='更新中…';
+            try {await fetchData(key);r23Render();}
+            finally {r23Refreshing=false;btn.disabled=false;btn.textContent='🔄 更新全部';}
+        }
+        // 原本函式仍為唯一資料計算來源；只在完成後更新 R23 視圖。
+        const r23OldTransactions = updateTransactions;
+        updateTransactions = function(...args){const result=r23OldTransactions.apply(this,args);r23Render();return result;};
+        const r23OldHolding = updateHoldingCalculations;
+        updateHoldingCalculations = function(...args){const result=r23OldHolding.apply(this,args);r23Render();return result;};
+        const r23OldFetch = fetchData;
+        fetchData = async function(...args){
+            const result=await r23OldFetch.apply(this,args);
+            if(rawPriceData.length>0 || latestDividend>0){r23LastMarketSuccess=new Date();r23Text('r23_updated','最近取得市場資料：'+r23LastMarketSuccess.toLocaleString('zh-TW',{hour12:false}));}
+            else r23Text('r23_updated','無法取得有效市場資料，請檢查 API / 網路');
+            r23Render();return result;
+        };
+
     </script>
 </body>
 </html>
