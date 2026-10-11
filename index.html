@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R38 FINAL｜MAX 的追蹤儀表板</title>
+    <title>00406A Tracker R38 FINAL 獨立帳戶修正版｜MAX 的追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -147,7 +147,7 @@
           body.r35-print-active #tab-cashflow td,body.r35-print-active #tab-cashflow th{padding:4px!important;border-bottom:1px solid #cbd5e1;}
           body.r35-print-active #tab-cashflow [class*="min-w-"]{min-width:0!important;}
         }
-        /* R37 家庭績效獨立 A4 列印，保留 R27～R36 列印方式。 */
+        /* R37 帳戶績效獨立 A4 列印，保留 R27～R36 列印方式。 */
         @media print {
           body.r37-print-active > .max-w-6xl > :not(#tab-performance){display:none!important;}
           body.r37-print-active > .max-w-6xl > #tab-performance{display:block!important;position:static!important;width:100%!important;max-width:none!important;}
@@ -203,8 +203,8 @@
             <button onclick="switchTab('records')" id="btn-records" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-lime-300 whitespace-nowrap">🔎 R31 資料管理</button>
             <button onclick="switchTab('reminders')" id="btn-reminders" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-orange-300 whitespace-nowrap">🔔 R32 提醒與首頁</button>
             <button onclick="switchTab('ledger')" id="btn-ledger" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📝 我的存股手帳</button>
-            <button onclick="switchTab('efficiency')" id="btn-efficiency" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-violet-200 whitespace-nowrap">🏆 FINAL 家庭 XIRR</button>
-            <button onclick="switchTab('performance')" id="btn-performance" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-fuchsia-300 whitespace-nowrap">📊 R37 家庭績效趨勢</button>
+            <button onclick="switchTab('efficiency')" id="btn-efficiency" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-violet-200 whitespace-nowrap">🏆 FINAL 獨立帳戶 XIRR</button>
+            <button onclick="switchTab('performance')" id="btn-performance" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-fuchsia-300 whitespace-nowrap">📊 R37 帳戶績效趨勢</button>
             <button onclick="switchTab('cashflow')" id="btn-cashflow" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-emerald-300 whitespace-nowrap">💵 R35 家庭現金流</button>
             <button onclick="switchTab('family')" id="btn-family" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-cyan-300 whitespace-nowrap">👨‍👩‍👧‍👦 R34 家庭總覽</button>
             <button onclick="switchTab('kids')" id="btn-kids" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-pink-400 whitespace-nowrap">👧 雙寶存股手帳</button>
@@ -255,7 +255,7 @@
                 </div>
             </div>
             <div class="bg-gradient-to-r from-violet-950/70 to-gray-800 border border-violet-700/70 rounded-lg p-4 flex flex-wrap justify-between items-center gap-3" data-r32-home="efficiency">
-              <div><p class="font-bold text-violet-200">🏆 FINAL 家庭投資效率</p><p class="text-xs text-gray-300 mt-2">主帳戶／大寶／二寶完整 XIRR、歷年實收、帳務完整性核對。XIRR 是資金加權年化試算，不是保證收益。</p></div>
+              <div><p class="font-bold text-violet-200">🏆 FINAL 三帳戶獨立績效</p><p class="text-xs text-gray-300 mt-2">主帳戶／大寶／二寶分別計算 XIRR、歷年實收、帳務完整性核對。XIRR 是資金加權年化試算，不是保證收益。</p></div>
               <button type="button" onclick="switchTab('efficiency')" class="bg-violet-700 hover:bg-violet-600 rounded px-4 py-3 text-sm font-semibold">開啟最終整合分析 →</button>
             </div>
             <!-- R34 家庭資產快捷入口（只讀，不修改真實交易） -->
@@ -267,9 +267,9 @@
               <div><p class="text-sm font-bold text-emerald-300">💵 R35 家庭現金流</p><p class="text-xs text-gray-300 mt-1">主帳戶／雙寶實際入帳、月年度現金流、家庭對帳。</p></div>
               <button type="button" onclick="switchTab('cashflow')" class="rounded bg-emerald-700 px-3 py-2 text-sm">家庭現金流 →</button>
             </div>
-            <!-- R37 唯讀家庭績效快覽入口 -->
+            <!-- R37 唯讀帳戶績效快覽入口 -->
             <div class="bg-gray-800 border border-fuchsia-800/60 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="performance">
-              <div><p class="text-sm font-bold text-fuchsia-300">📊 R37 家庭績效與領息趨勢</p><p class="text-xs text-gray-300 mt-1">三帳戶已實現／未實現成果、真實領息與投入比較；績效估值不等於年化報酬。</p></div>
+              <div><p class="text-sm font-bold text-fuchsia-300">📊 R37 帳戶績效與領息趨勢</p><p class="text-xs text-gray-300 mt-1">三帳戶已實現／未實現成果、真實領息與投入比較；績效估值不等於年化報酬。</p></div>
               <button type="button" onclick="switchTab('performance')" class="rounded bg-fuchsia-800 hover:bg-fuchsia-700 px-3 py-2 text-sm">開啟績效趨勢 →</button>
             </div>
             <!-- R32 首頁提醒速覽（僅在開啟網頁時檢查；不推播） -->
@@ -1035,19 +1035,19 @@
 
                  <!-- R36：家庭月度實收股息與現金流，直接隨 R27 月報列印及匯出 -->
                  <div class="card border border-emerald-800/50" id="r36_month_family">
-                   <div class="flex flex-wrap items-center justify-between gap-2"><h3 class="text-lg font-bold text-emerald-300">七、R36 家庭三帳戶月度領息與現金流</h3><span class="text-xs text-gray-400">真實已入帳 · 帳務唯讀</span></div>
+                   <div class="flex flex-wrap items-center justify-between gap-2"><h3 class="text-lg font-bold text-emerald-300">七、R36 三帳戶個別月度領息與現金流</h3><span class="text-xs text-gray-400">真實已入帳 · 帳務唯讀</span></div>
                    <p id="r36_month_status" class="text-xs text-gray-300 mt-2" role="status">資料載入中</p>
                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
-                     <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭本月實收股息</p><p id="r36_month_cash" class="text-lg font-bold text-emerald-300 mt-2">—</p></div>
+                     <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶本月實收股息</p><p id="r36_month_cash" class="text-lg font-bold text-emerald-300 mt-2">—</p></div>
                      <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">大寶實收</p><p id="r36_month_a" class="text-lg font-bold mt-2">—</p></div>
                      <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">二寶實收</p><p id="r36_month_b" class="text-lg font-bold mt-2">—</p></div>
-                     <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭本月帳務淨現金流</p><p id="r36_month_net" class="text-lg font-bold mt-2">—</p></div>
+                     <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶本月帳務淨現金流</p><p id="r36_month_net" class="text-lg font-bold mt-2">—</p></div>
                    </div>
                    <h4 class="font-semibold text-sm text-cyan-300 mt-4 mb-2">三帳戶買進／賣出／入帳現金流</h4>
                    <div class="overflow-x-auto"><table class="w-full min-w-[680px] text-xs"><thead class="text-gray-400"><tr><th class="p-2 text-left">帳戶</th><th class="p-2 text-right">自有買進</th><th class="p-2 text-right">配息再投資買進</th><th class="p-2 text-right">賣出淨收</th><th class="p-2 text-right">實收股息</th><th class="p-2 text-right">帳務淨現金流</th></tr></thead><tbody id="r36_month_rows" class="divide-y divide-gray-700"></tbody></table></div>
                    <h4 class="font-semibold text-sm text-emerald-300 mt-4 mb-2">家庭實際入帳明細（依入帳日）</h4>
                    <div class="overflow-x-auto"><table class="w-full min-w-[560px] text-xs"><thead class="text-gray-400"><tr><th class="p-2 text-left">入帳日</th><th class="p-2 text-left">帳戶</th><th class="p-2 text-right">淨入帳金額</th><th class="p-2 text-left">備註</th></tr></thead><tbody id="r36_month_dividends" class="divide-y divide-gray-700"></tbody></table></div>
-                   <p class="text-xs text-gray-400 mt-3" id="r36_month_note">主帳戶 R27 原欄位只代表主帳戶；家庭加總另列。公告配息不是實收，配息再投資是買股支出，帳務現金流不是投資報酬或銀行餘額。</p>
+                   <p class="text-xs text-gray-400 mt-3" id="r36_month_note">主帳戶 R27 原欄位只代表主帳戶；三帳戶分開列示，雙寶不納入主帳戶。公告配息不是實收，配息再投資是買股支出，帳務現金流不是投資報酬或銀行餘額。</p>
                  </div>
             </div>
         </section>
@@ -1090,7 +1090,7 @@
                         <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">年度帳務淨現金流</p><p id="r28_netflow" class="text-lg font-bold mt-2">—</p></div>
                         <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶年度交易筆數</p><p id="r28_trades" class="text-lg font-bold mt-2">—</p></div>
                     </div>
-                    <p class="text-xs text-gray-400 mt-3">已實現損益＋已登錄股息，不包含未實現損益；並非年度投資報酬率。現金流＝賣出淨收＋股息入帳－全部買股支出；已再投資的股息可能同時出現在入帳與買股兩側，需依實際紀錄核對。</p>
+                    <p class="text-xs text-gray-400 mt-3">已實現損益＋已登錄股息，不包含未實現損益；並非年度投資報酬率。現金流＝賣出淨收＋股息入帳－主帳戶買股支出；已再投資的股息可能同時出現在入帳與買股兩側，需依實際紀錄核對。</p>
                 </div>
                 <div class="card"><h3 class="text-lg font-bold text-cyan-300 mb-3">二、年末持股與市值（按可取得行情）</h3>
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -1099,8 +1099,8 @@
                         <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">期末 ETF 參考股價</p><p id="r28_price" class="text-lg font-bold mt-2">—</p></div>
                         <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶期末參考市值</p><p id="r28_market" class="text-lg font-bold mt-2">—</p></div>
                         <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶期末未實現損益</p><p id="r28_unrealized" class="text-lg font-bold mt-2">—</p></div>
-                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭期末合計股數</p><p id="r28_family_shares" class="text-lg font-bold mt-2">—</p></div>
-                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭期末參考總市值</p><p id="r28_family_market" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶期末股數（不含雙寶）</p><p id="r28_family_shares" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶期末參考市值</p><p id="r28_family_market" class="text-lg font-bold mt-2">—</p></div>
                         <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">全年公告每股配息合計</p><p id="r28_announced" class="text-lg font-bold mt-2">—</p></div>
                     </div>
                     <p id="r28_price_note" class="text-xs text-gray-400 mt-3">沒有該年度價格資料就留白，避免用最新行情冒充歷史年末價格。</p>
@@ -1124,20 +1124,20 @@
 
                  <!-- R36：家庭年度現金流直接整合 R28 年度列印及匯出 -->
                  <div class="card border border-emerald-800/50" id="r36_annual_family">
-                   <div class="flex flex-wrap items-center justify-between gap-2"><h3 class="text-lg font-bold text-emerald-300">七、R36 家庭三帳戶年度領息與現金流</h3><span class="text-xs text-gray-400">R25 主帳戶＋R35 雙寶台帳</span></div>
+                   <div class="flex flex-wrap items-center justify-between gap-2"><h3 class="text-lg font-bold text-emerald-300">七、R36 三帳戶個別年度領息與現金流</h3><span class="text-xs text-gray-400">R25 主帳戶＋R35 雙寶台帳</span></div>
                    <p id="r36_annual_status" class="text-xs text-gray-300 mt-2" role="status">資料載入中</p>
                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
-                     <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭全年實收股息</p><p id="r36_annual_cash" class="text-lg font-bold text-emerald-300 mt-2">—</p></div>
+                     <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶全年實收股息</p><p id="r36_annual_cash" class="text-lg font-bold text-emerald-300 mt-2">—</p></div>
                      <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">大寶全年實收</p><p id="r36_annual_a" class="text-lg font-bold mt-2">—</p></div>
                      <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">二寶全年實收</p><p id="r36_annual_b" class="text-lg font-bold mt-2">—</p></div>
-                     <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭年度帳務淨現金流</p><p id="r36_annual_net" class="text-lg font-bold mt-2">—</p></div>
+                     <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶年度帳務淨現金流</p><p id="r36_annual_net" class="text-lg font-bold mt-2">—</p></div>
                    </div>
                    <h4 class="font-semibold text-sm text-cyan-300 mt-4 mb-2">年度三帳戶真實現金流</h4>
                    <div class="overflow-x-auto"><table class="w-full min-w-[690px] text-xs"><thead class="text-gray-400"><tr><th class="p-2 text-left">帳戶</th><th class="p-2 text-right">自有買進</th><th class="p-2 text-right">配息再投資買進</th><th class="p-2 text-right">賣出淨收</th><th class="p-2 text-right">實收股息</th><th class="p-2 text-right">淨現金流</th></tr></thead><tbody id="r36_annual_rows" class="divide-y divide-gray-700"></tbody></table></div>
                    <h4 class="font-semibold text-sm text-pink-300 mt-4 mb-2">12 個月三帳戶實際領息</h4>
-                   <div class="overflow-x-auto"><table class="w-full min-w-[620px] text-xs"><thead class="text-gray-400"><tr><th class="p-2 text-left">月份</th><th class="p-2 text-right">主帳戶</th><th class="p-2 text-right">大寶</th><th class="p-2 text-right">二寶</th><th class="p-2 text-right">家庭合計</th><th class="p-2 text-right">家庭淨現金流</th></tr></thead><tbody id="r36_annual_months" class="divide-y divide-gray-700"></tbody></table></div>
-                   <h4 class="font-semibold text-sm text-indigo-300 mt-4 mb-2">最近年度家庭領息比較（已登錄資料）</h4>
-                   <div class="overflow-x-auto"><table class="w-full min-w-[540px] text-xs"><thead class="text-gray-400"><tr><th class="p-2 text-left">年度</th><th class="p-2 text-right">主帳戶</th><th class="p-2 text-right">大寶</th><th class="p-2 text-right">二寶</th><th class="p-2 text-right">家庭合計</th></tr></thead><tbody id="r36_annual_years" class="divide-y divide-gray-700"></tbody></table></div>
+                   <div class="overflow-x-auto"><table class="w-full min-w-[620px] text-xs"><thead class="text-gray-400"><tr><th class="p-2 text-left">月份</th><th class="p-2 text-right">主帳戶</th><th class="p-2 text-right">大寶</th><th class="p-2 text-right">二寶</th><th class="p-2 text-right">主帳戶淨現金流</th></tr></thead><tbody id="r36_annual_months" class="divide-y divide-gray-700"></tbody></table></div>
+                   <h4 class="font-semibold text-sm text-indigo-300 mt-4 mb-2">最近年度各帳戶領息比較（已登錄資料）</h4>
+                   <div class="overflow-x-auto"><table class="w-full min-w-[540px] text-xs"><thead class="text-gray-400"><tr><th class="p-2 text-left">年度</th><th class="p-2 text-right">主帳戶</th><th class="p-2 text-right">大寶</th><th class="p-2 text-right">二寶</th></tr></thead><tbody id="r36_annual_years" class="divide-y divide-gray-700"></tbody></table></div>
                    <p id="r36_annual_note" class="text-xs text-gray-400 mt-3">未來月份以「—」表示未結束，不能視為未來配息零元；各帳戶尚未登錄的實收紀錄可能造成統計低估。主帳戶 R28 原欄位維持原定義。</p>
                  </div>
             </div>
@@ -1511,7 +1511,7 @@
             <div class="flex flex-wrap justify-between items-start gap-3"><div><h2 class="text-xl font-bold text-fuchsia-300">📊 R37 家庭投資績效與領息趨勢</h2><p class="text-sm text-gray-300 mt-2">主帳戶、大寶、二寶：從真實買賣計算成本與交易成果，從 R25／R35 入帳台帳計算已收到的股息。投資績效與資金流入／流出分開看。</p></div><span id="r37_status" class="text-xs bg-gray-900 border border-gray-700 rounded px-3 py-2">本機資料分析</span></div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
               <label class="text-sm text-gray-300">最近幾個月<select id="r37_months" onchange="r37RangeChanged()" class="block mt-1 w-full rounded bg-gray-900 border border-gray-600 px-3 py-3 text-base"><option value="6">最近 6 個月</option><option value="12" selected>最近 12 個月</option><option value="24">最近 24 個月</option></select></label>
-              <label class="text-sm text-gray-300">趨勢表顯示帳戶<select id="r37_owner" onchange="r37RangeChanged()" class="block mt-1 w-full rounded bg-gray-900 border border-gray-600 px-3 py-3 text-base"><option value="all">家庭三帳戶</option><option value="main">主帳戶</option><option value="kid_a">大寶</option><option value="kid_b">二寶</option></select></label>
+              <label class="text-sm text-gray-300">趨勢表顯示帳戶<select id="r37_owner" onchange="r37RangeChanged()" class="block mt-1 w-full rounded bg-gray-900 border border-gray-600 px-3 py-3 text-base"><option value="all">主帳戶（不含雙寶）</option><option value="main">主帳戶</option><option value="kid_a">大寶</option><option value="kid_b">二寶</option></select></label>
               <label class="text-sm text-gray-300">手動假設股價（可空白）<input id="r37_manual_price" type="number" min="0.01" max="1000000" step="0.01" inputmode="decimal" placeholder="空白使用最新行情" onchange="r37Render()" class="block mt-1 w-full rounded bg-gray-900 border border-gray-600 px-3 py-3 text-base"></label>
             </div>
             <div class="flex flex-wrap gap-2 mt-4"><button type="button" onclick="r37Render()" class="rounded bg-fuchsia-800 hover:bg-fuchsia-700 px-4 py-3 text-sm">↻ 重新計算</button><button type="button" onclick="r37ExportCsv()" class="rounded bg-emerald-700 hover:bg-emerald-600 px-4 py-3 text-sm">📥 下載績效 CSV</button><button type="button" onclick="r37ExportHTML()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-3 text-sm">📄 下載獨立 HTML</button><button type="button" onclick="r37Print()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-3 text-sm">🖨️ 列印／PDF</button></div>
@@ -1520,10 +1520,10 @@
           <div id="r37_paper" class="space-y-5">
             <div class="card border border-fuchsia-900/50"><div class="flex flex-wrap justify-between items-start gap-3"><div><p class="text-xs tracking-widest text-fuchsia-300">00406A · FAMILY INVESTMENT PERFORMANCE</p><h2 class="text-xl font-bold mt-2">家庭投資績效與已登錄領息趨勢</h2></div><p id="r37_generated" class="text-xs text-gray-400">—</p></div><p id="r37_scope" class="text-xs text-gray-300 mt-3">等待檢查原始紀錄</p>
               <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mt-4">
-                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭歷來已登錄實收股息</p><p id="r37_cash_total" class="text-lg font-bold text-emerald-300 mt-2">—</p></div>
-                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭已實現買賣損益</p><p id="r37_realized_total" class="text-lg font-bold mt-2">—</p></div>
-                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭預估未實現損益</p><p id="r37_unrealized_total" class="text-lg font-bold mt-2">—</p></div>
-                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭累計成果估值（含未實現）</p><p id="r37_profit_total" class="text-lg font-bold text-fuchsia-300 mt-2">—</p></div>
+                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶歷來實收股息</p><p id="r37_cash_total" class="text-lg font-bold text-emerald-300 mt-2">—</p></div>
+                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶已實現買賣損益</p><p id="r37_realized_total" class="text-lg font-bold mt-2">—</p></div>
+                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶預估未實現損益</p><p id="r37_unrealized_total" class="text-lg font-bold mt-2">—</p></div>
+                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶累計成果估值（含未實現）</p><p id="r37_profit_total" class="text-lg font-bold text-fuchsia-300 mt-2">—</p></div>
                 <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">歷來成本對照比（非年化）</p><p id="r37_ratio_total" class="text-lg font-bold mt-2">—</p></div>
               </div><p id="r37_price_source" class="text-xs text-gray-400 mt-3">待取得行情</p>
             </div>
@@ -1538,7 +1538,7 @@
         <section id="tab-efficiency" class="space-y-5 hidden" aria-label="R38 FINAL 家庭 XIRR 與投資效率">
           <div class="card border border-violet-700/60 r38-no-print">
             <div class="flex flex-wrap justify-between items-start gap-3">
-              <div><h2 class="text-xl font-bold text-violet-300">🏆 FINAL 家庭投資效率中心（R38）</h2><p class="text-sm text-gray-300 mt-2">整合主帳戶／大寶／二寶的真實交易、實際股息、庫存與資金加權年化報酬率 XIRR；保留全部舊分頁，這裡只讀不改帳。</p></div>
+              <div><h2 class="text-xl font-bold text-violet-300">🏆 FINAL 三帳戶獨立績效中心（R38）</h2><p class="text-sm text-gray-300 mt-2">整合主帳戶／大寶／二寶的真實交易、實際股息、庫存與資金加權年化報酬率 XIRR；保留全部舊分頁，這裡只讀不改帳。</p></div>
               <span id="r38_status" class="text-xs bg-gray-900 border border-gray-700 rounded p-2" role="status">計算中</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
@@ -1549,13 +1549,13 @@
             <div class="flex gap-2 flex-wrap mt-4"><button type="button" onclick="r38Csv()" class="rounded bg-emerald-700 hover:bg-emerald-600 px-4 py-3 text-sm">📥 XIRR／現金流 CSV</button><button type="button" onclick="r38Html()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-3 text-sm">📄 獨立 HTML</button><button type="button" onclick="r38Print()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-3 text-sm">🖨️ 列印／另存 PDF</button></div>
           </div>
           <div id="r38_paper" class="space-y-5">
-            <div class="card border border-violet-800/60"><h3 class="text-xl font-bold text-violet-300">家庭資金加權年化報酬率</h3><p class="text-xs text-gray-400 mt-2">XIRR 是依資金流日期折現求得，並非每年實際到手配息率。期末持股採參考股價與假設賣出費用估值，未來結果不保證。</p>
-              <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-4"><div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭資金加權 XIRR（年化）</p><p id="r38_family_rate" class="text-2xl font-bold text-violet-300 mt-2">—</p></div><div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">歷來實現＋帳面＋已登錄股息</p><p id="r38_family_profit" class="text-xl font-bold mt-2">—</p></div><div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭累積已登錄實收股息</p><p id="r38_family_cash" class="text-xl font-bold text-emerald-300 mt-2">—</p></div></div>
+            <div class="card border border-violet-800/60"><h3 class="text-xl font-bold text-violet-300">主帳戶資金加權年化報酬率</h3><p class="text-xs text-gray-400 mt-2">XIRR 是依資金流日期折現求得，並非每年實際到手配息率。期末持股採參考股價與假設賣出費用估值，未來結果不保證。</p>
+              <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-4"><div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶 XIRR（年化）</p><p id="r38_family_rate" class="text-2xl font-bold text-violet-300 mt-2">—</p></div><div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">歷來實現＋帳面＋已登錄股息</p><p id="r38_family_profit" class="text-xl font-bold mt-2">—</p></div><div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶累積已登錄實收股息</p><p id="r38_family_cash" class="text-xl font-bold text-emerald-300 mt-2">—</p></div></div>
               <p id="r38_help" class="text-sm text-gray-300 mt-3" role="status">依實際記帳計算，並未向券商驗證。</p>
               <div class="overflow-x-auto mt-4"><table class="w-full min-w-[780px] text-xs"><thead class="text-gray-400"><tr><th class="text-left p-2">帳戶</th><th class="text-right p-2">現有持股</th><th class="text-right p-2">歷來買股支出</th><th class="text-right p-2">賣出淨收</th><th class="text-right p-2">歷來實收股息</th><th class="text-right p-2">XIRR（年化）</th><th class="text-left p-2">狀態</th></tr></thead><tbody id="r38_rate_rows" class="divide-y divide-gray-700"></tbody></table></div>
               <p class="text-xs text-gray-400 mt-3">計算流向：買股（包括配息再投資）為負；賣出淨收、已登錄實際股息為正；未賣部位僅在計算截止日加入「假設賣出淨值」。若未實際記錄股息或已再投資但未登收入，XIRR 可能偏低。資料未涵蓋外部券商帳戶現金餘額、稅務差異或其他資產。</p>
             </div>
-            <div class="card"><h3 class="text-lg font-bold text-cyan-300">年度資金流與領息核對</h3><p class="text-xs text-gray-400 mt-2">此表按實際交易與入帳年度彙整，並非各年度 XIRR；要計算特定年度績效還需要該年初、年末的可驗證估值。</p><div class="overflow-x-auto mt-3"><table class="w-full min-w-[730px] text-xs"><thead class="text-gray-400"><tr><th class="text-left p-2">年度</th><th class="text-right p-2">全部買股支出</th><th class="text-right p-2">賣出淨收入</th><th class="text-right p-2">主帳戶領息</th><th class="text-right p-2">大寶領息</th><th class="text-right p-2">二寶領息</th><th class="text-right p-2">家庭合計領息</th></tr></thead><tbody id="r38_year_rows" class="divide-y divide-gray-700"></tbody></table></div></div>
+            <div class="card"><h3 class="text-lg font-bold text-cyan-300">年度資金流與領息核對</h3><p class="text-xs text-gray-400 mt-2">此表主帳戶買進與賣出獨立彙整、雙寶僅顯示個別實收，並非各年度 XIRR；要計算特定年度績效還需要該年初、年末的可驗證估值。</p><div class="overflow-x-auto mt-3"><table class="w-full min-w-[730px] text-xs"><thead class="text-gray-400"><tr><th class="text-left p-2">年度</th><th class="text-right p-2">主帳戶買股支出</th><th class="text-right p-2">賣出淨收入</th><th class="text-right p-2">主帳戶領息</th><th class="text-right p-2">大寶領息</th><th class="text-right p-2">二寶領息</th></tr></thead><tbody id="r38_year_rows" class="divide-y divide-gray-700"></tbody></table></div></div>
             <div class="card border border-amber-900/50"><h3 class="text-lg font-bold text-amber-300">資料完整性與對帳提醒</h3><p id="r38_count" class="text-xs text-gray-400 mt-1">檢查中</p><div id="r38_audit" class="space-y-2 mt-3"></div><p class="text-xs text-gray-500 mt-4">僅提醒可能的帳務缺漏，不會自行新增、刪除、同步交易。R30 的 SHA-256 完整備份仍是原始帳務保存方式。財務資料請勿提交至公開 GitHub。</p></div>
           </div>
         </section>
@@ -1582,9 +1582,9 @@
           </div>
           <div id="r35_paper" class="space-y-5">
             <div class="card border border-emerald-900/50">
-              <div class="flex flex-wrap items-start justify-between gap-3"><div><p class="text-xs tracking-widest text-emerald-300">00406A · FAMILY CASH FLOW</p><h2 class="text-xl font-bold mt-2">家庭三帳戶實收股息與現金流</h2><p id="r35_period" class="text-xs text-gray-400 mt-2">—</p></div><p id="r35_generated" class="text-xs text-gray-400">—</p></div>
+              <div class="flex flex-wrap items-start justify-between gap-3"><div><p class="text-xs tracking-widest text-emerald-300">00406A · FAMILY CASH FLOW</p><h2 class="text-xl font-bold mt-2">三帳戶個別實收股息與現金流</h2><p id="r35_period" class="text-xs text-gray-400 mt-2">—</p></div><p id="r35_generated" class="text-xs text-gray-400">—</p></div>
               <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
-                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">累積家庭實收股息</p><p id="r35_lifetime_cash" class="text-lg font-bold text-emerald-300 mt-2">—</p></div>
+                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶累積實收股息</p><p id="r35_lifetime_cash" class="text-lg font-bold text-emerald-300 mt-2">—</p></div>
                 <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">所選期間實收股息</p><p id="r35_period_cash" class="text-lg font-bold mt-2">—</p></div>
                 <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">所選期間自有資金買進（含費）</p><p id="r35_period_external" class="text-lg font-bold mt-2">—</p></div>
                 <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">所選期間帳務淨現金流</p><p id="r35_period_net" class="text-lg font-bold mt-2">—</p></div>
@@ -1593,7 +1593,7 @@
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4" id="r35_owner_cards"></div>
             <div class="card"><h3 class="text-lg font-bold text-cyan-300 mb-3">② 所選期間三帳戶現金流比較</h3><div class="overflow-x-auto"><table class="w-full min-w-[660px] text-sm"><thead class="text-gray-400 border-b border-gray-700"><tr><th class="text-left p-2">帳戶</th><th class="text-right p-2">自有買進</th><th class="text-right p-2">再投資買進</th><th class="text-right p-2">賣出淨收</th><th class="text-right p-2">實收股息</th><th class="text-right p-2">帳務淨現金流</th></tr></thead><tbody id="r35_owner_rows" class="divide-y divide-gray-700"></tbody></table></div><p class="text-xs text-gray-500 mt-3">配息再投資是實際買入支出，不等於當月一定有實收股息。帳務淨現金流不是損益，也不能直接推算報酬率。</p></div>
-            <div class="card"><h3 class="text-lg font-bold text-blue-300 mb-3">③ 選定年度每月實收股息與現金流</h3><div class="r35-chart-wrap" style="height:230px"><canvas id="r35_chart" aria-label="三個帳戶每月實收股息比較圖"></canvas></div><p id="r35_chart_note" class="text-xs text-gray-500 mt-2">圖表使用已登錄的淨入帳金額；下方表格不依賴圖表套件。</p><div class="overflow-x-auto mt-3"><table class="w-full min-w-[740px] text-xs"><thead class="text-gray-400 border-b border-gray-700"><tr><th class="text-left p-2">月份</th><th class="text-right p-2">主帳戶實收</th><th class="text-right p-2">大寶實收</th><th class="text-right p-2">二寶實收</th><th class="text-right p-2">家庭實收合計</th><th class="text-right p-2">買股支出</th><th class="text-right p-2">家庭淨現金流</th></tr></thead><tbody id="r35_month_rows" class="divide-y divide-gray-700"></tbody></table></div></div>
+            <div class="card"><h3 class="text-lg font-bold text-blue-300 mb-3">③ 選定年度每月實收股息與現金流</h3><div class="r35-chart-wrap" style="height:230px"><canvas id="r35_chart" aria-label="三個帳戶每月實收股息比較圖"></canvas></div><p id="r35_chart_note" class="text-xs text-gray-500 mt-2">圖表使用已登錄的淨入帳金額；下方表格不依賴圖表套件。</p><div class="overflow-x-auto mt-3"><table class="w-full min-w-[740px] text-xs"><thead class="text-gray-400 border-b border-gray-700"><tr><th class="text-left p-2">月份</th><th class="text-right p-2">主帳戶實收</th><th class="text-right p-2">大寶實收</th><th class="text-right p-2">二寶實收</th><th class="text-right p-2">買股支出</th><th class="text-right p-2">主帳戶淨現金流</th></tr></thead><tbody id="r35_month_rows" class="divide-y divide-gray-700"></tbody></table></div></div>
             <div class="card"><h3 class="text-lg font-bold text-amber-300 mb-3">④ 實收股息入帳明細（所選期間）</h3><p class="text-xs text-gray-400 mb-3">僅此處記錄「實際入帳」，交易裡的配息再投資與 ETF 公告不會自動合併。</p><div class="overflow-x-auto"><table class="w-full min-w-[560px] text-sm"><thead class="text-gray-400 border-b border-gray-700"><tr><th class="text-left p-2">日期</th><th class="text-left p-2">帳戶</th><th class="text-right p-2">實收金額</th><th class="text-left p-2">備註</th><th class="text-center p-2 r35-no-print">操作</th></tr></thead><tbody id="r35_cash_rows" class="divide-y divide-gray-700"></tbody></table></div></div>
             <div class="card"><h3 class="text-lg font-bold text-rose-300 mb-3">⑤ 核對與資料品質</h3><div id="r35_warnings" class="text-sm text-gray-300 space-y-2"></div><p class="text-xs text-gray-500 mt-3">資料為個人手動帳務整理，非券商帳務證明。請與三帳戶實際入帳及成交對帳。新資料鍵會納入 R30 SHA-256 完整備份，不會自動同步 GitHub。</p></div>
           </div>
@@ -1616,13 +1616,13 @@
           </div>
           <div id="r34_paper" class="space-y-5">
             <div class="card border border-cyan-800/50">
-              <div class="flex flex-wrap items-start justify-between gap-3"><div><p class="text-xs tracking-widest text-cyan-300">00406A · FAMILY PORTFOLIO</p><h2 class="text-2xl font-bold mt-2">家庭投資資產總覽</h2></div><p class="text-xs text-gray-400" id="r34_asof">—</p></div>
+              <div class="flex flex-wrap items-start justify-between gap-3"><div><p class="text-xs tracking-widest text-cyan-300">00406A · FAMILY PORTFOLIO</p><h2 class="text-2xl font-bold mt-2">主帳戶與雙寶資產對照</h2></div><p class="text-xs text-gray-400" id="r34_asof">—</p></div>
               <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
-                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭合計持股</p><p id="r34_total_shares" class="r34-summary-number text-lg font-bold mt-2">—</p></div>
-                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭現有庫存成本</p><p id="r34_total_basis" class="r34-summary-number text-lg font-bold mt-2">—</p></div>
-                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭參考總市值</p><p id="r34_total_market" class="r34-summary-number text-lg font-bold text-cyan-300 mt-2">—</p></div>
-                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭估算未實現損益（扣假設賣出費）</p><p id="r34_total_unrealized" class="r34-summary-number text-lg font-bold mt-2">—</p></div>
-                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">累積已實現買賣損益（全部帳戶）</p><p id="r34_total_realized" class="r34-summary-number text-lg font-bold mt-2">—</p></div>
+                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶持股（不含雙寶）</p><p id="r34_total_shares" class="r34-summary-number text-lg font-bold mt-2">—</p></div>
+                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶庫存成本</p><p id="r34_total_basis" class="r34-summary-number text-lg font-bold mt-2">—</p></div>
+                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶參考市值</p><p id="r34_total_market" class="r34-summary-number text-lg font-bold text-cyan-300 mt-2">—</p></div>
+                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶估算未實現損益（扣假設賣出費）</p><p id="r34_total_unrealized" class="r34-summary-number text-lg font-bold mt-2">—</p></div>
+                <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶累積已實現買賣損益</p><p id="r34_total_realized" class="r34-summary-number text-lg font-bold mt-2">—</p></div>
                 <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">累積自有資金買入支出</p><p id="r34_total_external" class="r34-summary-number text-lg font-bold mt-2">—</p></div>
                 <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">累積配息再投資買股支出</p><p id="r34_total_reinvest" class="r34-summary-number text-lg font-bold mt-2">—</p></div>
                 <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶已登錄實收股息</p><p id="r34_main_cash" class="r34-summary-number text-lg font-bold text-emerald-300 mt-2">—</p></div>
@@ -1631,9 +1631,9 @@
             </div>
             <div class="card border border-emerald-900/60"><div class="flex flex-wrap items-center justify-between gap-3"><div><h3 class="font-bold text-emerald-300">💵 R35 三帳戶實際股息</h3><p class="text-sm text-gray-300 mt-2" id="r35_family_cash_brief">等待實收台帳整理</p></div><button type="button" onclick="switchTab('cashflow')" class="r34-no-print rounded bg-emerald-800 px-4 py-3 text-sm">查看／登錄實收 →</button></div></div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4" id="r34_account_cards"></div>
-            <div class="card"><h3 class="text-lg font-bold text-cyan-300">家庭持股分布（同檔 ETF，依帳戶市值占比）</h3><div id="r34_allocation" class="space-y-3 mt-4">等待交易與行情</div><p class="text-xs text-gray-400 mt-3">因三個帳戶均持有 00406A，使用相同參考價時，市值占比等於股數占比；這不是不同 ETF 的風險分散程度。</p></div>
+            <div class="card"><h3 class="text-lg font-bold text-cyan-300">三帳戶獨立持股比較（不做合計）</h3><div id="r34_allocation" class="space-y-3 mt-4">等待交易與行情</div><p class="text-xs text-gray-400 mt-3">三個帳戶獨立列示股數與參考市值，不再計算合併占比；大寶、二寶不併入主帳戶。</p></div>
             <div class="card"><h3 class="text-lg font-bold text-pink-300 mb-2">近 3 個月份各帳戶交易足跡</h3><p class="text-xs text-gray-400 mb-3">按交易日統計實際已發生的買入支出，分開列出自有投入與配息再投資；沒有假設未來定投。</p><div class="overflow-x-auto"><table class="w-full min-w-[640px] text-sm"><thead class="text-gray-400 border-b border-gray-700"><tr><th class="p-2 text-left">月份</th><th class="p-2 text-left">帳戶</th><th class="p-2 text-right">自有資金買入</th><th class="p-2 text-right">再投資買入</th><th class="p-2 text-right">賣出淨收入</th></tr></thead><tbody id="r34_recent_rows" class="divide-y divide-gray-700"><tr><td colspan="5" class="text-center p-6 text-gray-400">尚無資料</td></tr></tbody></table></div></div>
-            <div class="card"><h3 class="text-lg font-bold text-amber-300 mb-3">資料完整性與解讀說明</h3><div id="r34_warnings" class="text-sm text-gray-300 space-y-2"></div><p class="text-xs text-gray-500 mt-3">已實現與未實現損益採個別帳戶移動平均成本；市值和未實現損益是按參考價估算，並非券商對帳單。R35 已增加雙寶的實際股息入帳台帳，請到家庭現金流中心核對；家庭完整報酬率仍須考慮投入與提領時點，不由帳面損益直接推算。ETF 配息公告不等於實收。</p></div>
+            <div class="card"><h3 class="text-lg font-bold text-amber-300 mb-3">資料完整性與解讀說明</h3><div id="r34_warnings" class="text-sm text-gray-300 space-y-2"></div><p class="text-xs text-gray-500 mt-3">已實現與未實現損益採個別帳戶移動平均成本；市值和未實現損益是按參考價估算，並非券商對帳單。R35 已增加雙寶的實際股息入帳台帳，請到家庭現金流中心核對；主帳戶完整報酬率仍須考慮投入與提領時點，不由帳面損益直接推算。ETF 配息公告不等於實收。</p></div>
           </div>
         </section>
 
@@ -3889,7 +3889,7 @@
             const main=r.main,rows=[['00406A Tracker R27','投資月報',r.month],['欄位','值'],['統計截止',r.cutoff],['資料狀態',r.invalid?'交易異常':'依目前已登錄資料'],['主帳戶自有資金買進',main.monthExternal],['主帳戶配息再投資買股',main.monthReinvest],['主帳戶賣出淨收入',main.monthSales],['主帳戶實際股息入帳',r.cash],['主帳戶當月已實現損益',r.invalid?'資料異常':main.monthRealized],['主帳戶淨現金流',r.netflow],['主帳戶期末持股',r.invalid?'資料異常':main.shares],['主帳戶期末庫存成本',r.invalid?'資料異常':main.basis],['參考價格說明',r.pricing.label],['期末參考股價',r.pricing.price??'無行情'],['主帳戶市值',r.market??'無行情'],['主帳戶未實現損益',r.unrealized??'無行情'],[],['日期','帳戶','類型','股數','單價','淨現金流','備註']];
             r.details.forEach(d=>rows.push([d.date,d.owner,d.label,d.shares??'',d.price??'',d.amount,d.note??'']));
             r36AppendMonthlyCsv(rows,r);
-            r27Download(`00406A_R36_家庭月報_${r.month}.csv`,'\ufeff'+rows.map(a=>a.map(r27CsvValue).join(',')).join('\r\n'),'text/csv;charset=utf-8');
+            r27Download(`00406A_R36_帳戶對照月報_${r.month}.csv`,'\ufeff'+rows.map(a=>a.map(r27CsvValue).join(',')).join('\r\n'),'text/csv;charset=utf-8');
         }
         function r27ExportHTML(){
             r27Render();const r=r27CurrentReport;if(!r)return;
@@ -3897,7 +3897,7 @@
             clone.removeAttribute('id');
             // 完全靜態的選定月份報表：不含 API token、localStorage、腳本或帳務編輯功能。
             const style=`body{font-family:system-ui,-apple-system,sans-serif;margin:22px auto;padding:0 15px;max-width:900px;color:#172033;background:#fff;font-size:14px} .card{border:1px solid #cbd5e1;border-radius:8px;padding:18px;margin:0 0 14px;break-inside:avoid}h2{font-size:23px}h3{font-size:18px}p{line-height:1.55} .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.bg-gray-900{background:#f1f5f9;padding:10px;border-radius:5px}.text-xs{font-size:11px;color:#475569}.text-sm{font-size:13px}.text-lg{font-size:17px}table{width:100%;border-collapse:collapse}th,td{padding:7px 5px;border-bottom:1px solid #e2e8f0;text-align:left}td.text-right,th.text-right{text-align:right} .overflow-x-auto{overflow-x:auto}@media print{@page{size:A4;margin:13mm}body{margin:0;padding:0}.card{page-break-inside:avoid}}`;
-            r27Download(`00406A_R36_家庭月報_${r.month}.html`,'<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A '+r.month+' 月報</title><style>'+style+'</style></head><body>'+clone.outerHTML+'</body></html>','text/html;charset=utf-8');
+            r27Download(`00406A_R36_帳戶對照月報_${r.month}.html`,'<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A '+r.month+' 月報</title><style>'+style+'</style></head><body>'+clone.outerHTML+'</body></html>','text/html;charset=utf-8');
         }
         // R25 股息入帳新增、修改或刪除時，月報立即刷新。
         const r27PreviousR25Render=r25Render;
@@ -3989,7 +3989,7 @@
             }
             const price=pricing.price;
             const feeOk=Number.isFinite(Number(sellFee))&&Number(sellFee)>=0&&Number(sellFee)<100;
-            const familyShares=Object.values(last.accounts).reduce((a,x)=>a+x.shares,0);
+            const familyShares=last.main.shares; // 總額僅主帳戶；雙寶獨立列示。
             const market=!invalid&&price!==null?last.main.shares*price:null;
             const familyMarket=!invalid&&price!==null?familyShares*price:null;
             const unrealized=market!==null&&feeOk?market*(1-Number(sellFee)/100)-last.main.basis:null;
@@ -4121,7 +4121,7 @@
                 ['期末庫存成本',r.invalid?'資料異常':r.last.main.basis],
                 ['期末參考價來源',r.pricing.label],['期末參考價',r.pricing.price??'無行情'],
                 ['期末主帳戶市值',r.market??'無行情'],['期末未實現損益',r.unrealized??'無行情'],
-                ['家庭期末股數',r.invalid?'資料異常':r.familyShares],
+                ['主帳戶期末股數',r.invalid?'資料異常':r.familyShares],
                 ['全年 ETF 每股公告配息合計',r.announced??'未取得公告'],
                 [],['月份','主帳戶自有資金買入','配息再投資','已登錄實收股息','賣出淨收入','已實現損益','期末主帳戶股數']];
             for(const m of r.months)rows.push([m.month,m.main.monthExternal,m.main.monthReinvest,m.cash,m.main.monthSales,m.invalid?'資料異常':m.main.monthRealized,m.invalid?'資料異常':m.main.shares]);
@@ -4131,14 +4131,14 @@
                 rows.push([R27_OWNERS[id],x.bought,x.sold,r.invalid?'異常':end.shares,r.invalid?'異常':end.basis,r.invalid?'異常':x.realized]);
             }
             r36AppendAnnualCsv(rows,r);
-            r27Download(`00406A_R36_家庭年報_${r.year}.csv`,'\ufeff'+rows.map(row=>row.map(r27CsvValue).join(',')).join('\r\n'),'text/csv;charset=utf-8');
+            r27Download(`00406A_R36_帳戶對照年報_${r.year}.csv`,'\ufeff'+rows.map(row=>row.map(r27CsvValue).join(',')).join('\r\n'),'text/csv;charset=utf-8');
         }
         function r28ExportHTML(){
             r28Render();const r=r28Current;if(!r)return;
             const clone=r28El('r28_paper').cloneNode(true);clone.removeAttribute('id');
             clone.querySelectorAll('canvas,.r28-chart-wrap').forEach(e=>e.remove());
             const style=`body{font-family:system-ui,-apple-system,sans-serif;margin:20px auto;padding:0 14px;max-width:950px;color:#172033;background:#fff;font-size:13px}.card{border:1px solid #cbd5e1;border-radius:7px;padding:13px;margin:0 0 12px;break-inside:avoid}h2{font-size:22px;margin:3px 0}h3{font-size:16px;margin:3px 0 8px}p{line-height:1.45;margin:5px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.bg-gray-900{background:#f1f5f9;padding:8px;border-radius:5px}.text-xs{font-size:10px;color:#475569}.text-sm{font-size:12px}.text-lg{font-size:16px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{padding:6px 4px;border-bottom:1px solid #e2e8f0;text-align:left}td.text-right,th.text-right{text-align:right}.overflow-x-auto{overflow-x:auto}@media print{@page{size:A4;margin:12mm}body{margin:0;padding:0}.card{break-inside:avoid}table{font-size:9px}}`;
-            r27Download(`00406A_R36_家庭年報_${r.year}.html`,'<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A '+r.year+' 年度總結</title><style>'+style+'</style></head><body>'+clone.outerHTML+'</body></html>','text/html;charset=utf-8');
+            r27Download(`00406A_R36_帳戶對照年報_${r.year}.html`,'<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A '+r.year+' 年度總結</title><style>'+style+'</style></head><body>'+clone.outerHTML+'</body></html>','text/html;charset=utf-8');
         }
         // 本機交易、股息及市場資料更動時連動年度報表。避免另存任何新的交易紀錄。
         const r28PrevTransaction=updateTransactions;
@@ -4695,7 +4695,7 @@
             ['topup','智慧加碼入口'],['monthly','智慧月報入口'],['annual','年度總結入口'],
             ['retirement','退休目標入口'],['security','備份安全入口'],['records','資料管理入口'],
             ['market','行情及持股總覽'],['breakeven','保本及損益試算'],['projection','退休複利投影'],
-            ['performance','R37 家庭績效與領息趨勢'],['efficiency','FINAL 家庭 XIRR 與稽核'],
+            ['performance','R37 帳戶績效與領息趨勢'],['efficiency','FINAL 家庭 XIRR 與稽核'],
 ];
         const R32_DEFAULTS={days:{main:0,kid_a:0,kid_b:0},backupConfirmed:'',home:{}};
         let r32Prefs=JSON.parse(JSON.stringify(R32_DEFAULTS));
@@ -4910,7 +4910,7 @@
         /* ===== R33 手機優先：固定導覽、全功能選單與二次確認快速記帳 ===== */
         const R33_MENU=[
           ['核心功能',[['overview','🏠 資產總覽'],['transactions','📓 逐筆記帳'],['records','🔎 資料管理'],['reminders','🔔 智慧提醒']]],
-          ['家庭存股',[['family','👨‍👩‍👧‍👦 家庭資產總覽'],['cashflow','💵 家庭現金流'],['performance','📊 家庭績效趨勢'],['efficiency','🏆 FINAL 家庭 XIRR'],['ledger','📝 我的存股手帳'],['kids','👧 雙寶存股手帳']]],
+          ['家庭存股',[['family','👨‍👩‍👧‍👦 家庭資產總覽'],['cashflow','💵 家庭現金流'],['performance','📊 帳戶績效趨勢'],['efficiency','🏆 FINAL 獨立帳戶 XIRR'],['ledger','📝 我的存股手帳'],['kids','👧 雙寶存股手帳']]],
           ['分析與試算',[['charts','📈 走勢分析'],['dividends','💰 配息中心'],['assets','🎯 資產分析'],['topup','🧮 智慧加碼'],['report','🗓️ 智慧月報'],['annual','🏆 年度總結'],['retirement','🌅 退休目標']]],
           ['安全與風險',[['security','🔐 資料安全'],['safety','🛡️ 流動性雷達']]]
         ];
@@ -5122,12 +5122,12 @@
                 const a=owners[id];
                 a.avg=a.shares>0?a.basis/a.shares:null;
                 if(!a.invalid&&priceValid){a.market=a.shares*reference;if(feeValid)a.unrealized=a.market*(1-pct/100)-a.basis;}
-                for(const k of ['shares','basis','external','reinvest','sales','realized','bought','sold','trades'])totals[k]+=a[k];
             }
-            if(allValid&&priceValid){totals.market=R34_IDS.reduce((sum,id)=>sum+owners[id].market,0);if(feeValid)totals.unrealized=R34_IDS.reduce((sum,id)=>sum+owners[id].unrealized,0);}
-            for(const id of R34_IDS){
-                const a=owners[id];a.allocation=allValid&&totals.market>0?a.shares/totals.shares*100:null;
-            }
+            // 獨立帳戶規則：摘要只取主帳戶；大寶與二寶絕不加入合計。
+            for(const k of ['shares','basis','external','reinvest','sales','realized','bought','sold','trades'])totals[k]=owners.main[k];
+            if(allValid&&priceValid){totals.market=owners.main.market;if(feeValid)totals.unrealized=owners.main.unrealized;}
+            // 比較圖為獨立帳戶清單，不再計算三帳戶共同市值占比。
+            for(const id of R34_IDS)owners[id].allocation=null;
             return {owners,totals,mainCash,cashInvalid,allValid,errors:[...new Set(errors)],futureCount:future.length,months,price:priceValid?reference:null,feeValid,today};
         }
         function r34Build(){
@@ -5164,7 +5164,7 @@
                 r34_main_cash:r.cashInvalid?'入帳資料異常':r34Money(r.mainCash)
             }))r34Set(id,val);
             r34Set('r34_price_note',r.price===null?'尚無有效的本次載入參考股價；庫存市值和未實現損益不估算。':`使用最近載入的單一參考股價 NT$ ${r.price.toFixed(2)}；可能為前一交易日或快取，非保證即時報價。${r.feeValid?'未實現損益已扣假設賣出費率。':'賣出費率設定異常，因此未實現損益不計算。'}`);
-            r34Set('r34_home_brief',!valid?'家庭交易紀錄存在異常，請至 R30 資料安全中心檢查。':`主帳戶／雙寶合計 ${t.shares.toLocaleString('zh-TW')} 股；${t.market===null?'行情尚未取得':`參考市值 ${r34Money(t.market)}`}。`);
+            r34Set('r34_home_brief',!valid?'家庭交易紀錄存在異常，請至 R30 資料安全中心檢查。':`主帳戶 ${t.shares.toLocaleString('zh-TW')} 股（不含雙寶）；${t.market===null?'行情尚未取得':`參考市值 ${r34Money(t.market)}`}。`);
             const card=r34El('r34_account_cards');
             card.innerHTML=R34_IDS.map(id=>{
                 const a=o[id],bad=a.invalid;
@@ -5176,10 +5176,8 @@
                     <button type="button" class="r34-no-print rounded bg-gray-700 hover:bg-gray-600 px-4 py-3 text-sm mt-4 w-full" data-r34-owner="${id}">前往 ${a.label} 記帳 →</button></div>`;
             }).join('');
             const alloc=r34El('r34_allocation');
-            if(!valid)alloc.textContent='交易異常，請修正後再看家庭分布。';
-            else if(r.price===null)alloc.textContent='行情尚未取得，暫不顯示市值佔比。';
-            else if(t.shares===0)alloc.textContent='尚未登錄持股。';
-            else alloc.innerHTML=R34_IDS.map(id=>{const a=o[id],w=a.allocation||0;return `<div><div class="flex justify-between gap-2 text-sm mb-2"><span>${a.label}</span><span>${w.toFixed(1)}%｜${r34Money(a.market)}</span></div><div class="r34-progress"><div style="background:${R34_COLOR[id]};width:${Math.max(0,Math.min(100,w))}%"></div></div></div>`;}).join('');
+            if(!valid)alloc.textContent='帳務異常，請先檢查各帳戶交易。';
+            else alloc.innerHTML=R34_IDS.map(id=>{const a=o[id];return `<div class="bg-gray-900 rounded p-3 flex flex-wrap justify-between gap-2 text-sm"><span style="color:${R34_COLOR[id]}">${a.label}（獨立）</span><span>${a.shares.toLocaleString('zh-TW')} 股｜${r34Money(a.market)}</span></div>`;}).join('');
             const recent=r34El('r34_recent_rows'),ym=r.today.slice(0,7),list=[r27ShiftMonth(ym,-2),r27ShiftMonth(ym,-1),ym];
             recent.innerHTML=list.flatMap(m=>R34_IDS.map(id=>{
                 const x=r.months[m]?.[id]||{external:0,reinvest:0,sales:0};
@@ -5188,9 +5186,9 @@
             const warnings=[];
             if(!valid)warnings.push('⚠️ '+r.errors.join('；')+'。此時合計數字會停用，請開啟 R30 資料安全中心查核。');
             if(r.futureCount)warnings.push(`有 ${r.futureCount} 筆未來日期交易，不納入本次真實資產統計。`);
-            if(r.price===null)warnings.push('尚未載入有效行情；市值、未實現損益與市值佔比留白。');
+            if(r.price===null)warnings.push('尚未載入有效行情；市值與未實現損益留白。');
             if(!r.feeValid)warnings.push('賣出稅費比例不正確；未實現損益留白。');
-            warnings.push('家庭實收股息另由 R35 三帳戶台帳核對；ETF 配息公告不當作實收，家庭市值變化不代表報酬率。');
+            warnings.push('三帳戶實收股息分別由 R25／R35 台帳核對；ETF 配息公告不當作實收，市值變化不代表報酬率。');
             warnings.push('請定期下載 R30 校驗備份，並與券商股數及實際成本對帳。');
             r34El('r34_warnings').replaceChildren(...warnings.map(s=>{const p=document.createElement('p');p.textContent='• '+s;return p;}));
         }
@@ -5198,8 +5196,7 @@
             r34Render();const r=r34Last;if(!r)return;
             const rows=[['00406A R34 家庭資產總覽','資料截至',r.today],['帳戶','股數','平均成本','現有庫存成本','參考市值','未實現損益','已實現損益','累計自有投入','累計配息再投資','累計賣出淨收入','有效']];
             for(const id of R34_IDS){const x=r.owners[id],good=!x.invalid;rows.push([x.label,good?x.shares:'資料異常',good?x.avg:'',good?x.basis:'',good?x.market:'',good?x.unrealized:'',good?x.realized:'',good?x.external:'',good?x.reinvest:'',good?x.sales: '',good?'是':'否']);}
-            rows.push(['家庭合計',r.allValid?r.totals.shares:'資料異常','',r.allValid?r.totals.basis:'',r.allValid?r.totals.market:'',r.allValid?r.totals.unrealized:'',r.allValid?r.totals.realized:'',r.allValid?r.totals.external:'',r.allValid?r.totals.reinvest:'',r.allValid?r.totals.sales:'',r.allValid?'是':'否']);
-            rows.push(['主帳戶已登錄實收股息',r.cashInvalid?'異常':r.mainCash],['參考股價',r.price===null?'缺少':r.price],['註記','雙寶沒有獨立實收股息台帳；配息再投資為買股支出，不是實收現金。']);
+            rows.push(['主帳戶已登錄實收股息',r.cashInvalid?'異常':r.mainCash],['參考股價',r.price===null?'缺少':r.price],['註記','雙寶另有 R35 實收股息台帳，資料獨立；配息再投資為買股支出，不是實收現金。']);
             rows.push([],['月份','帳戶','自有資金買入','配息再投資買入','賣出淨收入']);
             const ym=r.today.slice(0,7);for(const m of [r27ShiftMonth(ym,-2),r27ShiftMonth(ym,-1),ym])for(const id of R34_IDS){const x=r.months[m]?.[id]||{external:0,reinvest:0,sales:0};rows.push([m,R27_OWNERS[id],x.external,x.reinvest,x.sales]);}
             r27Download('00406A_R34_家庭資產_'+r.today+'.csv','\ufeff'+rows.map(row=>row.map(r27CsvValue).join(',')).join('\r\n'),'text/csv;charset=utf-8');
@@ -5358,13 +5355,15 @@
                 if(month==='all'||date.slice(5,7)===month){owners[owner][col]+=amount;owners[owner].txCount++;}
             }
             function net(x){x.net=x.sales+x.cash-x.external-x.reinvest;return x;}
-            const total=make();for(const owner of R35_IDS){net(owners[owner]);for(const k of ['cash','external','reinvest','sales','net','txCount','cashCount'])total[k]+=owners[owner][k];}
+            for(const owner of R35_IDS)net(owners[owner]);
+            const total={...owners.main}; // 摘要僅主帳戶，不含大寶、二寶。
             const months=[];
             for(const m of Object.keys(byMonth)){
-                const r=byMonth[m],sum=make();for(const id of R35_IDS){net(r[id]);for(const k of ['cash','external','reinvest','sales','net','txCount','cashCount'])sum[k]+=r[id][k];}
+                const r=byMonth[m];for(const id of R35_IDS)net(r[id]);
+                const sum={...r.main};
                 months.push({month:m,accounts:r,total:sum});
             }
-            const lifetimeTotal=R35_IDS.reduce((s,id)=>s+lifetime[id].cash,0);
+            const lifetimeTotal=lifetime.main.cash;
             return {owners,total,months,lifetime,lifetimeTotal,filteredCash,issues:[...new Set(errorList)],year,month,today};
         }
         function r35Build(){
@@ -5407,11 +5406,11 @@
             }).join('');
             const ownerRows=R35_IDS.map(id=>{
                 const a=r.owners[id];return `<tr><td class="p-2">${R27_OWNERS[id]}</td><td class="p-2 text-right">${r35Money(a.external)}</td><td class="p-2 text-right">${r35Money(a.reinvest)}</td><td class="p-2 text-right">${r35Money(a.sales)}</td><td class="p-2 text-right">${r35Money(a.cash)}</td><td class="p-2 text-right font-semibold">${good?r35Money(a.net):'—'}</td></tr>`;
-            });r35El('r35_owner_rows').innerHTML=ownerRows.join('')+`<tr class="font-bold bg-gray-800"><td class="p-2">家庭合計</td><td class="p-2 text-right">${r35Money(r.total.external)}</td><td class="p-2 text-right">${r35Money(r.total.reinvest)}</td><td class="p-2 text-right">${r35Money(r.total.sales)}</td><td class="p-2 text-right">${r35Money(r.total.cash)}</td><td class="p-2 text-right">${good?r35Money(r.total.net):'—'}</td></tr>`;
-            r35El('r35_month_rows').innerHTML=r.months.map(m=>`<tr><td class="p-2">${m.month}</td><td class="p-2 text-right">${r35Money(m.accounts.main.cash)}</td><td class="p-2 text-right">${r35Money(m.accounts.kid_a.cash)}</td><td class="p-2 text-right">${r35Money(m.accounts.kid_b.cash)}</td><td class="p-2 text-right font-semibold">${r35Money(m.total.cash)}</td><td class="p-2 text-right">${r35Money(m.total.external+m.total.reinvest)}</td><td class="p-2 text-right">${good?r35Money(m.total.net):'—'}</td></tr>`).join('');
+            });r35El('r35_owner_rows').innerHTML=ownerRows.join('');
+            r35El('r35_month_rows').innerHTML=r.months.map(m=>`<tr><td class="p-2">${m.month}</td><td class="p-2 text-right">${r35Money(m.accounts.main.cash)}</td><td class="p-2 text-right">${r35Money(m.accounts.kid_a.cash)}</td><td class="p-2 text-right">${r35Money(m.accounts.kid_b.cash)}</td><td class="p-2 text-right">${r35Money(m.total.external+m.total.reinvest)}</td><td class="p-2 text-right">${good?r35Money(m.total.net):'—'}</td></tr>`).join('');
             r35El('r35_cash_rows').innerHTML=r.filteredCash.length?[...r.filteredCash].reverse().map(x=>`<tr><td class="p-2 whitespace-nowrap">${x.date}</td><td class="p-2">${R27_OWNERS[x.owner]}</td><td class="p-2 text-right font-semibold text-emerald-300">${r35Money(x.amount)}</td><td class="p-2">${r25Escape(x.note)}</td><td class="p-2 r35-no-print text-center">${x.owner==='main'?'<button type="button" data-r35-main="1" class="text-sky-300 underline text-xs">至 R25 編輯</button>':`<button type="button" data-r35-edit="${x.id}" class="text-amber-300 text-xs mr-2">編輯</button><button type="button" data-r35-delete="${x.id}" class="text-red-300 text-xs">刪除</button>`}</td></tr>`).join(''):'<tr><td colspan="5" class="text-center p-6 text-gray-400">所選期間尚未登錄實收股息。</td></tr>';
             const messages=[...r.issues];
-            if(!r.lifetimeTotal)messages.push('尚無已登錄的真實股息；請先確認券商入帳資料後再登錄。');
+            if(!r.lifetimeTotal)messages.push('主帳戶尚無已登錄的實收股息；雙寶另在個別帳戶統計。');
             if(!r.lifetime.kid_a.count||!r.lifetime.kid_b.count)messages.push('雙寶尚未登錄的月份不代表股息為零；目前只能統計已有資料。');
             if(r.months.some(m=>m.month>r.today.slice(0,7)))messages.push('年度表中尚未到來的月份使用零作佔位，並非預測，也不代表未來確定沒有配息。');
             if(r.total.reinvest&&!r.total.cash)messages.push('所選期間有配息再投資買股紀錄、但無實收股息紀錄，兩種資料不會自動互相補齊。');
@@ -5420,7 +5419,7 @@
             r35Text('r35_chart_note','圖表只取已登錄實收現金，不將交易中的再投資股數換算成額外收入。');
             if(r35Chart){try{r35Chart.destroy();}catch(e){}r35Chart=null;}
             if(typeof Chart==='function'){
-                try{r35Chart=new Chart(r35El('r35_chart'),{type:'bar',data:{labels:r.months.map(x=>x.month.slice(5)+'月'),datasets:R35_IDS.map(id=>({label:R27_OWNERS[id],data:r.months.map(x=>x.accounts[id].cash),backgroundColor:R35_COLORS[id]}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#e5e7eb'}}},scales:{x:{stacked:true,ticks:{color:'#cbd5e1'}},y:{stacked:true,ticks:{color:'#cbd5e1'}}}}});}
+                try{r35Chart=new Chart(r35El('r35_chart'),{type:'bar',data:{labels:r.months.map(x=>x.month.slice(5)+'月'),datasets:R35_IDS.map(id=>({label:R27_OWNERS[id],data:r.months.map(x=>x.accounts[id].cash),backgroundColor:R35_COLORS[id]}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#e5e7eb'}}},scales:{x:{stacked:false,ticks:{color:'#cbd5e1'}},y:{stacked:false,ticks:{color:'#cbd5e1'}}}}});}
                 catch(e){r35Chart=null;r35Text('r35_chart_note','圖表套件未載入；請依下方 12 個月表格核對。');}
             }else r35Text('r35_chart_note','圖表套件未載入；請依下方 12 個月表格核對。');
             r35SyncFamily();
@@ -5432,16 +5431,15 @@
             if(r35Corrupt){id.textContent='雙寶股息資料異常，請先到 R30 安全中心核對';return;}
             const rawMain=localStorage.getItem(R25_CASH_KEY);
             if(rawMain!==null){try{const obj=JSON.parse(rawMain);if(!Array.isArray(obj)||r25ReadCashRows(obj).length!==obj.length)throw Error('主帳戶實收紀錄不合法');}catch(e){id.textContent='主帳戶入帳原始資料異常，請先到 R30 安全中心核對';return;}}
-            const value=[...r25CashRows.map(x=>({...x,owner:'main'})),...r35KidsCash].filter(x=>x.date<=r25Today()).reduce((s,x)=>s+x.amount,0);
-            id.textContent='三帳戶累積已登錄實收股息：'+r35Money(value)+'（依實際入帳台帳，不含未登錄配息）';
+            const value=r25CashRows.filter(x=>x.date<=r25Today()).reduce((s,x)=>s+x.amount,0);
+            id.textContent='主帳戶累積已登錄實收股息：'+r35Money(value)+'（大寶、二寶另列，不納入主帳戶）';
         }
         function r35ExportCsv(){
             r35Render();const r=r35Last;if(!r)return;
             const rows=[['00406A R35 家庭現金流','期間',r.year,r.month],['帳戶','自有買進','再投資買進','賣出淨收','實收股息','帳務淨現金流']];
             for(const id of R35_IDS){const x=r.owners[id];rows.push([R27_OWNERS[id],x.external,x.reinvest,x.sales,x.cash,r.issues.length?'資料異常':x.net]);}
-            rows.push(['家庭合計',r.total.external,r.total.reinvest,r.total.sales,r.total.cash,r.issues.length?'資料異常':r.total.net]);
-            rows.push([],['月份','主帳戶實收','大寶實收','二寶實收','家庭實收合計','全部買股支出','家庭淨現金流']);
-            for(const m of r.months)rows.push([m.month,m.accounts.main.cash,m.accounts.kid_a.cash,m.accounts.kid_b.cash,m.total.cash,m.total.external+m.total.reinvest,r.issues.length?'資料異常':m.total.net]);
+            rows.push([],['月份','主帳戶實收','大寶實收','二寶實收','主帳戶買股支出','主帳戶淨現金流']);
+            for(const m of r.months)rows.push([m.month,m.accounts.main.cash,m.accounts.kid_a.cash,m.accounts.kid_b.cash,m.total.external+m.total.reinvest,r.issues.length?'資料異常':m.total.net]);
             rows.push([],['入帳日','帳戶','實收金額','備註']);for(const x of r.filteredCash)rows.push([x.date,R27_OWNERS[x.owner],x.amount,x.note]);
             r27Download(`00406A_R35_家庭現金流_${r.year}${r.month==='all'?'':'-'+r.month}.csv`,'\ufeff'+rows.map(row=>row.map(r27CsvValue).join(',')).join('\r\n'),'text/csv;charset=utf-8');
         }
@@ -5493,7 +5491,7 @@
         const r35PriorR34Render=r34Render;
         r34Render=function(...args){const val=r35PriorR34Render.apply(this,args);if(r35Initialized)r35SyncFamily();return val;};
 
-        /* ===== R36 家庭月報／年報整合：只讀取 R25 + R35 三帳戶真實入帳，不改舊報表計算或儲存鍵 ===== */
+        /* ===== R36 帳戶對照月報／年報整合：只讀取 R25 + R35 三帳戶真實入帳，不改舊報表計算或儲存鍵 ===== */
         const r36El=id=>document.getElementById(id);
         const r36Put=(id,text)=>{const e=r36El(id);if(e)e.textContent=String(text);};
         const r36Amount=n=>Number.isFinite(n)?r25Money2(n):'—';
@@ -5522,8 +5520,6 @@
                 const x=report.owners[id];
                 return `<tr><td class="p-2 font-semibold">${R27_OWNERS[id]}</td><td class="p-2 text-right">${bad?'—':r36Amount(x.external)}</td><td class="p-2 text-right">${bad?'—':r36Amount(x.reinvest)}</td><td class="p-2 text-right">${bad?'—':r36Amount(x.sales)}</td><td class="p-2 text-right text-emerald-300">${bad?'—':r36Amount(x.cash)}</td><td class="p-2 text-right">${bad?'—':r36Amount(x.net)}</td></tr>`;
             });
-            const t=report.total;
-            rows.push(`<tr class="font-bold bg-gray-800"><td class="p-2">家庭合計</td><td class="p-2 text-right">${bad?'—':r36Amount(t.external)}</td><td class="p-2 text-right">${bad?'—':r36Amount(t.reinvest)}</td><td class="p-2 text-right">${bad?'—':r36Amount(t.sales)}</td><td class="p-2 text-right">${bad?'—':r36Amount(t.cash)}</td><td class="p-2 text-right">${bad?'—':r36Amount(t.net)}</td></tr>`);
             return rows.join('');
         }
         function r36RenderMonthly(previous){
@@ -5531,23 +5527,23 @@
             try{
                 const {report:r,problems}=r36Prepared(previous.month.slice(0,4),previous.month.slice(5,7));
                 const bad=!!problems.length||previous.invalid;
-                r36Put('r36_month_status',bad?'⚠ 部分原始資料無效；已隱藏家庭實收與淨現金流，請到 R30 資料安全檢查':`${previous.month}｜三帳戶已登錄實收入帳 ${r.total.cashCount} 筆（主帳戶原欄位保持不變）`);
+                r36Put('r36_month_status',bad?'⚠ 部分原始資料無效；已隱藏主帳戶實收與淨現金流，請到 R30 資料安全檢查':`${previous.month}｜主帳戶已登錄實收入帳 ${r.total.cashCount} 筆（主帳戶原欄位保持不變）`);
                 r36Put('r36_month_cash',bad?'資料異常':r36Amount(r.total.cash));
                 r36Put('r36_month_a',bad?'—':r36Amount(r.owners.kid_a.cash));
                 r36Put('r36_month_b',bad?'—':r36Amount(r.owners.kid_b.cash));
                 r36Put('r36_month_net',bad?'—':r36Amount(r.total.net));
                 r36El('r36_month_rows').innerHTML=r36RowsOwners(r,bad);
                 r36El('r36_month_dividends').innerHTML=bad?'<tr><td colspan="4" class="p-4 text-center text-amber-300">資料異常，請先查核原始台帳</td></tr>':r.filteredCash.length?r.filteredCash.map(x=>`<tr><td class="p-2">${x.date}</td><td class="p-2">${R27_OWNERS[x.owner]}</td><td class="p-2 text-right">${r36Amount(x.amount)}</td><td class="p-2">${r25Escape(x.note)}</td></tr>`).join(''):'<tr><td colspan="4" class="text-gray-400 p-4 text-center">此月尚無已登錄實收股息（不代表確定未發放）</td></tr>';
-                r36Put('r36_month_note',bad?`原始台帳警告：${problems.join('；')||'交易有超賣／無效紀錄'}。不應使用這些欄位判斷家庭績效。`:'主帳戶 R27 原本的實收與淨現金流仍只代表主帳戶；本節獨立加總三帳戶。股息再投資列為買進支出、不是額外的收入；家庭帳務淨現金流不是銀行餘額或投資報酬。');
-            }catch(e){r36Put('r36_month_status','⚠ 家庭月報無法計算：'+e.message);['r36_month_cash','r36_month_a','r36_month_b','r36_month_net'].forEach(id=>r36Put(id,'—'));r36El('r36_month_rows').innerHTML='';r36El('r36_month_dividends').innerHTML='';}
+                r36Put('r36_month_note',bad?`原始台帳警告：${problems.join('；')||'交易有超賣／無效紀錄'}。不應使用這些欄位判斷帳戶績效。`:'主帳戶 R27 原本的實收與淨現金流仍只代表主帳戶；本節獨立列示三帳戶，主帳戶小計不含雙寶。股息再投資列為買進支出、不是額外的收入；家庭帳務淨現金流不是銀行餘額或投資報酬。');
+            }catch(e){r36Put('r36_month_status','⚠ 帳戶對照月報無法計算：'+e.message);['r36_month_cash','r36_month_a','r36_month_b','r36_month_net'].forEach(id=>r36Put(id,'—'));r36El('r36_month_rows').innerHTML='';r36El('r36_month_dividends').innerHTML='';}
         }
         function r36AnnualPriorYears(year,problems){
-            if(problems.length)return '<tr><td colspan="5" class="p-3 text-amber-300">原始資料異常，請先核對</td></tr>';
+            if(problems.length)return '<tr><td colspan="4" class="p-3 text-amber-300">原始資料異常，請先核對</td></tr>';
             const out=[];
             for(let y=Math.max(2020,Number(year)-3);y<=Number(year);y++){
                 const x=r36Prepared(y,'all'),v=x.report;
-                if(x.problems.length){out.push(`<tr><td class="p-2">${y}</td><td colspan="4" class="p-2">資料異常</td></tr>`);continue;}
-                out.push(`<tr><td class="p-2">${y}${y===new Date().getFullYear()?'*':''}</td><td class="p-2 text-right">${r36Amount(v.owners.main.cash)}</td><td class="p-2 text-right">${r36Amount(v.owners.kid_a.cash)}</td><td class="p-2 text-right">${r36Amount(v.owners.kid_b.cash)}</td><td class="p-2 text-right font-semibold">${r36Amount(v.total.cash)}</td></tr>`);
+                if(x.problems.length){out.push(`<tr><td class="p-2">${y}</td><td colspan="3" class="p-2">資料異常</td></tr>`);continue;}
+                out.push(`<tr><td class="p-2">${y}${y===new Date().getFullYear()?'*':''}</td><td class="p-2 text-right">${r36Amount(v.owners.main.cash)}</td><td class="p-2 text-right">${r36Amount(v.owners.kid_a.cash)}</td><td class="p-2 text-right">${r36Amount(v.owners.kid_b.cash)}</td></tr>`);
             }
             return out.reverse().join('');
         }
@@ -5556,7 +5552,7 @@
             try{
                 const {report:r,problems}=r36Prepared(previous.year,'all');
                 const bad=!!problems.length||previous.invalid;
-                r36Put('r36_annual_status',bad?'⚠ 交易或原始台帳異常；請到 R30 資料安全核對':`${r.year} 年${r.year===Number(r25Today().slice(0,4))?'（截至今日，尚未全年結算）':''}｜三帳戶共 ${r.total.cashCount} 筆已登錄實收`);
+                r36Put('r36_annual_status',bad?'⚠ 交易或原始台帳異常；請到 R30 資料安全核對':`${r.year} 年${r.year===Number(r25Today().slice(0,4))?'（截至今日，尚未全年結算）':''}｜主帳戶 ${r.total.cashCount} 筆已登錄實收`);
                 r36Put('r36_annual_cash',bad?'資料異常':r36Amount(r.total.cash));
                 r36Put('r36_annual_a',bad?'—':r36Amount(r.owners.kid_a.cash));
                 r36Put('r36_annual_b',bad?'—':r36Amount(r.owners.kid_b.cash));
@@ -5565,37 +5561,35 @@
                 const thisMonth=r25Today().slice(0,7);
                 r36El('r36_annual_months').innerHTML=r.months.map(m=>{
                     const future=m.month>thisMonth;const fmt=n=>bad||future?'—':r36Amount(n);
-                    return `<tr><td class="p-2">${m.month}${future?'（未到）':''}</td><td class="p-2 text-right">${fmt(m.accounts.main.cash)}</td><td class="p-2 text-right">${fmt(m.accounts.kid_a.cash)}</td><td class="p-2 text-right">${fmt(m.accounts.kid_b.cash)}</td><td class="p-2 text-right font-semibold">${fmt(m.total.cash)}</td><td class="p-2 text-right">${fmt(m.total.net)}</td></tr>`;
+                    return `<tr><td class="p-2">${m.month}${future?'（未到）':''}</td><td class="p-2 text-right">${fmt(m.accounts.main.cash)}</td><td class="p-2 text-right">${fmt(m.accounts.kid_a.cash)}</td><td class="p-2 text-right">${fmt(m.accounts.kid_b.cash)}</td><td class="p-2 text-right">${fmt(m.total.net)}</td></tr>`;
                 }).join('');
                 r36El('r36_annual_years').innerHTML=r36AnnualPriorYears(previous.year,bad?['原始資料異常']:[]);
-                r36Put('r36_annual_note',bad?`資料完整性警告：${problems.join('；')||'有無效／超賣交易'}。已隱藏家庭實收與淨額結論。`:'R28 原本的投入、已實現交易損益及主帳戶實收欄位仍維持舊計算範圍。本節改從 R25、R35 真實入帳台帳彙整家庭數字；未來月份留白，不預測股息或報酬。');
-            }catch(e){r36Put('r36_annual_status','⚠ 家庭年報無法計算：'+e.message);['r36_annual_cash','r36_annual_a','r36_annual_b','r36_annual_net'].forEach(id=>r36Put(id,'—'));['r36_annual_rows','r36_annual_months','r36_annual_years'].forEach(id=>r36El(id).innerHTML='');}
+                r36Put('r36_annual_note',bad?`資料完整性警告：${problems.join('；')||'有無效／超賣交易'}。已隱藏相關實收與淨額結論。`:'R28 原本的投入、已實現交易損益及主帳戶實收欄位仍維持舊計算範圍。本節從 R25、R35 真實入帳台帳個別列示三帳戶，主帳戶統計不含雙寶；未來月份留白，不預測股息或報酬。');
+            }catch(e){r36Put('r36_annual_status','⚠ 帳戶對照年報無法計算：'+e.message);['r36_annual_cash','r36_annual_a','r36_annual_b','r36_annual_net'].forEach(id=>r36Put(id,'—'));['r36_annual_rows','r36_annual_months','r36_annual_years'].forEach(id=>r36El(id).innerHTML='');}
         }
         function r36AppendMonthlyCsv(rows,previous){
             try{
                 const {report:r,problems}=r36Prepared(previous.month.slice(0,4),previous.month.slice(5,7));
                 const bad=!!problems.length||previous.invalid;
-                rows.push([],['R36 家庭月報','三帳戶真實入帳與現金流','備註：原 R27 前段維持主帳戶計算範圍'],['資料狀態',bad?'資料異常，不可採用家庭淨額結論':'依已登錄帳務']);
+                rows.push([],['R36 帳戶對照月報','三帳戶真實入帳與現金流','備註：原 R27 前段維持主帳戶計算範圍'],['資料狀態',bad?'資料異常，不可採用家庭淨額結論':'依已登錄帳務']);
                 rows.push(['帳戶','自有資金買入','配息再投資買入','賣出淨收','實收股息','家庭帳務淨現金流']);
                 for(const id of R35_IDS){const x=r.owners[id];rows.push([R27_OWNERS[id],bad?'資料異常':x.external,bad?'資料異常':x.reinvest,bad?'資料異常':x.sales,bad?'資料異常':x.cash,bad?'資料異常':x.net]);}
-                const t=r.total;rows.push(['家庭合計',bad?'資料異常':t.external,bad?'資料異常':t.reinvest,bad?'資料異常':t.sales,bad?'資料異常':t.cash,bad?'資料異常':t.net]);
                 rows.push([],['R36 實際入帳日','帳戶','實收淨額','備註']);
                 if(!bad)for(const x of r.filteredCash)rows.push([x.date,R27_OWNERS[x.owner],x.amount,x.note]);
-            }catch(e){rows.push([],['R36 家庭月報','無法計算，請查核原始資料',e.message]);}
+            }catch(e){rows.push([],['R36 帳戶對照月報','無法計算，請查核原始資料',e.message]);}
         }
         function r36AppendAnnualCsv(rows,previous){
             try{
                 const {report:r,problems}=r36Prepared(previous.year,'all');
                 const bad=!!problems.length||previous.invalid;
-                rows.push([],['R36 家庭年報','三帳戶真實入帳與現金流','備註：原 R28 前段維持主帳戶計算範圍'],['資料狀態',bad?'資料異常，不可採用家庭淨額結論':'依已登錄帳務']);
+                rows.push([],['R36 帳戶對照年報','三帳戶真實入帳與現金流','備註：原 R28 前段維持主帳戶計算範圍'],['資料狀態',bad?'資料異常，不可採用家庭淨額結論':'依已登錄帳務']);
                 rows.push(['帳戶','自有資金買入','配息再投資買入','賣出淨收','實收股息','帳務淨現金流']);
                 for(const id of R35_IDS){const x=r.owners[id];rows.push([R27_OWNERS[id],bad?'資料異常':x.external,bad?'資料異常':x.reinvest,bad?'資料異常':x.sales,bad?'資料異常':x.cash,bad?'資料異常':x.net]);}
-                const t=r.total;rows.push(['家庭合計',bad?'資料異常':t.external,bad?'資料異常':t.reinvest,bad?'資料異常':t.sales,bad?'資料異常':t.cash,bad?'資料異常':t.net]);
-                rows.push([],['月份','主帳戶實收','大寶實收','二寶實收','家庭實收合計','家庭淨現金流']);
-                for(const m of r.months){const future=m.month>r.today.slice(0,7);rows.push([m.month,bad||future?'':m.accounts.main.cash,bad||future?'':m.accounts.kid_a.cash,bad||future?'':m.accounts.kid_b.cash,bad||future?'':m.total.cash,bad||future?'':m.total.net]);}
+                rows.push([],['月份','主帳戶實收','大寶實收','二寶實收','主帳戶淨現金流']);
+                for(const m of r.months){const future=m.month>r.today.slice(0,7);rows.push([m.month,bad||future?'':m.accounts.main.cash,bad||future?'':m.accounts.kid_a.cash,bad||future?'':m.accounts.kid_b.cash,bad||future?'':m.total.net]);}
                 rows.push([],['實際入帳日','帳戶','實收淨額','備註']);
                 if(!bad)for(const x of r.filteredCash)rows.push([x.date,R27_OWNERS[x.owner],x.amount,x.note]);
-            }catch(e){rows.push([],['R36 家庭年報','無法計算，請查核原始資料',e.message]);}
+            }catch(e){rows.push([],['R36 帳戶對照年報','無法計算，請查核原始資料',e.message]);}
         }
 
         /* ===== R37 家庭實際績效與領息趨勢：唯讀、資金流與績效分開，不是保證報酬 ===== */
@@ -5636,7 +5630,7 @@
             for(const x of dividends.rows){
                 if(!fields[x.owner]){problems.push('股息帳戶不合法');continue;}
                 fields[x.owner].cash+=x.amount;fields[x.owner].cashCount++;
-                const m=byMonth.get(x.date.slice(0,7));if(m){m.accounts[x.owner].cash+=x.amount;m.cash+=x.amount;}
+                const m=byMonth.get(x.date.slice(0,7));if(m){m.accounts[x.owner].cash+=x.amount;if(x.owner==='main')m.cash+=x.amount;}
             }
             for(const tx of Array.isArray(txs)?txs:[]){
                 if(!tx||typeof tx!=='object'){problems.push('逐筆交易格式不合法');continue;}
@@ -5650,10 +5644,10 @@
                 const m=byMonth.get(tx.date.slice(0,7));if(!m)continue;
                 const key=meta[2]==='sell'?'sales':meta[2]==='reinvest'?'reinvest':'external';
                 const amount=p*s+(key==='sales'?-f:f);
-                m.accounts[meta[0]][key]+=amount;m[key]+=amount;
+                m.accounts[meta[0]][key]+=amount;if(meta[0]==='main')m[key]+=amount;
             }
             for(const m of trend)m.net=m.sales+m.cash-m.external-m.reinvest;
-            const priceNeeded=R37_OWNERS.some(k=>fields[k].shares>0);
+            const priceNeeded=fields.main.shares>0;
             const priceOK=Number.isFinite(Number(price))&&Number(price)>0;
             const feeOK=Number.isFinite(Number(fee))&&Number(fee)>=0&&Number(fee)<100;
             for(const id of R37_OWNERS){
@@ -5668,11 +5662,11 @@
             }
             const valid=!problems.length&&asset.allValid;
             const totals={cash:0,external:0,reinvest:0,sales:0,realized:0,shares:0,basis:0,unrealized:null,profit:null,ratio:null,liquidation:null};
-            for(const a of Object.values(fields))for(const k of ['cash','external','reinvest','sales','realized','shares','basis'])totals[k]+=a[k];
+            for(const k of ['cash','external','reinvest','sales','realized','shares','basis'])totals[k]=fields.main[k];
             if(valid&&feeOK&&(!priceNeeded||priceOK)){
-                totals.liquidation=R37_OWNERS.reduce((n,id)=>n+fields[id].liquidation,0);
-                totals.unrealized=R37_OWNERS.reduce((n,id)=>n+fields[id].unrealized,0);
-                totals.profit=R37_OWNERS.reduce((n,id)=>n+fields[id].profit,0);
+                totals.liquidation=fields.main.liquidation;
+                totals.unrealized=fields.main.unrealized;
+                totals.profit=fields.main.profit;
                 const spent=totals.external+totals.reinvest;totals.ratio=spent>0?totals.profit/spent*100:null;
             }
             return {owners:fields,totals,trend,valid,problems:[...new Set(problems)],priceOK,feeOK,priceNeeded,months,start,today,price:priceOK?Number(price):null,futureCount:asset.futureCount};
@@ -5705,8 +5699,6 @@
                 const a=r.owners[id];
                 return `<tr><td class="p-2 font-semibold">${R37_LABEL[id]}</td><td class="p-2 text-right">${bad?'—':a.shares.toLocaleString('zh-TW')}</td><td class="p-2 text-right">${format(a.external)}</td><td class="p-2 text-right">${format(a.reinvest)}</td><td class="p-2 text-right">${format(a.sales)}</td><td class="p-2 text-right">${format(a.cash)}</td><td class="p-2 text-right">${formatSign(a.realized)}</td><td class="p-2 text-right">${formatSign(a.unrealized)}</td><td class="p-2 text-right font-bold">${formatSign(a.profit)}</td><td class="p-2 text-right">${!bad&&Number.isFinite(a.ratio)?a.ratio.toFixed(2)+'%':'—'}</td></tr>`;
             });
-            const t=r.totals;
-            rows.push(`<tr class="bg-gray-800 font-bold"><td class="p-2">家庭合計</td><td class="p-2 text-right">${bad?'—':t.shares.toLocaleString('zh-TW')}</td><td class="p-2 text-right">${format(t.external)}</td><td class="p-2 text-right">${format(t.reinvest)}</td><td class="p-2 text-right">${format(t.sales)}</td><td class="p-2 text-right">${format(t.cash)}</td><td class="p-2 text-right">${formatSign(t.realized)}</td><td class="p-2 text-right">${formatSign(t.unrealized)}</td><td class="p-2 text-right font-bold">${formatSign(t.profit)}</td><td class="p-2 text-right">${!bad&&Number.isFinite(t.ratio)?t.ratio.toFixed(2)+'%':'—'}</td></tr>`);
             return rows.join('');
         }
         function r37DrawCharts(r){
@@ -5716,7 +5708,7 @@
             const months=r.trend.map(m=>m.month.slice(2));
             try{
                 const owner=r.owner;
-                const series=(owner==='all'?R37_OWNERS:[owner]).map(id=>({label:R37_LABEL[id]+'實收',data:r.trend.map(m=>m.accounts[id].cash),backgroundColor:R35_COLORS[id],borderRadius:3}));
+                const series=(owner==='all'?['main']:[owner]).map(id=>({label:R37_LABEL[id]+'實收',data:r.trend.map(m=>m.accounts[id].cash),backgroundColor:R35_COLORS[id],borderRadius:3}));
                 r37CashChart=new Chart(r37El('r37_cash_chart'),{type:'bar',data:{labels:months,datasets:series},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#e5e7eb'}}},scales:{x:{stacked:true,ticks:{color:'#cbd5e1'}},y:{stacked:true,beginAtZero:true,ticks:{color:'#cbd5e1'}}}}});
                 const vals=r.trend.map(m=>owner==='all'?m:R37_OWNERS.includes(owner)?m.accounts[owner]:m);
                 r37InvestChart=new Chart(r37El('r37_money_chart'),{type:'bar',data:{labels:months,datasets:[{label:'自有投入',data:vals.map(x=>x.external),backgroundColor:'#818cf8'},{label:'實收股息',data:vals.map(x=>x.cash),backgroundColor:'#34d399'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#e5e7eb'}}},scales:{x:{ticks:{color:'#cbd5e1'}},y:{beginAtZero:true,ticks:{color:'#cbd5e1'}}}}});
@@ -5728,7 +5720,7 @@
                 const r=r37Build();r37Last=r;const bad=!r.valid;
                 r37Set('r37_status',bad?'⚠ 原始帳務需要檢查':`截至 ${r.today}｜${r.months} 個月追蹤`);
                 r37Set('r37_generated','產生日期：'+r.today);
-                r37Set('r37_scope',bad?'⚠ 原始資料異常：'+r.problems.join('；'):r.manual?'使用手動假設價，僅供試算，不會改變正式行情或交易紀錄。':'以本次行情為參考；未取得價格時不推算未實現及家庭總成果。');
+                r37Set('r37_scope',bad?'⚠ 原始資料異常：'+r.problems.join('；'):r.manual?'使用手動假設價，僅供試算，不會改變正式行情或交易紀錄。':'以本次行情為參考；未取得價格時不推算未實現及主帳戶總成果。');
                 r37Set('r37_cash_total',bad?'資料異常':r37Money(r.totals.cash));
                 r37Set('r37_realized_total',bad?'—':r37Signed(r.totals.realized));
                 r37Set('r37_unrealized_total',bad?'—':r37Signed(r.totals.unrealized));
@@ -5741,7 +5733,7 @@
                     return `<tr><td class="p-2">${m.month}${m.month===r.today.slice(0,7)?'（本月未結束）':''}</td><td class="p-2 text-right">${bad?'—':r37Money(t.cash)}</td><td class="p-2 text-right">${bad?'—':r37Money(t.external)}</td><td class="p-2 text-right">${bad?'—':r37Money(t.reinvest)}</td><td class="p-2 text-right">${bad?'—':r37Money(t.sales)}</td><td class="p-2 text-right">${bad?'—':r37Signed(t.sales+t.cash-t.external-t.reinvest)}</td></tr>`;
                 });
                 r37El('r37_trend_rows').innerHTML=items.reverse().join('');
-                const viewName=r.owner==='all'?'家庭三帳戶':R37_LABEL[r.owner];
+                const viewName=r.owner==='all'?'主帳戶（不含雙寶）':R37_LABEL[r.owner];
                 r37Set('r37_trend_scope',`${viewName}｜${r.start}～${r.today.slice(0,7)}；每月僅統計已登錄的實際股息（空白月份表示「未登錄」而非確定未發放）。`);
                 r37Set('r37_disclaimer','累計成果估值＝預估現有庫存賣出淨額＋歷來賣出淨收＋已登錄實收股息－歷來全部買股成本（含配息再投資）。比率＝累計成果估值÷歷來全部買股成本，只是成本對照比，不是年化報酬率、時間加權報酬率或 XIRR；持續投入、缺漏入帳與配息再投資會影響解讀。'+(r.futureCount?'另有 '+r.futureCount+' 筆未來交易未計入。':''));
                 r37DrawCharts(r);
@@ -5751,11 +5743,10 @@
             r37Render();const r=r37Last;if(!r||!r.valid){alert('原始資料異常，請先到 R30 資料安全中心檢查，不匯出可能誤導的績效。');return;}
             const lines=[['00406A Tracker R37','家庭投資績效與實收股息趨勢'],['資料截至',r.today],['行情來源',r.manual?'手動假設價':'最新已載入行情'],['參考股價',r.price??'未取得'],['注意','未登錄股息不可當作已發放零元；累計成果對照比不是年化投資報酬率'],[],['帳戶','持股','自有投入','配息再投資投入','賣出淨收入','實收股息','已實現損益','未實現損益','累計成果估值','成本對照比%']];
             for(const id of R37_OWNERS){const a=r.owners[id];lines.push([R37_LABEL[id],a.shares,a.external,a.reinvest,a.sales,a.cash,a.realized,a.unrealized??'',a.profit??'',a.ratio??'']);}
-            const a=r.totals;lines.push(['家庭合計',a.shares,a.external,a.reinvest,a.sales,a.cash,a.realized,a.unrealized??'',a.profit??'',a.ratio??'']);
             lines.push([],['月份','帳戶','已登錄實收股息','自有買入','配息再投資買入','賣出淨收','帳務淨現金流']);
             for(const m of r.trend){for(const id of R37_OWNERS){const x=m.accounts[id];lines.push([m.month,R37_LABEL[id],x.cash,x.external,x.reinvest,x.sales,x.sales+x.cash-x.external-x.reinvest]);}}
             const csv='\ufeff'+lines.map(row=>row.map(r27CsvValue).join(',')).join('\r\n');
-            r27Download(`00406A-R37-家庭績效-${r.today}.csv`,csv,'text/csv;charset=utf-8');
+            r27Download(`00406A-R37-帳戶績效-${r.today}.csv`,csv,'text/csv;charset=utf-8');
         }
         function r37ExportHTML(){
             r37Render();const r=r37Last;if(!r||!r.valid){alert('原始帳務有異常，請先檢查');return;}
@@ -5763,7 +5754,7 @@
             report.querySelectorAll('canvas,.r37-chart-wrap').forEach(x=>x.remove());
             const css='*{box-sizing:border-box}body{font-family:Arial,"Noto Sans TC",sans-serif;color:#172033;background:white;padding:18px;line-height:1.5}.card{border:1px solid #cbd5e1;border-radius:8px;padding:12px;margin:0 0 12px;break-inside:avoid}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.grid>div{padding:5px;background:#f1f5f9;border-radius:5px}table{width:100%;border-collapse:collapse;font-size:10px}th,td{padding:6px;border-bottom:1px solid #cbd5e1;text-align:right}td:first-child,th:first-child{text-align:left}h2{font-size:20px}h3{font-size:15px}p{font-size:11px}.overflow-x-auto{overflow:visible}p,td{overflow-wrap:anywhere}@page{size:A4;margin:13mm}';
             const html='<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A R37 家庭投資績效 '+r.today+'</title><style>'+css+'</style></head><body>'+report.innerHTML+'</body></html>';
-            r27Download(`00406A-R37-家庭績效-${r.today}.html`,html,'text/html;charset=utf-8');
+            r27Download(`00406A-R37-帳戶績效-${r.today}.html`,html,'text/html;charset=utf-8');
         }
         function r37Print(){r37Render();if(!r37Last||!r37Last.valid){alert('請先檢查原始資料，暫不可列印績效報告');return;}document.body.classList.add('r37-print-active');try{window.print();}catch(e){document.body.classList.remove('r37-print-active');alert('無法列印：'+e.message);}}
         function r37Init(){
@@ -5782,9 +5773,9 @@
         const r37PriorFamily=r34Render;
         r34Render=function(...args){const val=r37PriorFamily.apply(this,args);r37RefreshIfOpen();return val;};
 
-        /* ===== R38 FINAL：完整家庭績效與資料稽核（帳務唯讀；資金加權 XIRR） ===== */
+        /* ===== R38 FINAL：完整帳戶績效與資料稽核（帳務唯讀；資金加權 XIRR） ===== */
         const R38_OWNERS=['main','kid_a','kid_b'];
-        const R38_NAMES={main:'主帳戶',kid_a:'大寶',kid_b:'二寶',all:'家庭合計'};
+        const R38_NAMES={main:'主帳戶',kid_a:'大寶',kid_b:'二寶'};
         let r38Initialized=false,r38Last=null;
         const r38El=id=>document.getElementById(id);
         const r38Set=(id,value)=>{const el=r38El(id);if(el)el.textContent=String(value);};
@@ -5888,24 +5879,24 @@
             const problems=[...asset.errors,...dividendResult.issues];
             if(!asset.allValid||problems.length)return {valid:false,problems:[...new Set(problems.length?problems:['庫存資料異常'])],asset};
             const flow=r38Flows(tx,dividendResult.rows,price,fee,today,asset);
-            const combined=R38_OWNERS.flatMap(id=>flow.byOwner[id]);
+            const combined=flow.byOwner.main.slice(); // 合計範圍只限主帳戶，雙寶各自求解。
             const perOwner=Object.fromEntries(R38_OWNERS.map(id=>[id,r38Xirr(flow.byOwner[id])]));
-            perOwner.all=r38Xirr(combined);
+            perOwner.all=perOwner.main; // 向下相容舊屬性；不再重算一次與主帳戶相同的 XIRR。
             // Critical: historical sale/dividend cash flows can have an IRR root even when
             // an OPEN stock position is missing its ending valuation. Never display it.
             const missingTerminal=!flow.priceOK||!flow.feeOK;
             if(missingTerminal){
                 for(const id of R38_OWNERS)if(asset.owners[id].shares>0)
                     perOwner[id]={rate:null,status:'尚有持股但缺少有效期末估值，暫不計算',roots:0};
-                if(R38_OWNERS.some(id=>asset.owners[id].shares>0))
-                    perOwner.all={rate:null,status:'家庭仍有持股，但缺少期末估值，暫不計算',roots:0};
+                if(asset.owners.main.shares>0)
+                    perOwner.all={rate:null,status:'主帳戶仍有持股，但缺少期末估值，暫不計算',roots:0};
             }
             const annualYears=new Set([Number(today.slice(0,4))]);
             for(const x of [...combined,...dividendResult.rows])if(x.date<=today)annualYears.add(Number(x.date.slice(0,4)));
             const annual=[...annualYears].filter(y=>y>=2020&&y<=2100).sort((a,b)=>b-a).slice(0,12).map(y=>{
                 const rows=combined.filter(x=>x.date.startsWith(y+'-'));
                 const div=dividendResult.rows.filter(x=>x.date.startsWith(y+'-'));
-                return {year:y,contrib:-rows.filter(x=>x.kind==='買股支出'||x.kind==='配息再投資買進').reduce((a,x)=>a+x.amount,0),sell:rows.filter(x=>x.kind==='賣出淨收').reduce((a,x)=>a+x.amount,0),cash:div.reduce((a,x)=>a+x.amount,0),byOwner:Object.fromEntries(R38_OWNERS.map(o=>[o,div.filter(x=>x.owner===o).reduce((a,x)=>a+x.amount,0)]))};
+                return {year:y,contrib:-rows.filter(x=>x.kind==='買股支出'||x.kind==='配息再投資買進').reduce((a,x)=>a+x.amount,0),sell:rows.filter(x=>x.kind==='賣出淨收').reduce((a,x)=>a+x.amount,0),cash:div.filter(x=>x.owner==='main').reduce((a,x)=>a+x.amount,0),byOwner:Object.fromEntries(R38_OWNERS.map(o=>[o,div.filter(x=>x.owner===o).reduce((a,x)=>a+x.amount,0)]))};
             });
             const warnings=[...flow.warnings];
             if(!flow.priceOK&&R38_OWNERS.some(o=>asset.owners[o].shares>0))warnings.push('沒有可用參考價，期末變現額及 XIRR 暫時留白。');
@@ -5929,7 +5920,7 @@
             if(!r38Initialized)return;
             try{
                 const report=r38Build();r38Last=report;
-                const ids=['main','kid_a','kid_b','all'];
+                const ids=['main','kid_a','kid_b'];
                 if(!report.valid){
                     r38Set('r38_status','⚠️ 資料異常：暫停績效分析');
                     r38Set('r38_help','原始資料異常：'+report.problems.join('；')+'。請先由資料安全中心備份並核對。');
@@ -5942,16 +5933,16 @@
                 const total=report.asset.totals;
                 const f=report.perOwner.all;
                 r38Set('r38_family_rate',f.rate===null?'—':(f.rate*100).toFixed(2)+'%');
-                r38Set('r38_family_profit',Number.isFinite(total.unrealized)?r38Money(total.realized+total.unrealized+report.dividends.reduce((s,x)=>s+x.amount,0)):'—');
-                r38Set('r38_family_cash',r38Money(report.dividends.reduce((s,x)=>s+x.amount,0)));
+                r38Set('r38_family_profit',Number.isFinite(total.unrealized)?r38Money(total.realized+total.unrealized+report.dividends.filter(x=>x.owner==='main').reduce((s,x)=>s+x.amount,0)):'—');
+                r38Set('r38_family_cash',r38Money(report.dividends.filter(x=>x.owner==='main').reduce((s,x)=>s+x.amount,0)));
                 r38Set('r38_help',f.status+(report.manual?'｜手動假設股價，不代表現價':'｜含現有庫存假設變現額，未實際賣出'));
                 r38Set('r38_price_note',report.manual?'手動參考價 '+r38Money(report.price)+'，不會覆寫 FinMind 行情。':report.price===null?'尚未取得有效行情；有庫存的帳戶不能求 XIRR。':'參考價 '+r38Money(report.price)+'／股；預估賣出費率 '+report.fee+'%。');
                 r38El('r38_rate_rows').innerHTML=ids.map(id=>{
-                    const a=id==='all'?total:report.asset.owners[id],x=report.perOwner[id];
-                    const cash=report.dividends.filter(v=>id==='all'||v.owner===id).reduce((s,v)=>s+v.amount,0);
+                    const a=report.asset.owners[id],x=report.perOwner[id];
+                    const cash=report.dividends.filter(v=>v.owner===id).reduce((s,v)=>s+v.amount,0);
                     return `<tr><td class="p-2 font-semibold">${R38_NAMES[id]}</td><td class="p-2 text-right">${a.shares.toLocaleString('zh-TW')} 股</td><td class="p-2 text-right">${r38Money(a.external+a.reinvest)}</td><td class="p-2 text-right">${r38Money(a.sales)}</td><td class="p-2 text-right">${r38Money(cash)}</td><td class="p-2 text-right font-bold ${x.rate!==null&&x.rate<0?'text-red-300':'text-emerald-300'}">${x.rate===null?'—':(x.rate*100).toFixed(2)+'%'}</td><td class="p-2 text-xs text-gray-300">${r25Escape(x.status)}</td></tr>`;
                 }).join('');
-                r38El('r38_year_rows').innerHTML=report.annual.map(y=>`<tr><td class="p-2">${y.year}</td><td class="p-2 text-right">${r38Money(y.contrib)}</td><td class="p-2 text-right">${r38Money(y.sell)}</td><td class="p-2 text-right">${r38Money(y.byOwner.main)}</td><td class="p-2 text-right">${r38Money(y.byOwner.kid_a)}</td><td class="p-2 text-right">${r38Money(y.byOwner.kid_b)}</td><td class="p-2 text-right font-semibold">${r38Money(y.cash)}</td></tr>`).join('');
+                r38El('r38_year_rows').innerHTML=report.annual.map(y=>`<tr><td class="p-2">${y.year}</td><td class="p-2 text-right">${r38Money(y.contrib)}</td><td class="p-2 text-right">${r38Money(y.sell)}</td><td class="p-2 text-right">${r38Money(y.byOwner.main)}</td><td class="p-2 text-right">${r38Money(y.byOwner.kid_a)}</td><td class="p-2 text-right">${r38Money(y.byOwner.kid_b)}</td></tr>`).join('');
                 const notes=[...report.warnings.map(text=>({kind:'warning',text,tab:'assets'})),...report.audit];
                 r38El('r38_audit').innerHTML=notes.length?notes.map((x,i)=>`<div class="bg-gray-900 rounded border border-gray-700 p-3 text-sm flex flex-wrap items-center justify-between gap-2"><p class="${x.kind==='warning'?'text-amber-300':'text-gray-300'}">${x.kind==='warning'?'⚠️':'ℹ️'} ${r25Escape(x.text)}</p><button type="button" class="r38-no-print bg-gray-700 rounded px-3 py-2 text-xs" data-r38-go="${x.tab}">前往核對 →</button></div>`).join(''):'<p class="text-emerald-300 text-sm">沒有發現此版可識別的資料提示；仍需與券商紀錄核對。</p>';
                 r38Set('r38_count','資料核對提醒 '+notes.length+' 項（僅提示，不自動修改紀錄）');
@@ -5963,10 +5954,10 @@
         }
         function r38Csv(){
             r38Render();const r=r38Last;if(!r||!r.valid){alert('資料異常，請先核對，不匯出績效報告。');return;}
-            const rows=[['00406A Tracker R38 FINAL','家庭資金加權 XIRR / 年度實收分析'],['截至',r.asOf],['行情',r.manual?'手動假設價':'最近載入參考價'],['參考價格',r.price??'未取得'],['預估賣出費率(%)',r.fee],['備註','XIRR 採完整現金流與假設期末變現淨額，非承諾報酬；配息再投資必須搭配完整實收台帳'],[],['帳戶','持股','所有買股支出','賣出淨收','累積實收股息','資金加權年化 XIRR(%)','計算狀態']];
-            for(const id of [...R38_OWNERS,'all']){const a=id==='all'?r.asset.totals:r.asset.owners[id],cash=r.dividends.filter(v=>id==='all'||v.owner===id).reduce((s,v)=>s+v.amount,0),rate=r.perOwner[id];rows.push([R38_NAMES[id],a.shares,a.external+a.reinvest,a.sales,cash,rate.rate===null?'':rate.rate*100,rate.status]);}
-            rows.push([],['年度','全部買股支出','賣出淨收','主帳戶實收','大寶實收','二寶實收','家庭實收']);
-            for(const y of r.annual)rows.push([y.year,y.contrib,y.sell,y.byOwner.main,y.byOwner.kid_a,y.byOwner.kid_b,y.cash]);
+            const rows=[['00406A Tracker R38 FINAL','三帳戶各自 XIRR / 主帳戶獨立年度分析'],['截至',r.asOf],['行情',r.manual?'手動假設價':'最近載入參考價'],['參考價格',r.price??'未取得'],['預估賣出費率(%)',r.fee],['備註','XIRR 採完整現金流與假設期末變現淨額，非承諾報酬；配息再投資必須搭配完整實收台帳'],[],['帳戶','持股','所有買股支出','賣出淨收','累積實收股息','資金加權年化 XIRR(%)','計算狀態']];
+            for(const id of R38_OWNERS){const a=r.asset.owners[id],cash=r.dividends.filter(v=>v.owner===id).reduce((s,v)=>s+v.amount,0),rate=r.perOwner[id];rows.push([R38_NAMES[id],a.shares,a.external+a.reinvest,a.sales,cash,rate.rate===null?'':rate.rate*100,rate.status]);}
+            rows.push([],['年度','主帳戶買股支出','主帳戶賣出淨收','主帳戶實收','大寶實收','二寶實收']);
+            for(const y of r.annual)rows.push([y.year,y.contrib,y.sell,y.byOwner.main,y.byOwner.kid_a,y.byOwner.kid_b]);
             rows.push([],['交易日／入帳日','帳戶','資金流向','XIRR 現金流（支出負／流入正）']);
             for(const id of R38_OWNERS)for(const x of r.flows[id])rows.push([x.date,R38_NAMES[id],x.kind,x.amount]);
             rows.push([],['提示類型','說明']);for(const t of [...r.warnings,...r.audit.map(x=>x.text)])rows.push(['資料核對',t]);
