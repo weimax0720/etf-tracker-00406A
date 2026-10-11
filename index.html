@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R28｜MAX 的追蹤儀表板</title>
+    <title>00406A Tracker R29｜MAX 的追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -66,6 +66,24 @@
           body.r28-print-active #tab-annual .r28-paper .r28-chart-wrap { display:none !important; }
           body.r28-print-active #tab-annual .r28-paper .min-w-\[650px\],body.r28-print-active #tab-annual .r28-paper .min-w-\[760px\],body.r28-print-active #tab-annual .r28-paper .min-w-\[720px\] { min-width:0 !important; }
         }
+
+        /* R29 列印：維持 R27 / R28 列印相容；只列出 R29 退休報表 */
+        @media print {
+            body.r29-print-active > .max-w-6xl > :not(#tab-retirement) { display:none !important; }
+            body.r29-print-active > .max-w-6xl > #tab-retirement { display:block !important; position:static !important; width:100% !important; margin:0 !important; padding:0 !important; }
+            body.r29-print-active #tab-report,body.r29-print-active #tab-annual {display:none !important;}
+            body.r29-print-active #tab-retirement .r29-no-print {display:none !important;}
+            body.r29-print-active #tab-retirement .r29-paper {display:block !important;}
+            body.r29-print-active #tab-retirement .card {background:#fff !important;color:#172033 !important;border:1px solid #cbd5e1 !important;padding:11px !important;margin:0 0 10px !important;break-inside:avoid;}
+            body.r29-print-active #tab-retirement .grid {display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:8px !important;}
+            body.r29-print-active #tab-retirement .bg-gray-900 {background:#f1f5f9 !important;color:#172033 !important;}
+            body.r29-print-active #tab-retirement [class*="text-"] {color:#172033 !important;}
+            body.r29-print-active #tab-retirement .r29-chart-wrap {display:none !important;}
+            body.r29-print-active #tab-retirement .overflow-x-auto {overflow:visible !important;}
+            body.r29-print-active #tab-retirement .min-w-\[760px\] {min-width:0 !important;}
+            body.r29-print-active #tab-retirement table {width:100%;font-size:10px;}
+            body.r29-print-active #tab-retirement td,body.r29-print-active #tab-retirement th {padding:5px !important;border-bottom:1px solid #e2e8f0;}
+        }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -97,6 +115,7 @@
             <button onclick="switchTab('topup')" id="btn-topup" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-violet-300 whitespace-nowrap">🧮 R26 智慧加碼</button>
             <button onclick="switchTab('report')" id="btn-report" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-sky-300 whitespace-nowrap">🗓️ R27 智慧月報</button>
             <button onclick="switchTab('annual')" id="btn-annual" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-amber-200 whitespace-nowrap">🏆 R28 年度總結</button>
+            <button onclick="switchTab('retirement')" id="btn-retirement" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-rose-200 whitespace-nowrap">🌅 R29 退休目標</button>
             <button onclick="switchTab('safety')" id="btn-safety" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">🛡️ 流動性雷達</button>
         </div>
 
@@ -105,7 +124,7 @@
             <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
             <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R28 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
+                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R29 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
                     <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
                 </div>
                 <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
@@ -145,6 +164,11 @@
             <div class="bg-gray-800 border border-amber-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
                 <div><p class="text-sm font-bold text-amber-200">🏆 R28 年度投資總結</p><p id="r28_home_brief" class="text-xs text-gray-300 mt-1">整理年度投入、實收股息、交易損益、家庭持股與年度比較。</p></div>
                 <button type="button" onclick="switchTab('annual')" class="rounded bg-amber-700 hover:bg-amber-600 px-3 py-2 text-sm font-medium">開啟年度總結 →</button>
+            </div>
+            <!-- R29 退休目標：唯讀主帳戶，不當作保證收益 -->
+            <div class="bg-gray-800 border border-rose-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div><p class="text-sm font-bold text-rose-200">🌅 R29 退休目標追蹤</p><p id="r29_home_brief" class="text-xs text-gray-300 mt-1">55 歲停扣、60 歲退休進度；三情境試算與目標差額。</p></div>
+                <button type="button" onclick="switchTab('retirement')" class="rounded bg-rose-800 hover:bg-rose-700 px-3 py-2 text-sm font-medium">開啟退休目標 →</button>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center relative overflow-hidden">
@@ -935,6 +959,75 @@
             </div>
         </section>
 
+        <!-- ================= R29 退休目標追蹤 ================= -->
+        <section id="tab-retirement" class="space-y-5 hidden" aria-label="R29 智慧退休目標中心">
+            <div class="card border border-rose-700/60 r29-no-print">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div><h2 class="text-xl font-bold text-rose-200">🌅 R29 智慧退休目標追蹤</h2>
+                        <p class="text-sm text-gray-400 mt-2">以主帳戶<strong class="text-white">目前實際持股及參考市價</strong>為起點，追蹤 55 歲停扣、60 歲退休情境。模擬不是收益預測或買賣建議。</p></div>
+                    <span id="r29_status" role="status" aria-live="polite" class="text-xs text-gray-300 bg-gray-900 border border-gray-700 rounded px-3 py-2">等待帳務與行情</span>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">目前主帳戶持股</p><p id="r29_current_shares" class="text-lg font-bold mt-1">—</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">目前參考起點市值</p><p id="r29_current_value" class="text-lg font-bold mt-1">—</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">距 55 歲停扣</p><p id="r29_months_55" class="text-lg font-bold mt-1">—</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">距 60 歲目標</p><p id="r29_months_60" class="text-lg font-bold mt-1">—</p></div>
+                </div>
+                <p id="r29_price_note" class="text-xs text-gray-400 mt-3">須有有效的 FinMind／Yahoo 參考價，或提供手動參考價；手動輸入不代表實際市場價格。</p>
+            </div>
+            <div class="card border border-rose-900/50 r29-no-print">
+                <h3 class="text-lg font-bold text-pink-200 mb-3">① 設定退休目標與未來投入</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <label class="text-sm text-gray-300">55 歲每月現金流目標（元）<input type="number" id="r29_goal55" min="0" step="1000" inputmode="numeric" placeholder="自行設定，例如 10000" onchange="r29Save()" class="w-full mt-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-white"></label>
+                    <label class="text-sm text-gray-300">60 歲每月現金流目標（元）<input type="number" id="r29_goal60" min="0" step="1000" inputmode="numeric" placeholder="自行設定，例如 30000" onchange="r29Save()" class="w-full mt-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-white"></label>
+                    <label class="text-sm text-gray-300">55 歲後配息用途<select id="r29_after55" onchange="r29Save()" class="w-full mt-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-white"><option value="reinvest">繼續再投資（不領出）</option><option value="withdraw">領現金（從資產扣除）</option></select></label>
+                    <label class="text-sm text-gray-300">未來每月投入<select id="r29_contribution" onchange="r29ModeChange()" class="w-full mt-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-white"><option value="schedule">沿用手帳階梯定投（含手動覆寫）</option><option value="flat">固定每月金額</option><option value="none">停止新增投入</option></select></label>
+                    <label class="text-sm text-gray-300">固定每月投入（元，僅固定模式使用）<input type="number" id="r29_flat" min="0" max="1000000" step="500" inputmode="numeric" value="5000" onchange="r29Save()" class="w-full mt-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-white"></label>
+                    <label class="text-sm text-gray-300">手動參考股價（元／股，可空白）<input type="number" id="r29_manual_price" min="0.01" step="0.01" inputmode="decimal" placeholder="留白則沿用行情" onchange="r29Save()" class="w-full mt-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-white"></label>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 mt-4">
+                    <button type="button" onclick="r29Reset()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm">↩ 還原預設情境與目標</button>
+                    <span id="r29_save_note" class="text-xs text-gray-400">只有此頁的試算偏好會儲存，絕不新增交易。</span>
+                </div>
+                <p id="r29_contrib_note" class="text-xs text-gray-400 mt-3">定投從下個月份起估算，避免重複計入本月已記帳交易。55 歲起不再追加外部資金。</p>
+            </div>
+            <div class="card r29-no-print">
+                <div class="flex flex-wrap justify-between items-start gap-3">
+                    <div><h3 class="text-lg font-bold text-cyan-300">② 三種報酬／配發假設</h3><p class="text-xs text-gray-400 mt-1">年化<strong>總報酬</strong>已包含假設配發再投資的效果；配發率僅用於估算現金流，不會再額外加到總報酬。</p></div>
+                    <button type="button" onclick="r29ExportCSV()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-2 text-sm">📥 下載試算 CSV</button>
+                </div>
+                <div class="overflow-x-auto mt-3 border border-gray-700 rounded"><table class="w-full min-w-[520px] text-sm"><thead class="bg-gray-900 text-gray-400"><tr><th class="text-left p-3">假設</th><th class="text-right p-3">年化總報酬 (%)</th><th class="text-right p-3">假設年度現金配發率 (%)</th></tr></thead><tbody class="divide-y divide-gray-700">
+                    <tr><td class="p-3 font-bold text-blue-300">保守</td><td class="p-2 text-right"><input type="number" id="r29_ret_low" min="-50" max="50" step="0.5" value="-2" onchange="r29Save()" class="w-24 text-right bg-gray-900 border border-gray-700 rounded p-2"></td><td class="p-2 text-right"><input type="number" id="r29_yield_low" min="0" max="25" step="0.5" value="3" onchange="r29Save()" class="w-24 text-right bg-gray-900 border border-gray-700 rounded p-2"></td></tr>
+                    <tr><td class="p-3 font-bold text-emerald-300">基準</td><td class="p-2 text-right"><input type="number" id="r29_ret_mid" min="-50" max="50" step="0.5" value="4" onchange="r29Save()" class="w-24 text-right bg-gray-900 border border-gray-700 rounded p-2"></td><td class="p-2 text-right"><input type="number" id="r29_yield_mid" min="0" max="25" step="0.5" value="5" onchange="r29Save()" class="w-24 text-right bg-gray-900 border border-gray-700 rounded p-2"></td></tr>
+                    <tr><td class="p-3 font-bold text-amber-300">樂觀</td><td class="p-2 text-right"><input type="number" id="r29_ret_high" min="-50" max="50" step="0.5" value="7" onchange="r29Save()" class="w-24 text-right bg-gray-900 border border-gray-700 rounded p-2"></td><td class="p-2 text-right"><input type="number" id="r29_yield_high" min="0" max="25" step="0.5" value="7" onchange="r29Save()" class="w-24 text-right bg-gray-900 border border-gray-700 rounded p-2"></td></tr>
+                </tbody></table></div>
+                <p class="text-xs text-gray-500 mt-3">上表僅是可修改的假設，不代表 00406A 的歷史報酬或預計配息；ETF 配發可能有本金來源，配發率不是總報酬率。假設報酬率為名目值，未扣物價通膨、個別稅費。</p>
+            </div>
+            <div class="r29-paper space-y-5" id="r29_paper">
+                <div class="card border border-rose-800/50">
+                    <div class="flex flex-wrap justify-between items-center gap-3"><div><p class="text-xs tracking-widest text-rose-300">00406A · RETIREMENT GOAL TRACKER</p><h2 class="text-xl font-bold mt-2">55 歲停扣 / 60 歲退休追蹤</h2><p id="r29_report_meta" class="text-xs text-gray-400 mt-2">請先取得行情並設定假設。</p></div><p class="text-xs text-gray-400">MAX Tracker · R29</p></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">55 歲退休階段 · 2038/09</p><p id="r29_goal55_label" class="text-lg font-bold mt-2">尚未設定每月目標</p><div class="h-2 bg-gray-700 rounded mt-3 overflow-hidden"><div id="r29_bar55" class="h-full bg-cyan-400" style="width:0%"></div></div><p id="r29_goal55_detail" class="text-xs text-gray-400 mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">60 歲退休階段 · 2043/09</p><p id="r29_goal60_label" class="text-lg font-bold mt-2">尚未設定每月目標</p><div class="h-2 bg-gray-700 rounded mt-3 overflow-hidden"><div id="r29_bar60" class="h-full bg-emerald-400" style="width:0%"></div></div><p id="r29_goal60_detail" class="text-xs text-gray-400 mt-2">—</p></div>
+                    </div>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-rose-200 mb-3">③ 55／60 歲三情境比較</h3>
+                    <div class="overflow-x-auto"><table class="w-full min-w-[760px] text-sm"><thead class="bg-gray-900 text-gray-400"><tr><th class="text-left p-2">情境</th><th class="text-right p-2">55歲資產</th><th class="text-right p-2">55歲月現金流假設</th><th class="text-right p-2">60歲資產</th><th class="text-right p-2">60歲月現金流假設</th><th class="text-right p-2">55～60歲領出現金</th></tr></thead><tbody id="r29_scenarios" class="divide-y divide-gray-700"><tr><td colspan="6" class="p-6 text-center text-gray-400">等待有效資料</td></tr></tbody></table></div>
+                    <p id="r29_scenario_note" class="text-xs text-gray-400 mt-3">模型會將未來投入按月份計入，55 歲後依設定決定再投資或領出配發。</p>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-cyan-300 mb-3">④ 基準情境目標缺口</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3"><div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">55 歲所需資產 / 缺口</p><p id="r29_gap55" class="text-lg font-bold mt-2">—</p></div><div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">60 歲所需資產 / 缺口</p><p id="r29_gap60" class="text-lg font-bold mt-2">—</p></div></div>
+                    <p id="r29_goal_note" class="text-xs text-gray-400 mt-3">本金需求 = 每月現金流目標 × 12 ÷ 假設年配發率。並非保證可達成。</p>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-emerald-300 mb-3">⑤ 退休資產路徑（名目新台幣）</h3>
+                    <div class="r29-chart-wrap" style="height:300px"><canvas id="r29_chart" role="img" aria-label="三情境退休資產試算走勢"></canvas></div>
+                    <div class="overflow-x-auto mt-3"><table class="w-full text-sm"><thead class="bg-gray-900 text-gray-400"><tr><th class="text-left p-2">日期</th><th class="text-right p-2">保守</th><th class="text-right p-2">基準</th><th class="text-right p-2">樂觀</th></tr></thead><tbody id="r29_path_rows" class="divide-y divide-gray-700"></tbody></table></div>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-indigo-300 mb-3">⑥ 模型注意事項與資料來源</h3><div id="r29_notes" class="text-sm text-gray-300 space-y-2">尚無有效資料。</div></div>
+            </div>
+            <div class="card r29-no-print"><div class="flex flex-wrap gap-2"><button type="button" onclick="r29Print()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-2 text-sm">🖨️ 列印／另存 PDF</button><button type="button" onclick="r29ExportHTML()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm">📄 下載獨立 HTML</button></div><p class="text-xs text-gray-500 mt-3">輸出內容只含退休試算，不含 API 金鑰、交易編輯與本機儲存資料。紙本報告不含可互動圖表，但保留里程碑表。</p></div>
+        </section>
+
         <!-- ================= 分頁 7：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
             <div class="card border border-red-900/50 shadow-lg shadow-red-900/10 mb-6">
@@ -1113,13 +1206,15 @@
             r26Init();
             r27Init();
             r28Init();
+            r29Init();
         };
 
         function switchTab(tabId) {
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
                 document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
-                if (id === 'annual') document.getElementById(`btn-${id}`).classList.remove('text-amber-200');
+                if (id === 'retirement') document.getElementById(`btn-${id}`).classList.remove('text-rose-200');
+                else if (id === 'annual') document.getElementById(`btn-${id}`).classList.remove('text-amber-200');
                 else if (id === 'report') document.getElementById(`btn-${id}`).classList.remove('text-sky-300');
                 else if (id === 'topup') document.getElementById(`btn-${id}`).classList.remove('text-violet-300');
                 else if (id === 'assets') document.getElementById(`btn-${id}`).classList.remove('text-amber-300');
@@ -1131,9 +1226,10 @@
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
             
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'safety'].forEach(id => {
                 if(id !== tabId) {
-                    if (id === 'annual') document.getElementById(`btn-${id}`).classList.add('text-amber-200');
+                    if (id === 'retirement') document.getElementById(`btn-${id}`).classList.add('text-rose-200');
+                    else if (id === 'annual') document.getElementById(`btn-${id}`).classList.add('text-amber-200');
                     else if (id === 'report') document.getElementById(`btn-${id}`).classList.add('text-sky-300');
                     else if (id === 'topup') document.getElementById(`btn-${id}`).classList.add('text-violet-300');
                     else if (id === 'assets') document.getElementById(`btn-${id}`).classList.add('text-amber-300');
@@ -1148,7 +1244,8 @@
             if(tabId === 'dividends') r24DrawChart();
             if(tabId === 'topup') r26Render();
             if(tabId === 'report') r27Render();
-            if(tabId === 'annual') r28Render(); 
+            if(tabId === 'annual') r28Render();
+            if(tabId === 'retirement') r29Render(); 
         }
 
         function saveAndLoad() {
@@ -2790,10 +2887,10 @@
                     const key=localStorage.key(i);
                     if(key&&key.startsWith('00406A_')&&key!==KEY_NAME)data[key]=localStorage.getItem(key);
                 }
-                const payload={format:'00406A-Tracker-Backup',schema:1,createdAt:new Date().toISOString(),version:'R28',data};
+                const payload={format:'00406A-Tracker-Backup',schema:1,createdAt:new Date().toISOString(),version:'R29',data};
                 const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
                 const url=URL.createObjectURL(blob),a=document.createElement('a');
-                a.href=url;a.download='00406A_R28_帳務備份_'+r25Today()+'.json';document.body.appendChild(a);a.click();a.remove();
+                a.href=url;a.download='00406A_R29_帳務備份_'+r25Today()+'.json';document.body.appendChild(a);a.click();a.remove();
                 setTimeout(()=>URL.revokeObjectURL(url),3000);
                 r25Write('r25_backup_status',`已準備備份 ${Object.keys(data).length} 類本機資料（不含 API 金鑰），請確認檔案有存到手機。`);
             }catch(e){alert('備份失敗：'+e.message);}
@@ -3372,6 +3469,228 @@
         r25Render=function(...args){const ret=r28PrevCashRender.apply(this,args);if(r28El('r28_year'))r28Render();return ret;};
         const r28PrevFetch=fetchData;
         fetchData=async function(...args){const ret=await r28PrevFetch.apply(this,args);if(r28El('r28_year'))r28Render();return ret;};
+
+
+        // ===== R29 退休目標追蹤：只讀主帳戶成本與行情；設定另存，絕不寫入交易紀錄 =====
+        const R29_SETTINGS_KEY='00406A_R29_RETIREMENT_SETTINGS_V1';
+        const R29_STOP='2038-09',R29_RETIRE='2043-09';
+        const R29_DEFAULTS=Object.freeze({goal55:'',goal60:'',after55:'reinvest',contribution:'schedule',flat:'5000',manualPrice:'',ret_low:'-2',yield_low:'3',ret_mid:'4',yield_mid:'5',ret_high:'7',yield_high:'7'});
+        const R29_FIELDS=Object.freeze({goal55:'r29_goal55',goal60:'r29_goal60',after55:'r29_after55',contribution:'r29_contribution',flat:'r29_flat',manualPrice:'r29_manual_price',ret_low:'r29_ret_low',yield_low:'r29_yield_low',ret_mid:'r29_ret_mid',yield_mid:'r29_yield_mid',ret_high:'r29_ret_high',yield_high:'r29_yield_high'});
+        const r29Get=id=>document.getElementById(id);
+        const r29Text=(id,value)=>{const el=r29Get(id);if(el)el.textContent=value;};
+        const r29Cash=n=>Number.isFinite(n)?'NT$ '+Math.round(n).toLocaleString('zh-TW'):'—';
+        const r29Num=n=>Number.isFinite(n)?Math.round(n).toLocaleString('zh-TW'):'—';
+        let r29Ready=false,r29Latest=null,r29Chart=null;
+        function r29MonthIndex(ym){return Number(ym.slice(0,4))*12+Number(ym.slice(5,7))-1;}
+        function r29MonthFromIndex(index){const year=Math.floor(index/12),month=index%12+1;return `${year}-${String(month).padStart(2,'0')}`;}
+        function r29MonthsUntil(ym,now){return Math.max(0,r29MonthIndex(ym)-r29MonthIndex(now));}
+        function r29YearlyInvest(ym,custom){
+            // 和原本 R23～R28 的 2026/09～2038/08 投資階梯相同；尊重原手帳中手動覆寫的月份金額。
+            if(ym>=R29_STOP)return 0;
+            const y=Number(ym.slice(0,4)),m=Number(ym.slice(5,7));
+            const idx=(y-2026)*12+m-9;
+            if(idx>=0 && custom && Object.prototype.hasOwnProperty.call(custom,idx) && custom[idx]!=='' ){
+                const v=Number(custom[idx]);if(Number.isFinite(v)&&v>=0&&v<=1000000)return v;
+            }
+            if(y>2032)return 30000;
+            if(y>2031 || (y===2031&&m>=7))return 20000;
+            if(y>2027 || (y===2027&&m>=7))return 8000;
+            return 5000;
+        }
+        function r29FormValues(){
+            const obj={};for(const [key,id] of Object.entries(R29_FIELDS))obj[key]=String(r29Get(id)?.value??'').trim();
+            return obj;
+        }
+        function r29ReadSettings(){
+            try{
+                const raw=JSON.parse(localStorage.getItem(R29_SETTINGS_KEY)||'null');
+                if(raw&&typeof raw==='object'&&!Array.isArray(raw)){
+                    const obj={...R29_DEFAULTS};for(const key of Object.keys(R29_FIELDS))if(typeof raw[key]==='string')obj[key]=raw[key];
+                    return obj;
+                }
+            }catch(e){console.warn('R29 設定解析失敗',e);}
+            return {...R29_DEFAULTS};
+        }
+        function r29FillForm(settings){for(const [key,id] of Object.entries(R29_FIELDS)){const el=r29Get(id);if(el)el.value=settings[key]??R29_DEFAULTS[key];}r29ToggleMode();}
+        function r29ToggleMode(){const mode=r29Get('r29_contribution')?.value;const flat=r29Get('r29_flat');if(flat)flat.disabled=mode!=='flat';if(flat)flat.classList.toggle('opacity-50',mode!=='flat');}
+        function r29ModeChange(){r29ToggleMode();r29Save();}
+        function r29Validate(o){
+            if(!['schedule','flat','none'].includes(o.contribution)||!['reinvest','withdraw'].includes(o.after55))return '模式選項不正確';
+            for(const k of ['goal55','goal60']){
+                if(o[k]!==''&&(!Number.isFinite(Number(o[k]))||Number(o[k])<0||Number(o[k])>1e8))return '每月退休目標需介於 0～100,000,000 元，空白代表未設定';
+            }
+            if(o.flat===''||!Number.isFinite(Number(o.flat))||Number(o.flat)<0||Number(o.flat)>1000000)return '固定月投入需為 0～1,000,000 元';
+            if(o.manualPrice!==''&&(!Number.isFinite(Number(o.manualPrice))||Number(o.manualPrice)<=0||Number(o.manualPrice)>100000))return '手動參考價必須是大於 0 的有效股價';
+            for(const k of ['low','mid','high']){
+                if(o['ret_'+k]===''||!Number.isFinite(Number(o['ret_'+k]))||Number(o['ret_'+k])< -50||Number(o['ret_'+k])>50)return '年化總報酬率需介於 -50%～50%';
+                if(o['yield_'+k]===''||!Number.isFinite(Number(o['yield_'+k]))||Number(o['yield_'+k])<0||Number(o['yield_'+k])>25)return '年度配發率需介於 0%～25%';
+            }
+            if(!(Number(o.ret_low)<=Number(o.ret_mid)&&Number(o.ret_mid)<=Number(o.ret_high)))return '報酬情境請設為「保守 ≤ 基準 ≤ 樂觀」';
+            return '';
+        }
+        function r29Save(){
+            const settings=r29FormValues(),error=r29Validate(settings);
+            if(error){r29Text('r29_save_note','⚠ '+error);r29Render();return;}
+            try{localStorage.setItem(R29_SETTINGS_KEY,JSON.stringify(settings));r29Text('r29_save_note','已在此瀏覽器保存 R29 試算偏好（未改動交易）。');}
+            catch(e){r29Text('r29_save_note','⚠ 偏好未能儲存：'+e.message);}
+            r29Render();
+        }
+        function r29Reset(){
+            if(!confirm('還原 R29 退休目標及情境的預設輸入？交易紀錄、股息及手帳不受影響。'))return;
+            r29FillForm({...R29_DEFAULTS});
+            try{localStorage.removeItem(R29_SETTINGS_KEY);}catch(e){}
+            r29Text('r29_save_note','已還原情境預設值；每月目標留白，請依需求設定。');r29Render();
+        }
+        function r29Init(){if(!r29Get('tab-retirement'))return;r29FillForm(r29ReadSettings());r29Ready=true;r29Render();}
+        // 純函式，總報酬率含配發再投資；55歲後領出的配發現金從資產扣除，不額外疊加報酬。
+        // 月末增值以 (期初資產+當月新增投入) * 月報酬率 計算，現金提領發生在同月結算後。
+        function r29Simulate(baseValue,nowYM,config,annualReturn,annualYield,custom){
+            if(!r27ValidMonth(nowYM)||!Number.isFinite(baseValue)||baseValue<0||baseValue>1e11)throw Error('起點資產或日期不正確');
+            if(!Number.isFinite(annualReturn)||annualReturn< -50||annualReturn>50||!Number.isFinite(annualYield)||annualYield<0||annualYield>25)throw Error('情境參數不正確');
+            if(!['schedule','flat','none'].includes(config.contribution)||!['reinvest','withdraw'].includes(config.after55))throw Error('情境模式不正確');
+            let value=baseValue,cashTaken=0,contribTotal=0,contribMonths=0;
+            const monthlyReturn=Math.pow(1+annualReturn/100,1/12)-1;
+            const last=r29MonthIndex(R29_RETIRE),start=r29MonthIndex(nowYM);
+            const history=[{month:nowYM,value}];
+            let at55=null,at60=null;
+            if(nowYM>=R29_STOP)at55={month:nowYM,value,contribTotal,cashTaken,alreadyPast:true};
+            if(nowYM>=R29_RETIRE)at60={month:nowYM,value,contribTotal,cashTaken,alreadyPast:true};
+            for(let i=start+1;i<=last;i++){
+                const month=r29MonthFromIndex(i);let extra=0;
+                if(month<R29_STOP){
+                    if(config.contribution==='schedule')extra=r29YearlyInvest(month,custom);
+                    if(config.contribution==='flat')extra=config.flat;
+                    if(!Number.isFinite(extra)||extra<0||extra>1000000)throw Error('每月定投設定不正確');
+                }
+                value=(value+extra)*(1+monthlyReturn);contribTotal+=extra;if(extra>0)contribMonths++;
+                if(month>=R29_STOP && config.after55==='withdraw'){
+                    const withdrawn=Math.min(value,value*(annualYield/1200));
+                    value-=withdrawn;cashTaken+=withdrawn;
+                }
+                const point={month,value};history.push(point);
+                if(month===R29_STOP)at55={...point,contribTotal,cashTaken,alreadyPast:false};
+                if(month===R29_RETIRE)at60={...point,contribTotal,cashTaken,alreadyPast:false};
+            }
+            // 已超過 55 歲的話，不再重新假裝追溯 55 歲實際資產。
+            return {at55,at60,history,contribTotal,contribMonths,cashTaken,annualReturn,annualYield,monthIncome55:at55?at55.value*annualYield/1200:null,monthIncome60:at60?at60.value*annualYield/1200:null};
+        }
+        function r29Model(settings,shares,livePrice,nowYM,custom){
+            const error=r29Validate(settings);if(error)return {error};
+            if(!Number.isFinite(shares)||shares<0||!Number.isSafeInteger(shares))return {error:'主帳戶持股數量異常'};
+            const price=settings.manualPrice!==''?Number(settings.manualPrice):livePrice;
+            if((!Number.isFinite(price)||price<=0)&&shares>0)return {error:'尚無有效市場參考價；請先更新行情，或輸入手動參考價。'};
+            const base=shares>0?shares*price:0;
+            if(!Number.isFinite(base)||base<0||base>1e11)return {error:'起點資產超出可計算範圍'};
+            const flat=Number(settings.flat),config={contribution:settings.contribution,after55:settings.after55,flat};
+            try{
+                const variants={};for(const k of ['low','mid','high'])variants[k]=r29Simulate(base,nowYM,config,Number(settings['ret_'+k]),Number(settings['yield_'+k]),custom);
+                return {base,price:shares>0?price:null,manual:settings.manualPrice!=='',shares,config,variants,settings,nowYM};
+            }catch(e){return {error:e.message};}
+        }
+        function r29Progress(actual,goal){if(!(goal>0)||!Number.isFinite(actual))return null;return actual/goal*100;}
+        function r29Need(goal,yieldRate){if(!(goal>0)||!(yieldRate>0))return null;return goal*12/(yieldRate/100);}
+        function r29Milestones(variants,nowYM){
+            const set=new Set([nowYM,R29_STOP,R29_RETIRE]);
+            for(const p of variants.mid.history){if(p.month.endsWith('-09'))set.add(p.month);}
+            return [...set].sort().map(month=>({month,low:variants.low.history.find(p=>p.month===month)?.value??null,mid:variants.mid.history.find(p=>p.month===month)?.value??null,high:variants.high.history.find(p=>p.month===month)?.value??null}));
+        }
+        function r29ChartDraw(result){
+            const canvas=r29Get('r29_chart');if(!canvas || r29Get('tab-retirement')?.classList.contains('hidden'))return;
+            if(r29Chart){r29Chart.destroy();r29Chart=null;}
+            if(!result||typeof Chart==='undefined'){canvas.style.display='none';return;}
+            canvas.style.display='block';
+            const points=r29Milestones(result.variants,result.nowYM);
+            r29Chart=new Chart(canvas.getContext('2d'),{type:'line',data:{labels:points.map(x=>x.month),datasets:[
+                {label:'保守',data:points.map(x=>x.low),borderColor:'#60a5fa',pointRadius:2,tension:0.1},
+                {label:'基準',data:points.map(x=>x.mid),borderColor:'#34d399',pointRadius:2,tension:0.1},
+                {label:'樂觀',data:points.map(x=>x.high),borderColor:'#fbbf24',pointRadius:2,tension:0.1}
+            ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#e5e7eb'}}},scales:{x:{ticks:{color:'#9ca3af',maxRotation:55},grid:{color:'#374151'}},y:{ticks:{color:'#9ca3af',callback:v=>Math.round(v/10000)+'萬'},grid:{color:'#374151'}}}}});
+        }
+        function r29Render(){
+            if(!r29Ready||!r29Get('tab-retirement'))return;
+            const settings=r29FormValues(),today=r25Today(),nowYM=today.slice(0,7);
+            const acct=r25Compute(transactionLog,r25CashRows,currentPrice,Number(r29Get('sell_tax_fee_pct')?.value));
+            r29Text('r29_current_shares',r29Num(acct.shares)+' 股');
+            r29Text('r29_months_55',r29MonthsUntil(R29_STOP,nowYM)+' 個月');
+            r29Text('r29_months_60',r29MonthsUntil(R29_RETIRE,nowYM)+' 個月');
+            if(acct.oversold){r29Latest=null;r29Text('r29_status','⚠ 主帳戶有無效／超賣交易，暫停退休試算');r29Text('r29_current_value','資料異常');r29Clear('請到逐筆記帳修正異常後再試算。');return;}
+            const result=r29Model(settings,acct.shares,currentPrice,nowYM,customInvestMap);
+            if(result.error){r29Latest=null;r29Text('r29_status','⚠ '+result.error);r29Text('r29_current_value','資料不足');r29Clear(result.error);return;}
+            r29Latest=result;r29Text('r29_status','三情境已依主帳戶現有部位更新');
+            r29Text('r29_current_value',r29Cash(result.base));
+            r29Text('r29_price_note',`${result.manual?'使用手動假設股價':'使用網頁目前參考市價'}：${result.price===null?'目前無庫存，可從零投入模擬':result.price.toFixed(2)+' 元／股'}。現在資產 ${r29Cash(result.base)} 不含雙寶或未登錄的其他資產。`);
+            const currentGoal55=Number(settings.goal55),currentGoal60=Number(settings.goal60);
+            r29Text('r29_report_meta',`估算起點 ${today}｜起始市值 ${r29Cash(result.base)}｜${result.manual?'手動參考價':'當前取得行情'}｜55 歲後 ${settings.after55==='withdraw'?'領現金':'持續再投資'}`);
+            const plan=settings.contribution==='schedule'?'沿用手帳階梯定投；若手帳有手動月投入額，優先使用':settings.contribution==='flat'?`固定每月 ${r29Cash(Number(settings.flat))}`:'未來不再新增投入';
+            r29Text('r29_contrib_note',`${plan}。只模擬下個月起的新資金；2038/09 起停止外部投入。基準情境假設到 55 歲前新增投入 ${r29Cash(result.variants.mid.contribTotal)}（${result.variants.mid.contribMonths} 個有投入的月份）。`);
+            const labels={low:'保守',mid:'基準',high:'樂觀'};
+            const tbody=r29Get('r29_scenarios');
+            if(tbody)tbody.innerHTML=['low','mid','high'].map(k=>{const x=result.variants[k];return `<tr><td class="p-2 font-bold">${labels[k]}<div class="text-xs text-gray-400">${x.annualReturn}%／${x.annualYield}%</div></td><td class="p-2 text-right">${r29Cash(x.at55?.value)}</td><td class="p-2 text-right">${r29Cash(x.monthIncome55)}</td><td class="p-2 text-right">${r29Cash(x.at60?.value)}</td><td class="p-2 text-right">${r29Cash(x.monthIncome60)}</td><td class="p-2 text-right">${r29Cash(x.cashTaken)}</td></tr>`;}).join('');
+            const baseline=result.variants.mid;
+            for(const [stage,goal,actual] of [['55',currentGoal55,baseline.monthIncome55],['60',currentGoal60,baseline.monthIncome60]]){
+                const notSet=settings['goal'+stage]===''||!(goal>0);
+                const pct=notSet?null:r29Progress(actual,goal);
+                r29Text('r29_goal'+stage+'_label',notSet?'尚未設定每月現金流目標':`達標比 ${pct?.toFixed(1)??'—'}%`);
+                r29Text('r29_goal'+stage+'_detail',notSet?'請於上方輸入目標金額。':`基準假設每月 ${r29Cash(actual)}／目標 ${r29Cash(goal)}；此為可能配發參考，不是實收股息。`);
+                const bar=r29Get('r29_bar'+stage);if(bar)bar.style.width=(pct===null?0:Math.max(0,Math.min(100,pct)))+'%';
+                const needed=notSet?null:r29Need(goal,baseline.annualYield);
+                const actualValue=stage==='55'?baseline.at55?.value:baseline.at60?.value;
+                r29Text('r29_gap'+stage,notSet?'尚未設定目標':needed===null?'假設配發率為 0，無法反推所需資產':`需求 ${r29Cash(needed)}｜${actualValue>=needed?'高於門檻 '+r29Cash(actualValue-needed):'缺口 '+r29Cash(needed-actualValue)}`);
+            }
+            r29Text('r29_scenario_note',`年化總報酬（保守／基準／樂觀）：${result.variants.low.annualReturn}%／${baseline.annualReturn}%／${result.variants.high.annualReturn}%。配發率作為所得容量試算，${settings.after55==='withdraw'?'55 歲後每月按各情境配發率領出現金並從資產扣除':'55 歲後不領出，假設持續再投資直到 60 歲'}。`);
+            r29Text('r29_goal_note',`基準假設年現金配發率 ${baseline.annualYield}%。所需資產＝每月目標×12÷配發率；不含稅金、通膨、費用及市場波動，非保證領息。`);
+            const milestones=r29Milestones(result.variants,nowYM);
+            const rows=r29Get('r29_path_rows');if(rows)rows.innerHTML=milestones.map(p=>`<tr><td class="p-2 font-semibold">${p.month}${p.month===R29_STOP?'（55 歲）':p.month===R29_RETIRE?'（60 歲）':''}</td><td class="p-2 text-right">${r29Cash(p.low)}</td><td class="p-2 text-right">${r29Cash(p.mid)}</td><td class="p-2 text-right">${r29Cash(p.high)}</td></tr>`).join('');
+            const notes=[
+                `起點：主帳戶真實逐筆交易持股 ${r29Num(acct.shares)} 股乘以${result.manual?'手動假設':'最新可得參考'}價格；雙寶帳戶不併入本頁目標。`,
+                '估算自下個月份起納入未來定投；已登錄的本月買進已包含在起點持股，不會再重複投入。',
+                '總報酬是本金及再投資的整體年化假設；配發率僅用於推算可能的月度現金配發，不會在總報酬外再加一次。',
+                settings.after55==='withdraw'?'55 歲後按假設配發率提領現金；已提領金額從資產扣除，因此 60 歲資產會受影響。':'55 歲後停止外部投入，但假設所有配發與報酬留在部位繼續複利。',
+                '假設採每月固定報酬、固定配發率；現實可能波動、虧損、停配，配息來源可能包含本金。這不是未來保證報酬或實際已領股息。',
+                '試算不含通膨、券商費用、補充保費、稅金、ETF 折溢價及其他現金需求。請依實際投資計畫自行調整。'
+            ];
+            if(nowYM>=R29_STOP)notes.unshift('55 歲日期已到：此頁不倒算過去 55 歲持股，而以今日資產顯示剩餘期間情境。');
+            const obs=r29Get('r29_notes');if(obs)obs.innerHTML=notes.map(x=>`<p>• ${r25Escape(x)}</p>`).join('');
+            r29Text('r29_home_brief',`主帳戶起點 ${r29Cash(result.base)}；基準情境 55 歲月配發參考 ${r29Cash(baseline.monthIncome55)}、60 歲 ${r29Cash(baseline.monthIncome60)}（非保證）。`);
+            r29ChartDraw(result);
+        }
+        function r29Clear(message){
+            const row=r29Get('r29_scenarios');if(row)row.innerHTML='<tr><td colspan="6" class="p-6 text-center text-gray-400">'+r25Escape(message)+'</td></tr>';
+            const path=r29Get('r29_path_rows');if(path)path.innerHTML='';
+            for(const id of ['r29_goal55_label','r29_goal60_label','r29_goal55_detail','r29_goal60_detail','r29_gap55','r29_gap60','r29_report_meta','r29_scenario_note','r29_goal_note'])r29Text(id,message);
+            r29Text('r29_home_brief',message);const note=r29Get('r29_notes');if(note)note.textContent=message;
+            for(const id of ['r29_bar55','r29_bar60']){const e=r29Get(id);if(e)e.style.width='0%';}
+            if(r29Chart){r29Chart.destroy();r29Chart=null;}
+        }
+        function r29ExportCSV(){
+            r29Render();const r=r29Latest;if(!r){alert('請先提供有效行情與試算假設');return;}
+            const settings=r.settings,vs=r.variants;
+            const rows=[['00406A Tracker R29','退休目標試算','非收益預測'],['試算起點',r.nowYM],['目前主帳戶持股',r.shares],['起始資產',r.base],['參考價來源',r.manual?'手動假設':'目前行情'],['參考股價',r.price??'無庫存'],['55歲每月目標',settings.goal55||'未設定'],['60歲每月目標',settings.goal60||'未設定'],['55歲後',settings.after55==='reinvest'?'繼續再投資':'領現金'],[],['情境','年化總報酬(%)','假設年配發率(%)','55歲資產','55歲每月配發','60歲資產','60歲每月配發','55~60歲領出現金','未來總投入']];
+            for(const [id,name] of [['low','保守'],['mid','基準'],['high','樂觀']]){const v=vs[id];rows.push([name,v.annualReturn,v.annualYield,v.at55?.value??'',v.monthIncome55??'',v.at60?.value??'',v.monthIncome60??'',v.cashTaken,v.contribTotal]);}
+            rows.push([],['月份','保守資產','基準資產','樂觀資產']);for(const v of r29Milestones(vs,r.nowYM))rows.push([v.month,v.low??'',v.mid??'',v.high??'']);
+            r27Download('00406A_R29_退休目標_'+r25Today()+'.csv','\ufeff'+rows.map(x=>x.map(r27CsvValue).join(',')).join('\r\n'),'text/csv;charset=utf-8');
+        }
+        function r29Print(){r29Render();if(!r29Latest){alert('請先提供有效行情與試算假設');return;}
+            document.body.classList.add('r29-print-active');
+            const cleanup=()=>document.body.classList.remove('r29-print-active');
+            window.addEventListener('afterprint',cleanup,{once:true});
+            try{window.print();}catch(e){cleanup();alert('無法開啟列印：'+e.message);}
+        }
+        function r29ExportHTML(){
+            r29Render();const r=r29Latest;if(!r){alert('請先提供有效行情與試算假設');return;}
+            const clone=r29Get('r29_paper').cloneNode(true);clone.removeAttribute('id');clone.querySelectorAll('canvas,.r29-chart-wrap').forEach(x=>x.remove());
+            const style=`body{font-family:system-ui,-apple-system,sans-serif;color:#172033;background:#fff;margin:22px auto;padding:0 16px;max-width:900px;font-size:14px}.card{padding:14px;border:1px solid #cbd5e1;border-radius:6px;margin:0 0 12px;break-inside:avoid}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.bg-gray-900{background:#f1f5f9;padding:10px;border-radius:4px}.text-xs{font-size:11px;color:#475569}.text-sm{font-size:13px}.text-lg{font-size:17px}h2{font-size:22px}h3{font-size:17px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{padding:6px;border-bottom:1px solid #cbd5e1}td.text-right,th.text-right{text-align:right}.overflow-x-auto{overflow-x:auto}@media print{@page{size:A4;margin:12mm}.card{break-inside:avoid}}`;
+            r27Download('00406A_R29_退休目標_'+r25Today()+'.html','<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A R29 退休目標</title><style>'+style+'</style></head><body>'+clone.outerHTML+'</body></html>','text/html;charset=utf-8');
+        }
+        // 連動 R25、R28 的既有帳務及資料刷新，不在新模組寫入交易或改動帳務函式。
+        const r29PriorTransactions=updateTransactions;
+        updateTransactions=function(...args){const val=r29PriorTransactions.apply(this,args);r29Render();return val;};
+        const r29PriorCashRender=r25Render;
+        r25Render=function(...args){const val=r29PriorCashRender.apply(this,args);r29Render();return val;};
+        const r29PriorFetch=fetchData;
+        fetchData=async function(...args){const val=await r29PriorFetch.apply(this,args);r29Render();return val;};
+        const r29PriorHolding=updateHoldingCalculations;
+        updateHoldingCalculations=function(...args){const val=r29PriorHolding.apply(this,args);r29Render();return val;};
 
     </script>
 </body>
