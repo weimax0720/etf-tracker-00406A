@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R27｜MAX 的追蹤儀表板</title>
+    <title>00406A Tracker R28｜MAX 的追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -45,6 +45,27 @@
           #tab-report .r27-paper .overflow-x-auto { overflow:visible !important; }
           #tab-report .r27-paper .min-w-\[560px\], #tab-report .r27-paper .min-w-\[640px\] { min-width:0 !important; }
         }
+
+        /* R28 年報：只列印年度紙本內容；R27 月報列印模式維持原樣。 */
+        @media print {
+          body.r28-print-active > .max-w-6xl > :not(#tab-annual) { display:none !important; }
+          body.r28-print-active > .max-w-6xl > #tab-annual { display:block !important; position:static !important; width:100% !important; margin:0 !important; padding:0 !important; }
+          body.r28-print-active #tab-report { display:none !important; }
+          body.r28-print-active #tab-annual .r28-no-print { display:none !important; }
+          body.r28-print-active #tab-annual .r28-paper { display:block !important; }
+          body.r28-print-active #tab-annual .r28-paper .card { background:#fff !important; color:#172033 !important; border:1px solid #cbd5e1 !important; padding:10px !important; margin:0 0 11px !important; border-radius:6px !important; break-inside:avoid; }
+          body.r28-print-active #tab-annual .r28-paper .grid { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:7px !important; }
+          body.r28-print-active #tab-annual .r28-paper .grid > div { padding:7px !important; margin:0 !important; }
+          body.r28-print-active #tab-annual .r28-paper h2 { font-size:19px !important; }
+          body.r28-print-active #tab-annual .r28-paper h3 { font-size:15px !important; margin:0 0 6px !important; }
+          body.r28-print-active #tab-annual .r28-paper [class*="text-"] { color:#172033 !important; }
+          body.r28-print-active #tab-annual .r28-paper .bg-gray-900 { background:#f1f5f9 !important; }
+          body.r28-print-active #tab-annual .r28-paper table { font-size:9px !important; width:100%; }
+          body.r28-print-active #tab-annual .r28-paper th, body.r28-print-active #tab-annual .r28-paper td { padding:4px !important; border-bottom:1px solid #e2e8f0; }
+          body.r28-print-active #tab-annual .r28-paper .overflow-x-auto { overflow:visible !important; }
+          body.r28-print-active #tab-annual .r28-paper .r28-chart-wrap { display:none !important; }
+          body.r28-print-active #tab-annual .r28-paper .min-w-\[650px\],body.r28-print-active #tab-annual .r28-paper .min-w-\[760px\],body.r28-print-active #tab-annual .r28-paper .min-w-\[720px\] { min-width:0 !important; }
+        }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -75,6 +96,7 @@
             <button onclick="switchTab('assets')" id="btn-assets" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-amber-300 whitespace-nowrap">🎯 R25 資產分析</button>
             <button onclick="switchTab('topup')" id="btn-topup" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-violet-300 whitespace-nowrap">🧮 R26 智慧加碼</button>
             <button onclick="switchTab('report')" id="btn-report" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-sky-300 whitespace-nowrap">🗓️ R27 智慧月報</button>
+            <button onclick="switchTab('annual')" id="btn-annual" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-amber-200 whitespace-nowrap">🏆 R28 年度總結</button>
             <button onclick="switchTab('safety')" id="btn-safety" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">🛡️ 流動性雷達</button>
         </div>
 
@@ -83,7 +105,7 @@
             <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
             <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R27 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
+                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R28 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
                     <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
                 </div>
                 <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
@@ -119,6 +141,10 @@
             <div class="bg-gray-800 border border-sky-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
                 <div><p class="text-sm font-bold text-sky-300">🗓️ R27 智慧月報</p><p id="r27_home_brief" class="text-xs text-gray-300 mt-1">整理當月交易、股息、月底庫存、成交價與配息公告；可列印 PDF、下載 CSV。</p></div>
                 <button type="button" onclick="switchTab('report')" class="rounded bg-sky-700 hover:bg-sky-600 px-3 py-2 text-sm font-medium">開啟月報 →</button>
+            </div>
+            <div class="bg-gray-800 border border-amber-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div><p class="text-sm font-bold text-amber-200">🏆 R28 年度投資總結</p><p id="r28_home_brief" class="text-xs text-gray-300 mt-1">整理年度投入、實收股息、交易損益、家庭持股與年度比較。</p></div>
+                <button type="button" onclick="switchTab('annual')" class="rounded bg-amber-700 hover:bg-amber-600 px-3 py-2 text-sm font-medium">開啟年度總結 →</button>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center relative overflow-hidden">
@@ -837,6 +863,78 @@
             </div>
         </section>
 
+
+        <!-- ================= R28 年度投資總結中心 ================= -->
+        <section id="tab-annual" class="space-y-5 hidden" aria-label="R28 年度投資總結">
+            <div class="card border border-amber-700/60 r28-no-print">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div><h2 class="text-xl font-bold text-amber-200">🏆 R28 年度投資總結中心</h2><p class="text-sm text-gray-400 mt-2">以逐筆真實交易及 R25 已登錄實收股息整理年度成果；不把配息公告當成已入帳，也不把未來手帳模擬納入真實績效。</p></div>
+                    <span id="r28_status" class="text-xs text-gray-300 bg-gray-900 border border-gray-700 rounded px-3 py-2" role="status">年度報告準備中</span>
+                </div>
+                <div class="flex flex-wrap gap-3 items-end mt-4">
+                    <label class="text-sm text-gray-300">選擇年度<select id="r28_year" onchange="r28Render()" class="block mt-1 bg-gray-900 border border-amber-700 rounded px-4 py-2 text-white text-base"></select></label>
+                    <button type="button" onclick="r28MoveYear(-1)" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm">← 上一年</button>
+                    <button type="button" onclick="r28MoveYear(1)" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm">下一年 →</button>
+                    <button type="button" onclick="r28ThisYear()" class="rounded bg-amber-800 hover:bg-amber-700 px-4 py-2 text-sm">回今年</button>
+                    <button type="button" onclick="r28LoadHistory()" id="r28_load_history" class="rounded bg-indigo-700 hover:bg-indigo-600 px-4 py-2 text-sm">🔄 補載所選年／前年歷史行情</button>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-4 border-t border-gray-700 pt-4">
+                    <button type="button" onclick="r28Print()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-2 text-sm font-semibold">🖨️ 列印／另存 PDF</button>
+                    <button type="button" onclick="r28ExportCSV()" class="rounded bg-emerald-700 hover:bg-emerald-600 px-4 py-2 text-sm font-semibold">📥 年度 CSV</button>
+                    <button type="button" onclick="r28ExportHTML()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm font-semibold">📄 獨立 HTML 報告</button>
+                </div>
+                <p id="r28_price_loading" role="status" class="text-xs text-gray-400 mt-3">過去年度價格可能不在目前 FinMind 最近一年行情內；請使用「補載歷史行情」，僅取得該年與前年所需資料。</p>
+            </div>
+            <div class="r28-paper space-y-5" id="r28_paper">
+                <div class="card border border-amber-800/50">
+                    <div class="flex flex-wrap justify-between gap-3 items-start"><div><p class="text-xs uppercase tracking-widest text-amber-300">00406A · ANNUAL INVESTMENT REVIEW</p><h2 id="r28_title" class="text-2xl font-bold mt-2">年度投資總結</h2><p id="r28_period" class="text-sm text-gray-300 mt-2">—</p></div><div class="text-xs text-gray-400 text-right"><p>00406A Tracker · R28</p><p id="r28_generated" class="mt-2">—</p></div></div>
+                    <p id="r28_scope" class="text-xs text-gray-400 mt-4">年度成果只根據本機帳務和可取得市場資料計算。</p>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-amber-300 mb-3">一、主帳戶年度資金與已實現成果</h3>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">自有資金買入（含費）</p><p id="r28_external" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">配息再投資買股（含費）</p><p id="r28_reinvest" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">股票賣出淨收入</p><p id="r28_sales" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">已登錄實收股息</p><p id="r28_cash" class="text-lg font-bold text-emerald-300 mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">已實現交易損益</p><p id="r28_realized" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">已實現損益＋實收股息</p><p id="r28_combined" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">年度帳務淨現金流</p><p id="r28_netflow" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶年度交易筆數</p><p id="r28_trades" class="text-lg font-bold mt-2">—</p></div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-3">已實現損益＋已登錄股息，不包含未實現損益；並非年度投資報酬率。現金流＝賣出淨收＋股息入帳－全部買股支出；已再投資的股息可能同時出現在入帳與買股兩側，需依實際紀錄核對。</p>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-cyan-300 mb-3">二、年末持股與市值（按可取得行情）</h3>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">期末主帳戶股數</p><p id="r28_shares" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">期末主帳戶庫存成本</p><p id="r28_basis" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">期末 ETF 參考股價</p><p id="r28_price" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶期末參考市值</p><p id="r28_market" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶期末未實現損益</p><p id="r28_unrealized" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭期末合計股數</p><p id="r28_family_shares" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">家庭期末參考總市值</p><p id="r28_family_market" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">全年公告每股配息合計</p><p id="r28_announced" class="text-lg font-bold mt-2">—</p></div>
+                    </div>
+                    <p id="r28_price_note" class="text-xs text-gray-400 mt-3">沒有該年度價格資料就留白，避免用最新行情冒充歷史年末價格。</p>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-pink-300 mb-3">三、家庭年度真實交易彙總</h3>
+                    <div class="overflow-x-auto"><table class="w-full min-w-[650px] text-sm"><thead class="text-gray-400"><tr><th class="text-left p-2">帳戶</th><th class="text-right p-2">全年買入股數</th><th class="text-right p-2">全年賣出股數</th><th class="text-right p-2">年末股數</th><th class="text-right p-2">年末成本</th><th class="text-right p-2">年度已實現損益</th></tr></thead><tbody id="r28_family_rows" class="divide-y divide-gray-700"></tbody></table></div>
+                    <p class="text-xs text-gray-500 mt-3">主帳戶實收股息另行記錄；雙寶目前沒有獨立的實際股息入帳台帳。此表不包含模擬手帳股數。</p>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-sky-300 mb-3">四、12 個月投資足跡</h3>
+                    <div class="r28-chart-wrap" style="height:225px"><canvas id="r28_month_chart" aria-label="按月份顯示自有資金投入及已登錄實收股息"></canvas></div>
+                    <div class="overflow-x-auto mt-3"><table class="w-full min-w-[760px] text-xs"><thead class="text-gray-400"><tr><th class="text-left p-2">月份</th><th class="text-right p-2">自有資金投入</th><th class="text-right p-2">配息再投資</th><th class="text-right p-2">實收股息</th><th class="text-right p-2">賣出淨收入</th><th class="text-right p-2">已實現損益</th><th class="text-right p-2">月底股數</th></tr></thead><tbody id="r28_month_rows" class="divide-y divide-gray-700"></tbody></table></div>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-indigo-300 mb-3">五、跨年度比較（本機已有資料範圍）</h3>
+                    <p class="text-xs text-gray-400 mb-3">比較年度現金流和期末持股，非「年報酬率」；年度市值受追加投入及提領影響，不能直接用兩年市值差推算投資報酬。</p>
+                    <div class="overflow-x-auto"><table class="w-full min-w-[720px] text-xs"><thead class="text-gray-400"><tr><th class="text-left p-2">年度</th><th class="text-right p-2">自有投入</th><th class="text-right p-2">實收股息</th><th class="text-right p-2">已實現損益</th><th class="text-right p-2">年末主帳戶股數</th><th class="text-right p-2">期末參考市值</th></tr></thead><tbody id="r28_year_rows" class="divide-y divide-gray-700"></tbody></table></div>
+                    <p id="r28_yoy_note" class="text-xs text-gray-400 mt-3">—</p>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-emerald-300 mb-3">六、年度觀察及資料提醒</h3><div id="r28_observations" class="text-sm text-gray-300 space-y-2">尚無資料</div>
+                    <p class="text-xs text-gray-500 mt-4">本報表非經查核之損益表、稅務申報資料或報酬率保證。買賣相關交易費用按已輸入金額處理。ETF 配息公告並非實收股息；請定期備份帳務 JSON。</p>
+                </div>
+            </div>
+        </section>
+
         <!-- ================= 分頁 7：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
             <div class="card border border-red-900/50 shadow-lg shadow-red-900/10 mb-6">
@@ -1014,13 +1112,15 @@
             r25Init();
             r26Init();
             r27Init();
+            r28Init();
         };
 
         function switchTab(tabId) {
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
                 document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
-                if (id === 'report') document.getElementById(`btn-${id}`).classList.remove('text-sky-300');
+                if (id === 'annual') document.getElementById(`btn-${id}`).classList.remove('text-amber-200');
+                else if (id === 'report') document.getElementById(`btn-${id}`).classList.remove('text-sky-300');
                 else if (id === 'topup') document.getElementById(`btn-${id}`).classList.remove('text-violet-300');
                 else if (id === 'assets') document.getElementById(`btn-${id}`).classList.remove('text-amber-300');
                 else if (id === 'dividends') document.getElementById(`btn-${id}`).classList.remove('text-emerald-400');
@@ -1031,9 +1131,10 @@
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
             
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'safety'].forEach(id => {
                 if(id !== tabId) {
-                    if (id === 'report') document.getElementById(`btn-${id}`).classList.add('text-sky-300');
+                    if (id === 'annual') document.getElementById(`btn-${id}`).classList.add('text-amber-200');
+                    else if (id === 'report') document.getElementById(`btn-${id}`).classList.add('text-sky-300');
                     else if (id === 'topup') document.getElementById(`btn-${id}`).classList.add('text-violet-300');
                     else if (id === 'assets') document.getElementById(`btn-${id}`).classList.add('text-amber-300');
                     else if (id === 'dividends') document.getElementById(`btn-${id}`).classList.add('text-emerald-400');
@@ -1046,7 +1147,8 @@
             if(tabId === 'charts' && rawPriceData.length > 0) renderTrendChart(currentChartTimeframe);
             if(tabId === 'dividends') r24DrawChart();
             if(tabId === 'topup') r26Render();
-            if(tabId === 'report') r27Render(); 
+            if(tabId === 'report') r27Render();
+            if(tabId === 'annual') r28Render(); 
         }
 
         function saveAndLoad() {
@@ -2688,10 +2790,10 @@
                     const key=localStorage.key(i);
                     if(key&&key.startsWith('00406A_')&&key!==KEY_NAME)data[key]=localStorage.getItem(key);
                 }
-                const payload={format:'00406A-Tracker-Backup',schema:1,createdAt:new Date().toISOString(),version:'R27',data};
+                const payload={format:'00406A-Tracker-Backup',schema:1,createdAt:new Date().toISOString(),version:'R28',data};
                 const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
                 const url=URL.createObjectURL(blob),a=document.createElement('a');
-                a.href=url;a.download='00406A_R27_帳務備份_'+r25Today()+'.json';document.body.appendChild(a);a.click();a.remove();
+                a.href=url;a.download='00406A_R28_帳務備份_'+r25Today()+'.json';document.body.appendChild(a);a.click();a.remove();
                 setTimeout(()=>URL.revokeObjectURL(url),3000);
                 r25Write('r25_backup_status',`已準備備份 ${Object.keys(data).length} 類本機資料（不含 API 金鑰），請確認檔案有存到手機。`);
             }catch(e){alert('備份失敗：'+e.message);}
@@ -3031,6 +3133,245 @@
         updateTransactions=function(...args){const ret=r27PreviousTransactions.apply(this,args);if(r27El('r27_month'))r27Render();return ret;};
         const r27PreviousFetch=fetchData;
         fetchData=async function(...args){const ret=await r27PreviousFetch.apply(this,args);if(r27El('r27_month'))r27Render();return ret;};
+
+
+        // ===== R28 年度投資總結：只讀 R27 帳務與 R25 入帳台帳，不改動交易儲存鍵。 =====
+        const R28_PRICE_KEY='00406A_R28_PRICE_HISTORY_V1';
+        let r28History={},r28Current=null,r28Chart=null,r28Busy=false;
+        const r28El=id=>document.getElementById(id);
+        const r28Text=(id,value)=>{const el=r28El(id);if(el)el.textContent=value;};
+        const r28Num=n=>Number.isFinite(n)?n.toLocaleString('zh-TW',{maximumFractionDigits:0}):'—';
+        const r28Money=n=>r27Money(n);
+        const r28Signed=n=>r27Signed(n);
+        function r28YearValid(y){return /^\d{4}$/.test(String(y)) && Number(y)>=2000 && Number(y)<=new Date().getFullYear();}
+        function r28YearOptions(){
+            const thisYear=Number(r25Today().slice(0,4));
+            const ys=new Set([thisYear]);
+            for(let y=Math.max(2000,thisYear-3);y<thisYear;y++)ys.add(y);
+            for(const t of transactionLog){const y=Number(String(t.date||'').slice(0,4));if(y>=2000&&y<=thisYear)ys.add(y);}
+            for(const r of r25CashRows){const y=Number(String(r.date||'').slice(0,4));if(y>=2000&&y<=thisYear)ys.add(y);}
+            for(const r of r24Rows){const y=Number(String(r.exDate||'').slice(0,4));if(y>=2000&&y<=thisYear)ys.add(y);}
+            return [...ys].sort((a,b)=>b-a);
+        }
+        function r28UpdateYearOptions(){
+            const select=r28El('r28_year');if(!select)return;
+            const chosen=select.value;
+            const ys=r28YearOptions();
+            select.innerHTML=ys.map(y=>`<option value="${y}">${y} 年${y===new Date().getFullYear()?'（今年）':''}</option>`).join('');
+            select.value=ys.includes(Number(chosen))?chosen:String(new Date().getFullYear());
+        }
+        function r28ReadHistoryCache(){
+            try{
+                const obj=JSON.parse(localStorage.getItem(R28_PRICE_KEY)||'{}');
+                if(!obj || typeof obj!=='object'||Array.isArray(obj))return {};
+                const cleaned={};
+                for(const [year,rows] of Object.entries(obj).slice(-10)){
+                    if(!/^20\d\d$/.test(year)||!Array.isArray(rows)||rows.length>500)continue;
+                    cleaned[year]=rows.filter(x=>x&&r24SafeDate(x.date)&&String(x.date).slice(0,4)===year&&Number.isFinite(Number(x.close))&&Number(x.close)>0).map(x=>({date:x.date,close:Number(x.close)}));
+                }
+                return cleaned;
+            }catch(e){console.warn('R28 年度行情快取讀取失敗',e);return {};}
+        }
+        function r28AllPriceRows(){
+            const m=new Map();
+            for(const arr of Object.values(r28History))for(const x of arr)m.set(x.date,x);
+            for(const x of rawPriceData)if(x&&r24SafeDate(x.date)&&Number(x.close)>0)m.set(x.date,x);
+            return [...m.values()].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+        }
+        function r28Compute(transactions,cashRows,divRows,prices,year,livePrice,sellFee,today){
+            year=Number(year);
+            if(!Number.isInteger(year)||year<2000||year>Number(today.slice(0,4)))throw Error('年度不在可統計的範圍');
+            const currentYear=Number(today.slice(0,4));
+            const endMonth=year===currentYear?Number(today.slice(5,7)):12;
+            const months=[];
+            for(let m=1;m<=endMonth;m++){
+                const ym=`${year}-${String(m).padStart(2,'0')}`;
+                months.push(r27Compute(transactions,cashRows,divRows,prices,ym,livePrice,sellFee,today));
+            }
+            const last=months[months.length-1];
+            const first=months[0];
+            const cutoff=last.cutoff;
+            const sums={external:0,reinvest:0,sales:0,cash:0,realized:0,trades:0,bought:0,sold:0,netflow:0};
+            const family={};
+            for(const id of Object.keys(R27_OWNERS))family[id]={bought:0,sold:0,external:0,reinvest:0,sales:0,realized:0,trades:0};
+            const invalid=months.some(x=>x.invalid);
+            for(const mo of months){
+                const a=mo.main;
+                sums.external+=a.monthExternal;sums.reinvest+=a.monthReinvest;sums.sales+=a.monthSales;
+                sums.cash+=mo.cash;sums.realized+=a.monthRealized;sums.trades+=a.monthTx;
+                sums.bought+=a.monthBought;sums.sold+=a.monthSold;sums.netflow+=mo.netflow;
+                for(const id of Object.keys(R27_OWNERS)){
+                    const ac=mo.accounts[id],dst=family[id];
+                    dst.bought+=ac.monthBought;dst.sold+=ac.monthSold;dst.external+=ac.monthExternal;
+                    dst.reinvest+=ac.monthReinvest;dst.sales+=ac.monthSales;
+                    dst.realized+=ac.monthRealized;dst.trades+=ac.monthTx;
+                }
+            }
+            // 年底價格須在最後十個日曆日內取得；只有已選年度有資料才計算歷史年末市值。
+            let pricing=last.pricing;
+            const date=pricing.date;
+            const diff=date?(new Date(cutoff+'T00:00:00')-new Date(date+'T00:00:00'))/86400000:Infinity;
+            if(pricing.price===null || !Number.isFinite(diff)||diff<0||diff>10){
+                pricing={price:null,date:null,provisional:last.isCurrent,label:'此年期末附近尚無可用收盤資料（需在截止日前 10 天內）；市值留白'};
+            }
+            const price=pricing.price;
+            const feeOk=Number.isFinite(Number(sellFee))&&Number(sellFee)>=0&&Number(sellFee)<100;
+            const familyShares=Object.values(last.accounts).reduce((a,x)=>a+x.shares,0);
+            const market=!invalid&&price!==null?last.main.shares*price:null;
+            const familyMarket=!invalid&&price!==null?familyShares*price:null;
+            const unrealized=market!==null&&feeOk?market*(1-Number(sellFee)/100)-last.main.basis:null;
+            const divs=(Array.isArray(divRows)?divRows:[]).filter(x=>x&&r24SafeDate(x.exDate)&&x.exDate.slice(0,4)===String(year)&&x.exDate<=cutoff&&Number.isFinite(Number(x.amount))&&Number(x.amount)>0);
+            const announced=divRows&&divRows.length?divs.reduce((a,x)=>a+Number(x.amount),0):null;
+            return {year,cutoff,current:year===currentYear,months,last,first,invalid,pricing,sums,family,familyShares,market,familyMarket,unrealized,announced,announcements:divs};
+        }
+        function r28Build(y){return r28Compute(transactionLog,r25CashRows,r24Rows,r28AllPriceRows(),y,currentPrice,Number(r28El('sell_tax_fee_pct')?.value),r25Today());}
+        function r28Init(){
+            if(!r28El('r28_year'))return;
+            r28History=r28ReadHistoryCache();r28UpdateYearOptions();r28Render();
+        }
+        function r28ThisYear(){r28El('r28_year').value=r25Today().slice(0,4);r28Render();}
+        function r28MoveYear(delta){
+            const field=r28El('r28_year');const target=Number(field.value)+delta;
+            const choices=r28YearOptions();
+            if(choices.includes(target)){field.value=String(target);r28Render();}
+        }
+        function r28RenderChart(report){
+            if(!r28El('r28_month_chart')||r28El('tab-annual').classList.contains('hidden'))return;
+            const canvas=r28El('r28_month_chart');
+            if(r28Chart){r28Chart.destroy();r28Chart=null;}
+            if(typeof Chart==='undefined'){canvas.style.display='none';return;}
+            canvas.style.display='block';
+            r28Chart=new Chart(canvas.getContext('2d'),{type:'bar',data:{
+                labels:report.months.map(x=>String(Number(x.month.slice(5,7)))+'月'),
+                datasets:[{label:'自有資金買入',data:report.months.map(x=>x.main.monthExternal),backgroundColor:'#60a5fa'},
+                          {label:'實際股息入帳',data:report.months.map(x=>x.cash),backgroundColor:'#34d399'}]
+            },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#e5e7eb'}}},scales:{x:{ticks:{color:'#9ca3af'},grid:{color:'#374151'}},y:{ticks:{color:'#9ca3af'},grid:{color:'#374151'}}}}});
+        }
+        function r28Render(){
+            const field=r28El('r28_year');if(!field)return;
+            const year=Number(field.value);if(!r28YearValid(year)){r28Text('r28_status','請選擇有效年度');r28Current=null;return;}
+            let r;
+            try{r=r28Build(year);}catch(e){r28Text('r28_status','年度計算暫時失敗：'+e.message);r28Current=null;return;}
+            r28Current=r;
+            const bad=r.invalid,s=r.sums,last=r.last.main;
+            const safe=n=>bad?null:n;
+            r28Text('r28_title',`${year} 年度投資總結`);
+            r28Text('r28_period',`統計期間：${year}-01-01 ～ ${r.cutoff}${r.current?'（今年尚未結束）':''}`);
+            r28Text('r28_generated','產生時間：'+new Date().toLocaleString('zh-TW',{hour12:false}));
+            r28Text('r28_scope','來源：本機逐筆交易、R25 主帳戶實際股息入帳、R24 ETF 公告配息及可取得的歷史行情。不包含任何未來模擬交易。');
+            r28Text('r28_status',bad?'⚠ 偵測到無效／超賣交易；損益與持股需核對':`${year} 年 ${r.months.length} 個月｜主帳戶 ${s.trades} 筆交易`);
+            r28Text('r28_external',r28Money(s.external));r28Text('r28_reinvest',r28Money(s.reinvest));
+            r28Text('r28_sales',r28Money(s.sales));r28Text('r28_cash',r28Money(s.cash));
+            r28Text('r28_realized',r28Signed(safe(s.realized)));
+            r28Text('r28_combined',r28Signed(safe(s.realized+s.cash)));
+            r28Text('r28_netflow',r28Signed(s.netflow));r28Text('r28_trades',s.trades+' 筆');
+            r28Text('r28_shares',bad?'資料異常':r28Num(last.shares)+' 股');
+            r28Text('r28_basis',r28Money(safe(last.basis)));
+            r28Text('r28_price',r.pricing.price===null?'行情不足':r28Money(r.pricing.price));
+            r28Text('r28_market',r28Money(r.market));r28Text('r28_unrealized',r28Signed(r.unrealized));
+            r28Text('r28_family_shares',bad?'資料異常':r28Num(r.familyShares)+' 股');
+            r28Text('r28_family_market',r28Money(r.familyMarket));
+            r28Text('r28_announced',r.announced===null?'公告未載入':`${r24Amount(r.announced)} 元／股`);
+            r28Text('r28_price_note',`${r.pricing.label}；${r.current?'年度尚未結束，僅為今年迄今的暫時估值。':'過去年度估值以該年底最後可得收盤價為參考。'}${bad?'⚠ 帳務交易異常，已隱藏可能失真的期末市值及損益。':''} ETF 公告配息與主帳戶實收股息不相同。`);
+            const familyEl=r28El('r28_family_rows');
+            if(familyEl)familyEl.innerHTML=Object.keys(R27_OWNERS).map(id=>{
+                const x=r.family[id],end=r.last.accounts[id];
+                return `<tr><td class="p-2 font-semibold">${R27_OWNERS[id]}</td><td class="p-2 text-right">${r28Num(x.bought)}</td><td class="p-2 text-right">${r28Num(x.sold)}</td><td class="p-2 text-right">${bad?'⚠':r28Num(end.shares)}</td><td class="p-2 text-right">${r28Money(safe(end.basis))}</td><td class="p-2 text-right">${r28Signed(safe(x.realized))}</td></tr>`;
+            }).join('');
+            const monthlyEl=r28El('r28_month_rows');
+            if(monthlyEl)monthlyEl.innerHTML=r.months.map(m=>`<tr><td class="p-2 font-semibold">${m.month}</td><td class="p-2 text-right">${r28Money(m.main.monthExternal)}</td><td class="p-2 text-right">${r28Money(m.main.monthReinvest)}</td><td class="p-2 text-right">${r28Money(m.cash)}</td><td class="p-2 text-right">${r28Money(m.main.monthSales)}</td><td class="p-2 text-right">${r28Signed(m.invalid?null:m.main.monthRealized)}</td><td class="p-2 text-right">${m.invalid?'⚠':r28Num(m.main.shares)}</td></tr>`).join('');
+            r28RenderChart(r);
+            // 往前最多三年；每一年度都由同一份交易資料獨立重新計算，並且區分年底價格缺漏。
+            const first=Math.max(2000,year-3);
+            const rows=[];
+            for(let y=first;y<=year;y++)rows.push(y===year?r:r28Build(y));
+            const yearsEl=r28El('r28_year_rows');
+            if(yearsEl)yearsEl.innerHTML=rows.slice().reverse().map(x=>`<tr class="${x.year===year?'bg-amber-950/20':''}"><td class="p-2 font-semibold">${x.year}${x.current?'*':''}</td><td class="p-2 text-right">${r28Money(x.sums.external)}</td><td class="p-2 text-right">${r28Money(x.sums.cash)}</td><td class="p-2 text-right">${r28Signed(x.invalid?null:x.sums.realized)}</td><td class="p-2 text-right">${x.invalid?'⚠':r28Num(x.last.main.shares)}</td><td class="p-2 text-right">${r28Money(x.market)}</td></tr>`).join('');
+            const prev=rows.length>1?rows[rows.length-2]:null;
+            r28Text('r28_yoy_note',prev?`與 ${prev.year} 年比較：自有買進金額差 ${r28Signed(s.external-prev.sums.external)}；實收股息差 ${r28Signed(s.cash-prev.sums.cash)}；主帳戶期末持股差 ${bad||prev.invalid?'帳務異常':r28Num(last.shares-prev.last.main.shares)+' 股'}。金額增減不等於投資報酬。`:'沒有可供比較的前一年度。');
+            const notes=[];
+            if(bad)notes.push('⚠ 此年度或之前存在無效／超賣交易，應先修正原始紀錄；成本、股數和相關損益可能失真。');
+            if(r.current)notes.push('本年度尚未結束，這是截至今天的年度進度，不是全年結算。');
+            if(!s.trades)notes.push('主帳戶今年沒有逐筆交易記錄；不代表沒有其他未登錄的投資行為。');
+            if(s.cash===0)notes.push('沒有 R25 實際入帳股息紀錄，年度實收可能低估；ETF 公告不會自動視為個人現金收入。');
+            if(r.pricing.price===null)notes.push('缺少年末／本年迄今價格；請先補載歷史行情，或稍後確認 FinMind 是否提供資料。');
+            if(r.announced!==null&&r.announcements.some(d=>d.amount<0.1))notes.push('當年查得至少一次每股配息低於 0.10 元，請查核正式公告。');
+            if(!r28AllPriceRows().length)notes.push('目前尚無可用歷史行情；仍可閱讀交易與實收股息數字。');
+            if(!notes.length)notes.push('已整理年度帳務。提醒：自有投入、配息買股與實收股息是不同類型，匯出前請核對券商及銀行紀錄。');
+            const obs=r28El('r28_observations');if(obs)obs.innerHTML=notes.map(x=>`<p>• ${r25Escape(x)}</p>`).join('');
+            r28Text('r28_home_brief',`${year} 年｜自有資金買入 ${r28Money(s.external)}、已登錄實收股息 ${r28Money(s.cash)}、期末主帳戶 ${bad?'交易異常':r28Num(last.shares)+' 股'}。`);
+        }
+        async function r28LoadHistory(){
+            if(r28Busy)return;
+            const key=r28El('api_key')?.value?.trim()||localStorage.getItem(KEY_NAME)||'';
+            if(!key){r28Text('r28_price_loading','請先輸入並儲存 FinMind 金鑰，才能補載年度行情。');return;}
+            const year=Number(r28El('r28_year')?.value);
+            if(!r28YearValid(year))return;
+            r28Busy=true;
+            const btn=r28El('r28_load_history');btn.disabled=true;btn.textContent='載入行情中…';
+            let ok=0;const errs=[];
+            try{
+                for(const y of [year-1,year]){
+                    if(y<2000||y>new Date().getFullYear())continue;
+                    if(r28History[y]&&r28History[y].length>0){ok++;continue;}
+                    try{
+                        const params=new URLSearchParams({dataset:'TaiwanStockPrice',data_id:'00406A',start_date:`${y}-01-01`,end_date:`${y}-12-31`,token:key});
+                        const resp=await fetch('https://api.finmindtrade.com/api/v4/data?'+params.toString());
+                        if(!resp.ok)throw Error('HTTP '+resp.status);
+                        const json=await resp.json();
+                        if(json.msg!=='success'||!Array.isArray(json.data))throw Error(String(json.msg||'格式異常'));
+                        const rows=json.data.filter(x=>x&&r24SafeDate(x.date)&&x.date.slice(0,4)===String(y)&&Number.isFinite(Number(x.close))&&Number(x.close)>0).map(x=>({date:x.date,close:Number(x.close)}));
+                        if(!rows.length)throw Error('沒有回傳有效收盤價');
+                        r28History[String(y)]=rows;ok++;
+                    }catch(e){errs.push(`${y} 年：${e.message}`);}
+                }
+                try{localStorage.setItem(R28_PRICE_KEY,JSON.stringify(r28History));}catch(e){errs.push('行情快取空間不足（本次資料仍可暫時顯示）');}
+                r28Text('r28_price_loading',`${ok} 個年度有歷史行情；${errs.length?errs.join('；'):'已更新年報可用的歷史收盤資料'}。`);
+                r28Render();
+            }finally{r28Busy=false;btn.disabled=false;btn.textContent='🔄 補載所選年／前年歷史行情';}
+        }
+        function r28Print(){r28Render();if(!r28Current)return;
+            document.body.classList.add('r28-print-active');
+            const cleanup=()=>document.body.classList.remove('r28-print-active');
+            window.addEventListener('afterprint',cleanup,{once:true});
+            window.print();
+        }
+        function r28ExportCSV(){
+            r28Render();const r=r28Current;if(!r)return;
+            const s=r.sums,rows=[['00406A Tracker R28','年度投資總結',r.year],['欄位','值'],
+                ['統計截止',r.cutoff],['帳務狀態',r.invalid?'含交易異常':'正常'],
+                ['主帳戶自有資金買入',s.external],['主帳戶配息再投資',s.reinvest],
+                ['主帳戶賣出淨收入',s.sales],['主帳戶已登錄實際股息',s.cash],
+                ['主帳戶年度已實現買賣損益',r.invalid?'資料異常':s.realized],
+                ['年度帳務淨現金流',s.netflow],['期末主帳戶股數',r.invalid?'資料異常':r.last.main.shares],
+                ['期末庫存成本',r.invalid?'資料異常':r.last.main.basis],
+                ['期末參考價來源',r.pricing.label],['期末參考價',r.pricing.price??'無行情'],
+                ['期末主帳戶市值',r.market??'無行情'],['期末未實現損益',r.unrealized??'無行情'],
+                ['家庭期末股數',r.invalid?'資料異常':r.familyShares],
+                ['全年 ETF 每股公告配息合計',r.announced??'未取得公告'],
+                [],['月份','主帳戶自有資金買入','配息再投資','已登錄實收股息','賣出淨收入','已實現損益','期末主帳戶股數']];
+            for(const m of r.months)rows.push([m.month,m.main.monthExternal,m.main.monthReinvest,m.cash,m.main.monthSales,m.invalid?'資料異常':m.main.monthRealized,m.invalid?'資料異常':m.main.shares]);
+            rows.push([],['家庭帳戶','年度買入股數','年度賣出股數','年末股數','年末庫存成本','年度已實現損益']);
+            for(const id of Object.keys(R27_OWNERS)){
+                const x=r.family[id],end=r.last.accounts[id];
+                rows.push([R27_OWNERS[id],x.bought,x.sold,r.invalid?'異常':end.shares,r.invalid?'異常':end.basis,r.invalid?'異常':x.realized]);
+            }
+            r27Download(`00406A_R28_年度總結_${r.year}.csv`,'\ufeff'+rows.map(row=>row.map(r27CsvValue).join(',')).join('\r\n'),'text/csv;charset=utf-8');
+        }
+        function r28ExportHTML(){
+            r28Render();const r=r28Current;if(!r)return;
+            const clone=r28El('r28_paper').cloneNode(true);clone.removeAttribute('id');
+            clone.querySelectorAll('canvas,.r28-chart-wrap').forEach(e=>e.remove());
+            const style=`body{font-family:system-ui,-apple-system,sans-serif;margin:20px auto;padding:0 14px;max-width:950px;color:#172033;background:#fff;font-size:13px}.card{border:1px solid #cbd5e1;border-radius:7px;padding:13px;margin:0 0 12px;break-inside:avoid}h2{font-size:22px;margin:3px 0}h3{font-size:16px;margin:3px 0 8px}p{line-height:1.45;margin:5px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.bg-gray-900{background:#f1f5f9;padding:8px;border-radius:5px}.text-xs{font-size:10px;color:#475569}.text-sm{font-size:12px}.text-lg{font-size:16px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{padding:6px 4px;border-bottom:1px solid #e2e8f0;text-align:left}td.text-right,th.text-right{text-align:right}.overflow-x-auto{overflow-x:auto}@media print{@page{size:A4;margin:12mm}body{margin:0;padding:0}.card{break-inside:avoid}table{font-size:9px}}`;
+            r27Download(`00406A_R28_年度總結_${r.year}.html`,'<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A '+r.year+' 年度總結</title><style>'+style+'</style></head><body>'+clone.outerHTML+'</body></html>','text/html;charset=utf-8');
+        }
+        // 本機交易、股息及市場資料更動時連動年度報表。避免另存任何新的交易紀錄。
+        const r28PrevTransaction=updateTransactions;
+        updateTransactions=function(...args){const ret=r28PrevTransaction.apply(this,args);if(r28El('r28_year'))r28Render();return ret;};
+        const r28PrevCashRender=r25Render;
+        r25Render=function(...args){const ret=r28PrevCashRender.apply(this,args);if(r28El('r28_year'))r28Render();return ret;};
+        const r28PrevFetch=fetchData;
+        fetchData=async function(...args){const ret=await r28PrevFetch.apply(this,args);if(r28El('r28_year'))r28Render();return ret;};
 
     </script>
 </body>
