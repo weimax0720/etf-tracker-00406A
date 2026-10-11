@@ -1183,7 +1183,7 @@
                 } else if (currentYear > 2031 || (currentYear === 2031 && currentMonth >= 7)) {
                     currentDefaultInvest = 20000;
                 } else if (currentYear > 2027 || (currentYear === 2027 && currentMonth >= 7)) {
-                    currentDefaultInvest = 5000;
+                    currentDefaultInvest = 8000;
                 }
                 const shares = Math.floor(currentDefaultInvest / currentPrice);
                 document.getElementById('buyable_shares_label').innerText = `約 ${currentDefaultInvest / 1000} 千元購買力參考`;
@@ -1453,7 +1453,7 @@
                     if (i < 144) {
                         if (currentY > 2033 || (currentY === 2033 && currentM >= 1)) defaultInvestForMonth = 30000;
                         else if (currentY > 2031 || (currentY === 2031 && currentM >= 7)) defaultInvestForMonth = 20000;
-                        else if (currentY > 2027 || (currentY === 2027 && currentM >= 7)) defaultInvestForMonth = 5000;
+                        else if (currentY > 2027 || (currentY === 2027 && currentM >= 7)) defaultInvestForMonth = 8000;
                         else defaultInvestForMonth = 5000;
                     } else {
                         defaultInvestForMonth = 0; 
