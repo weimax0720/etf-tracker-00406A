@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R32｜MAX 的追蹤儀表板</title>
+    <title>00406A Tracker R33｜MAX 的追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -87,6 +87,31 @@
         /* R32 僅隱藏個人化首頁區塊，不變更其節點或存放資料 */
         #tab-overview [data-r32-home].r32-hidden { display: none !important; }
         #tab-reminders input,#tab-reminders select { color-scheme: dark; }
+
+        /* R33：手機底部分頁、完整功能選單及安全快速記帳。電腦維持 R32 導覽。 */
+        #r33_mobile_nav,#r33_more_overlay,#r33_quick_overlay { display:none; }
+        #r33_quick_overlay.r33-open,#r33_more_overlay.r33-open { display:flex; }
+        #r33_mobile_nav button { min-height:56px; min-width:0; touch-action:manipulation; }
+        #r33_mobile_nav button.r33-active { color:#67e8f9; background:#1e3a5f; }
+        #r33_more_overlay,#r33_quick_overlay { position:fixed; inset:0; z-index:100; align-items:flex-end; justify-content:center; }
+        .r33-backdrop { position:absolute; inset:0; background:rgba(0,0,0,.72); }
+        .r33-sheet { position:relative; max-height:92dvh; overflow-y:auto; overscroll-behavior:contain; background:#1f2937; width:100%; max-width:620px; border:1px solid #475569; border-radius:20px 20px 0 0; padding:20px 16px max(24px,env(safe-area-inset-bottom)); box-shadow:0 -14px 60px rgba(0,0,0,.55); }
+        .r33-sheet button,.r33-sheet input,.r33-sheet select { touch-action:manipulation; }
+        .r33-sheet input,.r33-sheet select { font-size:16px; color-scheme:dark; }
+        #r33_more_items button { min-height:50px; text-align:left; }
+        #r33_quick_overlay .r33-sheet label { display:block; }
+        #r33_quick_overlay .r33-sheet input,#r33_quick_overlay .r33-sheet select { display:block; width:100%; background:#111827; border:1px solid #4b5563; border-radius:8px; padding:12px; margin-top:7px; }
+        #r33_quick_overlay .r33-sheet :focus-visible,#r33_more_overlay .r33-sheet :focus-visible { outline:2px solid #67e8f9; outline-offset:2px; }
+        @media (max-width:767px) {
+          body { padding-bottom:calc(86px + env(safe-area-inset-bottom)) !important; }
+          #r33_mobile_nav { display:grid; position:fixed; z-index:80; bottom:0; left:0; right:0; grid-template-columns:repeat(5,minmax(0,1fr)); padding:4px 4px max(6px,env(safe-area-inset-bottom)); border-top:1px solid #475569; background:rgba(15,23,42,.98); box-shadow:0 -5px 24px rgba(0,0,0,.5); }
+          #r33_mobile_nav .r33-tab-label {display:block;font-size:11px;line-height:1.2;margin-top:4px;}
+          #r33_mobile_nav button {font-size:20px;border-radius:9px;padding:4px 1px 6px;color:#d1d5db;}
+          #r33_top_tabs {display:none!important;}
+          #r33_more_overlay .r33-sheet,#r33_quick_overlay .r33-sheet {max-height:90dvh;}
+        }
+        @media (min-width:768px) {#r33_mobile_nav {display:none!important;} .r33-sheet {border-radius:20px;margin-bottom:5vh;} }
+        @media print {#r33_mobile_nav,#r33_more_overlay,#r33_quick_overlay,#r33_home_quick {display:none!important;} body {padding-bottom:0!important;} }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -107,7 +132,7 @@
         </div>
 
         <!-- 導覽分頁按鈕 (Tabs) -->
-        <div class="flex border-b border-gray-700 space-x-2 overflow-x-auto pb-2">
+        <div id="r33_top_tabs" class="flex border-b border-gray-700 space-x-2 overflow-x-auto pb-2">
             <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn active px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-200 whitespace-nowrap">📊 我的資產總覽</button>
             <button onclick="switchTab('transactions')" id="btn-transactions" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-green-400 whitespace-nowrap">📓 逐筆記帳 (連動)</button>
             <button onclick="switchTab('records')" id="btn-records" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-lime-300 whitespace-nowrap">🔎 R31 資料管理</button>
@@ -130,7 +155,7 @@
             <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
             <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理" data-r32-home="assistant">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R32 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
+                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R33 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
                     <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
                 </div>
                 <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
@@ -148,6 +173,18 @@
                 </div>
             </section>
 
+
+            <!-- R33 快速操作入口：僅使用現有帳務儲存格式 -->
+            <div id="r33_home_quick" class="bg-gray-800 border border-cyan-800/60 rounded-lg p-4">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <div><p class="font-bold text-cyan-300">⚡ R33 手機快速操作</p><p class="text-xs text-gray-400 mt-1">交易先預覽再確認，仍寫入原本逐筆帳務；亦可快速開啟查詢與提醒。</p></div>
+                  <div class="flex flex-wrap gap-2">
+                    <button type="button" onclick="r33OpenQuick()" class="rounded bg-cyan-700 hover:bg-cyan-600 px-4 py-3 text-sm font-semibold">＋ 快速記一筆</button>
+                    <button type="button" onclick="r33NavGo('records')" class="rounded bg-gray-700 hover:bg-gray-600 px-3 py-3 text-sm">🔎 搜尋</button>
+                    <button type="button" onclick="r33NavGo('reminders')" class="rounded bg-gray-700 hover:bg-gray-600 px-3 py-3 text-sm">🔔 提醒</button>
+                  </div>
+                </div>
+            </div>
             <!-- R32 首頁提醒速覽（僅在開啟網頁時檢查；不推播） -->
             <div class="bg-gray-800 border border-orange-800/70 rounded-lg px-4 py-4" id="r32_home_panel">
                 <div class="flex flex-wrap justify-between items-center gap-3">
@@ -369,7 +406,7 @@
                         <h2 class="text-xl font-semibold text-blue-400">📓 家族逐筆交易紀錄 (支援編輯)</h2>
                         <p class="text-sm text-gray-400 mt-1">選擇專屬按鈕即可自動帶入對應帳戶，紀錄按月份清晰分類。</p>
                     </div>
-                    <span class="badge bg-green-900 text-green-300">全自動計算與手帳連動</span>
+                    <div class="flex flex-wrap gap-2"><span class="badge bg-green-900 text-green-300">全自動計算與手帳連動</span><button type="button" onclick="r33OpenQuick()" class="rounded bg-cyan-700 hover:bg-cyan-600 px-3 py-2 text-sm">⚡ 快速記帳</button></div>
                 </div>
                 
                 <div class="bg-gray-800 p-5 rounded-lg border border-gray-700 shadow-lg relative mb-6">
@@ -1439,6 +1476,41 @@
         </div>
     </div>
 
+
+    <!-- R33 手機底部固定導覽；其餘 15 分頁均可從「更多」進入 -->
+    <nav id="r33_mobile_nav" role="navigation" aria-label="R33 手機快速導覽">
+      <button id="r33_nav_overview" type="button" onclick="r33NavGo('overview')" aria-label="開啟首頁"><span aria-hidden="true">🏠</span><span class="r33-tab-label">首頁</span></button>
+      <button id="r33_nav_transactions" type="button" onclick="r33NavGo('transactions')" aria-label="開啟逐筆記帳"><span aria-hidden="true">📓</span><span class="r33-tab-label">記帳</span></button>
+      <button id="r33_nav_quick" type="button" onclick="r33OpenQuick()" aria-label="快速新增交易" class="text-cyan-300"><span aria-hidden="true">➕</span><span class="r33-tab-label">新增</span></button>
+      <button id="r33_nav_records" type="button" onclick="r33NavGo('records')" aria-label="開啟搜尋"><span aria-hidden="true">🔎</span><span class="r33-tab-label">搜尋</span></button>
+      <button id="r33_nav_more" type="button" onclick="r33OpenMore()" aria-label="顯示全部功能"><span aria-hidden="true">☰</span><span class="r33-tab-label">更多</span></button>
+    </nav>
+    <div id="r33_more_overlay" role="dialog" aria-modal="true" aria-label="所有 Tracker 分頁" aria-hidden="true">
+      <div class="r33-backdrop" onclick="r33ClosePanels()"></div>
+      <div class="r33-sheet" tabindex="-1">
+        <div class="flex items-center justify-between gap-3 mb-4"><div><h2 class="text-xl font-bold text-cyan-300">☰ 全部功能</h2><p class="text-xs text-gray-400 mt-1">選擇後會直接前往該分頁</p></div><button type="button" onclick="r33ClosePanels()" class="rounded bg-gray-700 px-4 py-3 text-sm">✕ 關閉</button></div>
+        <div id="r33_more_items" class="space-y-4"></div>
+      </div>
+    </div>
+    <div id="r33_quick_overlay" role="dialog" aria-modal="true" aria-label="R33 快速新增交易" aria-hidden="true">
+      <div class="r33-backdrop" onclick="r33ClosePanels()"></div>
+      <div class="r33-sheet" tabindex="-1">
+        <div class="flex justify-between items-center gap-3 mb-3"><div><h2 class="text-xl font-bold text-cyan-300">⚡ 快速記一筆</h2><p class="text-xs text-gray-400 mt-1">先檢查交易內容，再點第二次確認寫入。</p></div><button type="button" onclick="r33ClosePanels()" class="rounded bg-gray-700 px-4 py-3 text-sm">✕ 關閉</button></div>
+        <div id="r33_quick_fields" class="grid grid-cols-2 gap-3">
+          <label class="text-xs text-gray-300">交易帳戶<select id="r33_q_owner" onchange="r33ChangeOwner()"><option value="main">👨 主帳戶</option><option value="kid_a">👧 大寶</option><option value="kid_b">👶 二寶</option></select></label>
+          <label class="text-xs text-gray-300">交易類型<select id="r33_q_type" onchange="r33UpdatePreview()"></select></label>
+          <label class="text-xs text-gray-300 col-span-2">交易日期<input type="date" id="r33_q_date" onchange="r33UpdatePreview()"></label>
+          <label class="text-xs text-gray-300">成交價／股<input id="r33_q_price" type="number" step="0.01" min="0.01" inputmode="decimal" placeholder="例如 15.20" oninput="r33UpdatePreview()"></label>
+          <label class="text-xs text-gray-300">股數<input id="r33_q_shares" type="number" step="1" min="1" inputmode="numeric" placeholder="例如 100" oninput="r33UpdatePreview()"></label>
+          <label class="text-xs text-gray-300 col-span-2">實付手續費／稅（元）<input id="r33_q_fee" type="number" min="0" step="0.01" value="0" inputmode="decimal" oninput="r33UpdatePreview()"></label>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-3"><button type="button" onclick="r33UsePrice()" class="bg-gray-700 hover:bg-gray-600 rounded px-3 py-3 text-sm">↩ 帶入參考股價</button><button type="button" onclick="r33NavGo('assets');r33ScrollCash()" class="bg-teal-800 hover:bg-teal-700 rounded px-3 py-3 text-sm">💰 改記實收股息</button></div>
+        <p id="r33_q_preview" class="text-sm text-gray-300 bg-gray-900 border border-gray-700 p-3 rounded mt-3" aria-live="polite">請輸入交易金額與股數。</p>
+        <div id="r33_q_review" class="hidden rounded border border-amber-800 bg-amber-950/30 p-3 mt-3" role="status"><p class="text-sm font-bold text-amber-300">請核對交易明細</p><p class="text-sm text-white mt-2" id="r33_q_review_text"></p><p class="text-xs text-gray-400 mt-2">確認才會新增到既有逐筆交易紀錄。此步驟沒有下單功能。</p></div>
+        <p id="r33_q_error" class="text-sm text-red-300 mt-3 hidden" role="alert"></p>
+        <div class="grid grid-cols-2 gap-2 mt-4"><button type="button" id="r33_q_cancel" onclick="r33ClosePanels()" class="bg-gray-700 rounded px-3 py-3 text-sm">取消</button><button type="button" id="r33_q_submit" onclick="r33QuickSubmit()" class="bg-cyan-700 hover:bg-cyan-600 rounded px-3 py-3 text-sm font-bold">下一步：檢查內容</button></div>
+      </div>
+    </div>
     <script>
         const KEY_NAME = '00406A_FINMIND_KEY';
         const SHARES_KEY = '00406A_REAL_SHARES';
@@ -1525,6 +1597,7 @@
             r30Init();
             r31Init();
             r32Init();
+            r33Init();
         };
 
         function switchTab(tabId) {
@@ -1573,6 +1646,7 @@
             if(tabId === 'security') r30Scan(); 
             if(tabId === 'records') r31Render();
             if(tabId === 'reminders') r32Render();
+            r33AfterTab(tabId);
         }
 
         function saveAndLoad() {
@@ -4547,6 +4621,163 @@
         const r32PriorDividendRender=r24Render;
         r24Render=function(...args){const val=r32PriorDividendRender.apply(this,args);if(r32Initialized)r32Render();return val;};
 
+        /* ===== R33 手機優先：固定導覽、全功能選單與二次確認快速記帳 ===== */
+        const R33_MENU=[
+          ['核心功能',[['overview','🏠 資產總覽'],['transactions','📓 逐筆記帳'],['records','🔎 資料管理'],['reminders','🔔 智慧提醒']]],
+          ['家庭存股',[['ledger','📝 我的存股手帳'],['kids','👧 雙寶存股手帳']]],
+          ['分析與試算',[['charts','📈 走勢分析'],['dividends','💰 配息中心'],['assets','🎯 資產分析'],['topup','🧮 智慧加碼'],['report','🗓️ 智慧月報'],['annual','🏆 年度總結'],['retirement','🌅 退休目標']]],
+          ['安全與風險',[['security','🔐 資料安全'],['safety','🛡️ 流動性雷達']]]
+        ];
+        const R33_TYPES={
+          main:[['buy_regular','定期買進'],['buy_extra','額外加碼'],['dividend','配息再投資買股'],['sell','賣出']],
+          kid_a:[['buy_kid_a','大寶買進'],['div_kid_a','大寶配息再投資'],['sell_kid_a','大寶賣出']],
+          kid_b:[['buy_kid_b','二寶買進'],['div_kid_b','二寶配息再投資'],['sell_kid_b','二寶賣出']]
+        };
+        let r33PendingTx=null,r33LastFocus=null,r33Initialized=false;
+        function r33El(id){return document.getElementById(id);}
+        function r33Today(){
+            const d=new Date();
+            return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+        }
+        function r33DateValid(s){
+            if(!/^\d{4}-\d{2}-\d{2}$/.test(String(s)))return false;
+            const [y,m,d]=s.split('-').map(Number);
+            const x=new Date(y,m-1,d);
+            return x.getFullYear()===y&&x.getMonth()===m-1&&x.getDate()===d;
+        }
+        function r33OwnersType(t){return /_kid_a$/.test(t)?'kid_a':/_kid_b$/.test(t)?'kid_b':'main';}
+        function r33IsSale(t){return t==='sell'||t==='sell_kid_a'||t==='sell_kid_b';}
+        function r33ClosePanels(){
+            ['r33_more_overlay','r33_quick_overlay'].forEach(id=>{
+                const el=r33El(id);if(!el)return;el.classList.remove('r33-open');el.setAttribute('aria-hidden','true');
+            });
+            document.body.style.overflow='';
+            r33PendingTx=null;
+            if(r33LastFocus && document.contains(r33LastFocus))r33LastFocus.focus({preventScroll:true});
+            r33LastFocus=null;
+        }
+        function r33ShowPanel(id){
+            r33LastFocus=document.activeElement;
+            for(const name of ['r33_more_overlay','r33_quick_overlay']){
+                const el=r33El(name);el.classList.toggle('r33-open',name===id);
+                el.setAttribute('aria-hidden',name===id?'false':'true');
+            }
+            document.body.style.overflow='hidden';
+            r33El(id).querySelector('.r33-sheet')?.focus({preventScroll:true});
+        }
+        function r33NavGo(id){
+            r33ClosePanels();switchTab(id);
+        }
+        function r33AfterTab(id){
+            if(!r33Initialized)return;
+            for(const key of ['overview','transactions','records','more']){
+                const b=r33El('r33_nav_'+key);if(!b)continue;
+                const active=key===id||(key==='more'&&!['overview','transactions','records'].includes(id));
+                b.classList.toggle('r33-active',active);
+                b.setAttribute('aria-current',active?'page':'false');
+            }
+            if(window.matchMedia('(max-width:767px)').matches)window.scrollTo({top:0,behavior:'instant'});
+        }
+        function r33OpenMore(){r33ShowPanel('r33_more_overlay');}
+        function r33ChangeOwner(){
+            const owner=r33El('r33_q_owner').value;
+            r33El('r33_q_type').innerHTML=R33_TYPES[owner].map(([type,label])=>`<option value="${type}">${label}</option>`).join('');
+            r33UpdatePreview();
+        }
+        function r33OpenQuick(){
+            r33El('r33_q_owner').value='main';r33ChangeOwner();
+            r33El('r33_q_date').value=r33Today();
+            for(const key of ['price','shares'])r33El('r33_q_'+key).value='';
+            r33El('r33_q_fee').value='0';r33UpdatePreview();
+            r33ShowPanel('r33_quick_overlay');
+            r33El('r33_q_price').focus({preventScroll:true});
+        }
+        function r33UsePrice(){
+            if(!(Number.isFinite(currentPrice)&&currentPrice>0)){
+                r33ShowError('目前無有效參考股價；請手動輸入成交價，不要用估算價格代替實際成交。');return;
+            }
+            r33El('r33_q_price').value=currentPrice.toFixed(2);r33UpdatePreview();
+        }
+        function r33ShowError(msg){const el=r33El('r33_q_error');el.textContent=msg;el.classList.remove('hidden');}
+        function r33UpdatePreview(){
+            r33PendingTx=null;
+            r33El('r33_q_review').classList.add('hidden');
+            r33El('r33_q_submit').textContent='下一步：檢查內容';
+            r33El('r33_q_error').classList.add('hidden');
+            const price=Number(r33El('r33_q_price').value),shares=Number(r33El('r33_q_shares').value),fee=Number(r33El('r33_q_fee').value);
+            const filled=r33El('r33_q_price').value!==''&&r33El('r33_q_shares').value!==''&&r33El('r33_q_fee').value!=='';
+            if(!filled||!Number.isFinite(price)||price<=0||!Number.isInteger(shares)||shares<=0||!Number.isFinite(fee)||fee<0){
+                r33El('r33_q_preview').textContent='請輸入正確成交價、正整數股數及非負手續費，下一步會檢查庫存。';return;
+            }
+            const sale=r33IsSale(r33El('r33_q_type').value),gross=price*shares,total=sale?gross-fee:gross+fee;
+            r33El('r33_q_preview').textContent=(sale?'預估收回：NT$ ':'預估支出：NT$ ')+total.toLocaleString('zh-TW',{maximumFractionDigits:2})+'（成交 '+gross.toLocaleString('zh-TW',{maximumFractionDigits:2})+'；費 '+fee.toLocaleString('zh-TW',{maximumFractionDigits:2})+'）';
+        }
+        function r33ValidateQuick(){
+            const owner=r33El('r33_q_owner').value,type=r33El('r33_q_type').value,date=r33El('r33_q_date').value;
+            const ps=r33El('r33_q_price').value,ss=r33El('r33_q_shares').value,fs=r33El('r33_q_fee').value;
+            const price=Number(ps),shares=Number(ss),fee=Number(fs);
+            if(!R33_TYPES[owner]?.some(x=>x[0]===type))throw Error('交易類型與帳戶不一致。');
+            if(!r33DateValid(date)||date>r33Today())throw Error('請填有效且不晚於今天的交易日期。');
+            if(!ps||!Number.isFinite(price)||price<=0||price>1e7)throw Error('成交價必須大於 0 且數值合理。');
+            if(!ss||!Number.isSafeInteger(shares)||shares<1||shares>1e9)throw Error('股數須為 1 以上的整數。');
+            if(fs===''||!Number.isFinite(fee)||fee<0||fee>1e9)throw Error('請輸入正確且非負的手續費。');
+            if(price*shares>1e12)throw Error('單筆金額超出保護上限，請回原始記帳頁核對。');
+            if(r33IsSale(type)&&fee>=price*shares)throw Error('賣出手續費不可高於或等於成交金額。');
+            if(editingTxId!==null)throw Error('原記帳頁仍在編輯其他交易。請先完成或取消編輯再使用快速新增，以免混淆。');
+            const raw=localStorage.getItem(TX_KEY);
+            if(raw!==null){try{const parsed=JSON.parse(raw);if(!Array.isArray(parsed))throw Error('交易存檔格式異常');}catch(e){throw Error('本機交易原始資料格式異常，已禁止覆寫；請先到 R30 安全中心檢查。');}}
+            const next={date,type,price,shares,fee};
+            if(r33IsSale(type))r33CheckSale(next);
+            return next;
+        }
+        // 回溯與向後模擬所有同帳戶逐筆交易，防止回填早期賣出破壞後續庫存。
+        function r33CheckSale(candidate){
+            const owner=r33OwnersType(candidate.type);
+            const existing=transactionLog.filter(t=>r33OwnersType(String(t.type||''))===owner);
+            if(existing.some(t=>!r33DateValid(t.date)||!Number.isInteger(Number(t.shares))||Number(t.shares)<=0))throw Error('此帳戶已有不完整或異常交易，請先到 R30 核對，再新增賣出。');
+            const rows=[...existing.map(t=>({date:t.date,type:t.type,shares:Number(t.shares),id:Number(t.id)||0})),{...candidate,id:Date.now()}];
+            rows.sort((a,b)=>a.date.localeCompare(b.date)||a.id-b.id);
+            let balance=0;
+            for(const t of rows){balance+=r33IsSale(t.type)?-t.shares:t.shares;
+                if(balance<0)throw Error('賣出股數超過當時可用庫存（或使後續交易超賣）；請回原始交易紀錄核對。');
+            }
+        }
+        function r33QuickSubmit(){
+            if(r33PendingTx){r33QuickCommit();return;}
+            let item;
+            try{item=r33ValidateQuick();}catch(e){r33ShowError(e.message);return;}
+            r33PendingTx=item;
+            const [_,actionLabel]=R33_TYPES[r33El('r33_q_owner').value].find(x=>x[0]===item.type);
+            const amount=item.price*item.shares+(r33IsSale(item.type)?-item.fee:item.fee);
+            r33El('r33_q_review_text').textContent=`${item.date}｜${actionLabel}｜${item.shares.toLocaleString()} 股 × NT$ ${item.price.toLocaleString()}｜${r33IsSale(item.type)?'收入':'支出'} NT$ ${amount.toLocaleString('zh-TW',{maximumFractionDigits:2})}（費 NT$ ${item.fee}）`;
+            r33El('r33_q_review').classList.remove('hidden');
+            r33El('r33_q_submit').textContent='✓ 確認儲存交易';
+            r33El('r33_q_review').scrollIntoView({block:'nearest',behavior:'smooth'});
+        }
+        function r33QuickCommit(){
+            if(!r33PendingTx)return;
+            let latest;try{latest=r33ValidateQuick();}catch(e){r33PendingTx=null;r33El('r33_q_review').classList.add('hidden');r33El('r33_q_submit').textContent='下一步：檢查內容';r33ShowError(e.message);return;}
+            if(JSON.stringify(latest)!==JSON.stringify(r33PendingTx)){r33PendingTx=null;r33ShowError('交易內容已變更，請重新檢查確認。');return;}
+            const rows=transactionLog.slice();
+            let id=Date.now();while(rows.some(t=>String(t.id)===String(id)))id++;
+            const added={id,...latest},next=[...rows,added];
+            // 確保確認後才寫入原有 00406A_TX_LOG；儲存失敗不更動頁面內帳務。
+            try{localStorage.setItem(TX_KEY,JSON.stringify(next));}catch(e){r33ShowError('瀏覽器儲存失敗，沒有寫入這筆交易。請先備份並檢查可用空間。');return;}
+            transactionLog=next;r33PendingTx=null;
+            try{updateTransactions();}catch(e){console.error('R33 更新帳務畫面失敗',e);r33ClosePanels();r33NavGo('transactions');alert('交易已保存，但畫面更新失敗；請重新整理並核對。');return;}
+            r33ClosePanels();r33NavGo('transactions');
+            alert('✅ 交易已新增到逐筆紀錄。請與券商實際成交資料核對。');
+        }
+        function r33ScrollCash(){r33El('r25_cash_date')?.scrollIntoView({block:'center',behavior:'smooth'});}
+        function r33Init(){
+            const host=r33El('r33_more_items');
+            if(!host)return;
+            host.innerHTML=R33_MENU.map(([group,items])=>`<section><h3 class="text-xs font-bold text-gray-400 mb-2">${group}</h3><div class="grid grid-cols-2 gap-2">${items.map(([id,label])=>`<button type="button" data-target="${id}" class="r33-menu-button rounded border border-gray-600 bg-gray-900 hover:bg-gray-700 px-3 py-3 text-sm text-gray-100">${label}</button>`).join('')}</div></section>`).join('');
+            host.addEventListener('click',e=>{const b=e.target.closest('button[data-target]');if(b)r33NavGo(b.dataset.target);});
+            document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(r33El('r33_quick_overlay').classList.contains('r33-open')||r33El('r33_more_overlay').classList.contains('r33-open')))r33ClosePanels();});
+            r33El('r33_q_type').innerHTML=R33_TYPES.main.map(([type,label])=>`<option value="${type}">${label}</option>`).join('');
+            r33Initialized=true;r33AfterTab('overview');
+        }
     </script>
 </body>
 </html>
