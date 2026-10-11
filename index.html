@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R23｜MAX 的追蹤儀表板</title>
+    <title>00406A Tracker R24｜MAX 的追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -48,6 +48,7 @@
             <button onclick="switchTab('ledger')" id="btn-ledger" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📝 我的存股手帳</button>
             <button onclick="switchTab('kids')" id="btn-kids" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-pink-400 whitespace-nowrap">👧 雙寶存股手帳</button>
             <button onclick="switchTab('charts')" id="btn-charts" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📈 走勢與日週月</button>
+            <button onclick="switchTab('dividends')" id="btn-dividends" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-emerald-400 whitespace-nowrap">💰 R24 配息中心</button>
             <button onclick="switchTab('safety')" id="btn-safety" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">🛡️ 流動性雷達</button>
         </div>
 
@@ -56,7 +57,7 @@
             <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
             <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R23 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
+                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R24 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
                     <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
                 </div>
                 <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
@@ -74,6 +75,10 @@
                 </div>
             </section>
 
+            <div class="bg-gray-800 border border-emerald-900/70 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div><p class="text-sm font-bold text-emerald-300">💰 R24 配息趨勢快覽</p><p id="r24_home_brief" class="text-xs text-gray-300 mt-1">等待配息紀錄載入</p></div>
+                <button type="button" onclick="switchTab('dividends')" class="rounded bg-emerald-700 hover:bg-emerald-600 px-3 py-2 text-sm font-medium">開啟配息中心 →</button>
+            </div>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center relative overflow-hidden">
                     <div id="live_indicator" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-gray-600"></div>
@@ -493,7 +498,62 @@
             </div>
         </div>
 
-        <!-- ================= 分頁 6：流動性與風險雷達 (Safety) ================= -->
+        <!-- ================= 分頁 6：R24 配息分析中心 ================= -->
+        <section id="tab-dividends" class="space-y-6 hidden" aria-label="R24 配息分析中心">
+            <div class="card border border-emerald-900/60">
+                <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+                    <div><h2 class="text-xl font-bold text-emerald-300">💰 R24 配息分析中心</h2>
+                        <p class="text-sm text-gray-400 mt-1">00406A 公告現金配息／每股；資料由 FinMind 查得，非個人實際入帳紀錄。</p></div>
+                    <span class="text-xs text-gray-400 bg-gray-900 px-3 py-2 rounded" id="r24_data_status" role="status" aria-live="polite">尚未取得配息歷史</span>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">最近公告每股配息</p><p class="text-xl font-bold text-emerald-300 mt-1" id="r24_last">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">近24次平均／股</p><p class="text-xl font-bold mt-1" id="r24_avg">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">近24次最高／股</p><p class="text-xl font-bold mt-1" id="r24_high">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">近24次最低／股</p><p class="text-xl font-bold mt-1" id="r24_low">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">今年公告合計／股</p><p class="text-xl font-bold mt-1" id="r24_year_total">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">查得歷史公告合計／股</p><p class="text-xl font-bold mt-1" id="r24_all_total">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">近365日除息合計／股</p><p class="text-xl font-bold mt-1" id="r24_ttm_total">--</p></div>
+                    <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">近365日配息／參考市價</p><p class="text-xl font-bold text-cyan-300 mt-1" id="r24_yield">--</p></div>
+                </div>
+                <p class="text-xs text-gray-500 mt-4" id="r24_stat_note">僅統計取得的正數現金配息公告；未確認是否實際發放。近365日比率不代表保證殖利率。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="card"><h3 class="font-bold text-blue-300 mb-2">📉 近6次配息變化</h3><p id="r24_trend6" class="text-sm text-gray-300">等待足夠資料</p></div>
+                <div class="card"><h3 class="font-bold text-purple-300 mb-2">📊 近12次配息變化</h3><p id="r24_trend12" class="text-sm text-gray-300">等待足夠資料</p></div>
+                <div class="card md:col-span-2"><h3 class="font-bold text-yellow-300 mb-2">🚨 配息下降監測</h3><p id="r24_alert" class="text-sm text-gray-300" aria-live="polite">等待資料</p><p class="text-xs text-gray-500 mt-2">警示條件：連續3次公告配息低於前一次，或最近一次低於每股 0.10 元；不代表下期配息一定下降。</p></div>
+            </div>
+
+            <div class="card">
+                <div class="flex flex-wrap gap-3 justify-between items-center mb-4">
+                    <div><h3 class="text-lg font-bold text-green-300">📈 現金配息歷史走勢</h3><p class="text-xs text-gray-400">單位：元／股，依除息日排列（最多顯示最新資料）</p></div>
+                    <div class="flex flex-wrap gap-2" role="group" aria-label="選擇配息顯示筆數">
+                        <button type="button" id="r24_count_12" onclick="r24SetCount(12)" class="text-sm rounded px-3 py-2 bg-gray-700 hover:bg-gray-600">近12次</button>
+                        <button type="button" id="r24_count_24" onclick="r24SetCount(24)" class="text-sm rounded px-3 py-2 bg-emerald-700 text-white">近24次</button>
+                        <button type="button" id="r24_count_all" onclick="r24SetCount('all')" class="text-sm rounded px-3 py-2 bg-gray-700 hover:bg-gray-600">全部</button>
+                    </div>
+                </div>
+                <div class="relative w-full" style="height:300px"><canvas id="r24_div_chart" role="img" aria-label="00406A 歷次現金配息柱狀圖"></canvas></div>
+                <p id="r24_chart_fallback" class="text-center text-xs text-gray-500 mt-2">若圖表無法載入，仍可閱讀下方紀錄。</p>
+            </div>
+
+            <div class="card">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                    <div><h3 class="text-lg font-bold text-emerald-300">📋 公告配息明細</h3><p class="text-xs text-gray-400" id="r24_list_sub">資料載入後可查看</p></div>
+                    <button type="button" id="r24_export" onclick="r24DownloadCsv()" disabled class="rounded bg-blue-700 hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed px-3 py-2 text-sm">下載歷史配息 CSV</button>
+                </div>
+                <div class="overflow-x-auto rounded border border-gray-700">
+                    <table class="w-full min-w-[620px] text-sm text-left">
+                        <thead class="bg-gray-900 text-gray-400"><tr><th class="py-3 px-3">除息日</th><th class="py-3 px-3">發放日（公告）</th><th class="py-3 px-3 text-right">每股現金配息</th><th class="py-3 px-3 text-right">資料標示</th></tr></thead>
+                        <tbody id="r24_list_body" class="divide-y divide-gray-700"><tr><td colspan="4" class="text-center text-gray-500 py-8">目前沒有可顯示的歷史配息</td></tr></tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">2020 年起查詢可取得的歷史資料；年度統計按「除息日」歸屬。金融商品配息可能包含不同來源，請以投信正式公告為準。</p>
+            </div>
+        </section>
+
+        <!-- ================= 分頁 7：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
             <div class="card border border-red-900/50 shadow-lg shadow-red-900/10 mb-6">
                 <h2 class="text-xl font-semibold mb-4 text-red-400">🚨 ETF 配息與流動性風險分數預警</h2>
@@ -666,28 +726,32 @@
             renderYearTabs();
             runDynamicSimulation(); 
             runKidsSimulation();
+            r24Init();
         };
 
         function switchTab(tabId) {
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
                 document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
-                if (id === 'kids') document.getElementById(`btn-${id}`).classList.remove('text-pink-400');
+                if (id === 'dividends') document.getElementById(`btn-${id}`).classList.remove('text-emerald-400');
+                else if (id === 'kids') document.getElementById(`btn-${id}`).classList.remove('text-pink-400');
                 else if (id === 'transactions') document.getElementById(`btn-${id}`).classList.remove('text-green-400');
                 else document.getElementById(`btn-${id}`).classList.remove('text-gray-400');
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
             
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'safety'].forEach(id => {
                 if(id !== tabId) {
-                    if (id === 'kids') document.getElementById(`btn-${id}`).classList.add('text-pink-400');
+                    if (id === 'dividends') document.getElementById(`btn-${id}`).classList.add('text-emerald-400');
+                    else if (id === 'kids') document.getElementById(`btn-${id}`).classList.add('text-pink-400');
                     else if (id === 'transactions') document.getElementById(`btn-${id}`).classList.add('text-green-400');
                     else document.getElementById(`btn-${id}`).classList.add('text-gray-400');
                 }
             });
             
-            if(tabId === 'charts' && rawPriceData.length > 0) renderTrendChart(currentChartTimeframe); 
+            if(tabId === 'charts' && rawPriceData.length > 0) renderTrendChart(currentChartTimeframe);
+            if(tabId === 'dividends') r24DrawChart(); 
         }
 
         function saveAndLoad() {
@@ -1106,7 +1170,6 @@
 
         async function fetchData(token) {
             const today = new Date();
-            const yearStart = `${today.getFullYear()}-01-01`;
             const yearAgoDate = new Date(today.getTime() - 365 * 24 * 60 * 60 * 1000); 
             const yearAgo = yearAgoDate.toISOString().split('T')[0];
             const monthAgoDate = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000); 
@@ -1211,12 +1274,14 @@
                 document.getElementById('buyable_shares').innerText = shares;
 
                 // 3. 抓取配息資料
-                const divUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockDividend&data_id=00406A&start_date=${yearStart}&token=${token}`;
+                const divUrl = `https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockDividend&data_id=00406A&start_date=2020-01-01&token=${token}`;
                 const divRes = await fetch(divUrl);
                 const divData = await divRes.json();
                 
-                if(divData.msg === 'success' && divData.data.length > 0) {
-                    const latest = divData.data[divData.data.length - 1];
+                if(divData.msg === 'success' && Array.isArray(divData.data) && divData.data.some(x => r24SafeDate(x.CashExDividendTradingDate) && Number(x.CashEarningsDistribution) > 0)) {
+                    r24Ingest(divData.data);
+                    const lastRow = r24Rows[r24Rows.length-1];
+                    const latest = {CashEarningsDistribution:lastRow.amount, CashExDividendTradingDate:lastRow.exDate, CashDividendPaymentDate:lastRow.payDate};
                     latestDividend = latest.CashEarningsDistribution || 0;
                     currentExDivDate = latest.CashExDividendTradingDate || ''; 
                     
@@ -1251,7 +1316,7 @@
                             countdownEl.className = 'text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded';
                         }
                     }
-                }
+                } else { r24ApiError('API 尚未回傳有效的現金配息資料'); }
 
                 // ★ 抓取完所有資料後更新全系統
                 updateHoldingCalculations(); 
@@ -2000,6 +2065,168 @@
             if(rawPriceData.length>0 || latestDividend>0){r23LastMarketSuccess=new Date();r23Text('r23_updated','最近取得市場資料：'+r23LastMarketSuccess.toLocaleString('zh-TW',{hour12:false}));}
             else r23Text('r23_updated','無法取得有效市場資料，請檢查 API / 網路');
             r23Render();return result;
+        };
+
+        // ===== R24：配息中心。沿用原 FinMind 配息 API，不改動既有交易資料格式。 =====
+        const R24_DIV_CACHE_KEY = '00406A_R24_DIV_CACHE_V1';
+        let r24Rows = [];
+        let r24CacheAt = null;
+        let r24Source = '尚未取得資料';
+        let r24VisibleCount = 24;
+        let r24ChartInstance = null;
+        let r24IngestSerial = 0;
+
+        function r24SafeDate(s) {
+            if(typeof s !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return '';
+            const d = new Date(s+'T00:00:00');
+            return !Number.isNaN(+d) && d.getFullYear()===Number(s.slice(0,4)) && d.getMonth()+1===Number(s.slice(5,7)) && d.getDate()===Number(s.slice(8,10)) ? s : '';
+        }
+        function r24ParseRows(raw) {
+            if(!Array.isArray(raw)) return [];
+            const byDate = new Map();
+            for(const rec of raw) {
+                if(!rec || typeof rec!=='object') continue;
+                const exDate = r24SafeDate(rec.exDate || rec.CashExDividendTradingDate);
+                const payDate = r24SafeDate(rec.payDate || rec.CashDividendPaymentDate);
+                const amount = Number(rec.amount ?? rec.CashEarningsDistribution);
+                if(!exDate || !Number.isFinite(amount) || amount<=0 || amount>1000) continue;
+                // 同一除息日若有修正公告，以 API 最後一筆有效資料為準，不重複累加。
+                byDate.set(exDate,{exDate,payDate,amount});
+            }
+            return [...byDate.values()].sort((a,b)=>a.exDate.localeCompare(b.exDate));
+        }
+        function r24SetStatus(text) { r23Text('r24_data_status',text); }
+        function r24ApiError(reason) {
+            r24Source = `${reason}；${r24Rows.length ? '沿用既有資料（本次更新失敗）' : '資料未取得'}`;
+            r24SetStatus(r24Source);
+            r24Render();
+        }
+        function r24Ingest(raw) {
+            const parsed = r24ParseRows(raw);
+            if(!parsed.length) {r24ApiError('未找到有效現金配息記錄');return;}
+            r24Rows = parsed;
+            r24CacheAt = new Date().toISOString();
+            r24Source = 'FinMind 即時查詢';
+            r24IngestSerial++;
+            try { localStorage.setItem(R24_DIV_CACHE_KEY,JSON.stringify({at:r24CacheAt,rows:r24Rows})); }
+            catch(e) {console.warn('R24 配息快取寫入失敗',e);}
+            r24Render();
+        }
+        function r24Init() {
+            if(!r24Rows.length) {
+                try {
+                    const saved=JSON.parse(localStorage.getItem(R24_DIV_CACHE_KEY)||'null');
+                    if(saved && saved.rows && saved.at) {
+                        r24Rows=r24ParseRows(saved.rows);
+                        r24CacheAt=saved.at;
+                        r24Source='本機歷史快取（非即時）';
+                    }
+                } catch(e) {console.warn('R24 配息快取解析失敗',e);}
+            }
+            r24Render();
+        }
+        const r24Amount = n => Number.isFinite(n) ? n.toFixed(4).replace(/0+$/,'').replace(/\.$/,'') : '--';
+        const r24Mean = rows => rows.length ? rows.reduce((sum,d)=>sum+d.amount,0)/rows.length : NaN;
+        function r24Trend(n) {
+            if(r24Rows.length<n*2) return `目前有 ${r24Rows.length} 次資料；需滿 ${n*2} 次才能比較前後各 ${n} 次平均。`;
+            const now=r24Mean(r24Rows.slice(-n));
+            const old=r24Mean(r24Rows.slice(-2*n,-n));
+            if(!Number.isFinite(old)||old<=0) return '前一組平均為零，無法計算百分比差異。';
+            const delta=(now-old)/old*100;
+            const tone=delta>0.5?'上升':delta< -0.5?'下降':'持平';
+            return `最近 ${n} 次平均 ${r24Amount(now)} 元／股，前 ${n} 次平均 ${r24Amount(old)} 元／股；${tone} ${Math.abs(delta).toFixed(1)}%。（此為公告平均比較）`;
+        }
+        function r24Render() {
+            const has=r24Rows.length>0;
+            const newest=has?r24Rows[r24Rows.length-1]:null;
+            const now=new Date();
+            const today=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+            const oneYearAgo=new Date(now.getFullYear(),now.getMonth(),now.getDate()-365);
+            const ago=`${oneYearAgo.getFullYear()}-${String(oneYearAgo.getMonth()+1).padStart(2,'0')}-${String(oneYearAgo.getDate()).padStart(2,'0')}`;
+            const recent=r24Rows.slice(-24);
+            const yearRows=r24Rows.filter(d=>d.exDate.slice(0,4)===String(now.getFullYear()));
+            const trailing=r24Rows.filter(d=>d.exDate>ago && d.exDate<=today);
+            const sum=rows=>rows.reduce((v,d)=>v+d.amount,0);
+            r23Text('r24_last',has?r24Amount(newest.amount)+' 元':'--');
+            r23Text('r24_avg',has?r24Amount(r24Mean(recent))+' 元':'--');
+            r23Text('r24_high',has?r24Amount(Math.max(...recent.map(x=>x.amount)))+' 元':'--');
+            r23Text('r24_low',has?r24Amount(Math.min(...recent.map(x=>x.amount)))+' 元':'--');
+            r23Text('r24_year_total',has?r24Amount(sum(yearRows))+' 元':'--');
+            r23Text('r24_all_total',has?r24Amount(sum(r24Rows))+' 元':'--');
+            r23Text('r24_ttm_total',has?r24Amount(sum(trailing))+' 元':'--');
+            const validPrice=Number.isFinite(currentPrice) && currentPrice>0;
+            r23Text('r24_yield',has&&validPrice ? (sum(trailing)/currentPrice*100).toFixed(2)+'%' : '價格或配息不足');
+            r23Text('r24_stat_note',has?`目前取得 ${r24Rows.length} 次配息；近24次統計涵蓋 ${recent.length} 次。${now.getFullYear()} 年合計按除息日統計，包含已公告但尚未除息的紀錄。近365日比率以現有參考股價計算，非保證報酬。`:'尚未取得有效配息紀錄；確認已設定 FinMind 金鑰並更新資料。');
+            r23Text('r24_trend6',r24Trend(6));
+            r23Text('r24_trend12',r24Trend(12));
+            const declining=r24Rows.length>=4 && r24Rows.slice(-4).every((d,i,arr)=>i===0 || d.amount<arr[i-1].amount);
+            const below=has && newest.amount<0.10;
+            const caution=[];
+            if(declining)caution.push('⚠ 最近連續3次配息較前次下降');
+            if(below)caution.push('🔴 最近一次每股配息低於 0.10 元');
+            if(!has)caution.push('配息資料不足，暫不判斷趨勢');
+            r23Text('r24_alert',caution.length?caution.join('；')+'。請確認投信公告。':'目前未觸發上述兩項警示；不表示未來配息穩定。');
+            const short=has?`${newest.exDate} 最近公告 ${r24Amount(newest.amount)} 元/股；${declining?'連續3次下降':below?'低於0.10元警戒':'未觸發下降警示'}`:'待取得 FinMind 配息歷史資料';
+            r23Text('r24_home_brief',short);
+            const displayed=r24VisibleCount==='all'?r24Rows:r24Rows.slice(-r24VisibleCount);
+            const tbody=document.getElementById('r24_list_body');
+            if(tbody) {
+                tbody.innerHTML=displayed.length? [...displayed].reverse().map(d=>{
+                    const state=d.exDate>today?'尚未除息':d.payDate&&d.payDate>today?'尚未發放':'公告紀錄';
+                    return `<tr><td class="px-3 py-3 whitespace-nowrap">${d.exDate}</td><td class="px-3 py-3 whitespace-nowrap text-gray-300">${d.payDate||'未提供'}</td><td class="px-3 py-3 text-right text-emerald-300 font-semibold">${r24Amount(d.amount)}</td><td class="px-3 py-3 text-right text-gray-400">${state}</td></tr>`;
+                }).join(''):'<tr><td colspan="4" class="text-center text-gray-500 py-8">尚無可顯示的配息紀錄</td></tr>';
+            }
+            r23Text('r24_list_sub',has?`顯示最新 ${displayed.length} 筆／共 ${r24Rows.length} 筆（最新排前面）`:'等待取得資料');
+            const exportBtn=document.getElementById('r24_export');if(exportBtn)exportBtn.disabled=!has;
+            if(has) {
+                const stamp=r24CacheAt?new Date(r24CacheAt):null;
+                const stampText=stamp&&!Number.isNaN(+stamp)?stamp.toLocaleString('zh-TW',{hour12:false}):'未知';
+                r24SetStatus(`${r24Source}｜更新時間 ${stampText}`);
+            } else if(r24Source==='尚未取得資料') r24SetStatus('尚未取得配息歷史；請使用首頁更新全部');
+            if(document.getElementById('tab-dividends') && !document.getElementById('tab-dividends').classList.contains('hidden'))r24DrawChart();
+        }
+        function r24SetCount(num) {
+            r24VisibleCount=num;
+            for(const val of [12,24,'all']) {
+                const btn=document.getElementById('r24_count_'+val);
+                if(btn)btn.className=`text-sm rounded px-3 py-2 ${val===num?'bg-emerald-700 text-white':'bg-gray-700 hover:bg-gray-600'}`;
+            }
+            r24Render();
+        }
+        function r24DrawChart() {
+            const canvas=document.getElementById('r24_div_chart');
+            if(!canvas)return;
+            const fallback=document.getElementById('r24_chart_fallback');
+            if(typeof Chart==='undefined') {if(fallback)fallback.textContent='圖表元件未載入；下方配息明細仍可檢視。';return;}
+            if(!r24Rows.length) {if(fallback)fallback.textContent='取得配息歷史後顯示圖表。';if(r24ChartInstance){r24ChartInstance.destroy();r24ChartInstance=null;}return;}
+            const chosen=r24VisibleCount==='all'?r24Rows:r24Rows.slice(-r24VisibleCount);
+            const series=chosen.map(d=>d.amount);
+            if(r24ChartInstance)r24ChartInstance.destroy();
+            r24ChartInstance=new Chart(canvas.getContext('2d'),{
+                type:'bar',
+                data:{labels:chosen.map(d=>d.exDate.slice(2,7)),datasets:[{label:'每股現金配息（元）',data:series,backgroundColor:series.map(n=>n<0.1?'#f87171':'#34d399'),borderRadius:3,maxBarThickness:32}]},
+                options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#d1d5db'}},tooltip:{callbacks:{title:items=>items.length?chosen[items[0].dataIndex].exDate:'',label:item=>'配息 '+r24Amount(item.parsed.y)+' 元／股'}}},scales:{x:{ticks:{color:'#9ca3af',maxRotation:45,minRotation:0,autoSkip:true,maxTicksLimit:12},grid:{display:false}},y:{beginAtZero:true,ticks:{color:'#9ca3af'},grid:{color:'#374151'}}}}
+            });
+            if(fallback)fallback.textContent='紅柱代表該次公告每股配息低於 0.10 元，非買賣建議。';
+        }
+        function r24DownloadCsv() {
+            if(!r24Rows.length)return;
+            const records=['除息日,公告發放日,每股現金配息（新台幣元）',...r24Rows.map(d=>`${d.exDate},${d.payDate},${d.amount}`)];
+            const blob=new Blob(['\ufeff'+records.join('\r\n')],{type:'text/csv;charset=utf-8;'});
+            const href=URL.createObjectURL(blob),a=document.createElement('a');
+            a.href=href;a.download='00406A_R24_配息歷史.csv';document.body.appendChild(a);a.click();a.remove();
+            setTimeout(()=>URL.revokeObjectURL(href),1500);
+        }
+        // 在 R23 原有 API 更新完成後，同步補上 R24 的歷史資料狀態。
+        const r24PriorFetch=fetchData;
+        fetchData=async function(...args){
+            const oldSerial=r24IngestSerial;
+            const result=await r24PriorFetch.apply(this,args);
+            if(r24IngestSerial===oldSerial) {
+                r24Source=r24Rows.length?'本機快取（本次未取得新的歷史資料）':'資料尚未取得';
+                r24Render();
+            } else r24Render();
+            return result;
         };
 
     </script>
