@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R24｜MAX 的追蹤儀表板</title>
+    <title>00406A Tracker R25｜MAX 的追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -49,6 +49,7 @@
             <button onclick="switchTab('kids')" id="btn-kids" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-pink-400 whitespace-nowrap">👧 雙寶存股手帳</button>
             <button onclick="switchTab('charts')" id="btn-charts" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📈 走勢與日週月</button>
             <button onclick="switchTab('dividends')" id="btn-dividends" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-emerald-400 whitespace-nowrap">💰 R24 配息中心</button>
+            <button onclick="switchTab('assets')" id="btn-assets" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-amber-300 whitespace-nowrap">🎯 R25 資產分析</button>
             <button onclick="switchTab('safety')" id="btn-safety" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">🛡️ 流動性雷達</button>
         </div>
 
@@ -57,7 +58,7 @@
             <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
             <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R24 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
+                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R25 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
                     <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
                 </div>
                 <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
@@ -78,6 +79,11 @@
             <div class="bg-gray-800 border border-emerald-900/70 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
                 <div><p class="text-sm font-bold text-emerald-300">💰 R24 配息趨勢快覽</p><p id="r24_home_brief" class="text-xs text-gray-300 mt-1">等待配息紀錄載入</p></div>
                 <button type="button" onclick="switchTab('dividends')" class="rounded bg-emerald-700 hover:bg-emerald-600 px-3 py-2 text-sm font-medium">開啟配息中心 →</button>
+            </div>
+            <!-- R25 資產損益速覽：不把公告股息當作個人實收 -->
+            <div class="bg-gray-800 border border-amber-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div><p class="text-sm font-bold text-amber-300">🎯 R25 主帳戶資產快覽</p><p id="r25_home_brief" class="text-xs text-gray-300 mt-1">等待交易紀錄及行情</p></div>
+                <button type="button" onclick="switchTab('assets')" class="rounded bg-amber-700 hover:bg-amber-600 px-3 py-2 text-sm font-medium">開啟資產分析 →</button>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center relative overflow-hidden">
@@ -553,6 +559,97 @@
             </div>
         </section>
 
+        <!-- ================= 分頁 7：R25 主帳戶資產分析 ================= -->
+        <section id="tab-assets" class="space-y-6 hidden" aria-label="R25 主帳戶資產分析">
+            <div class="card border border-amber-800/50">
+                <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-300">🎯 R25 資產分析與回本進度</h2>
+                        <p class="text-xs text-gray-400 mt-2">僅分析「主帳戶」逐筆交易。股息收入以本頁「實際入帳」手動登錄為準，不會把 R24 公告配息直接視為已收到。</p>
+                    </div>
+                    <span id="r25_status" class="text-xs text-gray-400 bg-gray-900 rounded p-2" role="status">本機帳務分析</span>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="bg-gray-900 rounded-lg p-3"><p class="text-xs text-gray-400">個人累積買進支出（不含配息買入）</p><p id="r25_gross_external" class="text-lg md:text-xl font-bold mt-2">--</p></div>
+                    <div class="bg-gray-900 rounded-lg p-3"><p class="text-xs text-gray-400">累積買進成本（含配息再投資）</p><p id="r25_all_buys" class="text-lg md:text-xl font-bold mt-2">--</p></div>
+                    <div class="bg-gray-900 rounded-lg p-3"><p class="text-xs text-gray-400">現有庫存成本（平均成本法）</p><p id="r25_basis" class="text-lg md:text-xl font-bold mt-2">--</p></div>
+                    <div class="bg-gray-900 rounded-lg p-3"><p class="text-xs text-gray-400">目前庫存市值（參考行情）</p><p id="r25_market" class="text-lg md:text-xl font-bold text-yellow-300 mt-2">--</p></div>
+                    <div class="bg-gray-900 rounded-lg p-3"><p class="text-xs text-gray-400">已實現買賣損益（售出後）</p><p id="r25_realized" class="text-lg md:text-xl font-bold mt-2">--</p></div>
+                    <div class="bg-gray-900 rounded-lg p-3"><p class="text-xs text-gray-400">未實現損益（預估扣賣出費）</p><p id="r25_unrealized" class="text-lg md:text-xl font-bold mt-2">--</p></div>
+                    <div class="bg-gray-900 rounded-lg p-3"><p class="text-xs text-gray-400">已登錄實際入帳股息（累計）</p><p id="r25_dividend" class="text-lg md:text-xl font-bold text-emerald-300 mt-2">--</p></div>
+                    <div class="bg-gray-900 rounded-lg p-3"><p class="text-xs text-gray-400">累計損益（交易＋已登錄股息）</p><p id="r25_total_return" class="text-lg md:text-xl font-bold mt-2">--</p></div>
+                </div>
+                <p id="r25_summary_note" class="text-xs text-gray-400 mt-3" aria-live="polite">價格未取得時只顯示已知的交易與入帳資訊；累計損益不含尚未登錄的實收股息。</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="card">
+                    <h3 class="font-bold text-indigo-300 mb-2">📈 持股回本進度（按庫存成本）</h3>
+                    <div class="flex justify-between items-end gap-2"><span id="r25_breakeven_pct" class="text-2xl font-bold">--</span><span id="r25_breakeven_price" class="text-xs text-gray-400">估算損益平衡價 --</span></div>
+                    <div class="w-full h-3 rounded-full bg-gray-700 overflow-hidden my-3" role="progressbar" aria-label="依庫存成本計算的回本進度" aria-valuemin="0" aria-valuemax="100" id="r25_breakeven_progress"><div id="r25_breakeven_bar" class="h-full bg-indigo-400 transition-all" style="width:0%"></div></div>
+                    <p id="r25_breakeven_gap" class="text-sm text-gray-300">待取得行情與持股資料</p>
+                    <p class="text-xs text-gray-500 mt-3">回本比 = 預估賣出淨值 ÷ 現有庫存成本；滿 100% 代表估算賣出後不虧損，進度條上限為 100%。不含歷史股息。</p>
+                </div>
+                <div class="card">
+                    <h3 class="font-bold text-emerald-300 mb-2">💵 現金回收進度（非純本金回收）</h3>
+                    <div class="flex justify-between items-end gap-2"><span id="r25_cash_ratio" class="text-2xl font-bold">--</span><span class="text-xs text-gray-400">售出淨收入＋已登錄股息</span></div>
+                    <div class="w-full h-3 rounded-full bg-gray-700 overflow-hidden my-3"><div id="r25_cash_bar" class="h-full bg-emerald-400 transition-all" style="width:0%"></div></div>
+                    <p id="r25_cash_details" class="text-sm text-gray-300">尚無交易紀錄</p>
+                    <p class="text-xs text-gray-500 mt-3">分母是個人累積買進支出（不含配息再投資）；賣出所得可能含獲利，所以此比率不能解讀成「原始本金已回收百分比」。</p>
+                </div>
+                <div class="card lg:col-span-2">
+                    <h3 class="font-bold text-amber-300 mb-2">🧮 配息抵成本參考（非券商實際成本）</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">未售庫存平均成本／股</p><p id="r25_avg" class="text-xl font-semibold mt-1">--</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">已登錄股息抵扣後參考價／股</p><p id="r25_net_avg" class="text-xl font-semibold text-emerald-300 mt-1">--</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">個人淨投入現金（買進－售出）</p><p id="r25_external_net" class="text-xl font-semibold mt-1">--</p></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3">「股息抵成本」僅是心理帳戶的歷史現金回收參考：股息可能來自已售部位，也可能已用於再投資，不應當成目前持股的券商成本、稅務成本或額外可領現金。</p>
+                </div>
+            </div>
+
+            <div class="card border border-teal-900/50">
+                <h3 class="text-lg font-bold text-teal-300">🧾 主帳戶實際股息入帳記錄</h3>
+                <p class="text-xs text-gray-400 mt-2">按銀行／券商實際收到的「淨入帳金額」登錄。配息再買股仍在原本「逐筆記帳」記錄，這裡不要重複記買股支出；同一次股息只登錄一次。</p>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mt-4">
+                    <label class="text-xs text-gray-400">實際入帳日期<input id="r25_cash_date" type="date" class="mt-1 w-full bg-gray-900 border border-gray-700 px-3 py-2 rounded text-white text-sm"></label>
+                    <label class="text-xs text-gray-400">實收現金（新台幣元）<input id="r25_cash_amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="例如 3250" class="mt-1 w-full bg-gray-900 border border-gray-700 px-3 py-2 rounded text-white text-sm"></label>
+                    <label class="text-xs text-gray-400 md:col-span-2">備註（選填）<input id="r25_cash_note" maxlength="80" type="text" placeholder="例如 2026/10 配息" class="mt-1 w-full bg-gray-900 border border-gray-700 px-3 py-2 rounded text-white text-sm"></label>
+                </div>
+                <div class="flex flex-wrap justify-end gap-2 mt-3">
+                    <button type="button" id="r25_cancel_edit" onclick="r25CancelCashEdit()" class="hidden rounded bg-gray-600 hover:bg-gray-500 text-sm px-4 py-2">取消編輯</button>
+                    <button type="button" id="r25_save_cash" onclick="r25SaveCash()" class="rounded bg-teal-700 hover:bg-teal-600 text-sm font-semibold px-5 py-2">新增入帳</button>
+                </div>
+                <div class="overflow-x-auto border border-gray-700 rounded mt-4">
+                    <table class="w-full min-w-[520px] text-sm">
+                        <thead class="bg-gray-900 text-gray-400"><tr><th class="text-left py-3 px-3">入帳日期</th><th class="text-right py-3 px-3">實收金額</th><th class="text-left py-3 px-3">備註</th><th class="text-center py-3 px-3">操作</th></tr></thead>
+                        <tbody id="r25_cash_rows" class="divide-y divide-gray-700"><tr><td colspan="4" class="text-center text-gray-500 py-6">尚未登錄實際入帳股息</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 class="text-lg font-bold text-blue-300 mb-2">📅 年度資產現金流摘要（主帳戶）</h3>
+                <p class="text-xs text-gray-400 mb-3">按交易日／實際入帳日統計；「配息再投資」代表買股支出，不等於實際配息收入。</p>
+                <div class="overflow-x-auto border border-gray-700 rounded">
+                    <table class="w-full min-w-[740px] text-sm">
+                        <thead class="bg-gray-900 text-gray-400"><tr><th class="text-left px-3 py-3">年度</th><th class="text-right px-3 py-3">個人買進支出</th><th class="text-right px-3 py-3">配息再投資</th><th class="text-right px-3 py-3">賣出淨收入</th><th class="text-right px-3 py-3">已登錄股息收入</th><th class="text-right px-3 py-3">已實現買賣損益</th></tr></thead>
+                        <tbody id="r25_annual_rows" class="divide-y divide-gray-700"><tr><td colspan="6" class="text-center text-gray-500 py-6">尚無交易紀錄</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card border border-blue-900/50">
+                <h3 class="text-lg font-bold text-sky-300">🛡️ 帳務備份與還原</h3>
+                <p class="text-xs text-gray-400 mt-2">備份目前網站上的所有 00406A 本機資料（交易、手帳、配息入帳與 R24 快取），預設不匯出 FinMind API 金鑰。備份檔請自行妥善保管，不要上傳公開 GitHub。</p>
+                <div class="flex flex-wrap items-center gap-3 mt-4">
+                    <button type="button" onclick="r25Backup()" class="bg-sky-700 hover:bg-sky-600 text-sm px-4 py-2 rounded font-semibold">📥 下載完整帳務備份 JSON</button>
+                    <label class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm cursor-pointer">📤 從備份 JSON 還原<input id="r25_restore_input" type="file" accept=".json,application/json" class="hidden" onchange="r25Restore(this)"></label>
+                </div>
+                <p id="r25_backup_status" role="status" class="text-xs text-gray-400 mt-3">還原會先要求確認，還原後重新整理頁面；建議操作前先下載目前備份。</p>
+            </div>
+        </section>
+
         <!-- ================= 分頁 7：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
             <div class="card border border-red-900/50 shadow-lg shadow-red-900/10 mb-6">
@@ -727,13 +824,15 @@
             runDynamicSimulation(); 
             runKidsSimulation();
             r24Init();
+            r25Init();
         };
 
         function switchTab(tabId) {
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
                 document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
-                if (id === 'dividends') document.getElementById(`btn-${id}`).classList.remove('text-emerald-400');
+                if (id === 'assets') document.getElementById(`btn-${id}`).classList.remove('text-amber-300');
+                else if (id === 'dividends') document.getElementById(`btn-${id}`).classList.remove('text-emerald-400');
                 else if (id === 'kids') document.getElementById(`btn-${id}`).classList.remove('text-pink-400');
                 else if (id === 'transactions') document.getElementById(`btn-${id}`).classList.remove('text-green-400');
                 else document.getElementById(`btn-${id}`).classList.remove('text-gray-400');
@@ -741,9 +840,10 @@
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
             
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'safety'].forEach(id => {
                 if(id !== tabId) {
-                    if (id === 'dividends') document.getElementById(`btn-${id}`).classList.add('text-emerald-400');
+                    if (id === 'assets') document.getElementById(`btn-${id}`).classList.add('text-amber-300');
+                    else if (id === 'dividends') document.getElementById(`btn-${id}`).classList.add('text-emerald-400');
                     else if (id === 'kids') document.getElementById(`btn-${id}`).classList.add('text-pink-400');
                     else if (id === 'transactions') document.getElementById(`btn-${id}`).classList.add('text-green-400');
                     else document.getElementById(`btn-${id}`).classList.add('text-gray-400');
@@ -2228,6 +2328,199 @@
             } else r24Render();
             return result;
         };
+
+        // ===== R25 資產分析：沿用主帳戶交易與 R24 配息資料，不更動既有鍵值 =====
+        // 注意：dividend 類型代表「配息再投資買入」而非配息現金入帳。
+        const R25_CASH_KEY = '00406A_R25_ACTUAL_CASH_DIVIDENDS_V1';
+        const R25_MAIN_BUYS = new Set(['buy_regular', 'buy_extra', 'dividend']);
+        let r25CashRows = [];
+        let r25EditingId = null;
+        const r25Money = n => Number.isFinite(n) ? 'NT$ '+Math.round(n).toLocaleString('zh-TW') : '—';
+        const r25Money2 = n => Number.isFinite(n) ? 'NT$ '+n.toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
+        const r25Signed = n => Number.isFinite(n) ? (n>0?'+':n<0?'−':'')+'NT$ '+Math.abs(Math.round(n)).toLocaleString('zh-TW') : '—';
+        const r25Write = (id,value) => {const el=document.getElementById(id);if(el)el.textContent=value;};
+        const r25Today = () => {const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+        const r25SafeId = s => typeof s==='string' && /^[a-zA-Z0-9_-]{1,64}$/.test(s);
+        const r25Escape = s => String(s??'').replace(/[&<>"']/g, x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
+
+        function r25ReadCashRows(raw){
+            if(!Array.isArray(raw))return [];
+            const known=new Set(),clean=[];
+            for(const x of raw){
+                if(!x||typeof x!=='object')continue;
+                const date=r24SafeDate(x.date),amount=Number(x.amount),id=String(x.id||'');
+                if(!date||!r25SafeId(id)||known.has(id)||!Number.isFinite(amount)||amount<=0||amount>1e9)continue;
+                known.add(id);
+                clean.push({id,date,amount:Math.round(amount*100)/100,note:String(x.note||'').slice(0,80)});
+            }
+            return clean.sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id));
+        }
+        function r25Init(){
+            try {r25CashRows=r25ReadCashRows(JSON.parse(localStorage.getItem(R25_CASH_KEY)||'[]'));}
+            catch(e){console.warn('R25 股息入帳資料解析失敗',e);r25CashRows=[];}
+            const date=document.getElementById('r25_cash_date');if(date)date.value=r25Today();
+            r25Render();
+        }
+        function r25StoreCash(){
+            try {localStorage.setItem(R25_CASH_KEY,JSON.stringify(r25CashRows));return true;}
+            catch(e){console.error(e);alert('瀏覽器儲存空間不足，入帳紀錄尚未存檔。請先備份其他資料。');return false;}
+        }
+        function r25SaveCash(){
+            const date=document.getElementById('r25_cash_date').value;
+            const raw=document.getElementById('r25_cash_amount').value;
+            const amount=Number(raw);
+            const note=document.getElementById('r25_cash_note').value.trim().slice(0,80);
+            if(!r24SafeDate(date)||date>r25Today()||!raw.trim()||!Number.isFinite(amount)||amount<=0||amount>1e9){alert('請輸入有效的已發生入帳日期與正數金額，未來日期不可登錄為實收。');return;}
+            const row={id:r25EditingId||'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,9),date,amount:Math.round(amount*100)/100,note};
+            const old=r25CashRows;
+            r25CashRows=r25ReadCashRows(r25EditingId?old.map(x=>x.id===r25EditingId?row:x):[...old,row]);
+            if(!r25StoreCash()){r25CashRows=old;return;}
+            r25CancelCashEdit();r25Render();
+        }
+        function r25EditCash(id){
+            const row=r25CashRows.find(x=>x.id===id);if(!row)return;
+            r25EditingId=id;
+            document.getElementById('r25_cash_date').value=row.date;
+            document.getElementById('r25_cash_amount').value=row.amount;
+            document.getElementById('r25_cash_note').value=row.note;
+            document.getElementById('r25_save_cash').textContent='儲存修改';
+            document.getElementById('r25_cancel_edit').classList.remove('hidden');
+            document.getElementById('r25_cash_date').scrollIntoView({behavior:'smooth',block:'center'});
+        }
+        function r25CancelCashEdit(){
+            r25EditingId=null;
+            document.getElementById('r25_cash_date').value=r25Today();
+            document.getElementById('r25_cash_amount').value='';
+            document.getElementById('r25_cash_note').value='';
+            document.getElementById('r25_save_cash').textContent='新增入帳';
+            document.getElementById('r25_cancel_edit').classList.add('hidden');
+        }
+        function r25DeleteCash(id){
+            if(!r25CashRows.some(x=>x.id===id)||!confirm('確定刪除此筆「實際股息入帳」紀錄？'))return;
+            const old=r25CashRows;r25CashRows=old.filter(x=>x.id!==id);
+            if(!r25StoreCash()){r25CashRows=old;return;}
+            if(r25EditingId===id)r25CancelCashEdit();
+            r25Render();
+        }
+        // 此函式純計算，可在測試環境用固定交易驗證平均成本法及現金流。
+        function r25Compute(transactions,dividends,price,sellPct){
+            const tx=(Array.isArray(transactions)?transactions:[])
+                .filter(t=>t && (R25_MAIN_BUYS.has(t.type)||t.type==='sell'))
+                .slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))||(Number(a.id)||0)-(Number(b.id)||0));
+            let shares=0,basis=0,personalBuy=0,allBuy=0,reinvest=0,saleNet=0,realized=0,oversold=false;
+            const annual={};
+            const getYear=y=>annual[y]||(annual[y]={personal:0,reinvest:0,sales:0,div:0,realized:0});
+            for(const t of tx){
+                const count=Number(t.shares),p=Number(t.price),fee=Number(t.fee||0);
+                if(!r24SafeDate(t.date)||!Number.isInteger(count)||count<=0||!Number.isFinite(p)||p<=0||!Number.isFinite(fee)||fee<0){oversold=true;continue;}
+                const gross=p*count,yr=getYear(t.date.slice(0,4));
+                if(R25_MAIN_BUYS.has(t.type)){
+                    const cost=gross+fee;
+                    allBuy+=cost;shares+=count;basis+=cost;
+                    if(t.type==='dividend'){reinvest+=cost;yr.reinvest+=cost;}
+                    else {personalBuy+=cost;yr.personal+=cost;}
+                }else{
+                    if(count>shares){oversold=true;continue;}
+                    const proceeds=gross-fee,removed=basis/shares*count,profit=proceeds-removed;
+                    shares-=count;basis-=removed;if(shares===0)basis=0;
+                    saleNet+=proceeds;realized+=profit;yr.sales+=proceeds;yr.realized+=profit;
+                }
+            }
+            const paid=Array.isArray(dividends)?dividends:[];
+            const received=paid.reduce((total,r)=>{
+                if(!r24SafeDate(r.date)||!Number.isFinite(Number(r.amount))||Number(r.amount)<=0)return total;
+                const val=Number(r.amount);getYear(r.date.slice(0,4)).div+=val;return total+val;
+            },0);
+            const validPrice=Number.isFinite(Number(price)) && Number(price)>0;
+            const validFee=Number.isFinite(Number(sellPct)) && Number(sellPct)>=0 && Number(sellPct)<100;
+            const mv=validPrice?Number(price)*shares:null;
+            const netSale=mv!==null&&validFee?mv*(1-Number(sellPct)/100):null;
+            const unrealized=netSale!==null?netSale-basis:null;
+            const totalReturn=unrealized===null?null:realized+unrealized+received;
+            const breakeven=shares>0&&basis>0&&validFee?basis/shares/(1-Number(sellPct)/100):null;
+            const recovered=personalBuy>0?(saleNet+received)/personalBuy*100:null;
+            const ratio=shares>0&&basis>0&&netSale!==null?netSale/basis*100:null;
+            const netReference=shares>0?Math.max(0,basis-received)/shares:null;
+            return {shares,basis,personalBuy,allBuy,reinvest,saleNet,realized,received,mv,netSale,unrealized,totalReturn,breakeven,recovered,ratio,netReference,externalNet:personalBuy-saleNet,avg:shares>0?basis/shares:null,annual,oversold,validPrice};
+        }
+        function r25Render(){
+            const fee=Number(document.getElementById('sell_tax_fee_pct')?.value || 0);
+            const result=r25Compute(transactionLog,r25CashRows,currentPrice,fee);
+            const problem=result.oversold;
+            const safe=n=>problem?NaN:n;
+            r25Write('r25_gross_external',r25Money(result.personalBuy));
+            r25Write('r25_all_buys',r25Money(result.allBuy));
+            r25Write('r25_basis',r25Money(safe(result.basis)));
+            r25Write('r25_market',problem?'需修正交易紀錄':r25Money(result.mv));
+            r25Write('r25_realized',r25Signed(safe(result.realized)));
+            r25Write('r25_unrealized',r25Signed(safe(result.unrealized)));
+            r25Write('r25_dividend',r25Money2(result.received));
+            r25Write('r25_total_return',r25Signed(safe(result.totalReturn)));
+            const status=problem?'⚠ 交易紀錄含超賣或不合法的交易數值，先修正後再看損益':'本機帳務計算 · 股息需手動確認入帳';
+            r25Write('r25_status',status);
+            const msg=problem?'偵測到超賣／不合法交易，R25 已暫停相關損益試算，避免誤導。':(!result.validPrice?'尚未取得有效行情：市值、未實現損益與合計報酬暫不計算。':'累計損益 = 已實現交易損益 + 預估未實現損益 + 已登錄實際股息；未登錄的歷史股息不包含在內。');
+            r25Write('r25_summary_note',msg+' 本頁計入交易手續費、售出實收金額；價格來源與更新時間請以首頁為準。');
+            r25Write('r25_home_brief',problem?'交易資料需檢查':result.mv===null?`已登錄股息 ${r25Money2(result.received)}；行情未載入`:`庫存參考市值 ${r25Money(result.mv)}；${result.totalReturn===null?'損益待算':`含已登錄股息累計損益 ${r25Signed(result.totalReturn)}`}`);
+            r25Write('r25_breakeven_pct',problem?'—':result.ratio===null?'待取得資料':`${result.ratio.toFixed(1)}%`);
+            r25Write('r25_breakeven_price',`估算損益平衡價 ${r25Money2(safe(result.breakeven))}／股`);
+            r25Write('r25_breakeven_gap',problem?'請修正交易異常':!result.shares?'目前主帳戶沒有庫存':result.breakeven===null||!result.validPrice?'需取得股價與有效成本':`參考價 ${Number(currentPrice).toFixed(2)} 元，${currentPrice>=result.breakeven?'已達估算回本價':'距估算回本價差 '+(result.breakeven-currentPrice).toFixed(2)+' 元／股；需上漲 '+((result.breakeven/currentPrice-1)*100).toFixed(2)+'%'}`);
+            const bar=document.getElementById('r25_breakeven_bar');if(bar)bar.style.width=problem||result.ratio===null?'0%':Math.min(100,Math.max(0,result.ratio))+'%';
+            const pbar=document.getElementById('r25_breakeven_progress');if(pbar)pbar.setAttribute('aria-valuenow',String(problem||result.ratio===null?0:Math.round(Math.min(100,Math.max(0,result.ratio)))));
+            r25Write('r25_cash_ratio',result.recovered===null?'尚無個人投入':`${result.recovered.toFixed(1)}%`);
+            r25Write('r25_cash_details',`累計賣出淨收入 ${r25Money(result.saleNet)} ＋ 已登錄股息 ${r25Money2(result.received)}；個人買進支出 ${r25Money(result.personalBuy)}。`);
+            const cbar=document.getElementById('r25_cash_bar');if(cbar)cbar.style.width=result.recovered===null?'0%':Math.min(100,Math.max(0,result.recovered))+'%';
+            r25Write('r25_avg',r25Money2(safe(result.avg)));
+            r25Write('r25_net_avg',r25Money2(safe(result.netReference)));
+            r25Write('r25_external_net',r25Signed(result.externalNet));
+            const cashBody=document.getElementById('r25_cash_rows');
+            if(cashBody)cashBody.innerHTML=r25CashRows.length?[...r25CashRows].reverse().map(x=>`<tr><td class="py-3 px-3 whitespace-nowrap">${x.date}</td><td class="py-3 px-3 text-right font-bold text-emerald-300">${r25Money2(x.amount)}</td><td class="py-3 px-3 text-gray-300">${r25Escape(x.note)}</td><td class="py-3 px-3 text-center whitespace-nowrap"><button type="button" onclick="r25EditCash('${x.id}')" class="text-xs text-yellow-300 border border-yellow-900 px-2 py-1 rounded mr-2">編輯</button><button type="button" onclick="r25DeleteCash('${x.id}')" class="text-xs text-red-300 border border-red-900 px-2 py-1 rounded">刪除</button></td></tr>`).join(''):'<tr><td colspan="4" class="text-center text-gray-500 py-6">尚未登錄實際入帳股息；R24 公告配息不會自動計入此處。</td></tr>';
+            const years=Object.keys(result.annual).sort((a,b)=>b.localeCompare(a));
+            const tbody=document.getElementById('r25_annual_rows');
+            if(tbody)tbody.innerHTML=years.length?years.map(y=>{const d=result.annual[y];return `<tr><td class="px-3 py-3 font-semibold">${y}</td><td class="text-right px-3 py-3">${r25Money(d.personal)}</td><td class="text-right px-3 py-3">${r25Money(d.reinvest)}</td><td class="text-right px-3 py-3">${r25Money(d.sales)}</td><td class="text-right px-3 py-3 text-emerald-300">${r25Money2(d.div)}</td><td class="text-right px-3 py-3">${problem?'—':r25Signed(d.realized)}</td></tr>`;}).join(''):'<tr><td colspan="6" class="text-center text-gray-500 py-6">尚無交易或入帳紀錄</td></tr>';
+        }
+        // 保留原 API、計算引擎及 R23/R24 既有事件，只補上 R25 畫面刷新。
+        const r25OriginalUpdateTransactions=updateTransactions;
+        updateTransactions=function(...args){const ret=r25OriginalUpdateTransactions.apply(this,args);r25Render();return ret;};
+        const r25OriginalUpdateHolding=updateHoldingCalculations;
+        updateHoldingCalculations=function(...args){const ret=r25OriginalUpdateHolding.apply(this,args);r25Render();return ret;};
+        const r25OriginalFetch=fetchData;
+        fetchData=async function(...args){const ret=await r25OriginalFetch.apply(this,args);r25Render();return ret;};
+
+        function r25Backup(){
+            const data={};
+            try {
+                for(let i=0;i<localStorage.length;i++){
+                    const key=localStorage.key(i);
+                    if(key&&key.startsWith('00406A_')&&key!==KEY_NAME)data[key]=localStorage.getItem(key);
+                }
+                const payload={format:'00406A-Tracker-Backup',schema:1,createdAt:new Date().toISOString(),version:'R25',data};
+                const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
+                const url=URL.createObjectURL(blob),a=document.createElement('a');
+                a.href=url;a.download='00406A_R25_帳務備份_'+r25Today()+'.json';document.body.appendChild(a);a.click();a.remove();
+                setTimeout(()=>URL.revokeObjectURL(url),3000);
+                r25Write('r25_backup_status',`已準備備份 ${Object.keys(data).length} 類本機資料（不含 API 金鑰），請確認檔案有存到手機。`);
+            }catch(e){alert('備份失敗：'+e.message);}
+        }
+        async function r25Restore(input){
+            const file=input.files&&input.files[0];
+            if(!file)return;
+            try{
+                if(file.size>5*1024*1024)throw Error('檔案超過 5 MB');
+                const obj=JSON.parse(await file.text());
+                if(!obj||obj.format!=='00406A-Tracker-Backup'||obj.schema!==1||!obj.data||typeof obj.data!=='object'||Array.isArray(obj.data))throw Error('不是 R25 支援的備份格式');
+                const entries=Object.entries(obj.data);
+                if(!entries.length||entries.length>100||entries.some(([key,val])=>typeof key!=='string'||!/^00406A_[A-Za-z0-9_]+$/.test(key)||key===KEY_NAME||typeof val!=='string'||val.length>3e6))throw Error('備份資料內容不合法');
+                if(obj.data[TX_KEY]!==undefined){const tx=JSON.parse(obj.data[TX_KEY]);if(!Array.isArray(tx)||tx.length>100000)throw Error('交易紀錄格式異常');}
+                if(obj.data[R25_CASH_KEY]!==undefined){const cr=JSON.parse(obj.data[R25_CASH_KEY]);if(!Array.isArray(cr)||r25ReadCashRows(cr).length!==cr.length)throw Error('實際股息格式異常');}
+                if(!confirm(`準備從備份還原 ${entries.length} 類資料，會覆蓋同名的本機交易與手帳記錄（保留現有 API 金鑰）。是否確定？\n\n建議先下載目前的帳務備份。`))return;
+                // 備份目前值：若寫入任何一筆失敗則盡可能復原，避免部分資料損壞。
+                const previous=entries.map(([k])=>[k,localStorage.getItem(k)]);
+                try{entries.forEach(([k,v])=>localStorage.setItem(k,v));}
+                catch(e){previous.forEach(([k,v])=>{try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(_){}});throw Error('裝置儲存空間不足，已嘗試復原原資料');}
+                alert('帳務資料已還原，頁面將重新整理。');location.reload();
+            }catch(e){alert('無法還原：'+e.message);r25Write('r25_backup_status','匯入失敗：'+e.message);}
+            finally{input.value='';}
+        }
 
     </script>
 </body>
