@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R30｜MAX 的追蹤儀表板</title>
+    <title>00406A Tracker R31｜MAX 的追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -107,6 +107,7 @@
         <div class="flex border-b border-gray-700 space-x-2 overflow-x-auto pb-2">
             <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn active px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-200 whitespace-nowrap">📊 我的資產總覽</button>
             <button onclick="switchTab('transactions')" id="btn-transactions" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-green-400 whitespace-nowrap">📓 逐筆記帳 (連動)</button>
+            <button onclick="switchTab('records')" id="btn-records" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-lime-300 whitespace-nowrap">🔎 R31 資料管理</button>
             <button onclick="switchTab('ledger')" id="btn-ledger" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📝 我的存股手帳</button>
             <button onclick="switchTab('kids')" id="btn-kids" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-pink-400 whitespace-nowrap">👧 雙寶存股手帳</button>
             <button onclick="switchTab('charts')" id="btn-charts" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📈 走勢與日週月</button>
@@ -125,7 +126,7 @@
             <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
             <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R30 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
+                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R31 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
                     <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
                 </div>
                 <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
@@ -175,6 +176,11 @@
             <div class="bg-gray-800 border border-teal-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
                 <div><p class="text-sm font-bold text-teal-300">🔐 R30 資料安全與備份</p><p id="r30_home_brief" class="text-xs text-gray-300 mt-1">自動檢查交易與實收股息紀錄；建議定期下載完整備份。</p></div>
                 <button type="button" onclick="switchTab('security')" class="rounded bg-teal-700 hover:bg-teal-600 px-3 py-2 text-sm font-medium">開啟安全中心 →</button>
+            </div>
+            <!-- R31 資料管理：只讀查詢；實際編輯返回原本帳務頁 -->
+            <div class="bg-gray-800 border border-lime-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div><p class="text-sm font-bold text-lime-300">🔎 R31 資料管理</p><p id="r31_home_brief" class="text-xs text-gray-300 mt-1">快速搜尋主帳戶、雙寶逐筆交易及實收股息，支援期間篩選與 CSV。</p></div>
+                <button type="button" onclick="switchTab('records')" class="rounded bg-lime-800 hover:bg-lime-700 px-3 py-2 text-sm font-medium">開啟資料管理 →</button>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center relative overflow-hidden">
@@ -417,7 +423,7 @@
 
                 <!-- 表格上方新增：月份篩選器 -->
                 <div class="flex justify-between items-end mb-2 mt-6">
-                    <h3 class="text-sm font-bold text-gray-400">交易明細列表</h3>
+                    <div class="flex flex-wrap items-center gap-2"><h3 class="text-sm font-bold text-gray-400">交易明細列表</h3><button type="button" onclick="switchTab('records')" class="text-xs text-lime-300 rounded border border-lime-800 px-3 py-2 hover:bg-gray-800">🔎 進階搜尋／CSV</button></div>
                     <div class="flex items-center gap-2">
                         <label class="text-xs text-gray-500">篩選月份:</label>
                         <select id="tx_month_filter" onchange="updateTransactions()" class="px-3 py-1.5 bg-gray-800 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -1036,6 +1042,88 @@
         </section>
 
         <!-- ================= R30：資料安全中心（所有預覽及健檢唯讀） ================= -->
+        <!-- ================= R31：智慧資料管理／手機友善查詢（唯讀） ================= -->
+        <section id="tab-records" class="space-y-5 hidden" aria-label="R31 資料管理與搜尋">
+            <div class="card border border-lime-800/60">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <div><h2 class="text-xl font-bold text-lime-300">🔎 R31 智慧資料管理中心</h2>
+                        <p class="text-sm text-gray-400 mt-2">搜尋、篩選、查核三個帳戶的逐筆交易與主帳戶實際入帳股息；此分頁<strong class="text-lime-200">不會直接修改或刪除原始帳務</strong>。</p></div>
+                    <span id="r31_status" role="status" aria-live="polite" class="text-xs bg-gray-900 text-gray-300 rounded border border-gray-700 px-3 py-2">正在載入</span>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <button type="button" onclick="switchTab('transactions')" class="bg-blue-700 hover:bg-blue-600 rounded px-4 py-3 text-sm font-semibold">＋ 新增／編輯交易</button>
+                    <button type="button" onclick="switchTab('assets');document.getElementById('r25_cash_date')?.scrollIntoView({behavior:'smooth',block:'center'})" class="bg-teal-700 hover:bg-teal-600 rounded px-4 py-3 text-sm font-semibold">＋ 登錄實收股息</button>
+                    <button type="button" onclick="switchTab('security')" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">🔐 查看備份</button>
+                </div>
+            </div>
+            <div class="card border border-gray-700">
+                <h3 class="text-lg font-bold text-cyan-300 mb-3">① 搜尋與篩選</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <label class="text-xs text-gray-300">搜尋日期、名稱、數字、股息備註
+                        <input type="search" id="r31_query" placeholder="例如 2026-10、加碼、15.2" oninput="r31FiltersChanged()" class="w-full mt-2 bg-gray-900 border border-gray-600 rounded px-3 py-3 text-base text-white" autocomplete="off">
+                    </label>
+                    <label class="text-xs text-gray-300">帳戶
+                        <select id="r31_owner" onchange="r31FiltersChanged()" class="w-full mt-2 bg-gray-900 border border-gray-600 rounded px-3 py-3 text-base text-white">
+                            <option value="all">全部帳戶</option><option value="main">主帳戶</option><option value="kid_a">大寶</option><option value="kid_b">二寶</option>
+                        </select>
+                    </label>
+                    <label class="text-xs text-gray-300">紀錄類型
+                        <select id="r31_kind" onchange="r31FiltersChanged()" class="w-full mt-2 bg-gray-900 border border-gray-600 rounded px-3 py-3 text-base text-white">
+                            <option value="all">全部類型</option><option value="buy">一般買進／加碼</option><option value="reinvest">配息再投資買股</option><option value="sell">賣出</option><option value="cash">實收股息入帳</option>
+                        </select>
+                    </label>
+                    <label class="text-xs text-gray-300">開始日期
+                        <input type="date" id="r31_from" onchange="r31FiltersChanged()" class="w-full mt-2 bg-gray-900 border border-gray-600 rounded px-3 py-3 text-base text-white">
+                    </label>
+                    <label class="text-xs text-gray-300">結束日期
+                        <input type="date" id="r31_to" onchange="r31FiltersChanged()" class="w-full mt-2 bg-gray-900 border border-gray-600 rounded px-3 py-3 text-base text-white">
+                    </label>
+                    <label class="text-xs text-gray-300">排序
+                        <select id="r31_sort" onchange="r31FiltersChanged()" class="w-full mt-2 bg-gray-900 border border-gray-600 rounded px-3 py-3 text-base text-white">
+                            <option value="newest">日期最新優先</option><option value="oldest">日期最早優先</option><option value="amount_desc">金額由大到小</option><option value="amount_asc">金額由小到大</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <button type="button" onclick="r31Range('month')" class="bg-gray-700 hover:bg-gray-600 rounded px-3 py-3 text-sm">本月</button>
+                    <button type="button" onclick="r31Range('year')" class="bg-gray-700 hover:bg-gray-600 rounded px-3 py-3 text-sm">今年</button>
+                    <button type="button" onclick="r31Range('recent')" class="bg-gray-700 hover:bg-gray-600 rounded px-3 py-3 text-sm">最近 90 天</button>
+                    <button type="button" onclick="r31Reset()" class="bg-gray-700 hover:bg-gray-600 rounded px-3 py-3 text-sm">清除全部篩選</button>
+                </div>
+                <p id="r31_filter_note" role="status" class="text-xs text-gray-400 mt-3">日期會同時篩選交易日與股息實際入帳日。</p>
+            </div>
+            <div class="card">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                    <h3 class="text-lg font-bold text-lime-300">② 篩選結果摘要</h3>
+                    <button type="button" onclick="r31ExportCsv()" id="r31_export" class="bg-emerald-700 hover:bg-emerald-600 disabled:opacity-40 rounded px-4 py-3 text-sm font-semibold" disabled>📥 匯出篩選結果 CSV</button>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">符合條件筆數</p><p id="r31_count" class="text-lg font-bold mt-1">0 筆</p></div>
+                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">一般買進＋再投資股數</p><p id="r31_buy_shares" class="text-lg font-bold mt-1">0 股</p></div>
+                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">賣出股數</p><p id="r31_sell_shares" class="text-lg font-bold mt-1">0 股</p></div>
+                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">已登錄實收股息</p><p id="r31_cash" class="text-lg font-bold text-emerald-300 mt-1">NT$ 0</p></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-3 text-sm">
+                    <p class="bg-gray-900 p-3 rounded text-gray-300" id="r31_buy_cost">買股支出（含配息再投資）：—</p>
+                    <p class="bg-gray-900 p-3 rounded text-gray-300" id="r31_reinvest_cost">其中配息再投資買股：—</p>
+                    <p class="bg-gray-900 p-3 rounded text-gray-300" id="r31_sale_proceeds">賣出淨收入：—</p>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">此處為「符合篩選條件的紀錄加總」，不是總報酬或目前庫存。配息買股是買入支出，和 R25 的實際入帳股息分開；若交易缺漏或異常，請以券商紀錄及 R30 健康檢查為準。</p>
+            </div>
+            <div class="card">
+                <div class="flex flex-wrap justify-between items-center gap-3 mb-4">
+                    <div><h3 class="text-lg font-bold text-blue-300">③ 手機友善紀錄清單</h3><p class="text-xs text-gray-400 mt-1">點選「前往編輯」會跳回原本記帳頁面，保留原有新增／修改／刪除保護。</p></div>
+                    <span id="r31_page_status" class="text-sm text-gray-300">第 1 頁</span>
+                </div>
+                <div id="r31_list" class="grid grid-cols-1 lg:grid-cols-2 gap-3" onclick="r31ListClick(event)"><p class="text-gray-400 text-sm">尚未載入紀錄。</p></div>
+                <div class="flex flex-wrap justify-between items-center gap-3 mt-4 border-t border-gray-700 pt-4">
+                    <button id="r31_prev" type="button" onclick="r31Page(-1)" class="rounded bg-gray-700 hover:bg-gray-600 disabled:opacity-35 px-4 py-3 text-sm" disabled>← 上一頁</button>
+                    <span id="r31_paging_note" class="text-xs text-gray-400">每頁 15 筆</span>
+                    <button id="r31_next" type="button" onclick="r31Page(1)" class="rounded bg-gray-700 hover:bg-gray-600 disabled:opacity-35 px-4 py-3 text-sm" disabled>下一頁 →</button>
+                </div>
+            </div>
+        </section>
+
         <section id="tab-security" class="space-y-5 hidden" aria-label="R30 資料安全中心">
           <div class="card border border-teal-800/60">
             <div class="flex flex-wrap items-start justify-between gap-3">
@@ -1275,13 +1363,15 @@
             r28Init();
             r29Init();
             r30Init();
+            r31Init();
         };
 
         function switchTab(tabId) {
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'security', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'records', 'security', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
                 document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
-                if (id === 'security') document.getElementById(`btn-${id}`).classList.remove('text-teal-300');
+                if (id === 'records') document.getElementById(`btn-${id}`).classList.remove('text-lime-300');
+                else if (id === 'security') document.getElementById(`btn-${id}`).classList.remove('text-teal-300');
                 else if (id === 'retirement') document.getElementById(`btn-${id}`).classList.remove('text-rose-200');
                 else if (id === 'annual') document.getElementById(`btn-${id}`).classList.remove('text-amber-200');
                 else if (id === 'report') document.getElementById(`btn-${id}`).classList.remove('text-sky-300');
@@ -1295,9 +1385,10 @@
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
             
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'security', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'records', 'security', 'safety'].forEach(id => {
                 if(id !== tabId) {
-                    if (id === 'security') document.getElementById(`btn-${id}`).classList.add('text-teal-300');
+                    if (id === 'records') document.getElementById(`btn-${id}`).classList.add('text-lime-300');
+                    else if (id === 'security') document.getElementById(`btn-${id}`).classList.add('text-teal-300');
                     else if (id === 'retirement') document.getElementById(`btn-${id}`).classList.add('text-rose-200');
                     else if (id === 'annual') document.getElementById(`btn-${id}`).classList.add('text-amber-200');
                     else if (id === 'report') document.getElementById(`btn-${id}`).classList.add('text-sky-300');
@@ -1317,6 +1408,7 @@
             if(tabId === 'annual') r28Render();
             if(tabId === 'retirement') r29Render();
             if(tabId === 'security') r30Scan(); 
+            if(tabId === 'records') r31Render();
         }
 
         function saveAndLoad() {
@@ -3930,6 +4022,145 @@
         updateTransactions=function(...args){const v=r30OldUpdateTransactions.apply(this,args);r30Scan();return v;};
         const r30OldCashRender=r25Render;
         r25Render=function(...args){const v=r30OldCashRender.apply(this,args);r30Scan();return v;};
+
+        // ===== R31：只讀資料管理中心；無額外本機儲存鍵，亦不改動原始紀錄 =====
+        const R31_PAGE_SIZE=15;
+        const R31_TYPE_LABELS={
+            buy_regular:'主帳戶定期買進',buy_extra:'主帳戶額外加碼',buy:'主帳戶買進',dividend:'主帳戶配息再投資',sell:'主帳戶賣出',
+            buy_kid_a:'大寶買進',div_kid_a:'大寶配息再投資',sell_kid_a:'大寶賣出',
+            buy_kid_b:'二寶買進',div_kid_b:'二寶配息再投資',sell_kid_b:'二寶賣出',cash:'主帳戶實收股息入帳'
+        };
+        let r31CurrentPage=1,r31FilteredRows=[];
+        const r31Node=id=>document.getElementById(id);
+        const r31Val=id=>String(r31Node(id)?.value||'');
+        const r31Num=n=>Number.isFinite(n)?Math.round(n).toLocaleString('zh-TW'):'—';
+        function r31Owner(type){if(String(type).includes('kid_a'))return 'kid_a';if(String(type).includes('kid_b'))return 'kid_b';return 'main';}
+        function r31Category(type){if(type==='cash')return 'cash';if(type==='dividend'||String(type).startsWith('div_kid_'))return 'reinvest';if(String(type).startsWith('sell'))return 'sell';return 'buy';}
+        function r31NormalizeRows(tx,cash){
+            const out=[];
+            for(const [index,t] of (Array.isArray(tx)?tx:[]).entries()){
+                if(!t||typeof t!=='object')continue;
+                const type=String(t.type||''),price=Number(t.price),shares=Number(t.shares),fee=Number(t.fee||0),date=String(t.date||'');
+                // 不顯示不合法交易的推估金額；保留其原始索引以利回到記帳頁核對。
+                const valid=!!r24SafeDate(date)&&Number.isFinite(price)&&price>0&&Number.isInteger(shares)&&shares>0&&Number.isFinite(fee)&&fee>=0&&R30_TYPES.has(type);
+                const kind=r31Category(type),isSale=kind==='sell';
+                const amount=valid?Math.round((price*shares+(isSale?-fee:fee))*100)/100:null;
+                out.push({key:'tx-'+index,id:t.id,kind,owner:r31Owner(type),type,date,price,shares,fee,amount,valid,
+                    label:R31_TYPE_LABELS[type]||'未知交易類型',note:'',source:'tx'});
+            }
+            for(const [index,c] of (Array.isArray(cash)?cash:[]).entries()){
+                if(!c||typeof c!=='object')continue;
+                const amount=Number(c.amount),date=String(c.date||'');
+                out.push({key:'cash-'+index,id:String(c.id||''),kind:'cash',owner:'main',type:'cash',date,price:null,shares:null,fee:null,
+                    amount,valid:!!r24SafeDate(date)&&Number.isFinite(amount)&&amount>0,
+                    label:R31_TYPE_LABELS.cash,note:String(c.note||''),source:'cash'});
+            }
+            return out;
+        }
+        function r31FilterRows(rows,filters){
+            const owner=String(filters.owner||'all'),kind=String(filters.kind||'all'),from=String(filters.from||''),to=String(filters.to||'');
+            const search=String(filters.query||'').trim().toLocaleLowerCase('zh-TW');
+            const sort=String(filters.sort||'newest');
+            return rows.filter(r=>{
+                if(owner!=='all'&&r.owner!==owner)return false;
+                if(kind!=='all'&&r.kind!==kind)return false;
+                if(from&&r.date<from||to&&r.date>to)return false;
+                if(!search)return true;
+                const text=[r.date,r.label,r.note,r.id,r.price,r.shares,r.amount,r.fee].filter(v=>v!==null&&v!==undefined).join(' ').toLocaleLowerCase('zh-TW');
+                return text.includes(search);
+            }).sort((a,b)=>{
+                if(sort==='amount_desc'||sort==='amount_asc'){
+                    const av=Number.isFinite(a.amount)?Math.abs(a.amount):-1,bv=Number.isFinite(b.amount)?Math.abs(b.amount):-1;
+                    if(av!==bv)return sort==='amount_desc'?bv-av:av-bv;
+                }
+                const order=sort==='oldest'?1:-1;
+                return order*a.date.localeCompare(b.date)||order*a.key.localeCompare(b.key);
+            });
+        }
+        function r31GetFilters(){return {owner:r31Val('r31_owner'),kind:r31Val('r31_kind'),from:r31Val('r31_from'),to:r31Val('r31_to'),query:r31Val('r31_query'),sort:r31Val('r31_sort')};}
+        function r31FiltersChanged(){r31CurrentPage=1;r31Render();}
+        function r31Reset(){for(const id of ['r31_query','r31_from','r31_to']){const el=r31Node(id);if(el)el.value='';}
+            for(const [id,val] of [['r31_owner','all'],['r31_kind','all'],['r31_sort','newest']]){const el=r31Node(id);if(el)el.value=val;}
+            r31FiltersChanged();}
+        function r31Range(period){
+            const date=r25Today(),from=r31Node('r31_from'),to=r31Node('r31_to');if(!from||!to)return;
+            to.value=date;
+            if(period==='month')from.value=date.slice(0,7)+'-01';
+            else if(period==='year')from.value=date.slice(0,4)+'-01-01';
+            else {const d=new Date(date+'T12:00:00');d.setDate(d.getDate()-89);from.value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+            r31FiltersChanged();
+        }
+        function r31Stats(rows){
+            let buyShares=0,sellShares=0,cash=0,buyCost=0,reinvest=0,sales=0;
+            for(const r of rows){if(!r.valid||!Number.isFinite(r.amount))continue;
+                if(r.kind==='cash')cash+=r.amount;
+                else if(r.kind==='sell'){sellShares+=r.shares;sales+=r.amount;}
+                else{buyShares+=r.shares;buyCost+=r.amount;if(r.kind==='reinvest')reinvest+=r.amount;}}
+            return {count:rows.length,buyShares,sellShares,cash,buyCost,reinvest,sales};
+        }
+        function r31Render(){
+            if(!r31Node('r31_list'))return;
+            const f=r31GetFilters();
+            if(f.from&&f.to&&f.from>f.to){r31FilteredRows=[];r31Node('r31_filter_note').textContent='⚠ 開始日期不可晚於結束日期，請修正篩選條件。';}
+            else{
+                r31FilteredRows=r31FilterRows(r31NormalizeRows(transactionLog,r25CashRows),f);
+                r31Node('r31_filter_note').textContent='查詢範圍：'+(f.from||'不限')+' ～ '+(f.to||'不限')+'。此畫面只讀取手機瀏覽器裡現有的帳務紀錄。';
+            }
+            const rows=r31FilteredRows,st=r31Stats(rows);
+            const today=r25Today();r31Node('r31_status').textContent=`共 ${st.count.toLocaleString('zh-TW')} 筆符合條件`;
+            r31Node('r31_home_brief').textContent=`目前帳務：交易 ${transactionLog.length} 筆、實際入帳股息 ${r25CashRows.length} 筆；可進階篩選、快速編輯與匯出。`;
+            r31Node('r31_count').textContent=st.count.toLocaleString('zh-TW')+' 筆';
+            r31Node('r31_buy_shares').textContent=r31Num(st.buyShares)+' 股';
+            r31Node('r31_sell_shares').textContent=r31Num(st.sellShares)+' 股';
+            r31Node('r31_cash').textContent=r25Money2(st.cash);
+            r31Node('r31_buy_cost').textContent='買股支出（含配息再投資）：'+r25Money2(st.buyCost);
+            r31Node('r31_reinvest_cost').textContent='其中配息再投資買股：'+r25Money2(st.reinvest);
+            r31Node('r31_sale_proceeds').textContent='賣出淨收入：'+r25Money2(st.sales);
+            r31Node('r31_export').disabled=!rows.length;
+            const totalPages=Math.max(1,Math.ceil(rows.length/R31_PAGE_SIZE));r31CurrentPage=Math.min(Math.max(1,r31CurrentPage),totalPages);
+            const begin=(r31CurrentPage-1)*R31_PAGE_SIZE,display=rows.slice(begin,begin+R31_PAGE_SIZE);
+            r31Node('r31_page_status').textContent=`第 ${r31CurrentPage}／${totalPages} 頁`;
+            r31Node('r31_paging_note').textContent=rows.length?`顯示第 ${begin+1}–${begin+display.length} 筆／共 ${rows.length} 筆`:'每頁 15 筆';
+            r31Node('r31_prev').disabled=r31CurrentPage<=1;r31Node('r31_next').disabled=r31CurrentPage>=totalPages;
+            const colors={buy:'text-blue-300',reinvest:'text-purple-300',sell:'text-emerald-300',cash:'text-lime-300'};
+            r31Node('r31_list').innerHTML=display.length?display.map(r=>{
+                const label=r25Escape(r.label),date=r25Escape(r.date),amount=r.valid?r25Money2(r.amount):'資料異常，請檢查';
+                const owner={main:'主帳戶',kid_a:'大寶',kid_b:'二寶'}[r.owner]||'未知帳戶';
+                const shares=r.kind==='cash'?'現金入帳':`${r31Num(r.shares)} 股 × ${Number.isFinite(r.price)?r.price.toFixed(2):'—'} 元`;
+                const note=r.note?`<p class="text-xs text-gray-400 mt-2 break-words">備註：${r25Escape(r.note)}</p>`:'';
+                const editable=r.source==='cash'?r25SafeId(r.id):typeof r.id==='number'&&Number.isSafeInteger(r.id)&&r.id>0;
+                const action=editable?`<button type="button" class="r31-edit shrink-0 text-xs font-semibold border border-lime-800 rounded px-3 py-3 text-lime-300 hover:bg-gray-700" data-key="${r25Escape(r.key)}">前往編輯 →</button>`:'<span class="text-xs text-amber-300">ID 異常，請至原帳務頁查核</span>';
+                return `<article class="bg-gray-900 border border-gray-700 rounded-lg p-4 min-w-0">
+                    <div class="flex items-start justify-between gap-3"><div><p class="text-xs text-gray-400">${date} ・ ${owner}</p><p class="font-bold ${colors[r.kind]||'text-white'} mt-1">${label}</p></div><strong class="text-sm whitespace-nowrap">${r25Escape(amount)}</strong></div>
+                    <p class="text-sm text-gray-300 mt-3">${shares}${r.kind==='cash'?'':` ・ 費用 ${r25Money2(r.fee)}`}</p>${note}
+                    <div class="flex justify-end mt-3">${action}</div>
+                </article>`;
+            }).join(''):'<p class="text-sm text-gray-400 bg-gray-900 rounded p-5 col-span-full">沒有符合條件的資料。請調整日期、帳戶、類型或搜尋內容。</p>';
+        }
+        function r31ListClick(ev){
+            const btn=ev.target.closest('button.r31-edit');if(!btn)return;
+            const item=r31FilteredRows.find(x=>x.key===btn.dataset.key);if(!item)return;
+            if(item.source==='cash'){if(!r25SafeId(item.id))return;switchTab('assets');r25EditCash(item.id);}
+            else if(typeof item.id==='number'&&Number.isSafeInteger(item.id)&&item.id>0){switchTab('transactions');editTransaction(item.id);}
+        }
+        function r31Page(delta){r31CurrentPage+=delta;r31Render();r31Node('r31_list')?.scrollIntoView({behavior:'smooth',block:'start'});}
+        function r31ExportCsv(){
+            r31Render();const rows=r31FilteredRows;if(!rows.length)return;
+            const filters=r31GetFilters(),data=[
+                ['00406A Tracker R31','資料管理篩選結果','僅下載查詢資料，不修改帳務'],
+                ['帳戶',filters.owner],['類型',filters.kind],['開始日期',filters.from],['結束日期',filters.to],['搜尋內容',filters.query],['排序',filters.sort],
+                [],['交易／入帳日期','帳戶','類型','股數','成交單價','費用','支出／入帳金額','備註','原始識別碼','資料狀態']
+            ];
+            for(const r of rows){const owner={main:'主帳戶',kid_a:'大寶',kid_b:'二寶'}[r.owner]||'未知帳戶';
+                data.push([r.date,owner,r.label,r.shares??'',r.price??'',r.fee??'',r.valid?r.amount:'資料異常',r.note,String(r.id??''),r.valid?'可檢視':'需核對']);}
+            r27Download('00406A_R31_資料查詢_'+r25Today()+'.csv','\ufeff'+data.map(row=>row.map(r27CsvValue).join(',')).join('\r\n'),'text/csv;charset=utf-8');
+        }
+        function r31Init(){r31CurrentPage=1;r31Render();}
+        // 監聽既有交易／股息變動，僅更新查詢畫面，不寫入新的資料鍵。
+        const r31PreviousUpdateTransactions=updateTransactions;
+        updateTransactions=function(...args){const result=r31PreviousUpdateTransactions.apply(this,args);r31Render();return result;};
+        const r31PreviousCashRender=r25Render;
+        r25Render=function(...args){const result=r31PreviousCashRender.apply(this,args);r31Render();return result;};
 
     </script>
 </body>
