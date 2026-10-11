@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R31｜MAX 的追蹤儀表板</title>
+    <title>00406A Tracker R32｜MAX 的追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -84,6 +84,9 @@
             body.r29-print-active #tab-retirement table {width:100%;font-size:10px;}
             body.r29-print-active #tab-retirement td,body.r29-print-active #tab-retirement th {padding:5px !important;border-bottom:1px solid #e2e8f0;}
         }
+        /* R32 僅隱藏個人化首頁區塊，不變更其節點或存放資料 */
+        #tab-overview [data-r32-home].r32-hidden { display: none !important; }
+        #tab-reminders input,#tab-reminders select { color-scheme: dark; }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -108,6 +111,7 @@
             <button onclick="switchTab('overview')" id="btn-overview" class="tab-btn active px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-200 whitespace-nowrap">📊 我的資產總覽</button>
             <button onclick="switchTab('transactions')" id="btn-transactions" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-green-400 whitespace-nowrap">📓 逐筆記帳 (連動)</button>
             <button onclick="switchTab('records')" id="btn-records" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-lime-300 whitespace-nowrap">🔎 R31 資料管理</button>
+            <button onclick="switchTab('reminders')" id="btn-reminders" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-orange-300 whitespace-nowrap">🔔 R32 提醒與首頁</button>
             <button onclick="switchTab('ledger')" id="btn-ledger" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📝 我的存股手帳</button>
             <button onclick="switchTab('kids')" id="btn-kids" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-pink-400 whitespace-nowrap">👧 雙寶存股手帳</button>
             <button onclick="switchTab('charts')" id="btn-charts" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📈 走勢與日週月</button>
@@ -124,9 +128,9 @@
         <!-- ================= 分頁 1：資產與即時領息總覽 ================= -->
         <div id="tab-overview" class="space-y-6">
             <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
-            <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理">
+            <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理" data-r32-home="assistant">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R31 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
+                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R32 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
                     <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
                 </div>
                 <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
@@ -144,45 +148,52 @@
                 </div>
             </section>
 
-            <div class="bg-gray-800 border border-emerald-900/70 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <!-- R32 首頁提醒速覽（僅在開啟網頁時檢查；不推播） -->
+            <div class="bg-gray-800 border border-orange-800/70 rounded-lg px-4 py-4" id="r32_home_panel">
+                <div class="flex flex-wrap justify-between items-center gap-3">
+                    <div><p class="text-sm font-bold text-orange-300">🔔 R32 我的提醒</p><p id="r32_home_brief" class="text-xs text-gray-300 mt-2" aria-live="polite">正在整理本機提醒</p></div>
+                    <button type="button" onclick="switchTab('reminders')" class="rounded bg-orange-700 hover:bg-orange-600 px-4 py-3 text-sm font-medium">開啟提醒與首頁設定 →</button>
+                </div>
+            </div>
+            <div class="bg-gray-800 border border-emerald-900/70 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="dividends">
                 <div><p class="text-sm font-bold text-emerald-300">💰 R24 配息趨勢快覽</p><p id="r24_home_brief" class="text-xs text-gray-300 mt-1">等待配息紀錄載入</p></div>
                 <button type="button" onclick="switchTab('dividends')" class="rounded bg-emerald-700 hover:bg-emerald-600 px-3 py-2 text-sm font-medium">開啟配息中心 →</button>
             </div>
             <!-- R25 資產損益速覽：不把公告股息當作個人實收 -->
-            <div class="bg-gray-800 border border-amber-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="bg-gray-800 border border-amber-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="assets">
                 <div><p class="text-sm font-bold text-amber-300">🎯 R25 主帳戶資產快覽</p><p id="r25_home_brief" class="text-xs text-gray-300 mt-1">等待交易紀錄及行情</p></div>
                 <button type="button" onclick="switchTab('assets')" class="rounded bg-amber-700 hover:bg-amber-600 px-3 py-2 text-sm font-medium">開啟資產分析 →</button>
             </div>
             <!-- R26 快捷入口（僅試算，不寫入交易紀錄） -->
-            <div class="bg-gray-800 border border-violet-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="bg-gray-800 border border-violet-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="topup">
                 <div><p class="text-sm font-bold text-violet-300">🧮 R26 智慧加碼試算</p><p id="r26_home_brief" class="text-xs text-gray-300 mt-1">5,000／10,000／30,000／50,000 元多方案比較，試算不會買進或修改交易資料。</p></div>
                 <button type="button" onclick="switchTab('topup')" class="rounded bg-violet-700 hover:bg-violet-600 px-3 py-2 text-sm font-medium">開啟智慧加碼 →</button>
             </div>
             <!-- R27 月報快捷入口：所有金額只讀取本機帳務 -->
-            <div class="bg-gray-800 border border-sky-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="bg-gray-800 border border-sky-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="monthly">
                 <div><p class="text-sm font-bold text-sky-300">🗓️ R27 智慧月報</p><p id="r27_home_brief" class="text-xs text-gray-300 mt-1">整理當月交易、股息、月底庫存、成交價與配息公告；可列印 PDF、下載 CSV。</p></div>
                 <button type="button" onclick="switchTab('report')" class="rounded bg-sky-700 hover:bg-sky-600 px-3 py-2 text-sm font-medium">開啟月報 →</button>
             </div>
-            <div class="bg-gray-800 border border-amber-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="bg-gray-800 border border-amber-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="annual">
                 <div><p class="text-sm font-bold text-amber-200">🏆 R28 年度投資總結</p><p id="r28_home_brief" class="text-xs text-gray-300 mt-1">整理年度投入、實收股息、交易損益、家庭持股與年度比較。</p></div>
                 <button type="button" onclick="switchTab('annual')" class="rounded bg-amber-700 hover:bg-amber-600 px-3 py-2 text-sm font-medium">開啟年度總結 →</button>
             </div>
             <!-- R29 退休目標：唯讀主帳戶，不當作保證收益 -->
-            <div class="bg-gray-800 border border-rose-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="bg-gray-800 border border-rose-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="retirement">
                 <div><p class="text-sm font-bold text-rose-200">🌅 R29 退休目標追蹤</p><p id="r29_home_brief" class="text-xs text-gray-300 mt-1">55 歲停扣、60 歲退休進度；三情境試算與目標差額。</p></div>
                 <button type="button" onclick="switchTab('retirement')" class="rounded bg-rose-800 hover:bg-rose-700 px-3 py-2 text-sm font-medium">開啟退休目標 →</button>
             </div>
             <!-- R30 安全中心捷徑 -->
-            <div class="bg-gray-800 border border-teal-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="bg-gray-800 border border-teal-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="security">
                 <div><p class="text-sm font-bold text-teal-300">🔐 R30 資料安全與備份</p><p id="r30_home_brief" class="text-xs text-gray-300 mt-1">自動檢查交易與實收股息紀錄；建議定期下載完整備份。</p></div>
                 <button type="button" onclick="switchTab('security')" class="rounded bg-teal-700 hover:bg-teal-600 px-3 py-2 text-sm font-medium">開啟安全中心 →</button>
             </div>
             <!-- R31 資料管理：只讀查詢；實際編輯返回原本帳務頁 -->
-            <div class="bg-gray-800 border border-lime-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="bg-gray-800 border border-lime-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="records">
                 <div><p class="text-sm font-bold text-lime-300">🔎 R31 資料管理</p><p id="r31_home_brief" class="text-xs text-gray-300 mt-1">快速搜尋主帳戶、雙寶逐筆交易及實收股息，支援期間篩選與 CSV。</p></div>
                 <button type="button" onclick="switchTab('records')" class="rounded bg-lime-800 hover:bg-lime-700 px-3 py-2 text-sm font-medium">開啟資料管理 →</button>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4" data-r32-home="market">
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center relative overflow-hidden">
                     <div id="live_indicator" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-gray-600"></div>
                     <p class="text-sm text-gray-400" id="price_label">最新股價 (讀取中...)</p>
@@ -249,7 +260,7 @@
             </div>
 
             <!-- 保本與損益精算卡片 -->
-            <div class="card border border-indigo-900/50 shadow-lg shadow-indigo-900/10 relative overflow-hidden">
+            <div class="card border border-indigo-900/50 shadow-lg shadow-indigo-900/10 relative overflow-hidden" data-r32-home="breakeven">
                 <div class="absolute right-[-20px] top-[-20px] text-8xl opacity-5">🎯</div>
                 <h2 class="text-xl font-semibold text-indigo-400 mb-4">🛡️ 主帳戶保本與損益精算</h2>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
@@ -322,7 +333,7 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" data-r32-home="projection">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold text-green-400">🌱 17 年動態複利投影 (55歲後停扣滑行)</h2>
                     <span class="badge bg-green-900 text-green-300">Coast FIRE 模式</span>
@@ -1124,6 +1135,155 @@
             </div>
         </section>
 
+        <!-- ================= R32：提醒、待辦與個人化首頁 ================= -->
+        <section id="tab-reminders" class="space-y-5 hidden" aria-label="R32 智慧提醒與首頁設定">
+            <div class="card border border-orange-800/60">
+                <div class="flex flex-wrap justify-between items-start gap-3">
+                    <div><h2 class="text-xl font-bold text-orange-300">🔔 R32 智慧提醒與個人化首頁</h2><p class="text-sm text-gray-300 mt-2">定投待辦、配息發放核對、自訂事項、備份提醒與首頁區塊開關。</p></div>
+                    <span id="r32_status" class="text-xs text-gray-300 bg-gray-900 px-3 py-2 rounded border border-gray-700" role="status">本機提醒</span>
+                </div>
+                <p class="text-xs text-amber-200 mt-3">此版本僅在開啟／操作網頁時檢查提醒，<strong>沒有 Android 背景推播、鬧鐘或自動下單。</strong> 提醒的「已核對」不代表真的買進或收到股息。</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">目前待核對</p><p id="r32_pending_count" class="text-xl font-bold mt-1">—</p></div>
+                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">已逾期（按設定）</p><p id="r32_overdue_count" class="text-xl font-bold text-amber-300 mt-1">—</p></div>
+                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">已核對／已有交易</p><p id="r32_done_count" class="text-xl font-bold text-emerald-300 mt-1">—</p></div>
+                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">備份確認狀態</p><p id="r32_backup_age" class="text-sm font-bold mt-2">尚未確認</p></div>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-4"><button type="button" onclick="r32Render()" class="px-4 py-3 rounded bg-orange-700 hover:bg-orange-600 text-sm">↻ 重新檢查提醒</button><button type="button" onclick="switchTab('security')" class="px-4 py-3 rounded bg-gray-700 hover:bg-gray-600 text-sm">🔐 安全備份中心</button></div>
+                <p id="r32_error" class="text-sm text-red-300 mt-3 hidden" role="alert"></p>
+            </div>
+            <div class="card border border-indigo-900/60">
+                <h3 class="font-bold text-indigo-300 text-lg">① 每月定投提醒設定</h3>
+                <p class="text-xs text-gray-400 mt-2">請自行選擇提醒日；未設定就不產生提醒。29～31 日遇到短月份會調整為該月最後一天。只辨識當月逐筆記帳的「定期買進／雙寶買進」，不包含配息買股。</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+                    <label class="text-sm text-gray-300">主帳戶每月提醒日<select id="r32_day_main" onchange="r32SaveSettings()" class="block w-full mt-2 bg-gray-900 border border-indigo-800 rounded px-3 py-3"><option value="0">不啟用提醒</option>                                  <option value="1">1 日</option>
+                                  <option value="2">2 日</option>
+                                  <option value="3">3 日</option>
+                                  <option value="4">4 日</option>
+                                  <option value="5">5 日</option>
+                                  <option value="6">6 日</option>
+                                  <option value="7">7 日</option>
+                                  <option value="8">8 日</option>
+                                  <option value="9">9 日</option>
+                                  <option value="10">10 日</option>
+                                  <option value="11">11 日</option>
+                                  <option value="12">12 日</option>
+                                  <option value="13">13 日</option>
+                                  <option value="14">14 日</option>
+                                  <option value="15">15 日</option>
+                                  <option value="16">16 日</option>
+                                  <option value="17">17 日</option>
+                                  <option value="18">18 日</option>
+                                  <option value="19">19 日</option>
+                                  <option value="20">20 日</option>
+                                  <option value="21">21 日</option>
+                                  <option value="22">22 日</option>
+                                  <option value="23">23 日</option>
+                                  <option value="24">24 日</option>
+                                  <option value="25">25 日</option>
+                                  <option value="26">26 日</option>
+                                  <option value="27">27 日</option>
+                                  <option value="28">28 日</option>
+                                  <option value="29">29 日</option>
+                                  <option value="30">30 日</option>
+                                  <option value="31">31 日</option></select></label>
+                    <label class="text-sm text-gray-300">大寶每月提醒日<select id="r32_day_kid_a" onchange="r32SaveSettings()" class="block w-full mt-2 bg-gray-900 border border-indigo-800 rounded px-3 py-3"><option value="0">不啟用提醒</option>                                  <option value="1">1 日</option>
+                                  <option value="2">2 日</option>
+                                  <option value="3">3 日</option>
+                                  <option value="4">4 日</option>
+                                  <option value="5">5 日</option>
+                                  <option value="6">6 日</option>
+                                  <option value="7">7 日</option>
+                                  <option value="8">8 日</option>
+                                  <option value="9">9 日</option>
+                                  <option value="10">10 日</option>
+                                  <option value="11">11 日</option>
+                                  <option value="12">12 日</option>
+                                  <option value="13">13 日</option>
+                                  <option value="14">14 日</option>
+                                  <option value="15">15 日</option>
+                                  <option value="16">16 日</option>
+                                  <option value="17">17 日</option>
+                                  <option value="18">18 日</option>
+                                  <option value="19">19 日</option>
+                                  <option value="20">20 日</option>
+                                  <option value="21">21 日</option>
+                                  <option value="22">22 日</option>
+                                  <option value="23">23 日</option>
+                                  <option value="24">24 日</option>
+                                  <option value="25">25 日</option>
+                                  <option value="26">26 日</option>
+                                  <option value="27">27 日</option>
+                                  <option value="28">28 日</option>
+                                  <option value="29">29 日</option>
+                                  <option value="30">30 日</option>
+                                  <option value="31">31 日</option></select></label>
+                    <label class="text-sm text-gray-300">二寶每月提醒日<select id="r32_day_kid_b" onchange="r32SaveSettings()" class="block w-full mt-2 bg-gray-900 border border-indigo-800 rounded px-3 py-3"><option value="0">不啟用提醒</option>                                  <option value="1">1 日</option>
+                                  <option value="2">2 日</option>
+                                  <option value="3">3 日</option>
+                                  <option value="4">4 日</option>
+                                  <option value="5">5 日</option>
+                                  <option value="6">6 日</option>
+                                  <option value="7">7 日</option>
+                                  <option value="8">8 日</option>
+                                  <option value="9">9 日</option>
+                                  <option value="10">10 日</option>
+                                  <option value="11">11 日</option>
+                                  <option value="12">12 日</option>
+                                  <option value="13">13 日</option>
+                                  <option value="14">14 日</option>
+                                  <option value="15">15 日</option>
+                                  <option value="16">16 日</option>
+                                  <option value="17">17 日</option>
+                                  <option value="18">18 日</option>
+                                  <option value="19">19 日</option>
+                                  <option value="20">20 日</option>
+                                  <option value="21">21 日</option>
+                                  <option value="22">22 日</option>
+                                  <option value="23">23 日</option>
+                                  <option value="24">24 日</option>
+                                  <option value="25">25 日</option>
+                                  <option value="26">26 日</option>
+                                  <option value="27">27 日</option>
+                                  <option value="28">28 日</option>
+                                  <option value="29">29 日</option>
+                                  <option value="30">30 日</option>
+                                  <option value="31">31 日</option></select></label>
+                </div>
+                <p id="r32_schedule_note" class="text-xs text-gray-400 mt-3">設定後會按本月交易紀錄提示核對。</p>
+            </div>
+            <div class="card">
+                <div class="flex flex-wrap justify-between items-center gap-2"><div><h3 class="font-bold text-emerald-300 text-lg">② 配息發放日核對</h3><p class="text-xs text-gray-400 mt-1">使用 R24 配息公告中的「發放日」。只提示最近 45 天及未來 30 天有有效公告日期的紀錄，不會自行登錄實收現金。</p></div><button type="button" onclick="switchTab('assets')" class="rounded bg-teal-700 hover:bg-teal-600 text-sm px-3 py-2">開啟實際領息帳本 →</button></div>
+                <p class="text-xs text-gray-500 mt-2">API 缺少發放日或行情尚未載入時可能沒有配息提醒，請以投信正式公告和券商入帳為準。</p>
+            </div>
+            <div class="card border border-slate-700">
+                <h3 class="font-bold text-blue-300 text-lg">③ 自訂待辦事項</h3>
+                <p class="text-xs text-gray-400 mt-2">可記錄每月對帳、查看投信公告等事項；備註只存放在這個瀏覽器，不會送到 GitHub。</p>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mt-4">
+                    <label class="text-xs text-gray-300 md:col-span-3">待辦內容<input id="r32_task_text" type="text" maxlength="100" placeholder="例如：月底與券商對帳" class="block w-full bg-gray-900 border border-gray-700 rounded px-3 py-3 text-base mt-1"></label>
+                    <label class="text-xs text-gray-300">截止日期（可空白）<input id="r32_task_date" type="date" class="block w-full bg-gray-900 border border-gray-700 rounded px-3 py-3 text-base mt-1"></label>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3"><button type="button" id="r32_task_save" onclick="r32SaveTask()" class="px-4 py-3 rounded bg-blue-700 hover:bg-blue-600 text-sm font-bold">＋ 新增待辦</button><button type="button" id="r32_task_cancel" onclick="r32CancelTaskEdit()" class="hidden px-4 py-3 rounded bg-gray-700 hover:bg-gray-600 text-sm">取消編輯</button></div>
+            </div>
+            <div class="card">
+                <div class="flex flex-wrap justify-between items-center gap-2"><h3 class="font-bold text-orange-300 text-lg">④ 提醒與待辦清單</h3><label class="text-sm text-gray-300 flex gap-2 items-center"><input type="checkbox" id="r32_show_done" onchange="r32Render()" class="accent-orange-500"> 顯示已核對</label></div>
+                <div id="r32_list" class="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-4" role="list"><p class="text-gray-400 text-sm">等待載入</p></div>
+                <p id="r32_list_note" class="text-xs text-gray-500 mt-3">勾選僅更新核對狀態，不能取代實際買賣或股息入帳記錄。</p>
+            </div>
+            <div class="card border border-teal-900/60">
+                <h3 class="font-bold text-teal-300 text-lg">⑤ 備份確認提醒</h3>
+                <p class="text-sm text-gray-300 mt-2">建議每 30 天確認一次備份；本頁只記錄你<strong>親自確認下載資料夾裡有 JSON 檔</strong>的日期，不會聲稱已自動備份。</p>
+                <div class="flex flex-wrap gap-2 mt-3"><button type="button" onclick="switchTab('security')" class="px-4 py-3 rounded bg-teal-800 hover:bg-teal-700 text-sm">先去下載校驗備份</button><button type="button" onclick="r32ConfirmBackup()" class="px-4 py-3 rounded bg-gray-700 hover:bg-gray-600 text-sm">✓ 我已親自確認備份檔存在</button></div>
+                <p id="r32_backup_note" class="text-xs text-gray-400 mt-3">尚未設定備份確認日期。</p>
+            </div>
+            <div class="card border border-violet-900/60">
+                <div class="flex flex-wrap justify-between items-center gap-3"><h3 class="font-bold text-violet-300 text-lg">⑥ 個人化首頁顯示內容</h3><button type="button" onclick="r32ResetHome()" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm">恢復全部顯示</button></div>
+                <p class="text-xs text-gray-400 mt-2">取消勾選僅隱藏首頁區塊，不會刪除交易、報表、原有分頁，也不會停止既有運算。</p>
+                <div id="r32_home_checks" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-4"></div>
+                <div class="flex flex-wrap gap-2 mt-4"><button type="button" onclick="r32HomePreset('compact')" class="px-4 py-3 rounded bg-violet-800 hover:bg-violet-700 text-sm">精簡首頁</button><button type="button" onclick="r32HomePreset('all')" class="px-4 py-3 rounded bg-gray-700 hover:bg-gray-600 text-sm">顯示全部</button><button type="button" onclick="switchTab('overview')" class="px-4 py-3 rounded bg-blue-700 hover:bg-blue-600 text-sm">查看我的首頁 →</button></div>
+                <p id="r32_home_note" class="text-xs text-gray-500 mt-3">首頁設定只儲存在本機，會納入 R30 的完整帳務 JSON 備份。</p>
+            </div>
+        </section>
         <section id="tab-security" class="space-y-5 hidden" aria-label="R30 資料安全中心">
           <div class="card border border-teal-800/60">
             <div class="flex flex-wrap items-start justify-between gap-3">
@@ -1364,13 +1524,15 @@
             r29Init();
             r30Init();
             r31Init();
+            r32Init();
         };
 
         function switchTab(tabId) {
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'records', 'security', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'records', 'reminders', 'security', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
                 document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
-                if (id === 'records') document.getElementById(`btn-${id}`).classList.remove('text-lime-300');
+                if (id === 'reminders') document.getElementById(`btn-${id}`).classList.remove('text-orange-300');
+                else if (id === 'records') document.getElementById(`btn-${id}`).classList.remove('text-lime-300');
                 else if (id === 'security') document.getElementById(`btn-${id}`).classList.remove('text-teal-300');
                 else if (id === 'retirement') document.getElementById(`btn-${id}`).classList.remove('text-rose-200');
                 else if (id === 'annual') document.getElementById(`btn-${id}`).classList.remove('text-amber-200');
@@ -1385,9 +1547,10 @@
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
             
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'records', 'security', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'records', 'reminders', 'security', 'safety'].forEach(id => {
                 if(id !== tabId) {
-                    if (id === 'records') document.getElementById(`btn-${id}`).classList.add('text-lime-300');
+                    if (id === 'reminders') document.getElementById(`btn-${id}`).classList.add('text-orange-300');
+                    else if (id === 'records') document.getElementById(`btn-${id}`).classList.add('text-lime-300');
                     else if (id === 'security') document.getElementById(`btn-${id}`).classList.add('text-teal-300');
                     else if (id === 'retirement') document.getElementById(`btn-${id}`).classList.add('text-rose-200');
                     else if (id === 'annual') document.getElementById(`btn-${id}`).classList.add('text-amber-200');
@@ -1409,6 +1572,7 @@
             if(tabId === 'retirement') r29Render();
             if(tabId === 'security') r30Scan(); 
             if(tabId === 'records') r31Render();
+            if(tabId === 'reminders') r32Render();
         }
 
         function saveAndLoad() {
@@ -4161,6 +4325,227 @@
         updateTransactions=function(...args){const result=r31PreviousUpdateTransactions.apply(this,args);r31Render();return result;};
         const r31PreviousCashRender=r25Render;
         r25Render=function(...args){const result=r31PreviousCashRender.apply(this,args);r31Render();return result;};
+
+
+        // ===== R32 智慧提醒與個人化首頁：不自動下單、不自動記入股息 =====
+        const R32_PREFS_KEY='00406A_R32_PREFS_V1';
+        const R32_TODOS_KEY='00406A_R32_TODOS_V1';
+        const R32_DONE_KEY='00406A_R32_DONE_V1';
+        const R32_HOME_CHOICES=[
+            ['assistant','今日投資助理'],['dividends','配息趨勢快覽'],['assets','資產損益快覽'],
+            ['topup','智慧加碼入口'],['monthly','智慧月報入口'],['annual','年度總結入口'],
+            ['retirement','退休目標入口'],['security','備份安全入口'],['records','資料管理入口'],
+            ['market','行情及持股總覽'],['breakeven','保本及損益試算'],['projection','退休複利投影']
+        ];
+        const R32_DEFAULTS={days:{main:0,kid_a:0,kid_b:0},backupConfirmed:'',home:{}};
+        let r32Prefs=JSON.parse(JSON.stringify(R32_DEFAULTS));
+        let r32Todos=[],r32Done={},r32EditingId=null,r32Initialized=false,r32Corrupt='';
+        const r32El=id=>document.getElementById(id);
+        const r32Date=date=>r24SafeDate(date);
+        function r32DayDiff(a,b){return Math.round((Date.UTC(+a.slice(0,4),+a.slice(5,7)-1,+a.slice(8,10))-Date.UTC(+b.slice(0,4),+b.slice(5,7)-1,+b.slice(8,10)))/86400000);}
+        function r32MonthDay(month,day){
+            if(!/^[0-9]{4}-(0[1-9]|1[0-2])$/.test(month)||!Number.isInteger(day)||day<1||day>31)return '';
+            const year=Number(month.slice(0,4)),m=Number(month.slice(5,7));
+            return `${month}-${String(Math.min(day,new Date(year,m,0).getDate())).padStart(2,'0')}`;
+        }
+        function r32NextMonth(month){const [year,m]=month.split('-').map(Number);return new Date(Date.UTC(year,m,1)).toISOString().slice(0,7);}
+        function r32ReadAll(){
+            r32Corrupt='';
+            try{
+                const p=JSON.parse(localStorage.getItem(R32_PREFS_KEY)||'null');
+                if(p!==null){if(!p||typeof p!=='object'||Array.isArray(p))throw Error('提醒設定不是物件');
+                    const days=p.days&&typeof p.days==='object'?p.days:{};
+                    r32Prefs={days:{main:0,kid_a:0,kid_b:0},home:{},backupConfirmed:''};
+                    for(const k of ['main','kid_a','kid_b']){const d=Number(days[k]);r32Prefs.days[k]=Number.isInteger(d)&&d>=0&&d<=31?d:0;}
+                    r32Prefs.backupConfirmed=r32Date(p.backupConfirmed)||'';
+                    if(p.home&&typeof p.home==='object'&&!Array.isArray(p.home))for(const [k] of R32_HOME_CHOICES)if(typeof p.home[k]==='boolean')r32Prefs.home[k]=p.home[k];
+                }
+            }catch(e){r32Corrupt+='提醒設定 JSON 損壞；';}
+            try{
+                const t=JSON.parse(localStorage.getItem(R32_TODOS_KEY)||'[]');
+                if(!Array.isArray(t))throw Error('待辦格式錯誤');
+                if(t.length>200)throw Error('待辦過多');
+                const seen=new Set();r32Todos=[];
+                for(const row of t){if(!row||typeof row!=='object'||!/^[A-Za-z0-9_-]{1,72}$/.test(String(row.id||''))||seen.has(row.id)||typeof row.text!=='string'||!row.text.trim()||row.text.length>100||row.due&&!r32Date(row.due)||typeof row.done!=='boolean')throw Error('待辦內容格式錯誤');
+                    seen.add(row.id);r32Todos.push({id:row.id,text:row.text,due:row.due||'',done:row.done});}
+            }catch(e){r32Corrupt+='待辦 JSON 損壞；';}
+            try{
+                const d=JSON.parse(localStorage.getItem(R32_DONE_KEY)||'{}');
+                if(!d||typeof d!=='object'||Array.isArray(d))throw Error('核對資料格式錯誤');
+                const entries=Object.entries(d);
+                if(entries.length>2000||entries.some(([k,v])=>!/^((dca-(main|kid_a|kid_b)-\d{4}-\d{2})|(div-\d{4}-\d{2}-\d{2}))$/.test(k)||v!==true))throw Error('核對資料格式錯誤');
+                r32Done=Object.fromEntries(entries);
+            }catch(e){r32Corrupt+='完成狀態 JSON 損壞；';}
+        }
+        function r32Persist(key,value){
+            if(r32Corrupt){alert('R32 部分資料無法解析，為避免覆蓋損壞原檔，已暫停儲存。請先到 R30 安全中心下載備份，再檢查資料。');return false;}
+            try{localStorage.setItem(key,JSON.stringify(value));return true;}
+            catch(e){alert('R32 儲存失敗：本機儲存空間可能不足，請先備份。');return false;}
+        }
+        function r32ApplyHome(){
+            for(const elem of document.querySelectorAll('#tab-overview [data-r32-home]')){
+                const key=elem.getAttribute('data-r32-home');elem.classList.toggle('r32-hidden',r32Prefs.home[key]===false);
+            }
+        }
+        function r32RenderHomeOptions(){
+            const host=r32El('r32_home_checks');if(!host)return;
+            host.innerHTML=R32_HOME_CHOICES.map(([key,label])=>`<label class="flex gap-2 items-center bg-gray-900 rounded px-3 py-3 text-sm text-gray-200"><input type="checkbox" data-home="${key}" ${r32Prefs.home[key]===false?'':'checked'} onchange="r32ToggleHome('${key}',this.checked)" class="accent-violet-500">${label}</label>`).join('');
+            r32ApplyHome();
+        }
+        function r32ToggleHome(key,enabled){
+            if(!R32_HOME_CHOICES.some(x=>x[0]===key))return;
+            const prev=r32Prefs.home[key];r32Prefs.home[key]=!!enabled;
+            if(!r32Persist(R32_PREFS_KEY,r32Prefs))r32Prefs.home[key]=prev;
+            r32RenderHomeOptions();
+        }
+        function r32HomePreset(type){
+            const prev={...r32Prefs.home};
+            const kept=new Set(['assistant','market','assets','retirement','security']);
+            for(const [key] of R32_HOME_CHOICES)r32Prefs.home[key]=type==='all'||kept.has(key);
+            if(!r32Persist(R32_PREFS_KEY,r32Prefs))r32Prefs.home=prev;
+            r32RenderHomeOptions();
+        }
+        function r32ResetHome(){r32HomePreset('all');}
+        function r32SaveSettings(){
+            const old={...r32Prefs.days};
+            for(const owner of ['main','kid_a','kid_b']){
+                const day=Number(r32El('r32_day_'+owner)?.value||0);
+                r32Prefs.days[owner]=Number.isInteger(day)&&day>=0&&day<=31?day:0;
+            }
+            if(!r32Persist(R32_PREFS_KEY,r32Prefs))r32Prefs.days=old;
+            r32Render();
+        }
+        function r32TransactionsForMonth(owner,month){
+            if(!Array.isArray(transactionLog))return false;
+            const types={main:['buy_regular','buy'],kid_a:['buy_kid_a'],kid_b:['buy_kid_b']}[owner]||[];
+            return transactionLog.some(t=>t&&types.includes(t.type)&&String(t.date||'').slice(0,7)===month&&r32Date(t.date)&&t.date<=r25Today()&&Number.isSafeInteger(Number(t.shares))&&Number(t.shares)>0&&Number.isFinite(Number(t.price))&&Number(t.price)>0&&Number.isFinite(Number(t.fee||0))&&Number(t.fee||0)>=0);
+        }
+        function r32BuildItems(today){
+            const items=[],month=today.slice(0,7),nextMonth=r32NextMonth(month);
+            for(const owner of ['main','kid_a','kid_b']){
+                const day=Number(r32Prefs.days[owner]||0);if(!day)continue;
+                for(const ym of [month,nextMonth]){
+                    const due=r32MonthDay(ym,day);if(!due||ym!==month&&r32DayDiff(due,today)>7)continue;
+                    const booked=r32TransactionsForMonth(owner,ym);
+                    items.push({id:`dca-${owner}-${ym}`,kind:'dca',title:({main:'主帳戶',kid_a:'大寶',kid_b:'二寶'}[owner])+'定投核對',due,desc:booked?'當月已有一般買進紀錄；請對照券商確認。':'核對是否已買進，尚未發現該月定投買進紀錄。',done:booked||!!r32Done[`dca-${owner}-${ym}`],autoBooked:booked});
+                }
+            }
+            for(const row of (Array.isArray(r24Rows)?r24Rows:[])){
+                const date=r32Date(row.payDate),ex=r32Date(row.exDate),amount=Number(row.amount);
+                if(!date||!ex||date<ex||!Number.isFinite(amount)||amount<=0)continue;
+                const diff=r32DayDiff(date,today);
+                if(diff< -45||diff>30)continue;
+                const id='div-'+ex;
+                items.push({id,kind:'div',title:'公告股息發放核對',due:date,desc:`除息日 ${ex}・公告每股 ${amount.toFixed(4)} 元；請核對實際入帳，勿當作已收到。`,done:!!r32Done[id]});
+            }
+            for(const task of r32Todos){items.push({id:'task-'+task.id,rawId:task.id,kind:'task',title:task.text,due:task.due,desc:'自訂待辦事項',done:task.done});}
+            const backup=r32Prefs.backupConfirmed;
+            const age=backup?r32DayDiff(today,backup):null;
+            if(!backup||age>=30){items.push({id:'backup',kind:'backup',title:'確認本機帳務備份',due:backup?(()=>{const d=new Date(backup+'T12:00:00');d.setDate(d.getDate()+30);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;})():today,desc:backup?'距上次人工確認已達 30 天，請再次下載並檢查 JSON 檔。':'尚未標記任何已確認存在的備份檔；請到 R30 下載並親自查驗。',done:false});}
+            return items.sort((a,b)=>Number(a.done)-Number(b.done)||(a.due||'9999').localeCompare(b.due||'9999')||a.id.localeCompare(b.id));
+        }
+        function r32Label(item,today){
+            if(item.autoBooked)return {text:'已有買進紀錄',color:'text-emerald-300'};
+            if(item.done)return {text:'已核對',color:'text-emerald-300'};
+            if(!item.due)return {text:'待處理',color:'text-slate-300'};
+            const diff=r32DayDiff(item.due,today);
+            if(diff<0)return {text:`逾期 ${-diff} 天`,color:'text-red-300'};
+            if(diff===0)return {text:'今日到期',color:'text-orange-300'};
+            return {text:`${diff} 天後`,color:diff<=7?'text-amber-300':'text-slate-300'};
+        }
+        function r32Render(){
+            if(!r32Initialized||!r32El('r32_list'))return;
+            const today=r25Today(),items=r32BuildItems(today);
+            const pending=items.filter(x=>!x.done),overdue=pending.filter(x=>x.due&&x.due<today),done=items.filter(x=>x.done);
+            const n=id=>r32El(id);
+            n('r32_pending_count').textContent=pending.length+' 項';n('r32_overdue_count').textContent=overdue.length+' 項';n('r32_done_count').textContent=done.length+' 項';
+            n('r32_status').textContent='檢查日期：'+today;
+            n('r32_home_brief').textContent=`待核對 ${pending.length} 項${overdue.length?'（逾期 '+overdue.length+' 項）':''}；定投提醒須自行設定，配息以公告日期核對。`;
+            const backup=r32Prefs.backupConfirmed;
+            n('r32_backup_age').textContent=backup?'上次確認：'+backup:'尚未確認';
+            n('r32_backup_note').textContent=backup?`上次親自確認：${backup}；請確認下載檔案仍存在，不代表已上傳雲端。`:'尚未確認備份檔；先從 R30 下載校驗 JSON，查驗後再按已確認。';
+            n('r32_schedule_note').textContent=['main','kid_a','kid_b'].map(k=>( {main:'主帳戶',kid_a:'大寶',kid_b:'二寶'}[k])+'：'+(r32Prefs.days[k]?`每月 ${r32Prefs.days[k]} 日`:'未啟用')).join('；');
+            for(const owner of ['main','kid_a','kid_b']){const el=n('r32_day_'+owner);if(el&&el.value!==String(r32Prefs.days[owner]))el.value=String(r32Prefs.days[owner]);}
+            const showDone=!!n('r32_show_done')?.checked;
+            const visible=showDone?items:pending;
+            const kindColors={dca:'text-indigo-300',div:'text-emerald-300',task:'text-sky-300',backup:'text-teal-300'};
+            const kindLabels={dca:'定投提醒',div:'公告配息',task:'自訂事項',backup:'備份提醒'};
+            n('r32_list').innerHTML=visible.length?visible.map(item=>{
+                const state=r32Label(item,today),isTask=item.kind==='task';
+                const control=item.kind==='backup'?`<button type="button" class="r32-action border border-teal-800 text-teal-200 px-3 py-2 rounded text-xs" data-act="backup">去確認備份</button>`:
+                    `${isTask?`<button type="button" class="r32-action text-xs border border-sky-900 text-sky-200 rounded px-3 py-2" data-act="edit" data-id="${r25Escape(item.id)}">編輯</button><button type="button" class="r32-action text-xs border border-red-900 text-red-200 rounded px-3 py-2" data-act="delete" data-id="${r25Escape(item.id)}">刪除</button>`:''}
+                     ${item.autoBooked?'':`<button type="button" class="r32-action text-xs border border-orange-800 text-orange-200 rounded px-3 py-2" data-act="toggle" data-id="${r25Escape(item.id)}">${item.done?'取消核對':'標記已核對'}</button>`}`;
+                return `<article role="listitem" class="bg-gray-900 rounded border border-gray-700 p-4 min-w-0">
+                    <div class="flex flex-wrap gap-2 justify-between items-start"><p class="text-xs ${kindColors[item.kind]||'text-gray-300'}">${kindLabels[item.kind]}</p><span class="text-xs ${state.color}">${state.text}</span></div>
+                    <p class="font-bold text-white mt-2 break-words">${r25Escape(item.title)}</p>
+                    <p class="text-xs text-gray-400 mt-2">${item.due?'日期：'+r25Escape(item.due):'未設定截止日期'}</p>
+                    <p class="text-xs text-gray-300 mt-2 break-words">${r25Escape(item.desc)}</p>
+                    <div class="flex flex-wrap justify-end gap-2 mt-3">${control}</div>
+                </article>`;
+            }).join(''):'<p class="text-gray-400 text-sm bg-gray-900 p-4 rounded">目前沒有需要處理的提醒；可勾選「顯示已核對」查看完成事項。</p>';
+            const err=n('r32_error');if(r32Corrupt){err.classList.remove('hidden');err.textContent='⚠ 部分 R32 本機資料無法解析，已禁止覆寫。'+r32Corrupt+' 請先保存 R30 備份再處理。';}else{err.classList.add('hidden');err.textContent='';}
+            r32RenderHomeOptions();
+        }
+        function r32SaveTask(){
+            const text=r32El('r32_task_text')?.value.trim()||'',due=r32El('r32_task_date')?.value||'';
+            if(!text||text.length>100||due&&!r32Date(due)){alert('請輸入 1～100 字事項與有效日期。');return;}
+            const original=r32Todos.map(x=>({...x}));
+            if(r32EditingId){const item=r32Todos.find(x=>x.id===r32EditingId);if(item){item.text=text;item.due=due;}}
+            else{
+                if(r32Todos.length>=100){alert('自訂待辦上限為 100 筆。');return;}
+                const id='t'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,10);
+                r32Todos.push({id,text,due,done:false});
+            }
+            if(!r32Persist(R32_TODOS_KEY,r32Todos)){r32Todos=original;return;}
+            r32CancelTaskEdit();r32Render();
+        }
+        function r32CancelTaskEdit(){r32EditingId=null;r32El('r32_task_text').value='';r32El('r32_task_date').value='';r32El('r32_task_save').textContent='＋ 新增待辦';r32El('r32_task_cancel').classList.add('hidden');}
+        function r32ActionClick(ev){
+            const button=ev.target.closest('.r32-action');if(!button)return;
+            const action=button.dataset.act,id=button.dataset.id;
+            if(action==='backup'){switchTab('security');return;}
+            const items=r32BuildItems(r25Today()),item=items.find(x=>x.id===id);if(!item)return;
+            if(action==='edit'&&item.kind==='task'){
+                const original=r32Todos.find(x=>x.id===item.rawId);if(!original)return;
+                r32EditingId=original.id;r32El('r32_task_text').value=original.text;r32El('r32_task_date').value=original.due;
+                r32El('r32_task_save').textContent='儲存修改';r32El('r32_task_cancel').classList.remove('hidden');r32El('r32_task_text').scrollIntoView({behavior:'smooth',block:'center'});return;
+            }
+            if(action==='delete'&&item.kind==='task'){
+                if(!confirm('確定刪除此自訂待辦事項嗎？這不會刪除任何交易。'))return;
+                const old=r32Todos; r32Todos=r32Todos.filter(x=>x.id!==item.rawId);
+                if(!r32Persist(R32_TODOS_KEY,r32Todos)){r32Todos=old;return;}
+                if(r32EditingId===item.rawId)r32CancelTaskEdit();r32Render();return;
+            }
+            if(action==='toggle'&&!item.autoBooked){
+                if(item.kind==='task'){
+                    const original=r32Todos.map(x=>({...x})),task=r32Todos.find(x=>x.id===item.rawId);if(!task)return;
+                    task.done=!task.done;
+                    if(!r32Persist(R32_TODOS_KEY,r32Todos))r32Todos=original;
+                }else{
+                    const old={...r32Done};if(r32Done[item.id])delete r32Done[item.id];else r32Done[item.id]=true;
+                    if(!r32Persist(R32_DONE_KEY,r32Done))r32Done=old;
+                }
+                r32Render();
+            }
+        }
+        function r32ConfirmBackup(){
+            if(!confirm('請先確認手機下載資料夾中確實存在可讀取的 00406A 校驗備份 JSON。已親自確認才按「確定」。'))return;
+            const old=r32Prefs.backupConfirmed;r32Prefs.backupConfirmed=r25Today();
+            if(!r32Persist(R32_PREFS_KEY,r32Prefs))r32Prefs.backupConfirmed=old;
+            r32Render();
+        }
+        function r32Init(){
+            r32ReadAll();r32Initialized=true;
+            r32El('r32_list')?.addEventListener('click',r32ActionClick);
+            r32Render();
+        }
+        // 原有交易、入帳與配息畫面刷新後，刷新本機提醒。不變更交易資料與原有儲存鍵。
+        const r32PriorUpdateTransactions=updateTransactions;
+        updateTransactions=function(...args){const val=r32PriorUpdateTransactions.apply(this,args);if(r32Initialized)r32Render();return val;};
+        const r32PriorCashRender=r25Render;
+        r25Render=function(...args){const val=r32PriorCashRender.apply(this,args);if(r32Initialized)r32Render();return val;};
+        const r32PriorDividendRender=r24Render;
+        r24Render=function(...args){const val=r32PriorDividendRender.apply(this,args);if(r32Initialized)r32Render();return val;};
 
     </script>
 </body>
