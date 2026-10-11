@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R29｜MAX 的追蹤儀表板</title>
+    <title>00406A Tracker R30｜MAX 的追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -116,6 +116,7 @@
             <button onclick="switchTab('report')" id="btn-report" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-sky-300 whitespace-nowrap">🗓️ R27 智慧月報</button>
             <button onclick="switchTab('annual')" id="btn-annual" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-amber-200 whitespace-nowrap">🏆 R28 年度總結</button>
             <button onclick="switchTab('retirement')" id="btn-retirement" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-rose-200 whitespace-nowrap">🌅 R29 退休目標</button>
+            <button onclick="switchTab('security')" id="btn-security" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-teal-300 whitespace-nowrap">🔐 R30 資料安全</button>
             <button onclick="switchTab('safety')" id="btn-safety" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">🛡️ 流動性雷達</button>
         </div>
 
@@ -124,7 +125,7 @@
             <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
             <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R29 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
+                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R30 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
                     <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
                 </div>
                 <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
@@ -169,6 +170,11 @@
             <div class="bg-gray-800 border border-rose-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
                 <div><p class="text-sm font-bold text-rose-200">🌅 R29 退休目標追蹤</p><p id="r29_home_brief" class="text-xs text-gray-300 mt-1">55 歲停扣、60 歲退休進度；三情境試算與目標差額。</p></div>
                 <button type="button" onclick="switchTab('retirement')" class="rounded bg-rose-800 hover:bg-rose-700 px-3 py-2 text-sm font-medium">開啟退休目標 →</button>
+            </div>
+            <!-- R30 安全中心捷徑 -->
+            <div class="bg-gray-800 border border-teal-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div><p class="text-sm font-bold text-teal-300">🔐 R30 資料安全與備份</p><p id="r30_home_brief" class="text-xs text-gray-300 mt-1">自動檢查交易與實收股息紀錄；建議定期下載完整備份。</p></div>
+                <button type="button" onclick="switchTab('security')" class="rounded bg-teal-700 hover:bg-teal-600 px-3 py-2 text-sm font-medium">開啟安全中心 →</button>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center relative overflow-hidden">
@@ -727,12 +733,13 @@
 
             <div class="card border border-blue-900/50">
                 <h3 class="text-lg font-bold text-sky-300">🛡️ 帳務備份與還原</h3>
-                <p class="text-xs text-gray-400 mt-2">備份目前網站上的所有 00406A 本機資料（交易、手帳、配息入帳與 R24 快取），預設不匯出 FinMind API 金鑰。備份檔請自行妥善保管，不要上傳公開 GitHub。</p>
+                <p class="text-xs text-gray-400 mt-2">備份目前網站上的所有 00406A 本機資料（交易、手帳、配息入帳、退休設定與歷史行情快取），預設不匯出 FinMind API 金鑰。備份檔請自行妥善保管，不要上傳公開 GitHub。</p>
                 <div class="flex flex-wrap items-center gap-3 mt-4">
-                    <button type="button" onclick="r25Backup()" class="bg-sky-700 hover:bg-sky-600 text-sm px-4 py-2 rounded font-semibold">📥 下載完整帳務備份 JSON</button>
-                    <label class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm cursor-pointer">📤 從備份 JSON 還原<input id="r25_restore_input" type="file" accept=".json,application/json" class="hidden" onchange="r25Restore(this)"></label>
+                    <button type="button" onclick="r30Backup()" class="bg-sky-700 hover:bg-sky-600 text-sm px-4 py-2 rounded font-semibold">📥 下載 R30 校驗備份 JSON</button>
+                    <label class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm cursor-pointer">📤 驗證後還原 JSON<input id="r25_restore_input" type="file" accept=".json,application/json" class="hidden" onchange="r30StageFile(this)"></label>
                 </div>
-                <p id="r25_backup_status" role="status" class="text-xs text-gray-400 mt-3">還原會先要求確認，還原後重新整理頁面；建議操作前先下載目前備份。</p>
+                <button type="button" onclick="switchTab('security')" class="text-xs text-teal-300 underline mt-3">前往 R30 資料安全中心查看檢查與還原預覽 →</button>
+                <p id="r25_backup_status" role="status" class="text-xs text-gray-400 mt-3">R30 已啟用：選擇 JSON 後先進入資料安全中心預覽、校驗，確認後才允許還原。</p>
             </div>
         </section>
 
@@ -1028,6 +1035,66 @@
             <div class="card r29-no-print"><div class="flex flex-wrap gap-2"><button type="button" onclick="r29Print()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-2 text-sm">🖨️ 列印／另存 PDF</button><button type="button" onclick="r29ExportHTML()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm">📄 下載獨立 HTML</button></div><p class="text-xs text-gray-500 mt-3">輸出內容只含退休試算，不含 API 金鑰、交易編輯與本機儲存資料。紙本報告不含可互動圖表，但保留里程碑表。</p></div>
         </section>
 
+        <!-- ================= R30：資料安全中心（所有預覽及健檢唯讀） ================= -->
+        <section id="tab-security" class="space-y-5 hidden" aria-label="R30 資料安全中心">
+          <div class="card border border-teal-800/60">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div><h2 class="text-xl font-bold text-teal-300">🔐 R30 投資資料安全中心</h2><p class="text-sm text-gray-400 mt-2">保護這台裝置的主帳戶、雙寶、配息入帳、手帳與退休設定。<strong class="text-white">GitHub 不會自動同步瀏覽器本機帳務資料。</strong></p></div>
+              <span id="r30_status" role="status" class="text-xs bg-gray-900 border border-gray-700 rounded px-3 py-2">等待檢查</span>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
+              <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">本機交易筆數</p><p id="r30_tx_count" class="text-lg font-bold mt-2">—</p></div>
+              <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶實收股息筆數</p><p id="r30_cash_count" class="text-lg font-bold mt-2">—</p></div>
+              <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">本機資料類別</p><p id="r30_key_count" class="text-lg font-bold mt-2">—</p></div>
+              <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">發現的異常／提醒</p><p id="r30_issue_count" class="text-lg font-bold mt-2">—</p></div>
+            </div>
+            <p class="text-xs text-gray-500 mt-3">檢查只讀取資料，不會自行刪除、修正或新增交易。數字正常不代表所有原始輸入必然正確，請定期與券商紀錄對帳。</p>
+          </div>
+          <div class="card">
+            <div class="flex flex-wrap justify-between gap-3 items-center"><div><h3 class="font-bold text-cyan-300 text-lg">① 本機帳務健康檢查</h3><p class="text-xs text-gray-400 mt-1">檢查交易格式、重複識別碼、超賣、未來交易，以及實際領息紀錄。</p></div><button type="button" onclick="r30Scan()" class="bg-cyan-700 hover:bg-cyan-600 rounded px-4 py-2 text-sm">重新檢查</button></div>
+            <div id="r30_issue_list" class="space-y-2 mt-4" aria-live="polite"><p class="text-gray-400 text-sm">讀取中</p></div>
+          </div>
+          <div class="card border border-emerald-900/60">
+            <h3 class="font-bold text-emerald-300 text-lg">② 下載 R30 完整備份</h3>
+            <p class="text-sm text-gray-300 mt-2">備份使用 <strong>SHA-256 校驗碼</strong>；可在還原前檢查備份資料完整性（無法證明來源身分）。包含所有 00406A 本機資料（不含 FinMind API 金鑰），請勿上傳公開 GitHub。</p>
+            <div class="flex flex-wrap gap-3 items-center mt-4"><button type="button" id="r30_backup_btn" onclick="r30Backup()" class="bg-emerald-700 hover:bg-emerald-600 rounded px-5 py-3 font-semibold text-sm">📥 下載 R30 校驗備份 JSON</button><button type="button" onclick="r30VerifyCurrent()" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">🔎 計算目前資料指紋</button></div>
+            <p id="r30_backup_note" class="text-xs text-gray-400 mt-3" role="status">下載後請開啟手機的「下載」資料夾，確認 JSON 檔確實存在。產生下載請求不等於已備份至雲端。</p>
+            <p id="r30_fingerprint" class="text-xs text-gray-500 mt-2 break-all"></p>
+          </div>
+          <div class="card border border-indigo-900/60">
+            <h3 class="font-bold text-indigo-300 text-lg">③ 預覽備份並檢查完整性</h3>
+            <p class="text-sm text-gray-300 mt-2">支援 R25～R29 舊版 JSON（無校驗碼，會顯示提醒）與 R30 校驗備份。<strong>選取檔案不會立即還原。</strong></p>
+            <label class="block border-2 border-dashed border-indigo-800 bg-gray-900 rounded-lg p-4 mt-4 text-sm cursor-pointer">📂 選擇備份 JSON 檔案
+              <input id="r30_restore_input" type="file" accept=".json,application/json" onchange="r30StageFile(this)" class="mt-3 block w-full text-xs text-gray-300">
+            </label>
+            <p id="r30_import_status" class="text-sm text-gray-400 mt-3" role="status">尚未選取備份檔案。</p>
+            <div id="r30_preview" class="hidden bg-gray-900 rounded p-4 mt-3 space-y-3">
+              <p id="r30_preview_header" class="font-semibold text-indigo-200"></p>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                <div><p class="text-xs text-gray-500">備份版本</p><p id="r30_preview_version">—</p></div>
+                <div><p class="text-xs text-gray-500">備份時間</p><p id="r30_preview_date">—</p></div>
+                <div><p class="text-xs text-gray-500">交易筆數</p><p id="r30_preview_tx">—</p></div>
+                <div><p class="text-xs text-gray-500">實收股息筆數</p><p id="r30_preview_cash">—</p></div>
+              </div>
+              <p id="r30_preview_checksum" class="text-sm"></p>
+              <p id="r30_preview_diff" class="text-sm text-gray-300"></p>
+              <div id="r30_preview_issues" class="text-xs text-amber-300 space-y-2"></div>
+            </div>
+          </div>
+          <div class="card border border-red-900/60">
+            <h3 class="font-bold text-red-300 text-lg">④ 最終還原確認（高風險操作）</h3>
+            <p class="text-sm text-gray-300 mt-2">僅覆蓋備份檔案包含的同名資料，其他本機鍵值不刪除；保留目前 API 金鑰。確認前必須另外下載一次「還原前安全備份」。</p>
+            <div class="mt-4 space-y-3">
+              <button type="button" onclick="r30Backup(true)" id="r30_safety_backup" class="bg-red-800 hover:bg-red-700 rounded px-4 py-3 text-sm font-semibold">🛟 下載還原前安全備份</button>
+              <label class="flex items-start gap-2 text-sm text-gray-300"><input type="checkbox" id="r30_accept" onchange="r30UpdateRestoreButton()" class="mt-1"><span>我已在手機下載資料夾確認「還原前安全備份」確實存在，且了解同名資料會被覆蓋。</span></label>
+              <label class="block text-sm text-gray-300">請輸入 <strong class="text-red-300">還原</strong> 二字以解鎖操作<input id="r30_confirm_word" type="text" autocomplete="off" placeholder="還原" oninput="r30UpdateRestoreButton()" class="block mt-2 w-full max-w-xs bg-gray-900 border border-red-900 rounded px-3 py-3 text-base text-white"></label>
+              <button type="button" id="r30_restore_btn" onclick="r30ApplyRestore()" disabled class="bg-red-700 hover:bg-red-600 disabled:opacity-40 disabled:cursor-not-allowed rounded px-5 py-3 text-sm font-bold">確認覆蓋並還原</button>
+              <button type="button" onclick="r30ClearPreview()" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">取消並清除預覽</button>
+            </div>
+            <p id="r30_restore_note" class="text-xs text-gray-400 mt-3" role="status">尚未選取並驗證備份檔案，無法還原。</p>
+          </div>
+        </section>
+
         <!-- ================= 分頁 7：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
             <div class="card border border-red-900/50 shadow-lg shadow-red-900/10 mb-6">
@@ -1178,7 +1245,7 @@
             }
 
             if(localStorage.getItem(TX_KEY)) {
-                transactionLog = JSON.parse(localStorage.getItem(TX_KEY));
+                try { const parsed=JSON.parse(localStorage.getItem(TX_KEY)); if(!Array.isArray(parsed)) throw Error('交易紀錄不是陣列'); transactionLog=parsed; } catch(e) { transactionLog=[]; console.warn('R30: 舊交易資料無法解析，原始 localStorage 未被修改',e); }
                 let updated = false;
                 transactionLog.forEach(t => {
                     if (t.type === 'buy') { t.type = 'buy_regular'; updated = true; }
@@ -1188,15 +1255,15 @@
             document.getElementById('tx_date').valueAsDate = new Date();
             updateTransactions(); 
             
-            if(localStorage.getItem(LEDGER_INVEST_KEY)) customInvestMap = JSON.parse(localStorage.getItem(LEDGER_INVEST_KEY));
-            if(localStorage.getItem(LEDGER_PRICE_KEY)) customPriceMap = JSON.parse(localStorage.getItem(LEDGER_PRICE_KEY));
-            if(localStorage.getItem(LEDGER_DRIP_KEY)) customDripMap = JSON.parse(localStorage.getItem(LEDGER_DRIP_KEY));
-            if(localStorage.getItem(LEDGER_EXTRA_KEY)) extraSharesMap = JSON.parse(localStorage.getItem(LEDGER_EXTRA_KEY));
+            if(localStorage.getItem(LEDGER_INVEST_KEY)) try { customInvestMap = JSON.parse(localStorage.getItem(LEDGER_INVEST_KEY)); } catch(e) { console.warn("R30: 原始手帳資料解析失敗，未修改儲存值：LEDGER_INVEST_KEY",e); }
+            if(localStorage.getItem(LEDGER_PRICE_KEY)) try { customPriceMap = JSON.parse(localStorage.getItem(LEDGER_PRICE_KEY)); } catch(e) { console.warn("R30: 原始手帳資料解析失敗，未修改儲存值：LEDGER_PRICE_KEY",e); }
+            if(localStorage.getItem(LEDGER_DRIP_KEY)) try { customDripMap = JSON.parse(localStorage.getItem(LEDGER_DRIP_KEY)); } catch(e) { console.warn("R30: 原始手帳資料解析失敗，未修改儲存值：LEDGER_DRIP_KEY",e); }
+            if(localStorage.getItem(LEDGER_EXTRA_KEY)) try { extraSharesMap = JSON.parse(localStorage.getItem(LEDGER_EXTRA_KEY)); } catch(e) { console.warn("R30: 原始手帳資料解析失敗，未修改儲存值：LEDGER_EXTRA_KEY",e); }
             
-            if(localStorage.getItem(LEDGER_KID_A_PRICE_KEY)) kidAPriceMap = JSON.parse(localStorage.getItem(LEDGER_KID_A_PRICE_KEY));
-            if(localStorage.getItem(LEDGER_KID_A_KEY)) kidAMap = JSON.parse(localStorage.getItem(LEDGER_KID_A_KEY));
-            if(localStorage.getItem(LEDGER_KID_B_PRICE_KEY)) kidBPriceMap = JSON.parse(localStorage.getItem(LEDGER_KID_B_PRICE_KEY));
-            if(localStorage.getItem(LEDGER_KID_B_KEY)) kidBMap = JSON.parse(localStorage.getItem(LEDGER_KID_B_KEY));
+            if(localStorage.getItem(LEDGER_KID_A_PRICE_KEY)) try { kidAPriceMap = JSON.parse(localStorage.getItem(LEDGER_KID_A_PRICE_KEY)); } catch(e) { console.warn("R30: 原始手帳資料解析失敗，未修改儲存值：LEDGER_KID_A_PRICE_KEY",e); }
+            if(localStorage.getItem(LEDGER_KID_A_KEY)) try { kidAMap = JSON.parse(localStorage.getItem(LEDGER_KID_A_KEY)); } catch(e) { console.warn("R30: 原始手帳資料解析失敗，未修改儲存值：LEDGER_KID_A_KEY",e); }
+            if(localStorage.getItem(LEDGER_KID_B_PRICE_KEY)) try { kidBPriceMap = JSON.parse(localStorage.getItem(LEDGER_KID_B_PRICE_KEY)); } catch(e) { console.warn("R30: 原始手帳資料解析失敗，未修改儲存值：LEDGER_KID_B_PRICE_KEY",e); }
+            if(localStorage.getItem(LEDGER_KID_B_KEY)) try { kidBMap = JSON.parse(localStorage.getItem(LEDGER_KID_B_KEY)); } catch(e) { console.warn("R30: 原始手帳資料解析失敗，未修改儲存值：LEDGER_KID_B_KEY",e); }
 
             renderYearTabs();
             runDynamicSimulation(); 
@@ -1207,13 +1274,15 @@
             r27Init();
             r28Init();
             r29Init();
+            r30Init();
         };
 
         function switchTab(tabId) {
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'security', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
                 document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
-                if (id === 'retirement') document.getElementById(`btn-${id}`).classList.remove('text-rose-200');
+                if (id === 'security') document.getElementById(`btn-${id}`).classList.remove('text-teal-300');
+                else if (id === 'retirement') document.getElementById(`btn-${id}`).classList.remove('text-rose-200');
                 else if (id === 'annual') document.getElementById(`btn-${id}`).classList.remove('text-amber-200');
                 else if (id === 'report') document.getElementById(`btn-${id}`).classList.remove('text-sky-300');
                 else if (id === 'topup') document.getElementById(`btn-${id}`).classList.remove('text-violet-300');
@@ -1226,9 +1295,10 @@
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
             
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'security', 'safety'].forEach(id => {
                 if(id !== tabId) {
-                    if (id === 'retirement') document.getElementById(`btn-${id}`).classList.add('text-rose-200');
+                    if (id === 'security') document.getElementById(`btn-${id}`).classList.add('text-teal-300');
+                    else if (id === 'retirement') document.getElementById(`btn-${id}`).classList.add('text-rose-200');
                     else if (id === 'annual') document.getElementById(`btn-${id}`).classList.add('text-amber-200');
                     else if (id === 'report') document.getElementById(`btn-${id}`).classList.add('text-sky-300');
                     else if (id === 'topup') document.getElementById(`btn-${id}`).classList.add('text-violet-300');
@@ -1245,7 +1315,8 @@
             if(tabId === 'topup') r26Render();
             if(tabId === 'report') r27Render();
             if(tabId === 'annual') r28Render();
-            if(tabId === 'retirement') r29Render(); 
+            if(tabId === 'retirement') r29Render();
+            if(tabId === 'security') r30Scan(); 
         }
 
         function saveAndLoad() {
@@ -3691,6 +3762,174 @@
         fetchData=async function(...args){const val=await r29PriorFetch.apply(this,args);r29Render();return val;};
         const r29PriorHolding=updateHoldingCalculations;
         updateHoldingCalculations=function(...args){const val=r29PriorHolding.apply(this,args);r29Render();return val;};
+
+        // ===== R30：備份完整性與還原預覽；不改動任何既有 localStorage 格式 =====
+        const R30_BACKUP_FORMAT='00406A-Tracker-Backup';
+        const R30_CORE_MAPS=new Set([LEDGER_INVEST_KEY,LEDGER_PRICE_KEY,LEDGER_DRIP_KEY,LEDGER_EXTRA_KEY,LEDGER_KID_A_PRICE_KEY,LEDGER_KID_A_KEY,LEDGER_KID_B_PRICE_KEY,LEDGER_KID_B_KEY]);
+        const R30_TYPES=new Set(['buy','buy_regular','buy_extra','dividend','sell','buy_kid_a','div_kid_a','sell_kid_a','buy_kid_b','div_kid_b','sell_kid_b']);
+        let r30Staged=null,r30SafetyHash='',r30Busy=false;
+        function r30Text(id,value){const el=document.getElementById(id);if(el)el.textContent=String(value);}
+        function r30Snapshot(){
+            const data=Object.create(null);
+            for(let i=0;i<localStorage.length;i++){
+                const key=localStorage.key(i);
+                if(key&&/^00406A_[A-Za-z0-9_]+$/.test(key)&&key!==KEY_NAME)data[key]=localStorage.getItem(key);
+            }
+            return data;
+        }
+        function r30Entries(data){return Object.keys(data).sort().map(key=>[key,data[key]]);}
+        async function r30Digest(data){
+            if(!globalThis.crypto?.subtle)throw Error('此瀏覽器不支援安全校驗；請用 HTTPS 的 GitHub Pages 開啟。');
+            const bytes=new TextEncoder().encode(JSON.stringify(r30Entries(data)));
+            const hash=await crypto.subtle.digest('SHA-256',bytes);
+            return [...new Uint8Array(hash)].map(x=>x.toString(16).padStart(2,'0')).join('');
+        }
+        function r30Analyze(data){
+            const issues=[],errors=[],warnings=[];
+            const warn=s=>{warnings.push(s);issues.push({level:'warn',text:s});};
+            const error=s=>{errors.push(s);issues.push({level:'error',text:s});};
+            const parse=(key)=>{if(data[key]===undefined)return null;try{return JSON.parse(data[key]);}catch(e){error(key+'：JSON 無法解析');return null;}};
+            const types={main:['buy','buy_regular','buy_extra','dividend','sell'],kid_a:['buy_kid_a','div_kid_a','sell_kid_a'],kid_b:['buy_kid_b','div_kid_b','sell_kid_b']};
+            const positions={main:0,kid_a:0,kid_b:0};
+            let txCount=0,cashCount=0,invalidId=0;
+            const tx=parse(TX_KEY);
+            if(data[TX_KEY]!==undefined){
+                if(!Array.isArray(tx))error('逐筆交易資料不是陣列');
+                else if(tx.length>100000)error('交易筆數超過 100,000 筆上限');
+                else {
+                    txCount=tx.length;const seen=new Set();
+                    const ordered=[];
+                    for(let i=0;i<tx.length;i++){
+                        const t=tx[i];if(!t||typeof t!=='object'||Array.isArray(t)){error('交易第 '+(i+1)+' 筆不是物件');continue;}
+                        const id=t.id,typ=t.type,date=t.date,shares=t.shares,price=t.price,fee=t.fee??0;
+                        if((typeof id!=='number'||!Number.isSafeInteger(id)||id<=0)&&!r25SafeId(id)){
+                            if(invalidId++<3)error('交易第 '+(i+1)+' 筆識別碼不合法');
+                        }else if(seen.has(String(id)))error('交易識別碼重複：'+String(id).slice(0,24));
+                        else seen.add(String(id));
+                        if(!R30_TYPES.has(typ))error('交易第 '+(i+1)+' 筆類型不支援');
+                        if(!r24SafeDate(date))error('交易第 '+(i+1)+' 筆日期無效');
+                        if(typeof shares!=='number'||!Number.isSafeInteger(shares)||shares<=0||shares>1e9)error('交易第 '+(i+1)+' 筆股數不合法');
+                        if(typeof price!=='number'||!Number.isFinite(price)||price<=0||price>1e8)error('交易第 '+(i+1)+' 筆成交價不合法');
+                        if(typeof fee!=='number'||!Number.isFinite(fee)||fee<0||fee>1e9)error('交易第 '+(i+1)+' 筆手續費不合法');
+                        if(r24SafeDate(date)&&date>r25Today()&&i<100000)warn('交易第 '+(i+1)+' 筆是未來日期：'+date);
+                        if(r24SafeDate(date)&&R30_TYPES.has(typ)&&Number.isSafeInteger(shares)&&shares>0)ordered.push(t);
+                    }
+                    ordered.sort((a,b)=>a.date.localeCompare(b.date)||(Number(a.id)||0)-(Number(b.id)||0));
+                    let oversell=0;
+                    for(const t of ordered){
+                        const owner=types.kid_a.includes(t.type)?'kid_a':types.kid_b.includes(t.type)?'kid_b':'main';
+                        if(t.type.startsWith('sell')){
+                            if(positions[owner]<t.shares){if(oversell++<5)warn('交易 '+t.date+'：'+(owner==='main'?'主帳戶':owner==='kid_a'?'大寶':'二寶')+' 賣出股數超過當時庫存');}
+                            positions[owner]-=t.shares;
+                        }else positions[owner]+=t.shares;
+                    }
+                }
+            }
+            const cash=parse(R25_CASH_KEY);
+            if(data[R25_CASH_KEY]!==undefined){
+                if(!Array.isArray(cash))error('實收股息紀錄不是陣列');
+                else if(cash.length>100000)error('實收股息筆數超過上限');
+                else{
+                    cashCount=cash.length;
+                    if(r25ReadCashRows(cash).length!==cash.length)error('實收股息日期、金額或識別碼格式不合法／重複');
+                    for(const item of cash){if(r24SafeDate(item?.date)&&item.date>r25Today())warn('實收股息含未來日期 '+item.date);}
+                    const possible=new Set();let repeat=0;
+                    for(const item of cash){const key=String(item?.date)+'|'+String(item?.amount);if(possible.has(key)){if(repeat++<3)warn('同日期／同金額的股息入帳可能重複，請人工核對：'+String(item?.date));}else possible.add(key);}
+                }
+            }
+            for(const key of R30_CORE_MAPS){
+                if(data[key]!==undefined){const obj=parse(key);if(obj!==null&&(!obj||typeof obj!=='object'||Array.isArray(obj)))error('手帳設定格式異常：'+key);}
+            }
+            if(data[R29_SETTINGS_KEY]!==undefined){const settings=parse(R29_SETTINGS_KEY);if(settings!==null){if(!settings||typeof settings!=='object'||Array.isArray(settings))error('退休設定不是物件');else {const err=r29Validate({...R29_DEFAULTS,...settings});if(err)warn('退休設定可能需要檢查：'+err);}}}
+            if(data[R24_DIV_CACHE_KEY]!==undefined){const cache=parse(R24_DIV_CACHE_KEY);if(cache!==null&&(!cache||!Array.isArray(cache.rows)))warn('配息歷史快取可能無法讀取，可重新更新行情。');}
+            const family=Object.values(positions).reduce((sum,n)=>sum+n,0);
+            return {txCount,cashCount,keyCount:Object.keys(data).length,issues,errors,warnings,positions,family};
+        }
+        function r30HealthDOM(analysis){
+            r30Text('r30_tx_count',analysis.txCount+' 筆');r30Text('r30_cash_count',analysis.cashCount+' 筆');r30Text('r30_key_count',analysis.keyCount+' 類');
+            r30Text('r30_issue_count',analysis.errors.length+' 項錯誤／'+analysis.warnings.length+' 項提醒');
+            r30Text('r30_status',analysis.errors.length?'🔴 發現資料錯誤':analysis.warnings.length?'🟡 發現注意事項':'🟢 未發現格式問題');
+            r30Text('r30_home_brief',analysis.errors.length?'偵測到 '+analysis.errors.length+' 項帳務格式錯誤，請前往安全中心檢查。':analysis.warnings.length?'有 '+analysis.warnings.length+' 項資料提醒；可查看詳情並下載校驗備份。':'交易 '+analysis.txCount+' 筆／實收股息 '+analysis.cashCount+' 筆；建議定期下載完整備份。');
+            const box=document.getElementById('r30_issue_list');
+            if(box)box.innerHTML=analysis.issues.length?analysis.issues.slice(0,30).map(x=>`<p class="text-sm p-3 rounded ${x.level==='error'?'bg-red-950/40 text-red-300':'bg-amber-950/30 text-amber-200'}">${x.level==='error'?'🔴':'🟡'} ${r25Escape(x.text)}</p>`).join('')+(analysis.issues.length>30?'<p class="text-xs text-gray-400">另有其他提醒，建議先檢查原始紀錄。</p>':''):'<p class="text-sm bg-emerald-950/30 text-emerald-300 rounded p-3">✅ 目前未發現格式、重複識別碼或超賣異常。仍請與券商紀錄定期核對。</p>';
+        }
+        function r30Scan(){try{const s=r30Snapshot(),a=r30Analyze(s);r30HealthDOM(a);return a;}catch(e){r30Text('r30_status','檢查失敗：'+e.message);return null;}}
+        async function r30VerifyCurrent(){try{r30Text('r30_fingerprint','計算中…');const hash=await r30Digest(r30Snapshot());r30Text('r30_fingerprint','目前本機帳務 SHA-256 指紋：'+hash);}catch(e){r30Text('r30_fingerprint','無法計算：'+e.message);}}
+        async function r30Backup(safety=false){
+            if(r30Busy)return false;
+            try{
+                r30Busy=true;const data=r30Snapshot();const checksum=await r30Digest(data);const analysis=r30Analyze(data);
+                const payload={format:R30_BACKUP_FORMAT,schema:2,version:'R30',createdAt:new Date().toISOString(),integrity:{algorithm:'SHA-256',scope:'sorted-key-value-pairs-v1',digest:checksum},summary:{keys:analysis.keyCount,transactions:analysis.txCount,cashDividends:analysis.cashCount,errors:analysis.errors.length,warnings:analysis.warnings.length},data};
+                const name='00406A_R30_'+(safety?'還原前安全備份_':'完整校驗備份_')+r25Today()+'.json';
+                r27Download(name,JSON.stringify(payload,null,2),'application/json;charset=utf-8');
+                r30Text('r30_backup_note',`已送出「${name}」下載請求；共 ${analysis.keyCount} 類本機資料，SHA-256 ${checksum.slice(0,16)}…。請到下載資料夾確認檔案存在。`);
+                r30Text('r25_backup_status','R30 校驗備份已要求下載；請到手機下載資料夾確認。');
+                if(safety){r30SafetyHash=checksum;r30Text('r30_restore_note','已送出還原前安全備份下載，請確認檔案確實存妥，再勾選同意。');r30UpdateRestoreButton();}
+                return true;
+            }catch(e){r30Text('r30_backup_note','⚠ 備份失敗：'+e.message);alert('R30 備份失敗：'+e.message);return false;}
+            finally{r30Busy=false;}
+        }
+        function r30ClearPreview(){r30Staged=null;r30SafetyHash='';document.getElementById('r30_preview')?.classList.add('hidden');const inp=document.getElementById('r30_restore_input');if(inp)inp.value='';const accept=document.getElementById('r30_accept');if(accept)accept.checked=false;const word=document.getElementById('r30_confirm_word');if(word)word.value='';r30Text('r30_import_status','尚未選取備份檔案。');r30Text('r30_restore_note','尚未選取並驗證備份檔案，無法還原。');r30UpdateRestoreButton();}
+        function r30UpdateRestoreButton(){const btn=document.getElementById('r30_restore_btn');if(btn)btn.disabled=!r30Staged||r30Staged.analysis.errors.length>0||!r30SafetyHash||!document.getElementById('r30_accept')?.checked||document.getElementById('r30_confirm_word')?.value.trim()!=='還原'||r30Busy;}
+        async function r30StageFile(input){
+            const file=input.files?.[0];if(!file)return;
+            r30ClearPreview(); // 清除舊檔與確認；不修改帳務
+            try{
+                r30Text('r30_import_status','正在讀取與驗證檔案…');
+                if(file.size>5*1024*1024||file.size===0)throw Error('檔案大小必須介於 1 B～5 MB');
+                const obj=JSON.parse(await file.text());
+                if(!obj||obj.format!==R30_BACKUP_FORMAT||![1,2].includes(obj.schema)||!obj.data||typeof obj.data!=='object'||Array.isArray(obj.data))throw Error('不支援的 00406A 備份格式');
+                const entries=Object.entries(obj.data);
+                if(entries.length===0||entries.length>100||entries.some(([k,v])=>!/^00406A_[A-Za-z0-9_]+$/.test(k)||k===KEY_NAME||typeof v!=='string'||v.length>3e6))throw Error('備份的資料類別或內容無效');
+                let verified=false;
+                if(obj.schema===2){
+                    if(obj.integrity?.algorithm!=='SHA-256'||obj.integrity?.scope!=='sorted-key-value-pairs-v1'||typeof obj.integrity?.digest!=='string'||!/^[a-f0-9]{64}$/i.test(obj.integrity.digest))throw Error('R30 備份缺少合法的 SHA-256 校驗資訊');
+                    const calculated=await r30Digest(obj.data);
+                    if(calculated.toLowerCase()!==obj.integrity.digest.toLowerCase())throw Error('SHA-256 校驗不符：備份內容可能已修改或損壞，禁止還原');
+                    verified=true;
+                }
+                const snapshot=r30Snapshot(),analysis=r30Analyze(obj.data),changed=entries.filter(([k,v])=>snapshot[k]!==v).length;
+                const newKeys=entries.filter(([k])=>snapshot[k]===undefined).length;
+                r30Staged={data:obj.data,version:obj.version||'舊版',date:obj.createdAt||'',schema:obj.schema,verified,analysis,changed,newKeys,currentHash:await r30Digest(snapshot)};
+                document.getElementById('r30_preview')?.classList.remove('hidden');
+                r30Text('r30_preview_header',`檔案：${file.name}｜共 ${entries.length} 類資料`);
+                r30Text('r30_preview_version',r30Staged.version+'／格式 '+obj.schema);
+                r30Text('r30_preview_date',r30Staged.date||'未知');
+                r30Text('r30_preview_tx',analysis.txCount+' 筆');r30Text('r30_preview_cash',analysis.cashCount+' 筆');
+                r30Text('r30_preview_checksum',verified?'✅ R30 SHA-256 校驗通過（驗證內容未異動）':'⚠ 舊版格式沒有校驗碼，無法確認檔案未經改動；請核對備份來源。');
+                r30Text('r30_preview_diff',`比對目前手機：會覆蓋 ${changed-newKeys} 類有差異的既有資料，新增 ${newKeys} 類。備份未包含的資料不刪除；API 金鑰保留。`);
+                const issueBox=document.getElementById('r30_preview_issues');
+                if(issueBox)issueBox.innerHTML=[...analysis.errors.map(t=>'<p class="text-red-300">🔴 '+r25Escape(t)+'</p>'),...analysis.warnings.map(t=>'<p>🟡 '+r25Escape(t)+'</p>')].slice(0,15).join('')||(verified?'<p class="text-emerald-300">未發現格式問題。</p>':'<p>請核對舊版備份的日期與交易筆數。</p>');
+                r30Text('r30_import_status',analysis.errors.length?'🔴 偵測到 '+analysis.errors.length+' 項結構錯誤，已封鎖還原。':verified?'✅ 校驗通過；請確認預覽後再下載安全備份。':'🟡 舊版無校驗碼，請謹慎核對並備份現有資料。');
+                r30Text('r30_restore_note',analysis.errors.length?'檔案格式有錯誤，無法執行還原。':'請先下載還原前安全備份，確認檔案確實存在，再勾選並輸入「還原」。');
+                switchTab('security');r30UpdateRestoreButton();
+            }catch(e){r30Staged=null;r30Text('r30_import_status','❌ 無法預覽／還原：'+e.message);r30Text('r30_restore_note','檔案未通過檢查，沒有修改任何本機資料。');r30UpdateRestoreButton();}
+            finally{input.value='';}
+        }
+        async function r30ApplyRestore(){
+            if(r30Busy||!r30Staged||r30Staged.analysis.errors.length||!r30SafetyHash||!document.getElementById('r30_accept')?.checked||document.getElementById('r30_confirm_word')?.value.trim()!=='還原')return;
+            r30Busy=true;r30UpdateRestoreButton();
+            const item=r30Staged;
+            try{
+                const before=r30Snapshot(),fingerprint=await r30Digest(before);
+                if(fingerprint!==r30SafetyHash||fingerprint!==item.currentHash)throw Error('目前帳務在預覽／備份後曾改變，請重新選檔預覽並重新下載安全備份。');
+                // Recheck staged data integrity as well in case of accidental state mutation.
+                if(item.analysis.errors.length)throw Error('備份含不合法資料');
+                if(!confirm(`最後確認：覆蓋 ${item.changed-item.newKeys} 類現有資料、新增 ${item.newKeys} 類；${item.schema===1?'此舊版備份沒有完整性校驗。':''}\n\n目前的 API 金鑰不變，確定還原嗎？`))return;
+                const keys=Object.keys(item.data);const old=new Map(keys.map(k=>[k,localStorage.getItem(k)]));
+                try{for(const key of keys)localStorage.setItem(key,item.data[key]);}
+                catch(e){let rollbackFailed=false;for(const [k,v] of old){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(_){rollbackFailed=true;}}
+                    throw Error(rollbackFailed?'還原寫入失敗，回復也未完全成功；請保留下載的安全備份並重新載入。':'還原寫入失敗，已嘗試將資料恢復至原狀。');}
+                alert('R30 已還原所選資料，現在重新載入頁面。');location.reload();
+            }catch(e){r30Text('r30_restore_note','⚠ 未執行還原：'+e.message);alert('R30 還原未完成：'+e.message);}
+            finally{r30Busy=false;r30UpdateRestoreButton();}
+        }
+        function r30Init(){r30Scan();}
+        // 既有資料寫入後，只更新檢查畫面，絕不改動原有帳務結果。
+        const r30OldUpdateTransactions=updateTransactions;
+        updateTransactions=function(...args){const v=r30OldUpdateTransactions.apply(this,args);r30Scan();return v;};
+        const r30OldCashRender=r25Render;
+        r25Render=function(...args){const v=r30OldCashRender.apply(this,args);r30Scan();return v;};
 
     </script>
 </body>
