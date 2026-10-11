@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R26｜MAX 的追蹤儀表板</title>
+    <title>00406A Tracker R27｜MAX 的追蹤儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -22,6 +22,29 @@
         
         input[type="number"]::-webkit-inner-spin-button, 
         input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+        /* R27 PDF 列印：只印月報本體，不列印金鑰、導覽列或操作按鈕 */
+        @media print {
+          @page { size: A4; margin: 13mm; }
+          body { background:#fff !important; color:#111827 !important; padding:0 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+          body > .max-w-6xl { display:block !important; max-width:none !important; width:100% !important; margin:0 !important; padding:0 !important; }
+          body > .max-w-6xl > :not(#tab-report) { display:none !important; }
+          #tab-report { display:block !important; position:static !important; width:100% !important; margin:0; padding:0; }
+          #tab-report .r27-no-print { display:none !important; }
+          #tab-report .r27-paper { display:block !important; }
+          #tab-report .r27-paper .card { background:#fff !important; color:#111827 !important; border:1px solid #cbd5e1 !important; border-radius:5px; padding:11px !important; margin:0 0 12px !important; break-inside:avoid; box-shadow:none !important; }
+          #tab-report .r27-paper .grid { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:8px !important; }
+          #tab-report .r27-paper .grid > div { padding:7px !important; margin:0 !important; min-width:0; }
+          #tab-report .r27-paper h2 { font-size:20px !important; margin:3px 0 !important; }
+          #tab-report .r27-paper h3 { font-size:15px !important; margin:0 0 6px !important; }
+          #tab-report .r27-paper p { margin:3px 0 !important; line-height:1.35 !important; }
+          #tab-report .r27-paper .bg-gray-900 { background:#f1f5f9 !important; color:#111827 !important; }
+          #tab-report .r27-paper [class*="text-"] { color:#111827 !important; }
+          #tab-report .r27-paper table { width:100%; font-size:10px; }
+          #tab-report .r27-paper th,#tab-report .r27-paper td { border-bottom:1px solid #e2e8f0; }
+          #tab-report .r27-paper .overflow-x-auto { overflow:visible !important; }
+          #tab-report .r27-paper .min-w-\[560px\], #tab-report .r27-paper .min-w-\[640px\] { min-width:0 !important; }
+        }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -51,6 +74,7 @@
             <button onclick="switchTab('dividends')" id="btn-dividends" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-emerald-400 whitespace-nowrap">💰 R24 配息中心</button>
             <button onclick="switchTab('assets')" id="btn-assets" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-amber-300 whitespace-nowrap">🎯 R25 資產分析</button>
             <button onclick="switchTab('topup')" id="btn-topup" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-violet-300 whitespace-nowrap">🧮 R26 智慧加碼</button>
+            <button onclick="switchTab('report')" id="btn-report" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-sky-300 whitespace-nowrap">🗓️ R27 智慧月報</button>
             <button onclick="switchTab('safety')" id="btn-safety" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">🛡️ 流動性雷達</button>
         </div>
 
@@ -59,7 +83,7 @@
             <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
             <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R26 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
+                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 R27 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
                     <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
                 </div>
                 <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
@@ -90,6 +114,11 @@
             <div class="bg-gray-800 border border-violet-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
                 <div><p class="text-sm font-bold text-violet-300">🧮 R26 智慧加碼試算</p><p id="r26_home_brief" class="text-xs text-gray-300 mt-1">5,000／10,000／30,000／50,000 元多方案比較，試算不會買進或修改交易資料。</p></div>
                 <button type="button" onclick="switchTab('topup')" class="rounded bg-violet-700 hover:bg-violet-600 px-3 py-2 text-sm font-medium">開啟智慧加碼 →</button>
+            </div>
+            <!-- R27 月報快捷入口：所有金額只讀取本機帳務 -->
+            <div class="bg-gray-800 border border-sky-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div><p class="text-sm font-bold text-sky-300">🗓️ R27 智慧月報</p><p id="r27_home_brief" class="text-xs text-gray-300 mt-1">整理當月交易、股息、月底庫存、成交價與配息公告；可列印 PDF、下載 CSV。</p></div>
+                <button type="button" onclick="switchTab('report')" class="rounded bg-sky-700 hover:bg-sky-600 px-3 py-2 text-sm font-medium">開啟月報 →</button>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center relative overflow-hidden">
@@ -738,6 +767,76 @@
             <p class="text-xs text-gray-400 px-2">⚠️ R26 只用既有交易計算平均成本，沒有買賣下單、沒有自動加碼、沒有保存輸入價格或金額。實際成交仍可能因價格、交易單位、券商手續費、滑價與稅費而不同，請以券商帳務為準。</p>
         </section>
 
+
+        <!-- ================= R27：智慧月報（帳務唯讀） ================= -->
+        <section id="tab-report" class="space-y-5 hidden" aria-label="R27 智慧月報">
+            <div class="card border border-sky-800/60 r27-no-print">
+                <div class="flex flex-wrap justify-between items-start gap-3">
+                    <div><h2 class="text-xl font-bold text-sky-300">🗓️ R27 智慧月報中心</h2><p class="text-sm text-gray-400 mt-2">每月自動彙整主帳戶及雙寶真實交易、已登錄實收股息與可取得的配息公告。<strong class="text-sky-200">報表不會修改原始交易。</strong></p></div>
+                    <span class="text-xs text-gray-300 bg-gray-900 border border-gray-700 rounded px-3 py-2" id="r27_status" role="status">本機月報</span>
+                </div>
+                <div class="flex flex-wrap items-end gap-3 mt-4">
+                    <label class="block text-sm text-gray-300">選擇月份
+                        <input type="month" id="r27_month" onchange="r27Render()" class="block mt-1 bg-gray-900 border border-sky-700 rounded px-4 py-2 text-white text-base">
+                    </label>
+                    <button type="button" onclick="r27MoveMonth(-1)" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm">← 上個月</button>
+                    <button type="button" onclick="r27MoveMonth(1)" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm">下個月 →</button>
+                    <button type="button" onclick="r27SetCurrentMonth()" class="rounded bg-sky-800 hover:bg-sky-700 px-4 py-2 text-sm">回本月</button>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-4 border-t border-gray-700 pt-4">
+                    <button type="button" onclick="r27Print()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-2 text-sm font-semibold">🖨️ 列印／另存 PDF</button>
+                    <button type="button" onclick="r27ExportCSV()" class="rounded bg-emerald-700 hover:bg-emerald-600 px-4 py-2 text-sm font-semibold">📥 下載月報 CSV</button>
+                    <button type="button" onclick="r27ExportHTML()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm font-semibold">📄 下載可列印 HTML</button>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">Android Chrome 的列印選單若支援「儲存為 PDF」，即可直接匯出。無法列印時，請先下載獨立 HTML 報表再開啟列印。報表只含選定月份摘要，不含 API 金鑰。</p>
+            </div>
+            <div class="r27-paper space-y-5" id="r27_paper">
+                <div class="card border border-sky-900/50">
+                    <div class="flex flex-wrap justify-between gap-3 items-start">
+                        <div><p class="text-xs uppercase tracking-widest text-sky-300">00406A · MONTHLY INVESTMENT REPORT</p><h2 id="r27_title" class="text-2xl font-bold mt-2">00406A 每月投資報告</h2><p id="r27_period" class="text-sm text-gray-300 mt-2">尚未選擇月份</p></div>
+                        <div class="text-right text-xs text-gray-400"><p>MAX的 00406A Tracker · R27</p><p id="r27_generated" class="mt-2">產生日期 —</p></div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-4" id="r27_scope">來源：本機逐筆交易與已登錄股息；並參考本次載入的歷史價格及配息公告。</p>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-sky-300 mb-3">一、主帳戶月度現金流與交易</h3>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">自有資金買進（含費）</p><p id="r27_external" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">配息再投資買股（含費）</p><p id="r27_reinvest" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">股票賣出淨收入</p><p id="r27_sales" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">實際登錄股息入帳</p><p id="r27_cash" class="text-lg font-bold text-emerald-300 mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶月底持股（或本月迄今）</p><p id="r27_shares" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">庫存成本（均價法）</p><p id="r27_basis" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">當月已實現交易損益</p><p id="r27_realized" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">帳務淨現金流（非帳戶餘額）</p><p id="r27_netflow" class="text-lg font-bold mt-2">—</p></div>
+                    </div>
+                    <p id="r27_cash_note" class="text-xs text-gray-400 mt-3">請先檢視紀錄。</p>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-amber-300 mb-3">二、月底庫存與參考行情</h3>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">所選月份可取得參考股價</p><p id="r27_price" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶庫存估值</p><p id="r27_market" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">預估賣出後未實現損益</p><p id="r27_unrealized" class="text-lg font-bold mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">已登錄當月股息＋當月已實現損益</p><p id="r27_realized_plus" class="text-lg font-bold mt-2">—</p></div>
+                    </div>
+                    <p id="r27_price_note" class="text-xs text-gray-400 mt-3">缺少行情不以今日價格填補歷史月底市值。</p>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-pink-300 mb-3">三、家庭持股摘要（真實逐筆紀錄）</h3>
+                    <div class="overflow-x-auto"><table class="w-full min-w-[560px] text-sm text-left"><thead class="text-gray-400 border-b border-gray-700"><tr><th class="py-2">帳戶</th><th class="py-2 text-right">本月買入股數</th><th class="py-2 text-right">本月賣出股數</th><th class="py-2 text-right">期末股數</th><th class="py-2 text-right">期末庫存成本</th></tr></thead><tbody id="r27_family_rows" class="divide-y divide-gray-700"></tbody></table></div>
+                    <p class="text-xs text-gray-500 mt-3">本表僅反映真實逐筆交易，不包含手帳內的未來模擬股數；雙寶尚未建立獨立實收股息台帳。</p>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-emerald-300 mb-3">四、當月 ETF 公告與價格觀察</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3"><p class="bg-gray-900 rounded p-3 text-sm" id="r27_dividend_announcements">公告配息：—</p><p class="bg-gray-900 rounded p-3 text-sm" id="r27_month_prices">月份價格：—</p></div>
+                    <p class="text-xs text-gray-500 mt-3">公告配息是「ETF 每股公告」，不等於你實際收到的現金；若尚未除息或發放，亦不得視為已入帳。</p>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-indigo-300 mb-3">五、逐筆交易及股息入帳明細</h3>
+                    <div class="overflow-x-auto"><table class="w-full min-w-[640px] text-sm text-left"><thead class="text-gray-400 border-b border-gray-700"><tr><th class="p-2">日期</th><th class="p-2">帳戶</th><th class="p-2">類型</th><th class="p-2 text-right">股數</th><th class="p-2 text-right">單價</th><th class="p-2 text-right">收付金額（元）</th></tr></thead><tbody id="r27_detail_rows" class="divide-y divide-gray-700"></tbody></table></div>
+                </div>
+                <div class="card"><h3 class="text-lg font-bold text-blue-300 mb-3">六、月度觀察</h3><div id="r27_observations" class="text-sm text-gray-300 space-y-2">資料整理中。</div>
+                    <p class="text-xs text-gray-500 mt-4">本報表使用交易紀錄與可得的市場資料，非經會計師查核的損益表；不預測配息與報酬、不提供自動買賣決策。匯出前請確認原始資料無誤。</p>
+                </div>
+            </div>
+        </section>
+
         <!-- ================= 分頁 7：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
             <div class="card border border-red-900/50 shadow-lg shadow-red-900/10 mb-6">
@@ -914,13 +1013,15 @@
             r24Init();
             r25Init();
             r26Init();
+            r27Init();
         };
 
         function switchTab(tabId) {
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
                 document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
-                if (id === 'topup') document.getElementById(`btn-${id}`).classList.remove('text-violet-300');
+                if (id === 'report') document.getElementById(`btn-${id}`).classList.remove('text-sky-300');
+                else if (id === 'topup') document.getElementById(`btn-${id}`).classList.remove('text-violet-300');
                 else if (id === 'assets') document.getElementById(`btn-${id}`).classList.remove('text-amber-300');
                 else if (id === 'dividends') document.getElementById(`btn-${id}`).classList.remove('text-emerald-400');
                 else if (id === 'kids') document.getElementById(`btn-${id}`).classList.remove('text-pink-400');
@@ -930,9 +1031,10 @@
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
             
-            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'safety'].forEach(id => {
                 if(id !== tabId) {
-                    if (id === 'topup') document.getElementById(`btn-${id}`).classList.add('text-violet-300');
+                    if (id === 'report') document.getElementById(`btn-${id}`).classList.add('text-sky-300');
+                    else if (id === 'topup') document.getElementById(`btn-${id}`).classList.add('text-violet-300');
                     else if (id === 'assets') document.getElementById(`btn-${id}`).classList.add('text-amber-300');
                     else if (id === 'dividends') document.getElementById(`btn-${id}`).classList.add('text-emerald-400');
                     else if (id === 'kids') document.getElementById(`btn-${id}`).classList.add('text-pink-400');
@@ -943,7 +1045,8 @@
             
             if(tabId === 'charts' && rawPriceData.length > 0) renderTrendChart(currentChartTimeframe);
             if(tabId === 'dividends') r24DrawChart();
-            if(tabId === 'topup') r26Render(); 
+            if(tabId === 'topup') r26Render();
+            if(tabId === 'report') r27Render(); 
         }
 
         function saveAndLoad() {
@@ -2585,10 +2688,10 @@
                     const key=localStorage.key(i);
                     if(key&&key.startsWith('00406A_')&&key!==KEY_NAME)data[key]=localStorage.getItem(key);
                 }
-                const payload={format:'00406A-Tracker-Backup',schema:1,createdAt:new Date().toISOString(),version:'R26',data};
+                const payload={format:'00406A-Tracker-Backup',schema:1,createdAt:new Date().toISOString(),version:'R27',data};
                 const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
                 const url=URL.createObjectURL(blob),a=document.createElement('a');
-                a.href=url;a.download='00406A_R26_帳務備份_'+r25Today()+'.json';document.body.appendChild(a);a.click();a.remove();
+                a.href=url;a.download='00406A_R27_帳務備份_'+r25Today()+'.json';document.body.appendChild(a);a.click();a.remove();
                 setTimeout(()=>URL.revokeObjectURL(url),3000);
                 r25Write('r25_backup_status',`已準備備份 ${Object.keys(data).length} 類本機資料（不含 API 金鑰），請確認檔案有存到手機。`);
             }catch(e){alert('備份失敗：'+e.message);}
@@ -2759,6 +2862,175 @@
         updateHoldingCalculations=function(...args){const v=r26PriorHolding.apply(this,args);r26Render();return v;};
         const r26PriorFetch=fetchData;
         fetchData=async function(...args){const v=await r26PriorFetch.apply(this,args);const field=r26Get('r26_buy_price');if(field&&!field.value.trim()&&Number.isFinite(currentPrice)&&currentPrice>0)field.value=currentPrice.toFixed(2);r26Render();return v;};
+
+        // ===== R27 智慧月報：僅讀取真實逐筆交易／R25實收股息／R24公告及本次行情 =====
+        // 任何所選月份的價格只用當月可查得的市場資料；無當月歷史行情則不推估月底市值。
+        let r27CurrentReport = null;
+        const R27_TYPES = Object.freeze({
+            buy_regular:['main','定期買進','external'],buy_extra:['main','額外買進','external'],
+            dividend:['main','配息再投資買股','reinvest'],sell:['main','賣出','sell'],
+            buy_kid_a:['kid_a','大寶買進','external'],div_kid_a:['kid_a','大寶配息再投資','reinvest'],sell_kid_a:['kid_a','大寶賣出','sell'],
+            buy_kid_b:['kid_b','二寶買進','external'],div_kid_b:['kid_b','二寶配息再投資','reinvest'],sell_kid_b:['kid_b','二寶賣出','sell']
+        });
+        const R27_OWNERS=Object.freeze({main:'主帳戶',kid_a:'大寶',kid_b:'二寶'});
+        const r27El=id=>document.getElementById(id);
+        const r27Write=(id,val)=>{const el=r27El(id);if(el)el.textContent=val;};
+        function r27Money(n,decimal=false){return Number.isFinite(n)?'NT$ '+n.toLocaleString('zh-TW',{minimumFractionDigits:decimal?2:0,maximumFractionDigits:decimal?2:0}):'—';}
+        function r27Signed(n){return Number.isFinite(n)?(n>0?'+':n<0?'−':'')+r27Money(Math.abs(n)):'—';}
+        function r27ValidMonth(month){return /^\d{4}-(0[1-9]|1[0-2])$/.test(month) && Number(month.slice(0,4))>=2000 && Number(month.slice(0,4))<=2100;}
+        function r27CurrentYM(){return r25Today().slice(0,7);}
+        function r27MonthEnd(ym){const [y,m]=ym.split('-').map(Number);return `${ym}-${String(new Date(y,m,0).getDate()).padStart(2,'0')}`;}
+        function r27ShiftMonth(ym,offset){const [y,m]=ym.split('-').map(Number);const d=new Date(y,m-1+offset,1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;}
+        // 純計算：價格欄不會拿目前價格填歷史月份，含費成本採逐筆移動平均。
+        function r27Compute(transactions,cashRows,announcements,priceRows,month,latestReference,sellPercent,today){
+            if(!r27ValidMonth(month) || !r24SafeDate(today))throw Error('月報日期格式不正確');
+            const cutoff=month===today.slice(0,7)?today:r27MonthEnd(month);
+            const accounts={};
+            for(const id of Object.keys(R27_OWNERS)) accounts[id]={shares:0,basis:0,monthBought:0,monthSold:0,monthExternal:0,monthReinvest:0,monthSales:0,monthRealized:0,allRealized:0,invalid:false,monthTx:0};
+            const details=[];
+            let invalid=false;
+            const sorted=(Array.isArray(transactions)?transactions:[]).filter(x=>x&&typeof x==='object').slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)) || Number(a.id||0)-Number(b.id||0));
+            for(const tx of sorted){
+                const meta=R27_TYPES[tx.type];if(!meta)continue;
+                const [owner,label,kind]=meta;
+                const date=String(tx.date||'');
+                if(!r24SafeDate(date)){invalid=true;accounts[owner].invalid=true;continue;}
+                if(date>cutoff)continue;
+                const qty=Number(tx.shares),price=Number(tx.price),fee=Number(tx.fee||0);
+                if(!Number.isSafeInteger(qty)||qty<=0||!Number.isFinite(price)||price<=0||!Number.isFinite(fee)||fee<0){invalid=true;accounts[owner].invalid=true;continue;}
+                const ac=accounts[owner], inMonth=date.slice(0,7)===month;
+                const gross=qty*price;
+                let money;
+                if(kind==='sell'){
+                    if(qty>ac.shares){invalid=true;ac.invalid=true;continue;}
+                    money=gross-fee;
+                    const removed=ac.basis/ac.shares*qty;
+                    const realized=money-removed;
+                    ac.shares-=qty;ac.basis-=removed;
+                    if(ac.shares===0)ac.basis=0;
+                    ac.allRealized+=realized;
+                    if(inMonth){ac.monthSold+=qty;ac.monthSales+=money;ac.monthRealized+=realized;}
+                }else{
+                    money=-(gross+fee);
+                    const cost=-money;
+                    ac.shares+=qty;ac.basis+=cost;
+                    if(inMonth){ac.monthBought+=qty;if(kind==='reinvest')ac.monthReinvest+=cost;else ac.monthExternal+=cost;}
+                }
+                if(inMonth){ac.monthTx++;details.push({date,owner:R27_OWNERS[owner],label,shares:kind==='sell'?-qty:qty,price,amount:money,kind:'trade'});}
+            }
+            let cash=0;
+            for(const row of Array.isArray(cashRows)?cashRows:[]){
+                if(!row || !r24SafeDate(row.date) || Number(row.amount)<=0 || !Number.isFinite(Number(row.amount))){invalid=true;continue;}
+                if(row.date.slice(0,7)===month && row.date<=cutoff){
+                    const amount=Number(row.amount);
+                    cash+=amount;details.push({date:row.date,owner:'主帳戶',label:'實際股息入帳',shares:null,price:null,amount,kind:'cash',note:String(row.note||'')});
+                }
+            }
+            details.sort((a,b)=>a.date.localeCompare(b.date)||a.kind.localeCompare(b.kind));
+            const announcementsMonth=(Array.isArray(announcements)?announcements:[]).filter(x=>x&&r24SafeDate(x.exDate)&&x.exDate.slice(0,7)===month&&Number.isFinite(Number(x.amount))&&Number(x.amount)>0).map(x=>({exDate:x.exDate,payDate:x.payDate||'',amount:Number(x.amount)}));
+            const paidMonth=(Array.isArray(announcements)?announcements:[]).filter(x=>x&&r24SafeDate(x.payDate)&&x.payDate.slice(0,7)===month&&Number.isFinite(Number(x.amount))&&Number(x.amount)>0).map(x=>({exDate:x.exDate,payDate:x.payDate,amount:Number(x.amount)}));
+            const monthPrices=(Array.isArray(priceRows)?priceRows:[]).filter(x=>x&&r24SafeDate(x.date)&&x.date.slice(0,7)===month&&x.date<=cutoff&&Number.isFinite(Number(x.close))&&Number(x.close)>0).slice().sort((a,b)=>a.date.localeCompare(b.date));
+            const isCurrent=month===today.slice(0,7);
+            const hasReference=Number.isFinite(Number(latestReference))&&Number(latestReference)>0;
+            const pricing=isCurrent&&hasReference&&monthPrices.length?{price:Number(latestReference),label:'本月最近可取得的參考市價（可能非當日成交，非月底結算）',date:monthPrices[monthPrices.length-1].date,provisional:true}:monthPrices.length?{price:Number(monthPrices[monthPrices.length-1].close),label:`FinMind ${monthPrices[monthPrices.length-1].date} 收盤價`,date:monthPrices[monthPrices.length-1].date,provisional:isCurrent}:{price:null,label:'本月份歷史收盤價未取得；不以其他月份行情替代',date:null,provisional:isCurrent};
+            const fee=Number(sellPercent);
+            const validFee=Number.isFinite(fee)&&fee>=0&&fee<100;
+            const main=accounts.main;
+            const hasError=invalid||Object.values(accounts).some(a=>a.invalid);
+            const market=pricing.price!==null&&!hasError?main.shares*pricing.price:null;
+            const unrealized=market!==null&&validFee?market*(1-fee/100)-main.basis:null;
+            const netflow=main.monthSales+cash-main.monthExternal-main.monthReinvest;
+            return {month,cutoff,isCurrent,accounts,main,details,cash,netflow,invalid:hasError,monthPrices,announcementsMonth,paidMonth,pricing,market,unrealized,realizedPlusCash:main.monthRealized+cash};
+        }
+        function r27BuildReport(month){
+            return r27Compute(transactionLog,r25CashRows,r24Rows,rawPriceData,month,currentPrice,Number(r27El('sell_tax_fee_pct')?.value),r25Today());
+        }
+        function r27Init(){
+            const input=r27El('r27_month');if(!input)return;
+            input.max=r27CurrentYM();input.min='2000-01';
+            input.value=r27CurrentYM();r27Render();
+        }
+        function r27SetCurrentMonth(){const input=r27El('r27_month');input.value=r27CurrentYM();r27Render();}
+        function r27MoveMonth(offset){
+            const field=r27El('r27_month');const current=r27ValidMonth(field.value)?field.value:r27CurrentYM();
+            const dest=r27ShiftMonth(current,offset);
+            if(dest>r27CurrentYM()||dest<'2000-01')return;
+            field.value=dest;r27Render();
+        }
+        function r27Render(){
+            if(!r27El('r27_month'))return;
+            const month=r27El('r27_month').value;
+            if(!r27ValidMonth(month)||month>r27CurrentYM()){
+                r27Write('r27_status','請選擇有效的已發生月份');r27CurrentReport=null;return;
+            }
+            const r=r27BuildReport(month);r27CurrentReport=r;
+            const main=r.main,bad=r.invalid;
+            const safe=x=>bad?null:x;
+            const now=new Date();
+            r27Write('r27_title',`${month.slice(0,4)} 年 ${Number(month.slice(5,7))} 月投資月報`);
+            r27Write('r27_period',`統計期間：${month}-01 ～ ${r.cutoff}${r.isCurrent?'（本月尚未結束）':''}`);
+            r27Write('r27_generated',`報表產生：${now.toLocaleString('zh-TW',{hour12:false})}`);
+            r27Write('r27_scope',`來源：目前瀏覽器內的逐筆交易、R25 已登錄實收股息、R24 公告紀錄；參考行情 ${r.pricing.label}。`);
+            r27Write('r27_status',bad?'⚠ 有無效／超賣交易，損益需確認':`已整理 ${r.details.length} 筆交易／股息資料`);
+            r27Write('r27_external',r27Money(main.monthExternal));
+            r27Write('r27_reinvest',r27Money(main.monthReinvest));
+            r27Write('r27_sales',r27Money(main.monthSales));
+            r27Write('r27_cash',r27Money(r.cash,true));
+            r27Write('r27_shares',bad?'帳務異常':main.shares.toLocaleString('zh-TW')+' 股');
+            r27Write('r27_basis',r27Money(safe(main.basis)));
+            r27Write('r27_realized',r27Signed(safe(main.monthRealized)));
+            r27Write('r27_netflow',r27Signed(r.netflow));
+            r27Write('r27_cash_note','現金流 = 賣出淨收＋已登錄實收股息－自有資金買股－配息再投資買股；僅反映已記錄收付，並非銀行餘額或投資報酬。若股息未登錄，會低估現金流。');
+            r27Write('r27_price',r.pricing.price===null?'本月無可用行情':r27Money(r.pricing.price,true));
+            r27Write('r27_market',r27Money(r.market));
+            r27Write('r27_unrealized',r27Signed(r.unrealized));
+            r27Write('r27_realized_plus',r27Signed(safe(r.realizedPlusCash)));
+            r27Write('r27_price_note',`${r.pricing.label}；估值依當時庫存股數與可取得行情，預估賣出費率 ${(Number(r27El('sell_tax_fee_pct')?.value)||0).toFixed(2)}%。${r.pricing.provisional?'本月未結束，這不是月底定案數字。':''}${bad?'⚠ 帳務含異常交易，停止估值損益顯示。':''}`);
+            const fam=r27El('r27_family_rows');
+            if(fam)fam.innerHTML=Object.entries(r.accounts).map(([key,ac])=>`<tr><td class="py-3 font-semibold">${R27_OWNERS[key]}</td><td class="py-3 text-right">${ac.monthBought.toLocaleString('zh-TW')}</td><td class="py-3 text-right">${ac.monthSold.toLocaleString('zh-TW')}</td><td class="py-3 text-right">${bad?'需檢查':ac.shares.toLocaleString('zh-TW')}</td><td class="py-3 text-right">${r27Money(safe(ac.basis))}</td></tr>`).join('');
+            const divMsgs=[];
+            if(r.announcementsMonth.length)divMsgs.push(...r.announcementsMonth.map(d=>`除息 ${d.exDate}：公告每股 ${r24Amount(d.amount)} 元`));
+            if(r.paidMonth.length)divMsgs.push(...r.paidMonth.map(d=>`公告發放日 ${d.payDate}：每股 ${r24Amount(d.amount)} 元（非個人實收）`));
+            r27Write('r27_dividend_announcements',divMsgs.length?divMsgs.join('；'):'本月查無可確認的除息或公告發放日紀錄；可能是資料尚未載入。');
+            const pts=r.monthPrices;
+            r27Write('r27_month_prices',pts.length?`本月歷史收盤：${pts[0].date} ${Number(pts[0].close).toFixed(2)} 元 → ${pts[pts.length-1].date} ${Number(pts[pts.length-1].close).toFixed(2)} 元；高 ${Math.max(...pts.map(x=>Number(x.close))).toFixed(2)}／低 ${Math.min(...pts.map(x=>Number(x.close))).toFixed(2)} 元（收盤價區間，非當月盤中最高最低）。`:'目前沒有此月份的 FinMind 歷史收盤資料，無法算當月股價變化。');
+            const detail=r27El('r27_detail_rows');
+            if(detail)detail.innerHTML=r.details.length?r.details.map(d=>`<tr><td class="py-2 px-2 whitespace-nowrap">${d.date}</td><td class="py-2 px-2 whitespace-nowrap">${r25Escape(d.owner)}</td><td class="py-2 px-2">${r25Escape(d.label)}${d.note?' <span class="text-xs text-gray-400">('+r25Escape(d.note)+')</span>':''}</td><td class="py-2 px-2 text-right">${d.shares===null?'—':d.shares.toLocaleString('zh-TW')}</td><td class="py-2 px-2 text-right">${d.price===null?'—':d.price.toFixed(2)}</td><td class="py-2 px-2 text-right">${r27Signed(d.amount)}</td></tr>`).join(''):'<tr><td colspan="6" class="text-center p-4 text-gray-400">所選月份沒有已登錄的真實交易或實際入帳股息</td></tr>';
+            const messages=[];
+            if(bad)messages.push('⚠ 偵測到超賣或無效交易，請回「逐筆記帳」核對；此月及之前的帳務數字可能不完整。');
+            if(main.monthTx===0)messages.push('本月主帳戶沒有逐筆買賣紀錄（不等於沒有投資計畫）。');
+            else messages.push(`本月主帳戶真實交易 ${main.monthTx} 筆，買進 ${main.monthBought.toLocaleString('zh-TW')} 股、賣出 ${main.monthSold.toLocaleString('zh-TW')} 股。`);
+            if(!r.cash)messages.push('本月沒有 R25「實際入帳股息」登錄；R24 公告不會自動算為已收到。');
+            if(r.pricing.price===null)messages.push('此月份缺少歷史行情，月末庫存市值與未實現損益留白；請勿以今日行情替代。');
+            if(r.isCurrent)messages.push('本月尚未結束，交易、配息及庫存數據可能繼續變動。');
+            if(r.announcementsMonth.some(d=>d.amount<.10))messages.push('本月查得每股公告配息低於 0.10 元，請對照投信正式資料。');
+            const obs=r27El('r27_observations');if(obs)obs.innerHTML=messages.map(t=>`<p>• ${r25Escape(t)}</p>`).join('');
+            r27Write('r27_home_brief',`${month}｜主帳戶新增 ${main.monthBought.toLocaleString('zh-TW')} 股；實收股息 ${r27Money(r.cash)}；${bad?'交易異常需檢查':r.pricing.price===null?'月底行情未取得':'可產生月報'}。`);
+        }
+        function r27Print(){r27Render();if(!r27CurrentReport){alert('請先選擇有效月份');return;}window.print();}
+        function r27Download(filename,content,mime){const blob=new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
+        function r27CsvValue(s){if(typeof s==='number'&&Number.isFinite(s))return String(s);const raw=String(s??'');const guard=/^[\s]*[=+@\-]/.test(raw)?"'"+raw:raw;return '"'+guard.replace(/"/g,'""')+'"';}
+        function r27ExportCSV(){
+            r27Render();const r=r27CurrentReport;if(!r)return;
+            const main=r.main,rows=[['00406A Tracker R27','投資月報',r.month],['欄位','值'],['統計截止',r.cutoff],['資料狀態',r.invalid?'交易異常':'依目前已登錄資料'],['主帳戶自有資金買進',main.monthExternal],['主帳戶配息再投資買股',main.monthReinvest],['主帳戶賣出淨收入',main.monthSales],['主帳戶實際股息入帳',r.cash],['主帳戶當月已實現損益',r.invalid?'資料異常':main.monthRealized],['主帳戶淨現金流',r.netflow],['主帳戶期末持股',r.invalid?'資料異常':main.shares],['主帳戶期末庫存成本',r.invalid?'資料異常':main.basis],['參考價格說明',r.pricing.label],['期末參考股價',r.pricing.price??'無行情'],['主帳戶市值',r.market??'無行情'],['主帳戶未實現損益',r.unrealized??'無行情'],[],['日期','帳戶','類型','股數','單價','淨現金流','備註']];
+            r.details.forEach(d=>rows.push([d.date,d.owner,d.label,d.shares??'',d.price??'',d.amount,d.note??'']));
+            r27Download(`00406A_R27_月報_${r.month}.csv`,'\ufeff'+rows.map(a=>a.map(r27CsvValue).join(',')).join('\r\n'),'text/csv;charset=utf-8');
+        }
+        function r27ExportHTML(){
+            r27Render();const r=r27CurrentReport;if(!r)return;
+            const clone=r27El('r27_paper').cloneNode(true);
+            clone.removeAttribute('id');
+            // 完全靜態的選定月份報表：不含 API token、localStorage、腳本或帳務編輯功能。
+            const style=`body{font-family:system-ui,-apple-system,sans-serif;margin:22px auto;padding:0 15px;max-width:900px;color:#172033;background:#fff;font-size:14px} .card{border:1px solid #cbd5e1;border-radius:8px;padding:18px;margin:0 0 14px;break-inside:avoid}h2{font-size:23px}h3{font-size:18px}p{line-height:1.55} .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.bg-gray-900{background:#f1f5f9;padding:10px;border-radius:5px}.text-xs{font-size:11px;color:#475569}.text-sm{font-size:13px}.text-lg{font-size:17px}table{width:100%;border-collapse:collapse}th,td{padding:7px 5px;border-bottom:1px solid #e2e8f0;text-align:left}td.text-right,th.text-right{text-align:right} .overflow-x-auto{overflow-x:auto}@media print{@page{size:A4;margin:13mm}body{margin:0;padding:0}.card{page-break-inside:avoid}}`;
+            r27Download(`00406A_R27_月報_${r.month}.html`,'<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A '+r.month+' 月報</title><style>'+style+'</style></head><body>'+clone.outerHTML+'</body></html>','text/html;charset=utf-8');
+        }
+        // R25 股息入帳新增、修改或刪除時，月報立即刷新。
+        const r27PreviousR25Render=r25Render;
+        r25Render=function(...args){const ret=r27PreviousR25Render.apply(this,args);if(r27El('r27_month'))r27Render();return ret;};
+        const r27PreviousTransactions=updateTransactions;
+        updateTransactions=function(...args){const ret=r27PreviousTransactions.apply(this,args);if(r27El('r27_month'))r27Render();return ret;};
+        const r27PreviousFetch=fetchData;
+        fetchData=async function(...args){const ret=await r27PreviousFetch.apply(this,args);if(r27El('r27_month'))r27Render();return ret;};
 
     </script>
 </body>
