@@ -84,7 +84,7 @@ const start=original[0].indexOf("const R29_SETTINGS_KEY=");
 const stop=original[0].indexOf("const r29PriorTransactions=");
 assert.ok(start>0&&stop>start);
 const retirement=original[0].slice(start,stop);
-const financeSandbox={document:{getElementById:()=>null},console:{warn:()=>{}},localStorage:{getItem:()=>null},window:{},r27ValidMonth:ym=>/^20\\d{2}-(0[1-9]|1[0-2])$/.test(ym)};
+const financeSandbox={document:{getElementById:()=>null},console:{warn:()=>{}},localStorage:{getItem:()=>null},window:{},r27ValidMonth:ym=>/^20\d{2}-(0[1-9]|1[0-2])$/.test(ym)};
 vm.runInNewContext(retirement+
   '\n globalThis.testProjection = (base,ym,config)=>r29Simulate(base,ym,config,4,5,{});'+
   '\n globalThis.testMonths = (a,b)=>r29MonthsUntil(a,b);',financeSandbox);
