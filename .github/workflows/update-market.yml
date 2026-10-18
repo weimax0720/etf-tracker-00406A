@@ -1,0 +1,49 @@
+name: 00406A 公開市場資料自動更新
+
+on:
+  schedule:
+    # UTC 01:17 / 07:17 / 12:17 = 台灣 09:17 / 15:17 / 20:17
+    - cron: '17 1,7,12 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/update_market.py'
+      - '.github/workflows/update-market.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: etf-00406a-market-feed
+  cancel-in-progress: false
+
+jobs:
+  update-market:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate script syntax
+        run: python -m py_compile scripts/update_market.py
+      - name: Fetch TWSE and optional FinMind data
+        env:
+          FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
+        run: python scripts/update_market.py
+      - name: Commit market data only
+        run: |
+          git add data/market.json
+          if git diff --cached --quiet; then
+            echo "Market data unchanged"
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "data: refresh 00406A public market feed"
+          git push
