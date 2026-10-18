@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="00406A Tracker 圖示">
+<rect width="512" height="512" rx="112" fill="#0f172a"/>
+<rect x="70" y="70" width="372" height="372" rx="82" fill="#1e293b" stroke="#22d3ee" stroke-width="12"/>
+<path d="M122 330L200 266L260 296L336 188L390 224" fill="none" stroke="#5eead4" stroke-width="31" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="336" cy="188" r="22" fill="#a7f3d0"/>
+<text x="256" y="398" text-anchor="middle" fill="#e2e8f0" font-family="Arial,sans-serif" font-weight="bold" font-size="54">00406A</text>
+</svg>
