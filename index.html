@@ -3731,42 +3731,6 @@
         const r25OriginalFetch=fetchData;
         fetchData=async function(...args){const ret=await r25OriginalFetch.apply(this,args);r25Render();return ret;};
 
-        function r25Backup(){
-            const data={};
-            try {
-                for(let i=0;i<localStorage.length;i++){
-                    const key=localStorage.key(i);
-                    if(key&&key.startsWith('00406A_')&&key!==KEY_NAME)data[key]=localStorage.getItem(key);
-                }
-                const payload={format:'00406A-Tracker-Backup',schema:1,createdAt:new Date().toISOString(),version:'R29',data};
-                const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
-                const url=URL.createObjectURL(blob),a=document.createElement('a');
-                a.href=url;a.download='00406A_R29_帳務備份_'+r25Today()+'.json';document.body.appendChild(a);a.click();a.remove();
-                setTimeout(()=>URL.revokeObjectURL(url),3000);
-                r25Write('r25_backup_status',`已準備備份 ${Object.keys(data).length} 類本機資料（不含 API 金鑰），請確認檔案有存到手機。`);
-            }catch(e){alert('備份失敗：'+e.message);}
-        }
-        async function r25Restore(input){
-            const file=input.files&&input.files[0];
-            if(!file)return;
-            try{
-                if(file.size>5*1024*1024)throw Error('檔案超過 5 MB');
-                const obj=JSON.parse(await file.text());
-                if(!obj||obj.format!=='00406A-Tracker-Backup'||obj.schema!==1||!obj.data||typeof obj.data!=='object'||Array.isArray(obj.data))throw Error('不是 R25 支援的備份格式');
-                const entries=Object.entries(obj.data);
-                if(!entries.length||entries.length>100||entries.some(([key,val])=>typeof key!=='string'||!/^00406A_[A-Za-z0-9_]+$/.test(key)||key===KEY_NAME||typeof val!=='string'||val.length>3e6))throw Error('備份資料內容不合法');
-                if(obj.data[TX_KEY]!==undefined){const tx=JSON.parse(obj.data[TX_KEY]);if(!Array.isArray(tx)||tx.length>100000)throw Error('交易紀錄格式異常');}
-                if(obj.data[R25_CASH_KEY]!==undefined){const cr=JSON.parse(obj.data[R25_CASH_KEY]);if(!Array.isArray(cr)||r25ReadCashRows(cr).length!==cr.length)throw Error('實際股息格式異常');}
-                if(!confirm(`準備從備份還原 ${entries.length} 類資料，會覆蓋同名的本機交易與手帳記錄（保留現有 API 金鑰）。是否確定？\n\n建議先下載目前的帳務備份。`))return;
-                // 備份目前值：若寫入任何一筆失敗則盡可能復原，避免部分資料損壞。
-                const previous=entries.map(([k])=>[k,localStorage.getItem(k)]);
-                try{entries.forEach(([k,v])=>localStorage.setItem(k,v));}
-                catch(e){previous.forEach(([k,v])=>{try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(_){}});throw Error('裝置儲存空間不足，已嘗試復原原資料');}
-                alert('帳務資料已還原，頁面將重新整理。');location.reload();
-            }catch(e){alert('無法還原：'+e.message);r25Write('r25_backup_status','匯入失敗：'+e.message);}
-            finally{input.value='';}
-        }
-
         // ===== R26 智慧加碼：完全唯讀，沿用 R25 平均成本法與帳務驗證 =====
         const R26_PRESETS = Object.freeze([5000,10000,30000,50000]);
         let r26ChosenBudget = 10000;
@@ -4547,11 +4511,11 @@
         const r29PriorHolding=updateHoldingCalculations;
         updateHoldingCalculations=function(...args){const val=r29PriorHolding.apply(this,args);r29Render();return val;};
 
-        // ===== R30：備份完整性與還原預覽；不改動任何既有 localStorage 格式 =====
-        const R30_BACKUP_FORMAT='00406A-Tracker-Backup';
+        // ===== R47：保留原帳務驗證邏輯；只讀取本機資料，不再下載或匯入 =====
+        
         const R30_CORE_MAPS=new Set([LEDGER_INVEST_KEY,LEDGER_PRICE_KEY,LEDGER_DRIP_KEY,LEDGER_EXTRA_KEY,LEDGER_KID_A_PRICE_KEY,LEDGER_KID_A_KEY,LEDGER_KID_B_PRICE_KEY,LEDGER_KID_B_KEY]);
         const R30_TYPES=new Set(['buy','buy_regular','buy_extra','dividend','sell','buy_kid_a','div_kid_a','sell_kid_a','buy_kid_b','div_kid_b','sell_kid_b']);
-        let r30Staged=null,r30SafetyHash='',r30Busy=false;
+        
         function r30Text(id,value){const el=document.getElementById(id);if(el)el.textContent=String(value);}
         function r30Snapshot(){
             const data=Object.create(null);
@@ -4560,13 +4524,6 @@
                 if(key&&/^00406A_[A-Za-z0-9_]+$/.test(key)&&key!==KEY_NAME)data[key]=localStorage.getItem(key);
             }
             return data;
-        }
-        function r30Entries(data){return Object.keys(data).sort().map(key=>[key,data[key]]);}
-        async function r30Digest(data){
-            if(!globalThis.crypto?.subtle)throw Error('此瀏覽器不支援安全校驗；請用 HTTPS 的 GitHub Pages 開啟。');
-            const bytes=new TextEncoder().encode(JSON.stringify(r30Entries(data)));
-            const hash=await crypto.subtle.digest('SHA-256',bytes);
-            return [...new Uint8Array(hash)].map(x=>x.toString(16).padStart(2,'0')).join('');
         }
         function r30Analyze(data){
             const issues=[],errors=[],warnings=[];
@@ -4633,81 +4590,11 @@
             r30Text('r30_tx_count',analysis.txCount+' 筆');r30Text('r30_cash_count',analysis.cashCount+' 筆');r30Text('r30_key_count',analysis.keyCount+' 類');
             r30Text('r30_issue_count',analysis.errors.length+' 項錯誤／'+analysis.warnings.length+' 項提醒');
             r30Text('r30_status',analysis.errors.length?'🔴 發現資料錯誤':analysis.warnings.length?'🟡 發現注意事項':'🟢 未發現格式問題');
-            r30Text('r30_home_brief',analysis.errors.length?'偵測到 '+analysis.errors.length+' 項帳務格式錯誤，請前往安全中心檢查。':analysis.warnings.length?'有 '+analysis.warnings.length+' 項資料提醒；可查看詳情並下載校驗備份。':'交易 '+analysis.txCount+' 筆／實收股息 '+analysis.cashCount+' 筆；建議定期下載完整備份。');
+            r30Text('r30_home_brief',analysis.errors.length?'偵測到 '+analysis.errors.length+' 項帳務異常，請前往健康檢查核對。':analysis.warnings.length?'有 '+analysis.warnings.length+' 項資料提醒，可查看詳細原因。':'交易 '+analysis.txCount+' 筆／主帳戶實收股息 '+analysis.cashCount+' 筆；未偵測到格式異常。');
             const box=document.getElementById('r30_issue_list');
             if(box)box.innerHTML=analysis.issues.length?analysis.issues.slice(0,30).map(x=>`<p class="text-sm p-3 rounded ${x.level==='error'?'bg-red-950/40 text-red-300':'bg-amber-950/30 text-amber-200'}">${x.level==='error'?'🔴':'🟡'} ${r25Escape(x.text)}</p>`).join('')+(analysis.issues.length>30?'<p class="text-xs text-gray-400">另有其他提醒，建議先檢查原始紀錄。</p>':''):'<p class="text-sm bg-emerald-950/30 text-emerald-300 rounded p-3">✅ 目前未發現格式、重複識別碼或超賣異常。仍請與券商紀錄定期核對。</p>';
         }
         function r30Scan(){try{const s=r30Snapshot(),a=r30Analyze(s);r30HealthDOM(a);return a;}catch(e){r30Text('r30_status','檢查失敗：'+e.message);return null;}}
-        async function r30VerifyCurrent(){try{r30Text('r30_fingerprint','計算中…');const hash=await r30Digest(r30Snapshot());r30Text('r30_fingerprint','目前本機帳務 SHA-256 指紋：'+hash);}catch(e){r30Text('r30_fingerprint','無法計算：'+e.message);}}
-        async function r30Backup(safety=false){
-            if(r30Busy)return false;
-            try{
-                r30Busy=true;const data=r30Snapshot();const checksum=await r30Digest(data);const analysis=r30Analyze(data);
-                const payload={format:R30_BACKUP_FORMAT,schema:2,version:'R43',createdAt:new Date().toISOString(),integrity:{algorithm:'SHA-256',scope:'sorted-key-value-pairs-v1',digest:checksum},summary:{keys:analysis.keyCount,transactions:analysis.txCount,cashDividends:analysis.cashCount,errors:analysis.errors.length,warnings:analysis.warnings.length},data};
-                const name='00406A_R43_'+(safety?'還原前安全備份_':'完整校驗備份_')+r25Today()+'.json';
-                r27Download(name,JSON.stringify(payload,null,2),'application/json;charset=utf-8');
-                r30Text('r30_backup_note',`已送出「${name}」下載請求；共 ${analysis.keyCount} 類本機資料，SHA-256 ${checksum.slice(0,16)}…。請到下載資料夾確認檔案存在。`);
-                r30Text('r25_backup_status','R30 校驗備份已要求下載；請到手機下載資料夾確認。');
-                if(safety){r30SafetyHash=checksum;r30Text('r30_restore_note','已送出還原前安全備份下載，請確認檔案確實存妥，再勾選同意。');r30UpdateRestoreButton();}
-                return true;
-            }catch(e){r30Text('r30_backup_note','⚠ 備份失敗：'+e.message);alert('R30 備份失敗：'+e.message);return false;}
-            finally{r30Busy=false;}
-        }
-        function r30ClearPreview(){r30Staged=null;r30SafetyHash='';document.getElementById('r30_preview')?.classList.add('hidden');const inp=document.getElementById('r30_restore_input');if(inp)inp.value='';const accept=document.getElementById('r30_accept');if(accept)accept.checked=false;const word=document.getElementById('r30_confirm_word');if(word)word.value='';r30Text('r30_import_status','尚未選取備份檔案。');r30Text('r30_restore_note','尚未選取並驗證備份檔案，無法還原。');r30UpdateRestoreButton();}
-        function r30UpdateRestoreButton(){const btn=document.getElementById('r30_restore_btn');if(btn)btn.disabled=!r30Staged||r30Staged.analysis.errors.length>0||!r30SafetyHash||!document.getElementById('r30_accept')?.checked||document.getElementById('r30_confirm_word')?.value.trim()!=='還原'||r30Busy;}
-        async function r30StageFile(input){
-            const file=input.files?.[0];if(!file)return;
-            r30ClearPreview(); // 清除舊檔與確認；不修改帳務
-            try{
-                r30Text('r30_import_status','正在讀取與驗證檔案…');
-                if(file.size>5*1024*1024||file.size===0)throw Error('檔案大小必須介於 1 B～5 MB');
-                const obj=JSON.parse(await file.text());
-                if(!obj||obj.format!==R30_BACKUP_FORMAT||![1,2].includes(obj.schema)||!obj.data||typeof obj.data!=='object'||Array.isArray(obj.data))throw Error('不支援的 00406A 備份格式');
-                const entries=Object.entries(obj.data);
-                if(entries.length===0||entries.length>100||entries.some(([k,v])=>!/^00406A_[A-Za-z0-9_]+$/.test(k)||k===KEY_NAME||typeof v!=='string'||v.length>3e6))throw Error('備份的資料類別或內容無效');
-                let verified=false;
-                if(obj.schema===2){
-                    if(obj.integrity?.algorithm!=='SHA-256'||obj.integrity?.scope!=='sorted-key-value-pairs-v1'||typeof obj.integrity?.digest!=='string'||!/^[a-f0-9]{64}$/i.test(obj.integrity.digest))throw Error('R30 備份缺少合法的 SHA-256 校驗資訊');
-                    const calculated=await r30Digest(obj.data);
-                    if(calculated.toLowerCase()!==obj.integrity.digest.toLowerCase())throw Error('SHA-256 校驗不符：備份內容可能已修改或損壞，禁止還原');
-                    verified=true;
-                }
-                const snapshot=r30Snapshot(),analysis=r30Analyze(obj.data),changed=entries.filter(([k,v])=>snapshot[k]!==v).length;
-                const newKeys=entries.filter(([k])=>snapshot[k]===undefined).length;
-                r30Staged={data:obj.data,version:obj.version||'舊版',date:obj.createdAt||'',schema:obj.schema,verified,analysis,changed,newKeys,currentHash:await r30Digest(snapshot)};
-                document.getElementById('r30_preview')?.classList.remove('hidden');
-                r30Text('r30_preview_header',`檔案：${file.name}｜共 ${entries.length} 類資料`);
-                r30Text('r30_preview_version',r30Staged.version+'／格式 '+obj.schema);
-                r30Text('r30_preview_date',r30Staged.date||'未知');
-                r30Text('r30_preview_tx',analysis.txCount+' 筆');r30Text('r30_preview_cash',analysis.cashCount+' 筆');
-                r30Text('r30_preview_checksum',verified?'✅ R30 SHA-256 校驗通過（驗證內容未異動）':'⚠ 舊版格式沒有校驗碼，無法確認檔案未經改動；請核對備份來源。');
-                r30Text('r30_preview_diff',`比對目前手機：會覆蓋 ${changed-newKeys} 類有差異的既有資料，新增 ${newKeys} 類。備份未包含的資料不刪除；API 金鑰保留。`);
-                const issueBox=document.getElementById('r30_preview_issues');
-                if(issueBox)issueBox.innerHTML=[...analysis.errors.map(t=>'<p class="text-red-300">🔴 '+r25Escape(t)+'</p>'),...analysis.warnings.map(t=>'<p>🟡 '+r25Escape(t)+'</p>')].slice(0,15).join('')||(verified?'<p class="text-emerald-300">未發現格式問題。</p>':'<p>請核對舊版備份的日期與交易筆數。</p>');
-                r30Text('r30_import_status',analysis.errors.length?'🔴 偵測到 '+analysis.errors.length+' 項結構錯誤，已封鎖還原。':verified?'✅ 校驗通過；請確認預覽後再下載安全備份。':'🟡 舊版無校驗碼，請謹慎核對並備份現有資料。');
-                r30Text('r30_restore_note',analysis.errors.length?'檔案格式有錯誤，無法執行還原。':'請先下載還原前安全備份，確認檔案確實存在，再勾選並輸入「還原」。');
-                switchTab('security');r30UpdateRestoreButton();
-            }catch(e){r30Staged=null;r30Text('r30_import_status','❌ 無法預覽／還原：'+e.message);r30Text('r30_restore_note','檔案未通過檢查，沒有修改任何本機資料。');r30UpdateRestoreButton();}
-            finally{input.value='';}
-        }
-        async function r30ApplyRestore(){
-            if(r30Busy||!r30Staged||r30Staged.analysis.errors.length||!r30SafetyHash||!document.getElementById('r30_accept')?.checked||document.getElementById('r30_confirm_word')?.value.trim()!=='還原')return;
-            r30Busy=true;r30UpdateRestoreButton();
-            const item=r30Staged;
-            try{
-                const before=r30Snapshot(),fingerprint=await r30Digest(before);
-                if(fingerprint!==r30SafetyHash||fingerprint!==item.currentHash)throw Error('目前帳務在預覽／備份後曾改變，請重新選檔預覽並重新下載安全備份。');
-                // Recheck staged data integrity as well in case of accidental state mutation.
-                if(item.analysis.errors.length)throw Error('備份含不合法資料');
-                if(!confirm(`最後確認：覆蓋 ${item.changed-item.newKeys} 類現有資料、新增 ${item.newKeys} 類；${item.schema===1?'此舊版備份沒有完整性校驗。':''}\n\n目前的 API 金鑰不變，確定還原嗎？`))return;
-                const keys=Object.keys(item.data);const old=new Map(keys.map(k=>[k,localStorage.getItem(k)]));
-                try{for(const key of keys)localStorage.setItem(key,item.data[key]);}
-                catch(e){let rollbackFailed=false;for(const [k,v] of old){try{if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(_){rollbackFailed=true;}}
-                    throw Error(rollbackFailed?'還原寫入失敗，回復也未完全成功；請保留下載的安全備份並重新載入。':'還原寫入失敗，已嘗試將資料恢復至原狀。');}
-                alert('R30 已還原所選資料，現在重新載入頁面。');location.reload();
-            }catch(e){r30Text('r30_restore_note','⚠ 未執行還原：'+e.message);alert('R30 還原未完成：'+e.message);}
-            finally{r30Busy=false;r30UpdateRestoreButton();}
-        }
         function r30Init(){r30Scan();}
         // 既有資料寫入後，只更新檢查畫面，絕不改動原有帳務結果。
         const r30OldUpdateTransactions=updateTransactions;
@@ -4870,11 +4757,11 @@
         const R32_HOME_CHOICES=[
             ['assistant','今日投資助理'],['family','家庭資產快覽'],['cashflow','家庭現金流入口'],['dividends','配息趨勢快覽'],['assets','資產損益快覽'],
             ['topup','智慧加碼入口'],['monthly','智慧月報入口'],['annual','年度總結入口'],
-            ['retirement','退休目標入口'],['security','備份安全入口'],['records','資料管理入口'],
+            ['retirement','退休目標入口'],['security','帳務健檢入口'],['records','資料管理入口'],
             ['market','行情及持股總覽'],['breakeven','保本及損益試算'],['projection','退休複利投影'],
             ['performance','R37 帳戶績效與領息趨勢'],['efficiency','FINAL 家庭 XIRR 與稽核'],
 ];
-        const R32_DEFAULTS={days:{main:0,kid_a:0,kid_b:0},backupConfirmed:'',home:{}};
+        const R32_DEFAULTS={days:{main:0,kid_a:0,kid_b:0},home:{}};
         let r32Prefs=JSON.parse(JSON.stringify(R32_DEFAULTS));
         let r32Todos=[],r32Done={},r32EditingId=null,r32Initialized=false,r32Corrupt='';
         const r32El=id=>document.getElementById(id);
@@ -4892,9 +4779,8 @@
                 const p=JSON.parse(localStorage.getItem(R32_PREFS_KEY)||'null');
                 if(p!==null){if(!p||typeof p!=='object'||Array.isArray(p))throw Error('提醒設定不是物件');
                     const days=p.days&&typeof p.days==='object'?p.days:{};
-                    r32Prefs={days:{main:0,kid_a:0,kid_b:0},home:{},backupConfirmed:''};
+                    r32Prefs={days:{main:0,kid_a:0,kid_b:0},home:{}};
                     for(const k of ['main','kid_a','kid_b']){const d=Number(days[k]);r32Prefs.days[k]=Number.isInteger(d)&&d>=0&&d<=31?d:0;}
-                    r32Prefs.backupConfirmed=r32Date(p.backupConfirmed)||'';
                     if(p.home&&typeof p.home==='object'&&!Array.isArray(p.home))for(const [k] of R32_HOME_CHOICES)if(typeof p.home[k]==='boolean')r32Prefs.home[k]=p.home[k];
                 }
             }catch(e){r32Corrupt+='提醒設定 JSON 損壞；';}
@@ -4976,9 +4862,6 @@
                 items.push({id,kind:'div',title:'公告股息發放核對',due:date,desc:`除息日 ${ex}・公告每股 ${amount.toFixed(4)} 元；請核對實際入帳，勿當作已收到。`,done:!!r32Done[id]});
             }
             for(const task of r32Todos){items.push({id:'task-'+task.id,rawId:task.id,kind:'task',title:task.text,due:task.due,desc:'自訂待辦事項',done:task.done});}
-            const backup=r32Prefs.backupConfirmed;
-            const age=backup?r32DayDiff(today,backup):null;
-            if(!backup||age>=30){items.push({id:'backup',kind:'backup',title:'確認本機帳務備份',due:backup?(()=>{const d=new Date(backup+'T12:00:00');d.setDate(d.getDate()+30);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;})():today,desc:backup?'距上次人工確認已達 30 天，請再次下載並檢查 JSON 檔。':'尚未標記任何已確認存在的備份檔；請到 R30 下載並親自查驗。',done:false});}
             return items.sort((a,b)=>Number(a.done)-Number(b.done)||(a.due||'9999').localeCompare(b.due||'9999')||a.id.localeCompare(b.id));
         }
         function r32Label(item,today){
@@ -4998,19 +4881,15 @@
             n('r32_pending_count').textContent=pending.length+' 項';n('r32_overdue_count').textContent=overdue.length+' 項';n('r32_done_count').textContent=done.length+' 項';
             n('r32_status').textContent='檢查日期：'+today;
             n('r32_home_brief').textContent=`待核對 ${pending.length} 項${overdue.length?'（逾期 '+overdue.length+' 項）':''}；定投提醒須自行設定，配息以公告日期核對。`;
-            const backup=r32Prefs.backupConfirmed;
-            n('r32_backup_age').textContent=backup?'上次確認：'+backup:'尚未確認';
-            n('r32_backup_note').textContent=backup?`上次親自確認：${backup}；請確認下載檔案仍存在，不代表已上傳雲端。`:'尚未確認備份檔；先從 R30 下載校驗 JSON，查驗後再按已確認。';
             n('r32_schedule_note').textContent=['main','kid_a','kid_b'].map(k=>( {main:'主帳戶',kid_a:'大寶',kid_b:'二寶'}[k])+'：'+(r32Prefs.days[k]?`每月 ${r32Prefs.days[k]} 日`:'未啟用')).join('；');
             for(const owner of ['main','kid_a','kid_b']){const el=n('r32_day_'+owner);if(el&&el.value!==String(r32Prefs.days[owner]))el.value=String(r32Prefs.days[owner]);}
             const showDone=!!n('r32_show_done')?.checked;
             const visible=showDone?items:pending;
-            const kindColors={dca:'text-indigo-300',div:'text-emerald-300',task:'text-sky-300',backup:'text-teal-300'};
-            const kindLabels={dca:'定投提醒',div:'公告配息',task:'自訂事項',backup:'備份提醒'};
+            const kindColors={dca:'text-indigo-300',div:'text-emerald-300',task:'text-sky-300'};
+            const kindLabels={dca:'定投提醒',div:'公告配息',task:'自訂事項'};
             n('r32_list').innerHTML=visible.length?visible.map(item=>{
                 const state=r32Label(item,today),isTask=item.kind==='task';
-                const control=item.kind==='backup'?`<button type="button" class="r32-action border border-teal-800 text-teal-200 px-3 py-2 rounded text-xs" data-act="backup">去確認備份</button>`:
-                    `${isTask?`<button type="button" class="r32-action text-xs border border-sky-900 text-sky-200 rounded px-3 py-2" data-act="edit" data-id="${r25Escape(item.id)}">編輯</button><button type="button" class="r32-action text-xs border border-red-900 text-red-200 rounded px-3 py-2" data-act="delete" data-id="${r25Escape(item.id)}">刪除</button>`:''}
+                const control=`${isTask?`<button type="button" class="r32-action text-xs border border-sky-900 text-sky-200 rounded px-3 py-2" data-act="edit" data-id="${r25Escape(item.id)}">編輯</button><button type="button" class="r32-action text-xs border border-red-900 text-red-200 rounded px-3 py-2" data-act="delete" data-id="${r25Escape(item.id)}">刪除</button>`:''}
                      ${item.autoBooked?'':`<button type="button" class="r32-action text-xs border border-orange-800 text-orange-200 rounded px-3 py-2" data-act="toggle" data-id="${r25Escape(item.id)}">${item.done?'取消核對':'標記已核對'}</button>`}`;
                 return `<article role="listitem" class="bg-gray-900 rounded border border-gray-700 p-4 min-w-0">
                     <div class="flex flex-wrap gap-2 justify-between items-start"><p class="text-xs ${kindColors[item.kind]||'text-gray-300'}">${kindLabels[item.kind]}</p><span class="text-xs ${state.color}">${state.text}</span></div>
@@ -5040,7 +4919,7 @@
         function r32ActionClick(ev){
             const button=ev.target.closest('.r32-action');if(!button)return;
             const action=button.dataset.act,id=button.dataset.id;
-            if(action==='backup'){switchTab('security');return;}
+            
             const items=r32BuildItems(r25Today()),item=items.find(x=>x.id===id);if(!item)return;
             if(action==='edit'&&item.kind==='task'){
                 const original=r32Todos.find(x=>x.id===item.rawId);if(!original)return;
@@ -5064,12 +4943,6 @@
                 }
                 r32Render();
             }
-        }
-        function r32ConfirmBackup(){
-            if(!confirm('請先確認手機下載資料夾中確實存在可讀取的 00406A 校驗備份 JSON。已親自確認才按「確定」。'))return;
-            const old=r32Prefs.backupConfirmed;r32Prefs.backupConfirmed=r25Today();
-            if(!r32Persist(R32_PREFS_KEY,r32Prefs))r32Prefs.backupConfirmed=old;
-            r32Render();
         }
         function r32Init(){
             r32ReadAll();r32Initialized=true;
@@ -6170,7 +6043,7 @@
           {id:'accounts',icon:'👨‍👧‍👦',name:'帳戶與領息',desc:'三帳戶分開管理',pages:[['ledger','主帳戶手帳'],['kids','雙寶存股手帳'],['family','帳戶資產總覽'],['cashflow','實收股息與現金流'],['assets','主帳戶資產分析']]},
           {id:'analysis',icon:'📊',name:'投資分析',desc:'績效、行情、試算',pages:[['charts','價格走勢'],['dividends','公告配息'],['performance','帳戶績效趨勢'],['efficiency','XIRR 年化績效'],['topup','智慧加碼'],['retirement','退休目標']]},
           {id:'reports',icon:'🗓️',name:'月報／年報',desc:'查看與匯出報表',pages:[['report','智慧月報'],['annual','年度總結']]},
-          {id:'security',icon:'🔐',name:'安全與風險',desc:'備份、風險監測',pages:[['security','資料安全與備份'],['safety','流動性雷達']]}
+          {id:'security',icon:'🩺',name:'風險與健檢',desc:'帳務檢查、量能監測',pages:[['security','帳務健康檢查'],['safety','流動性雷達']]}
         ];
         const R39_PAGE_GROUP=Object.fromEntries(R39_GROUPS.flatMap(g=>g.pages.map(([id])=>[id,g.id])));
         let r39ActiveGroup='frequent';
@@ -6253,7 +6126,7 @@
           report:'先看當月主要數字，再展開交易、持股、三帳戶明細。',
           annual:'先看年度主要數字，再展開比較及月份明細。',
           retirement:'先看目標與試算結果，進階假設和路徑可展開。',
-          security:'先看資料健檢和備份，還原選項放進詳細功能，降低誤觸。',
+          security:'保留帳務健康檢查，操作簡單且不修改原始資料。',
           performance:'先看投資成果，趨勢與計算說明可展開。',
           efficiency:'先看 XIRR，年度對帳和完整性報告可展開。',
           cashflow:'登錄雙寶實收股息及查看摘要，其餘月份與明細可展開。',
