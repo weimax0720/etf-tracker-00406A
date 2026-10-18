@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R40｜分類導覽・流動性雷達進階版</title>
+    <title>00406A Tracker R41｜簡潔全功能旗艦版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -210,6 +210,49 @@
           body.r40-print-active #r40_module td,body.r40-print-active #r40_module th{padding:4px!important;border-bottom:1px solid #cbd5e1;}
           body.r40-print-active #r40_module .r40-no-print{display:none!important;}
         }
+
+        /* ===== R41 簡潔旗艦：只改 UI 顯示階層，不修改任何帳務數據 ===== */
+        @media screen {
+          body { background:#0c1322; }
+          body > .max-w-6xl { max-width:1180px; }
+          body > .max-w-6xl > .flex:first-child { padding:3px 0 12px; }
+          body > .max-w-6xl > .flex:first-child h1 { letter-spacing:-.03em; }
+          .card { padding:1.15rem; border-radius:14px; border-color:#334155; }
+          #r39_category_buttons button { background:#151f31; border:1px solid #384860; border-radius:14px; padding:10px 8px; transition:background .15s,border-color .15s; }
+          #r39_category_buttons button.r39-selected { background:#1e3a5e; border-color:#22d3ee; box-shadow:inset 0 0 0 1px #22d3ee55; }
+          #r33_top_tabs { gap:7px; padding:10px 0 7px; }
+          #r33_top_tabs > button { background:#182337; padding:9px 13px; border-radius:10px; }
+          #r33_top_tabs > button.active { background:#155e75; border-color:#22d3ee; }
+          .r41-panel { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; background:#172537; border:1px solid #36566d; border-radius:14px; padding:12px 14px; margin:10px 0 14px; }
+          .r41-panel strong { color:#dff8ff; font-size:14px; }
+          .r41-panel p { color:#97afc4; font-size:12px; margin-top:4px; }
+          .r41-toggle { background:#155e75; border:1px solid #22d3ee77; border-radius:10px; color:#fff; font-weight:650; font-size:13px; padding:10px 15px; min-height:42px; cursor:pointer; touch-action:manipulation; }
+          .r41-toggle:hover { background:#0e7490; }
+          .r41-toggle:focus-visible { outline:2px solid #a5f3fc; outline-offset:3px; }
+          .r41-view:not(.r41-expanded) .r41-extra { display:none !important; }
+          .r41-hint { background:#0d2530; color:#b2d7e5; border:1px solid #19546b; padding:9px 12px; border-radius:10px; font-size:12px; line-height:1.6; }
+          #tab-overview > [data-r32-home="market"] { margin-top:0; }
+          #tab-overview #r33_home_quick { border-radius:14px; }
+          .r41-view:not(.r41-expanded) .r41-advanced-tip { display:none; }
+          @media (max-width:767px) {
+            .card { padding:14px; border-radius:13px; }
+            #r39_category_buttons button { font-size:12px; min-height:48px; padding:8px 5px; }
+            #r39_category_buttons { gap:6px; }
+            #tab-overview > [data-r32-home="market"] { gap:9px; }
+            #tab-overview > [data-r32-home="market"] > div { padding:12px; }
+            #r33_home_quick { padding:12px; }
+            .r41-panel { padding:12px; }
+            .r41-panel .r41-toggle { width:100%; }
+            .r41-view .overflow-x-auto { -webkit-overflow-scrolling:touch; }
+          }
+        }
+        @media print {
+          .r41-panel,.r41-hint {display:none!important;}
+          /* Export and print ALL report sections, including detail cards normally folded on screen. */
+          .r41-view .r41-extra { display:revert!important; }
+          .r41-view .r41-extra.grid,.r41-view .r41-extra[class*="grid-cols-"] {display:grid!important;}
+          .r41-view .r41-extra.flex {display:flex!important;}
+        }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -262,7 +305,7 @@
             <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
             <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理" data-r32-home="assistant">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 FINAL 今日投資助理</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
+                    <div><h2 class="text-xl font-bold text-cyan-300">🤖 今日投資摘要</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
                     <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
                 </div>
                 <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
@@ -914,7 +957,7 @@
                 <h3 class="text-lg font-bold text-sky-300">🛡️ 帳務備份與還原</h3>
                 <p class="text-xs text-gray-400 mt-2">備份目前網站上的所有 00406A 本機資料（交易、手帳、配息入帳、退休設定與歷史行情快取），預設不匯出 FinMind API 金鑰。備份檔請自行妥善保管，不要上傳公開 GitHub。</p>
                 <div class="flex flex-wrap items-center gap-3 mt-4">
-                    <button type="button" onclick="r30Backup()" class="bg-sky-700 hover:bg-sky-600 text-sm px-4 py-2 rounded font-semibold">📥 下載 R40 校驗備份 JSON</button>
+                    <button type="button" onclick="r30Backup()" class="bg-sky-700 hover:bg-sky-600 text-sm px-4 py-2 rounded font-semibold">📥 下載 R41 校驗備份 JSON</button>
                     <label class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm cursor-pointer">📤 驗證後還原 JSON<input id="r25_restore_input" type="file" accept=".json,application/json" class="hidden" onchange="r30StageFile(this)"></label>
                 </div>
                 <button type="button" onclick="switchTab('security')" class="text-xs text-teal-300 underline mt-3">前往 R30 資料安全中心查看檢查與還原預覽 →</button>
@@ -1008,7 +1051,7 @@
         <section id="tab-report" class="space-y-5 hidden" aria-label="R27 智慧月報">
             <div class="card border border-sky-800/60 r27-no-print">
                 <div class="flex flex-wrap justify-between items-start gap-3">
-                    <div><h2 class="text-xl font-bold text-sky-300">🗓️ R27＋R36 智慧月報中心</h2><p class="text-sm text-gray-400 mt-2">每月自動彙整三帳戶真實交易、三帳戶已登錄實收股息與可取得的配息公告。<strong class="text-sky-200">報表不會修改原始交易。</strong></p></div>
+                    <div><h2 class="text-xl font-bold text-sky-300">🗓️ 每月投資報表</h2><p class="text-sm text-gray-400 mt-2">每月自動彙整三帳戶真實交易、三帳戶已登錄實收股息與可取得的配息公告。<strong class="text-sky-200">報表不會修改原始交易。</strong></p></div>
                     <span class="text-xs text-gray-300 bg-gray-900 border border-gray-700 rounded px-3 py-2" id="r27_status" role="status">本機月報</span>
                 </div>
                 <div class="flex flex-wrap items-end gap-3 mt-4">
@@ -1095,7 +1138,7 @@
         <section id="tab-annual" class="space-y-5 hidden" aria-label="R28 年度投資總結">
             <div class="card border border-amber-700/60 r28-no-print">
                 <div class="flex flex-wrap items-start justify-between gap-3">
-                    <div><h2 class="text-xl font-bold text-amber-200">🏆 R28＋R36 年度投資總結中心</h2><p class="text-sm text-gray-400 mt-2">以逐筆真實交易、R25 主帳戶及 R35 雙寶已登錄實收股息整理年度成果；不把配息公告當成已入帳，也不把未來手帳模擬納入真實績效。</p></div>
+                    <div><h2 class="text-xl font-bold text-amber-200">🏆 年度投資報表</h2><p class="text-sm text-gray-400 mt-2">以逐筆真實交易、R25 主帳戶及 R35 雙寶已登錄實收股息整理年度成果；不把配息公告當成已入帳，也不把未來手帳模擬納入真實績效。</p></div>
                     <span id="r28_status" class="text-xs text-gray-300 bg-gray-900 border border-gray-700 rounded px-3 py-2" role="status">年度報告準備中</span>
                 </div>
                 <div class="flex flex-wrap gap-3 items-end mt-4">
@@ -1485,7 +1528,7 @@
         <section id="tab-security" class="space-y-5 hidden" aria-label="R30 資料安全中心">
           <div class="card border border-teal-800/60">
             <div class="flex flex-wrap items-start justify-between gap-3">
-              <div><h2 class="text-xl font-bold text-teal-300">🔐 R30 投資資料安全中心</h2><p class="text-sm text-gray-400 mt-2">保護這台裝置的主帳戶、雙寶、配息入帳、手帳與退休設定。<strong class="text-white">GitHub 不會自動同步瀏覽器本機帳務資料。</strong></p></div>
+              <div><h2 class="text-xl font-bold text-teal-300">🔐 資料安全與備份</h2><p class="text-sm text-gray-400 mt-2">保護這台裝置的主帳戶、雙寶、配息入帳、手帳與退休設定。<strong class="text-white">GitHub 不會自動同步瀏覽器本機帳務資料。</strong></p></div>
               <span id="r30_status" role="status" class="text-xs bg-gray-900 border border-gray-700 rounded px-3 py-2">等待檢查</span>
             </div>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
@@ -1502,9 +1545,9 @@
             <div id="r30_issue_list" class="space-y-2 mt-4" aria-live="polite"><p class="text-gray-400 text-sm">讀取中</p></div>
           </div>
           <div class="card border border-emerald-900/60">
-            <h3 class="font-bold text-emerald-300 text-lg">② 下載 R40 完整備份</h3>
+            <h3 class="font-bold text-emerald-300 text-lg">② 下載 R41 完整備份</h3>
             <p class="text-sm text-gray-300 mt-2">備份使用 <strong>SHA-256 校驗碼</strong>；可在還原前檢查備份資料完整性（無法證明來源身分）。包含所有 00406A 本機資料（不含 FinMind API 金鑰），請勿上傳公開 GitHub。</p>
-            <div class="flex flex-wrap gap-3 items-center mt-4"><button type="button" id="r30_backup_btn" onclick="r30Backup()" class="bg-emerald-700 hover:bg-emerald-600 rounded px-5 py-3 font-semibold text-sm">📥 下載 R40 校驗備份 JSON</button><button type="button" onclick="r30VerifyCurrent()" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">🔎 計算目前資料指紋</button></div>
+            <div class="flex flex-wrap gap-3 items-center mt-4"><button type="button" id="r30_backup_btn" onclick="r30Backup()" class="bg-emerald-700 hover:bg-emerald-600 rounded px-5 py-3 font-semibold text-sm">📥 下載 R41 校驗備份 JSON</button><button type="button" onclick="r30VerifyCurrent()" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">🔎 計算目前資料指紋</button></div>
             <p id="r30_backup_note" class="text-xs text-gray-400 mt-3" role="status">下載後請開啟手機的「下載」資料夾，確認 JSON 檔確實存在。產生下載請求不等於已備份至雲端。</p>
             <p id="r30_fingerprint" class="text-xs text-gray-500 mt-2 break-all"></p>
           </div>
@@ -1546,7 +1589,7 @@
         <!-- ================= R37 家庭投資績效與領息趨勢（只讀、不寫入交易） ================= -->
         <section id="tab-performance" class="space-y-5 hidden" aria-label="R37 家庭投資績效與實收領息趨勢">
           <div class="card border border-fuchsia-800/60 r37-no-print">
-            <div class="flex flex-wrap justify-between items-start gap-3"><div><h2 class="text-xl font-bold text-fuchsia-300">📊 R37 家庭投資績效與領息趨勢</h2><p class="text-sm text-gray-300 mt-2">主帳戶、大寶、二寶：從真實買賣計算成本與交易成果，從 R25／R35 入帳台帳計算已收到的股息。投資績效與資金流入／流出分開看。</p></div><span id="r37_status" class="text-xs bg-gray-900 border border-gray-700 rounded px-3 py-2">本機資料分析</span></div>
+            <div class="flex flex-wrap justify-between items-start gap-3"><div><h2 class="text-xl font-bold text-fuchsia-300">📊 投資績效與領息趨勢</h2><p class="text-sm text-gray-300 mt-2">主帳戶、大寶、二寶：從真實買賣計算成本與交易成果，從 R25／R35 入帳台帳計算已收到的股息。投資績效與資金流入／流出分開看。</p></div><span id="r37_status" class="text-xs bg-gray-900 border border-gray-700 rounded px-3 py-2">本機資料分析</span></div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
               <label class="text-sm text-gray-300">最近幾個月<select id="r37_months" onchange="r37RangeChanged()" class="block mt-1 w-full rounded bg-gray-900 border border-gray-600 px-3 py-3 text-base"><option value="6">最近 6 個月</option><option value="12" selected>最近 12 個月</option><option value="24">最近 24 個月</option></select></label>
               <label class="text-sm text-gray-300">趨勢表顯示帳戶<select id="r37_owner" onchange="r37RangeChanged()" class="block mt-1 w-full rounded bg-gray-900 border border-gray-600 px-3 py-3 text-base"><option value="all">主帳戶（不含雙寶）</option><option value="main">主帳戶</option><option value="kid_a">大寶</option><option value="kid_b">二寶</option></select></label>
@@ -1576,7 +1619,7 @@
         <section id="tab-efficiency" class="space-y-5 hidden" aria-label="R38 FINAL 家庭 XIRR 與投資效率">
           <div class="card border border-violet-700/60 r38-no-print">
             <div class="flex flex-wrap justify-between items-start gap-3">
-              <div><h2 class="text-xl font-bold text-violet-300">🏆 FINAL 三帳戶獨立績效中心（R38）</h2><p class="text-sm text-gray-300 mt-2">整合主帳戶／大寶／二寶的真實交易、實際股息、庫存與資金加權年化報酬率 XIRR；保留全部舊分頁，這裡只讀不改帳。</p></div>
+              <div><h2 class="text-xl font-bold text-violet-300">🏆 投資報酬與 XIRR</h2><p class="text-sm text-gray-300 mt-2">整合主帳戶／大寶／二寶的真實交易、實際股息、庫存與資金加權年化報酬率 XIRR；保留全部舊分頁，這裡只讀不改帳。</p></div>
               <span id="r38_status" class="text-xs bg-gray-900 border border-gray-700 rounded p-2" role="status">計算中</span>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
@@ -1601,7 +1644,7 @@
         <!-- ================= R35 家庭實收股息與現金流中心 ================= -->
         <section id="tab-cashflow" class="space-y-5 hidden" aria-label="R35 家庭配息與現金流">
           <div class="card border border-emerald-800/60 r35-no-print">
-            <div class="flex flex-wrap items-start justify-between gap-3"><div><h2 class="text-xl font-bold text-emerald-300">💵 R35 家庭配息與現金流中心</h2><p class="text-sm text-gray-300 mt-2">主帳戶沿用 R25 實際股息台帳；大寶、二寶新增獨立實際入帳台帳。只統計已發生的真實入帳及交易，不使用公告金額推算實收。</p></div><span id="r35_status" role="status" class="bg-gray-900 border border-gray-700 text-xs text-gray-300 rounded px-3 py-2">載入中</span></div>
+            <div class="flex flex-wrap items-start justify-between gap-3"><div><h2 class="text-xl font-bold text-emerald-300">💵 實際領息與現金流</h2><p class="text-sm text-gray-300 mt-2">主帳戶沿用 R25 實際股息台帳；大寶、二寶新增獨立實際入帳台帳。只統計已發生的真實入帳及交易，不使用公告金額推算實收。</p></div><span id="r35_status" role="status" class="bg-gray-900 border border-gray-700 text-xs text-gray-300 rounded px-3 py-2">載入中</span></div>
             <div class="flex flex-wrap items-end gap-3 mt-4"><label class="text-sm text-gray-300">年度<select id="r35_year" onchange="r35Render()" class="block mt-1 bg-gray-900 border border-emerald-700 rounded px-3 py-2 text-white text-base"></select></label><label class="text-sm text-gray-300">月份（可選全部）<select id="r35_month" onchange="r35Render()" class="block mt-1 bg-gray-900 border border-emerald-700 rounded px-3 py-2 text-white text-base"><option value="all">全年</option></select></label><button type="button" onclick="r35GoThisYear()" class="rounded bg-gray-700 px-4 py-3 text-sm">回今年</button></div>
             <div class="flex flex-wrap gap-2 mt-4"><button type="button" onclick="r35Render()" class="rounded bg-emerald-800 px-4 py-3 text-sm">↻ 重新彙整</button><button type="button" onclick="r35ExportCsv()" class="rounded bg-blue-700 px-4 py-3 text-sm">📥 下載 CSV</button><button type="button" onclick="r35ExportHTML()" class="rounded bg-gray-700 px-4 py-3 text-sm">📄 下載獨立 HTML</button><button type="button" onclick="r35Print()" class="rounded bg-indigo-700 px-4 py-3 text-sm">🖨️ 列印／PDF</button></div>
             <p class="text-xs text-amber-200 mt-3">本金投入與配息再投資仍以逐筆交易為準。勾選提醒、公告發放或模擬手帳都不會自動新增一筆真實入帳；同一次股息請勿重複登錄。</p>
@@ -1641,7 +1684,7 @@
         <section id="tab-family" class="space-y-5 hidden" aria-label="R34 家庭資產整合儀表板">
           <div class="card border border-cyan-800/60 r34-no-print">
             <div class="flex flex-wrap items-start justify-between gap-3">
-              <div><h2 class="text-xl font-bold text-cyan-300">👨‍👩‍👧‍👦 R34 家庭資產整合儀表板</h2><p class="text-sm text-gray-300 mt-2">真實逐筆交易計算，主帳戶、大寶、二寶各自獨立移動平均成本；不含手帳的未來模擬股數。</p></div>
+              <div><h2 class="text-xl font-bold text-cyan-300">👨‍👩‍👧‍👦 帳戶資產比較</h2><p class="text-sm text-gray-300 mt-2">真實逐筆交易計算，主帳戶、大寶、二寶各自獨立移動平均成本；不含手帳的未來模擬股數。</p></div>
               <span id="r34_status" class="bg-gray-900 border border-gray-700 text-xs text-gray-300 rounded px-3 py-2" role="status">整理家庭帳務中</span>
             </div>
             <div class="flex flex-wrap gap-2 mt-4">
@@ -1682,7 +1725,7 @@
             <section id="r40_module" class="space-y-5" aria-label="R40 進階流動性雷達">
               <div class="card border border-cyan-800/70">
                 <div class="flex flex-wrap items-start justify-between gap-3">
-                  <div><h2 class="text-xl font-bold text-cyan-300">🛡️ R40 進階流動性雷達</h2>
+                  <div><h2 class="text-xl font-bold text-cyan-300">🛡️ 流動性雷達</h2>
                     <p class="text-sm text-gray-300 mt-2">00406A 成交量／成交額變化、量能萎縮警示，以及主帳戶持股容量試算。<strong class="text-cyan-200">僅觀察 ETF 整體市場交易；雙寶持股不納入容量試算。</strong></p></div>
                   <span id="r40_quality" class="text-xs text-gray-300 border border-gray-700 bg-gray-900 rounded px-3 py-2" role="status">尚未取得行情</span>
                 </div>
@@ -1964,6 +2007,7 @@
             r38Init();
             r39Init();
             r40Init();
+            r41Init();
         };
 
         function switchTab(tabId) {
@@ -4575,8 +4619,8 @@
             if(r30Busy)return false;
             try{
                 r30Busy=true;const data=r30Snapshot();const checksum=await r30Digest(data);const analysis=r30Analyze(data);
-                const payload={format:R30_BACKUP_FORMAT,schema:2,version:'R40',createdAt:new Date().toISOString(),integrity:{algorithm:'SHA-256',scope:'sorted-key-value-pairs-v1',digest:checksum},summary:{keys:analysis.keyCount,transactions:analysis.txCount,cashDividends:analysis.cashCount,errors:analysis.errors.length,warnings:analysis.warnings.length},data};
-                const name='00406A_R40_'+(safety?'還原前安全備份_':'完整校驗備份_')+r25Today()+'.json';
+                const payload={format:R30_BACKUP_FORMAT,schema:2,version:'R41',createdAt:new Date().toISOString(),integrity:{algorithm:'SHA-256',scope:'sorted-key-value-pairs-v1',digest:checksum},summary:{keys:analysis.keyCount,transactions:analysis.txCount,cashDividends:analysis.cashCount,errors:analysis.errors.length,warnings:analysis.warnings.length},data};
+                const name='00406A_R41_'+(safety?'還原前安全備份_':'完整校驗備份_')+r25Today()+'.json';
                 r27Download(name,JSON.stringify(payload,null,2),'application/json;charset=utf-8');
                 r30Text('r30_backup_note',`已送出「${name}」下載請求；共 ${analysis.keyCount} 類本機資料，SHA-256 ${checksum.slice(0,16)}…。請到下載資料夾確認檔案存在。`);
                 r30Text('r25_backup_status','R30 校驗備份已要求下載；請到手機下載資料夾確認。');
@@ -6172,6 +6216,132 @@
             node.innerHTML=R39_GROUPS.map(g=>`<button type="button" data-r39-group="${g.id}" aria-pressed="false"><span aria-hidden="true">${g.icon}</span> ${g.name}</button>`).join('');
             node.addEventListener('click',e=>{const b=e.target.closest('button[data-r39-group]');if(b)r39ChooseCategory(b.dataset.r39Group);});
             r39AfterTab('overview');
+        }
+
+
+        /* ===== R41：簡潔呈現，保留所有既有 DOM / IDs / 資料運算及匯出 ===== */
+        const R41_PAGES={
+          overview:'首頁只顯示主帳戶重點、快捷記帳與提醒，其餘資訊按需要查看。',
+          transactions:'先記帳；持股摘要和歷史交易清單可展開。',
+          assets:'主帳戶總覽與實收股息登錄在前，更多計算與年度表格可展開。',
+          dividends:'優先看配息公告與變化提醒，歷史圖表和明細可展開。',
+          topup:'先輸入試算條件、看結果，進階比較可展開。',
+          report:'先看當月主要數字，再展開交易、持股、三帳戶明細。',
+          annual:'先看年度主要數字，再展開比較及月份明細。',
+          retirement:'先看目標與試算結果，進階假設和路徑可展開。',
+          security:'先看資料健檢和備份，還原選項放進詳細功能，降低誤觸。',
+          performance:'先看投資成果，趨勢與計算說明可展開。',
+          efficiency:'先看 XIRR，年度對帳和完整性報告可展開。',
+          cashflow:'登錄雙寶實收股息及查看摘要，其餘月份與明細可展開。',
+          family:'先看三帳戶獨立資產，進階交易足跡可展開。',
+          safety:'優先看量能分級及交易容量，走勢與歷史數據可展開。',
+          reminders:'待辦清單先顯示，進階提醒設定可展開。'
+        };
+        function r41Mark(parent,indices){
+          if(!parent)return;
+          const list=Array.from(parent.children);
+          for(const i of indices)if(list[i])list[i].classList.add('r41-extra');
+        }
+        function r41Panel(view,name,place){
+          const extras=Array.from(view.querySelectorAll('.r41-extra')).length;
+          if(!extras)return;
+          const panel=document.createElement('div');panel.className='r41-panel r41-no-print';
+          panel.innerHTML='<div><strong>簡潔顯示 · 重點優先</strong><p>'+name+'</p></div>';
+          const button=document.createElement('button');button.type='button';button.className='r41-toggle';
+          button.setAttribute('aria-expanded','false');button.setAttribute('aria-controls',view.id);
+          button.textContent='展開詳細資料（'+extras+' 項） ↓';
+          button.onclick=()=>r41Toggle(view.id.slice(4));
+          panel.appendChild(button);
+          if(place?.parentElement)place.after(panel);else view.prepend(panel);
+          view._r41Button=button;view.classList.add('r41-view');
+        }
+        function r41Toggle(id,force){
+          const view=document.getElementById('tab-'+id);if(!view||!view._r41Button)return;
+          const open=typeof force==='boolean'?force:!view.classList.contains('r41-expanded');
+          view.classList.toggle('r41-expanded',open);
+          const button=view._r41Button;
+          button.setAttribute('aria-expanded',String(open));
+          const n=view.querySelectorAll('.r41-extra').length;
+          button.textContent=open?'收起詳細資料 ↑':'展開詳細資料（'+n+' 項） ↓';
+          if(open){
+            // Charts might have been rendered while folded. Recalculate only the active chart view.
+            try{
+              if(id==='dividends')r24DrawChart();
+              if(id==='annual')r28Render();
+              if(id==='retirement')r29Render();
+              if(id==='cashflow')r35Render();
+              if(id==='performance')r37Render();
+              if(id==='safety'){r40ChartKey='';r40Render();}
+            }catch(err){console.warn('R41 圖表展開：',err);}
+            requestAnimationFrame(()=>{
+              try{if(typeof Chart!=='undefined'&&Chart.instances)Object.values(Chart.instances).forEach(c=>{if(c&&typeof c.resize==='function')c.resize();});}catch(e){}
+            });
+          }
+        }
+        function r41RevealTarget(node){
+          let el=node;
+          while(el && el!==document.body){
+            if(el.classList?.contains('r41-view') && el.querySelector('.r41-extra') && !el.classList.contains('r41-expanded')){
+              r41Toggle(el.id.slice(4),true);return;
+            }
+            el=el.parentElement;
+          }
+        }
+        function r41Init(){
+          const ov=document.getElementById('tab-overview');
+          if(ov){
+            const market=ov.querySelector('[data-r32-home="market"]');
+            if(market)ov.prepend(market);
+            const children=Array.from(ov.children);
+            // Main market values, quick accounting and actionable reminders are always visible.
+            for(const c of children){
+              if(c===market||c.id==='r33_home_quick'||c.id==='r32_home_panel')continue;
+              c.classList.add('r41-extra');
+            }
+            r41Panel(ov,R41_PAGES.overview,ov.querySelector('#r33_home_quick')||market);
+            ov.classList.add('r41-view');
+          }
+          const tx=document.getElementById('tab-transactions');
+          if(tx){const card=tx.querySelector('.card');r41Mark(card,[3,4]);r41Panel(tx,R41_PAGES.transactions,card);}
+          const plan={
+            assets:[3,4],topup:[3,4],dividends:[2,3],
+            reminders:[1,2,5,6],security:[3,4],
+            retirement:[2],safety:[1,2,3],
+            // All original chart and table content is still present, only visually folded.
+          };
+          for(const [id,indices] of Object.entries(plan)){
+            const tab=document.getElementById('tab-'+id);if(tab)r41Mark(tab,indices);
+          }
+          // Cash form is always exposed; all report data remain in their original containers.
+          const nested={
+            report:['r27_paper',[2,3,4,5,6,7]],
+            annual:['r28_paper',[2,3,4,5,6,7]],
+            retirement:['r29_paper',[3,4]],
+            cashflow:['r35_paper',[3,4,5]],
+            family:['r34_paper',[3,4,5]],
+            performance:['r37_paper',[2,3,4]],
+            efficiency:['r38_paper',[1,2]],
+            safety:['r40_module',[4,5]]
+          };
+          for(const [id,[container,indices]] of Object.entries(nested))r41Mark(document.getElementById(container),indices);
+          for(const id of Object.keys(R41_PAGES)){
+            if(id==='overview'||id==='transactions')continue;
+            const tab=document.getElementById('tab-'+id);
+            if(!tab)continue;
+            const first=tab.firstElementChild;
+            r41Panel(tab,R41_PAGES[id],first);
+          }
+          // Short visible naming. Internal page IDs remain unchanged for deep links and old shortcuts.
+          const headers=[
+            ['#tab-overview [data-r32-home="market"]','主帳戶與市場重點'],
+          ];
+          // Existing links may call scrollIntoView on a folded element; expand before scrolling.
+          const nativeScroll=Element.prototype.scrollIntoView;
+          if(typeof nativeScroll==='function'){
+            Element.prototype.scrollIntoView=function(...args){r41RevealTarget(this);return nativeScroll.apply(this,args);};
+          }
+          window.addEventListener('beforeprint',()=>document.body.classList.add('r41-printing'));
+          window.addEventListener('afterprint',()=>document.body.classList.remove('r41-printing'));
         }
 
         /* ===== R40：流動性雷達 2.0 — 純歷史量價分析（不寫入帳務、不新增連線） ===== */
