@@ -1456,11 +1456,10 @@
                     <span id="r32_status" class="text-xs text-gray-300 bg-gray-900 px-3 py-2 rounded border border-gray-700" role="status">本機提醒</span>
                 </div>
                 <p class="text-xs text-amber-200 mt-3">此版本僅在開啟／操作網頁時檢查提醒，<strong>沒有 Android 背景推播、鬧鐘或自動下單。</strong> 提醒的「已核對」不代表真的買進或收到股息。</p>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
                     <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">目前待核對</p><p id="r32_pending_count" class="text-xl font-bold mt-1">—</p></div>
                     <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">已逾期（按設定）</p><p id="r32_overdue_count" class="text-xl font-bold text-amber-300 mt-1">—</p></div>
                     <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">已核對／已有交易</p><p id="r32_done_count" class="text-xl font-bold text-emerald-300 mt-1">—</p></div>
-                    </div>
                 </div>
                 <div class="flex flex-wrap gap-2 mt-4"><button type="button" onclick="r32Render()" class="px-4 py-3 rounded bg-orange-700 hover:bg-orange-600 text-sm">↻ 重新檢查提醒</button><button type="button" onclick="switchTab('security')" class="px-4 py-3 rounded bg-gray-700 hover:bg-gray-600 text-sm">🩺 帳務健康檢查</button></div>
                 <p id="r32_error" class="text-sm text-red-300 mt-3 hidden" role="alert"></p>
