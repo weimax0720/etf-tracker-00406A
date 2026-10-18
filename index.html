@@ -2598,11 +2598,11 @@
                 const currentMonth = today.getMonth() + 1;
                 let currentDefaultInvest = 5000;
                 if (currentYear > 2033 || (currentYear === 2033 && currentMonth >= 1)) {
-                    currentDefaultInvest = 30000;
+                    currentDefaultInvest = 25000;
                 } else if (currentYear > 2031 || (currentYear === 2031 && currentMonth >= 7)) {
-                    currentDefaultInvest = 20000;
+                    currentDefaultInvest = 15000;
                 } else if (currentYear > 2027 || (currentYear === 2027 && currentMonth >= 7)) {
-                    currentDefaultInvest = 8000;
+                    currentDefaultInvest = 4000;
                 }
                 const shares = Math.floor(currentDefaultInvest / currentPrice);
                 document.getElementById('buyable_shares_label').innerText = `約 ${currentDefaultInvest / 1000} 千元購買力參考`;
@@ -2872,9 +2872,9 @@
                 } else {
                     let defaultInvestForMonth = 0;
                     if (i < 144) {
-                        if (currentY > 2033 || (currentY === 2033 && currentM >= 1)) defaultInvestForMonth = 30000;
-                        else if (currentY > 2031 || (currentY === 2031 && currentM >= 7)) defaultInvestForMonth = 20000;
-                        else if (currentY > 2027 || (currentY === 2027 && currentM >= 7)) defaultInvestForMonth = 8000;
+                        if (currentY > 2033 || (currentY === 2033 && currentM >= 1)) defaultInvestForMonth = 25000;
+                        else if (currentY > 2031 || (currentY === 2031 && currentM >= 7)) defaultInvestForMonth = 15000;
+                        else if (currentY > 2027 || (currentY === 2027 && currentM >= 7)) defaultInvestForMonth = 4000;
                         else defaultInvestForMonth = 5000;
                     } else {
                         defaultInvestForMonth = 0; 
@@ -4337,9 +4337,9 @@
             if(idx>=0 && custom && Object.prototype.hasOwnProperty.call(custom,idx) && custom[idx]!=='' ){
                 const v=Number(custom[idx]);if(Number.isFinite(v)&&v>=0&&v<=1000000)return v;
             }
-            if(y>2032)return 30000;
-            if(y>2031 || (y===2031&&m>=7))return 20000;
-            if(y>2027 || (y===2027&&m>=7))return 8000;
+            if(y>2032)return 25000;
+            if(y>2031 || (y===2031&&m>=7))return 15000;
+            if(y>2027 || (y===2027&&m>=7))return 4000;
             return 5000;
         }
         function r29FormValues(){
