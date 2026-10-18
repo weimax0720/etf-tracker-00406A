@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R44｜自動市場資料・簡潔版</title>
+    <title>00406A Tracker R45｜智慧首頁・自動資料版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -307,13 +307,48 @@
 
         <!-- ================= 分頁 1：資產與即時領息總覽 ================= -->
         <div id="tab-overview" class="space-y-6">
+            <!-- R45 智慧首頁：只放三件事；原有分析仍可展開。 -->
+            <div id="r45_assistant" class="space-y-3" data-r32-home="assistant">
+              <section id="r45_brief" class="card border border-cyan-800/60" aria-label="R45 今日三件事">
+                <div class="flex flex-wrap gap-3 justify-between items-start mb-3">
+                  <div>
+                    <h2 class="text-lg md:text-xl font-bold text-cyan-300">✨ 今日三件事</h2>
+                    <p class="text-xs text-gray-400 mt-1">自動整理公開行情、下一期配息與主帳戶；只列重點</p>
+                  </div>
+                  <div class="flex flex-wrap gap-2 items-center">
+                    <span id="r45_state" role="status" aria-live="polite" class="text-xs text-cyan-200 bg-cyan-950 border border-cyan-900 rounded-lg px-2 py-1">讀取中</span>
+                    <button type="button" onclick="r45Refresh()" class="text-xs text-white bg-gray-700 hover:bg-gray-600 rounded-lg px-3 py-2">↻ 重新整理</button>
+                  </div>
+                </div>
+                <p id="r45_asof" class="text-xs text-gray-400 mb-3">正在核對公開資料與本機帳務…</p>
+                <div class="space-y-2">
+                  <p class="bg-gray-900/80 rounded-lg px-3 py-3 text-sm text-gray-100"><span class="text-cyan-300 font-bold mr-2">1</span><span id="r45_line1">等待最近收盤資料</span></p>
+                  <p class="bg-gray-900/80 rounded-lg px-3 py-3 text-sm text-gray-100"><span class="text-cyan-300 font-bold mr-2">2</span><span id="r45_line2">等待下次除息公告</span></p>
+                  <p class="bg-gray-900/80 rounded-lg px-3 py-3 text-sm text-gray-100"><span class="text-cyan-300 font-bold mr-2">3</span><span id="r45_line3">等待主帳戶紀錄</span></p>
+                </div>
+                <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+                  <div class="rounded-lg bg-gray-900/70 p-2"><p class="text-xs text-gray-400">行情</p><p id="r45_market" class="text-xs text-gray-200 mt-1">核對中</p></div>
+                  <div class="rounded-lg bg-gray-900/70 p-2"><p class="text-xs text-gray-400">配息</p><p id="r45_dividend" class="text-xs text-gray-200 mt-1">核對中</p></div>
+                  <div class="rounded-lg bg-gray-900/70 p-2"><p class="text-xs text-gray-400">同步</p><p id="r45_feed" class="text-xs text-gray-200 mt-1">核對中</p></div>
+                </div>
+                <div id="r45_attention" hidden class="border border-amber-800/60 rounded-lg bg-amber-950/20 px-3 py-3 mt-3">
+                  <p id="r45_attention_title" class="text-sm font-semibold text-amber-300 mb-2"></p>
+                  <p id="r45_warn1" class="text-xs text-gray-200 my-1"></p>
+                  <p id="r45_warn2" class="text-xs text-gray-200 my-1"></p>
+                  <p id="r45_warn3" class="text-xs text-gray-200 my-1"></p>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">規則式摘要（不是生成式 AI），非買賣建議；只讀取主帳戶資料，不與雙寶合計。</p>
+              </section>
+              <details id="r45_legacy_details" class="rounded-lg border border-gray-700 bg-gray-800/40">
+                <summary class="cursor-pointer px-4 py-3 text-sm text-gray-300 font-medium">📊 展開原有完整投資分析</summary>
+                <div class="px-2 pb-2">
             <!-- R23 智慧投資摘要：使用現有持股及行情，不呼叫付費 AI -->
-            <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理" data-r32-home="assistant">
+            <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <div><h2 class="text-xl font-bold text-cyan-300">🤖 今日投資摘要</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
                     <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
                 </div>
-                <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄後顯示摘要；行情須先輸入 FinMind 金鑰。</p>
+                <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄與公開市場資料後顯示摘要；可使用 GitHub 自動資料更新。</p>
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
                     <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶持股</p><p class="text-lg font-semibold" id="r23_shares">--</p></div>
                     <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">參考市值</p><p class="text-lg font-semibold" id="r23_value">--</p></div>
@@ -327,7 +362,9 @@
                     <div class="bg-gray-900 rounded p-4"><h3 class="font-semibold text-purple-300">💡 今日觀察</h3><p id="r23_advice" class="text-sm text-gray-300 mt-2">尚無足夠資料</p></div>
                 </div>
             </section>
-
+                </div>
+              </details>
+            </div>
 
             <!-- R33 快速操作入口：僅使用現有帳務儲存格式 -->
             <div id="r33_home_quick" class="bg-gray-800 border border-cyan-800/60 rounded-lg p-4">
@@ -6669,5 +6706,6 @@
 
     </script>
     <script src="./js/auto-market.js"></script>
+    <script src="./js/r45-smart.js"></script>
 </body>
 </html>
