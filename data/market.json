@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "code": "00406A",
-  "checkedAt": "2026-10-18T16:12:23+08:00",
-  "pricesUpdatedAt": "2026-10-18T16:12:23+08:00",
-  "dividendsUpdatedAt": "2026-10-18T16:12:23+08:00",
+  "checkedAt": "2026-10-18T16:20:18+08:00",
+  "pricesUpdatedAt": "2026-10-18T16:20:18+08:00",
+  "dividendsUpdatedAt": "2026-10-18T16:20:18+08:00",
   "prices": [
     {
       "date": "2026-07-01",
@@ -780,7 +780,5 @@
     "prices": "臺灣證券交易所每日成交資料",
     "dividends": "臺灣證券交易所 ETF e添富"
   },
-  "errors": [
-    "TWSE 2025 配息：證交所網頁未回傳可辨識的 00406A 表格（避免清空舊資料）"
-  ]
+  "errors": []
 }
