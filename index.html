@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R43｜簡潔版・預估配息同步</title>
+    <title>00406A Tracker R44｜自動市場資料・簡潔版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -267,11 +267,16 @@
                 <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 家族全連動旗艦版 · 分類導覽優化版</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
-                <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
-                <button onclick="saveAndLoad()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-medium transition whitespace-nowrap">儲存更新</button>
+                <input type="password" id="api_key" placeholder="FinMind 金鑰（選填）" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
+                <button onclick="saveAndLoad()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-medium transition whitespace-nowrap">更新行情</button>
             </div>
         </div>
 
+        <!-- R44 公開市場資料更新狀態（不含私人投資帳務） -->
+        <div id="r44_status_bar" class="flex flex-wrap gap-2 justify-between items-center bg-gray-800 border border-cyan-900/50 rounded-lg px-3 py-2 text-xs text-gray-300">
+          <span id="r44_sync_status" role="status" aria-live="polite">🌐 準備檢查 GitHub 公開市場資料…</span>
+          <button id="r44_refresh_btn" type="button" onclick="r44Refresh(true)" class="rounded bg-gray-700 hover:bg-gray-600 px-3 py-2">↻ 檢查最新資料</button>
+        </div>
         <!-- R39：分類式導覽。原有 19 個頁面與 id 原封保留，僅收合導覽入口。 -->
         <nav id="r39_category_nav" class="r39-no-print" aria-label="功能分類">
           <div id="r39_category_buttons" class="grid grid-cols-3 lg:grid-cols-5 gap-2" role="group" aria-label="選擇功能分類"></div>
@@ -2089,7 +2094,7 @@
 
         function saveAndLoad() {
             const key = document.getElementById('api_key').value.trim();
-            if(!key) { alert('請先輸入 API 金鑰！'); return; }
+            if(!key) { void r44Refresh(true); return; }
             localStorage.setItem(KEY_NAME, key);
             fetchData(key);
             alert('金鑰已儲存！正在抓取最新市場資料...');
@@ -4064,7 +4069,8 @@
             clone.removeAttribute('id');
             // 完全靜態的選定月份報表：不含 API token、localStorage、腳本或帳務編輯功能。
             const style=`body{font-family:system-ui,-apple-system,sans-serif;margin:22px auto;padding:0 15px;max-width:900px;color:#172033;background:#fff;font-size:14px} .card{border:1px solid #cbd5e1;border-radius:8px;padding:18px;margin:0 0 14px;break-inside:avoid}h2{font-size:23px}h3{font-size:18px}p{line-height:1.55} .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.bg-gray-900{background:#f1f5f9;padding:10px;border-radius:5px}.text-xs{font-size:11px;color:#475569}.text-sm{font-size:13px}.text-lg{font-size:17px}table{width:100%;border-collapse:collapse}th,td{padding:7px 5px;border-bottom:1px solid #e2e8f0;text-align:left}td.text-right,th.text-right{text-align:right} .overflow-x-auto{overflow-x:auto}@media print{@page{size:A4;margin:13mm}body{margin:0;padding:0}.card{page-break-inside:avoid}}`;
-            r27Download(`00406A_R36_帳戶對照月報_${r.month}.html`,'<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A '+r.month+' 月報</title><style>'+style+'</style></head><body>'+clone.outerHTML+'</body></html>','text/html;charset=utf-8');
+            r27Download(`00406A_R36_帳戶對照月報_${r.month}.html`,'<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A '+r.month+' 月報</title><style>'+style+'</style></head><body>'+clone.outerHTML+'    <script src="./js/auto-market.js"></script>
+</body></html>','text/html;charset=utf-8');
         }
         // R25 股息入帳新增、修改或刪除時，月報立即刷新。
         const r27PreviousR25Render=r25Render;
