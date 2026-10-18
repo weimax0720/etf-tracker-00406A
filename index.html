@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R38 FINAL 獨立帳戶修正版｜MAX 的追蹤儀表板</title>
+    <title>00406A Tracker R40｜分類導覽・流動性雷達進階版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -192,6 +192,24 @@
         #r39_menu_search{font-size:16px;color-scheme:dark;}
         @media (max-width:767px){#r39_category_nav{display:none!important;}}
         @media print{#r39_category_nav{display:none!important;}}
+
+        /* R40 安全雷達列印只顯示先進量價分析，不將舊指標誤作官方風險分級。 */
+        @media print {
+          body.r40-print-active > .max-w-6xl > :not(#tab-safety){display:none!important;}
+          body.r40-print-active #tab-safety{display:block!important;width:100%!important;}
+          body.r40-print-active #tab-safety > :not(#r40_module){display:none!important;}
+          body.r40-print-active #r40_module{display:block!important;}
+          body.r40-print-active #r40_module .r40-no-print{display:none!important;}
+          body.r40-print-active #r40_module .card{background:#fff!important;color:#172033!important;border:1px solid #cbd5e1!important;padding:10px!important;margin:0 0 10px!important;break-inside:avoid;}
+          body.r40-print-active #r40_module [class*="text-"]{color:#172033!important;}
+          body.r40-print-active #r40_module .bg-gray-900{background:#f1f5f9!important;}
+          body.r40-print-active #r40_module .grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;}
+          body.r40-print-active #r40_module .overflow-x-auto{overflow:visible!important;}
+          body.r40-print-active #r40_module [class*="min-w-"]{min-width:0!important;}
+          body.r40-print-active #r40_module table{width:100%!important;font-size:9px!important;}
+          body.r40-print-active #r40_module td,body.r40-print-active #r40_module th{padding:4px!important;border-bottom:1px solid #cbd5e1;}
+          body.r40-print-active #r40_module .r40-no-print{display:none!important;}
+        }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -896,7 +914,7 @@
                 <h3 class="text-lg font-bold text-sky-300">🛡️ 帳務備份與還原</h3>
                 <p class="text-xs text-gray-400 mt-2">備份目前網站上的所有 00406A 本機資料（交易、手帳、配息入帳、退休設定與歷史行情快取），預設不匯出 FinMind API 金鑰。備份檔請自行妥善保管，不要上傳公開 GitHub。</p>
                 <div class="flex flex-wrap items-center gap-3 mt-4">
-                    <button type="button" onclick="r30Backup()" class="bg-sky-700 hover:bg-sky-600 text-sm px-4 py-2 rounded font-semibold">📥 下載 R38 FINAL 校驗備份 JSON</button>
+                    <button type="button" onclick="r30Backup()" class="bg-sky-700 hover:bg-sky-600 text-sm px-4 py-2 rounded font-semibold">📥 下載 R40 校驗備份 JSON</button>
                     <label class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm cursor-pointer">📤 驗證後還原 JSON<input id="r25_restore_input" type="file" accept=".json,application/json" class="hidden" onchange="r30StageFile(this)"></label>
                 </div>
                 <button type="button" onclick="switchTab('security')" class="text-xs text-teal-300 underline mt-3">前往 R30 資料安全中心查看檢查與還原預覽 →</button>
@@ -1484,9 +1502,9 @@
             <div id="r30_issue_list" class="space-y-2 mt-4" aria-live="polite"><p class="text-gray-400 text-sm">讀取中</p></div>
           </div>
           <div class="card border border-emerald-900/60">
-            <h3 class="font-bold text-emerald-300 text-lg">② 下載 R38 FINAL 完整備份</h3>
+            <h3 class="font-bold text-emerald-300 text-lg">② 下載 R40 完整備份</h3>
             <p class="text-sm text-gray-300 mt-2">備份使用 <strong>SHA-256 校驗碼</strong>；可在還原前檢查備份資料完整性（無法證明來源身分）。包含所有 00406A 本機資料（不含 FinMind API 金鑰），請勿上傳公開 GitHub。</p>
-            <div class="flex flex-wrap gap-3 items-center mt-4"><button type="button" id="r30_backup_btn" onclick="r30Backup()" class="bg-emerald-700 hover:bg-emerald-600 rounded px-5 py-3 font-semibold text-sm">📥 下載 R38 FINAL 校驗備份 JSON</button><button type="button" onclick="r30VerifyCurrent()" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">🔎 計算目前資料指紋</button></div>
+            <div class="flex flex-wrap gap-3 items-center mt-4"><button type="button" id="r30_backup_btn" onclick="r30Backup()" class="bg-emerald-700 hover:bg-emerald-600 rounded px-5 py-3 font-semibold text-sm">📥 下載 R40 校驗備份 JSON</button><button type="button" onclick="r30VerifyCurrent()" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">🔎 計算目前資料指紋</button></div>
             <p id="r30_backup_note" class="text-xs text-gray-400 mt-3" role="status">下載後請開啟手機的「下載」資料夾，確認 JSON 檔確實存在。產生下載請求不等於已備份至雲端。</p>
             <p id="r30_fingerprint" class="text-xs text-gray-500 mt-2 break-all"></p>
           </div>
@@ -1659,6 +1677,69 @@
 
         <!-- ================= 分頁 7：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
+
+            <!-- R40｜進階流動性雷達：使用同一份 FinMind 歷史量價資料；不額外送出 API 請求。 -->
+            <section id="r40_module" class="space-y-5" aria-label="R40 進階流動性雷達">
+              <div class="card border border-cyan-800/70">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                  <div><h2 class="text-xl font-bold text-cyan-300">🛡️ R40 進階流動性雷達</h2>
+                    <p class="text-sm text-gray-300 mt-2">00406A 成交量／成交額變化、量能萎縮警示，以及主帳戶持股容量試算。<strong class="text-cyan-200">僅觀察 ETF 整體市場交易；雙寶持股不納入容量試算。</strong></p></div>
+                  <span id="r40_quality" class="text-xs text-gray-300 border border-gray-700 bg-gray-900 rounded px-3 py-2" role="status">尚未取得行情</span>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-4 r40-no-print">
+                  <button type="button" onclick="r40Refresh()" class="rounded bg-cyan-800 hover:bg-cyan-700 px-4 py-3 text-sm font-semibold">↻ 重新分析已載入行情</button>
+                  <button type="button" onclick="r40ExportCsv()" class="rounded bg-emerald-800 hover:bg-emerald-700 px-4 py-3 text-sm">📥 成交量 CSV</button>
+                  <button type="button" onclick="r40ExportHTML()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-3 text-sm">📄 獨立 HTML</button>
+                  <button type="button" onclick="r40Print()" class="rounded bg-blue-800 hover:bg-blue-700 px-4 py-3 text-sm">🖨️ 列印／PDF</button>
+                </div>
+                <p id="r40_source" class="mt-3 text-xs text-gray-400" aria-live="polite">資料來源：目前尚未載入 FinMind TaiwanStockPrice。</p>
+              </div>
+              <div class="card border border-slate-700/80">
+                <div class="flex flex-col md:flex-row gap-4 md:items-center justify-between">
+                  <div><p class="text-xs text-gray-400">量能警示（規則式觀察，非下單或安全保證）</p><p id="r40_level" class="text-xl font-bold text-gray-200 mt-2">資料不足，無法評估</p><p id="r40_main_reason" class="text-sm text-gray-300 mt-2">請先載入足夠的成交量與成交額資料。</p></div>
+                  <div class="rounded-lg border border-gray-700 bg-gray-900 p-4 min-w-[200px]"><p class="text-xs text-gray-400">最近有效交易日</p><p id="r40_latest_date" class="font-semibold text-lg mt-2">—</p><p id="r40_days_old" class="text-xs text-gray-400 mt-2">資料尚未更新</p></div>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
+                  <div class="bg-gray-900 p-3 rounded-lg"><p class="text-xs text-gray-400">近 20 日平均量</p><p id="r40_avg20_vol" class="text-xl font-bold mt-2">—</p></div>
+                  <div class="bg-gray-900 p-3 rounded-lg"><p class="text-xs text-gray-400">近 5 日平均量</p><p id="r40_avg5_vol" class="text-xl font-bold mt-2">—</p></div>
+                  <div class="bg-gray-900 p-3 rounded-lg"><p class="text-xs text-gray-400">近 20 日平均成交額</p><p id="r40_avg20_money" class="text-xl font-bold mt-2">—</p></div>
+                  <div class="bg-gray-900 p-3 rounded-lg"><p class="text-xs text-gray-400">近 5 日／20 日量比</p><p id="r40_volume_ratio" class="text-xl font-bold mt-2">—</p></div>
+                  <div class="bg-gray-900 p-3 rounded-lg"><p class="text-xs text-gray-400">最新日成交量</p><p id="r40_latest_vol" class="text-lg font-bold mt-2">—</p></div>
+                  <div class="bg-gray-900 p-3 rounded-lg"><p class="text-xs text-gray-400">最新日成交額</p><p id="r40_latest_money" class="text-lg font-bold mt-2">—</p></div>
+                  <div class="bg-gray-900 p-3 rounded-lg"><p class="text-xs text-gray-400">近 5 日／20 日成交額比</p><p id="r40_money_ratio" class="text-lg font-bold mt-2">—</p></div>
+                  <div class="bg-gray-900 p-3 rounded-lg"><p class="text-xs text-gray-400">20 日收盤價區間幅度</p><p id="r40_range" class="text-lg font-bold mt-2">—</p></div>
+                </div>
+              </div>
+              <div class="card border border-amber-900/60">
+                <h3 class="font-bold text-lg text-amber-300">🚦 量能警示與資料完整性</h3>
+                <div id="r40_alerts" class="space-y-2 mt-3 text-sm" aria-live="polite"><p>等待量價資料。</p></div>
+                <p class="mt-3 text-xs text-gray-400">規則：近 20 交易日平均成交額低於 1 億元列為高度注意，低於 5 億元列為注意；近 5 日／20 日成交量比低於 0.55 加強警示、低於 0.30 列高度注意。這是<strong>可供觀察的固定門檻</strong>，不是證券交易所或投信的官方風險等級，也不代表未來配息會低於 0.10 元。</p>
+              </div>
+              <div class="card border border-violet-800/60">
+                <h3 class="font-bold text-lg text-violet-300">🧮 主帳戶分批交易容量試算</h3>
+                <p class="text-xs text-gray-300 mt-2">估算「若每天成交股數不超過近 20 日平均總成交量的一定比例」，需要幾個<strong>交易日</strong>才能完成預計賣出股數。這不是成交預測、不能估算滑價、排隊、買賣價差或保證成交。<strong>大寶、二寶持股不計入。</strong></p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4 r40-no-print">
+                  <label class="text-sm text-gray-300">預計賣出股數（留空＝主帳戶持股）<input id="r40_order_shares" type="number" min="1" max="1000000000" step="1" inputmode="numeric" placeholder="留空：使用主帳戶現有持股" oninput="r40Render()" class="w-full mt-2 rounded bg-gray-900 border border-gray-700 px-3 py-3 text-base text-white"></label>
+                  <label class="text-sm text-gray-300">每天參與量上限<select id="r40_participation" onchange="r40Render()" class="w-full mt-2 rounded bg-gray-900 border border-gray-700 px-3 py-3 text-base text-white"><option value="0.01">1%（保守試算）</option><option value="0.03">3%</option><option value="0.05" selected>5%</option><option value="0.10">10%（較高參與量）</option></select></label>
+                  <div class="flex items-end"><button type="button" onclick="r40UseMainShares()" class="w-full rounded bg-violet-800 hover:bg-violet-700 px-3 py-3 text-sm">帶入主帳戶持股</button></div>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
+                  <div class="rounded bg-gray-900 p-3"><p class="text-xs text-gray-400">主帳戶現有股數</p><p class="font-bold text-lg mt-2" id="r40_main_shares">—</p></div>
+                  <div class="rounded bg-gray-900 p-3"><p class="text-xs text-gray-400">試算股數</p><p class="font-bold text-lg mt-2" id="r40_order_display">—</p></div>
+                  <div class="rounded bg-gray-900 p-3"><p class="text-xs text-gray-400">單日假設可參與股數</p><p class="font-bold text-lg mt-2" id="r40_daily_capacity">—</p></div>
+                  <div class="rounded bg-gray-900 p-3"><p class="text-xs text-gray-400">理論需要交易日</p><p class="font-bold text-xl text-violet-300 mt-2" id="r40_exit_days">—</p></div>
+                </div>
+                <p id="r40_order_note" class="text-xs text-amber-200 mt-3" role="status">尚未有足夠成交量資料。</p>
+              </div>
+              <div class="card">
+                <div class="flex flex-wrap items-center justify-between gap-2"><h3 class="font-bold text-lg text-cyan-300">📈 最近 20 個交易日量價趨勢</h3><span class="text-xs text-gray-400">FinMind 歷史收盤量價</span></div>
+                <div id="r40_chart_box" class="mt-4 r40-no-print" style="height:240px"><canvas id="r40_chart" role="img" aria-label="最近二十交易日成交量及成交額比較"></canvas></div>
+                <p id="r40_chart_note" class="text-xs text-gray-400 mt-2">圖表需要 Chart.js；即使圖表無法載入，下方明細仍可查看。</p>
+                <div class="overflow-x-auto mt-4 border border-gray-700 rounded"><table class="w-full min-w-[620px] text-xs"><thead class="bg-gray-900 text-gray-300"><tr><th class="p-2 text-left">日期</th><th class="p-2 text-right">收盤價</th><th class="p-2 text-right">成交量（張）</th><th class="p-2 text-right">成交額（億元）</th><th class="p-2 text-left">成交額來源</th></tr></thead><tbody id="r40_table_rows" class="divide-y divide-gray-700"><tr><td colspan="5" class="p-4 text-center">尚無量價資料</td></tr></tbody></table></div>
+              </div>
+              <div class="card"><h3 class="font-bold text-lg text-slate-200">ℹ️ 正確解讀</h3><p class="text-sm text-gray-300 mt-2">成交量／成交額不等於可成交深度；僅靠日線無法知道最佳五檔、即時買賣價差、申購買回成本、造市商報價或基金規模。ETF 價格偏離淨值與折溢價也應另外查官方來源。若資料超過 7 個日曆日、交易日不足 15 筆或最近沒有有效量價，系統會停用風險等級與容量試算，避免將舊資料說成最新。</p></div>
+            </section>
+            <details class="card border border-gray-700"><summary class="cursor-pointer text-sm font-semibold text-gray-300">展開舊版預警指標（配息門檻、單日成交額；僅供對照）</summary><div class="space-y-5 mt-4">
             <div class="card border border-red-900/50 shadow-lg shadow-red-900/10 mb-6">
                 <h2 class="text-xl font-semibold mb-4 text-red-400">🚨 ETF 配息與流動性風險分數預警</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -1702,6 +1783,8 @@
                     <p class="text-xl font-bold text-blue-400" id="trading_turnover">NT$ -- 億</p>
                 </div>
             </div>
+
+            </div></details>
 
             <div class="card flex justify-between items-center">
                 <div>
@@ -1880,6 +1963,7 @@
             r37Init();
             r38Init();
             r39Init();
+            r40Init();
         };
 
         function switchTab(tabId) {
@@ -1940,6 +2024,7 @@
             if(tabId === 'cashflow') r35Render();
             if(tabId === 'performance') r37Render();
             if(tabId === 'efficiency') r38Render();
+            if(tabId === 'safety') r40Render();
             r33AfterTab(tabId);
             r39AfterTab(tabId);
         }
@@ -2373,6 +2458,8 @@
                 
                 if(priceData.msg === 'success' && priceData.data.length > 0) {
                     rawPriceData = priceData.data.filter(item => !isWeekend(item.date));
+                    // R40 僅重用此份市場資料，不新增 API 流量；如資料無效，風險等級會留白。
+                    if(typeof r40Render==='function')r40Render();
                     
                     if(rawPriceData.length > 0) {
                         const latestPriceObj = rawPriceData[rawPriceData.length - 1];
@@ -2451,13 +2538,13 @@
 
                 const currentYear = today.getFullYear();
                 const currentMonth = today.getMonth() + 1;
-                let currentDefaultInvest = 4000;
+                let currentDefaultInvest = 5000;
                 if (currentYear > 2033 || (currentYear === 2033 && currentMonth >= 1)) {
-                    currentDefaultInvest = 25000;
+                    currentDefaultInvest = 30000;
                 } else if (currentYear > 2031 || (currentYear === 2031 && currentMonth >= 7)) {
-                    currentDefaultInvest = 15000;
+                    currentDefaultInvest = 20000;
                 } else if (currentYear > 2027 || (currentYear === 2027 && currentMonth >= 7)) {
-                    currentDefaultInvest = 4000;
+                    currentDefaultInvest = 8000;
                 }
                 const shares = Math.floor(currentDefaultInvest / currentPrice);
                 document.getElementById('buyable_shares_label').innerText = `約 ${currentDefaultInvest / 1000} 千元購買力參考`;
@@ -2727,10 +2814,10 @@
                 } else {
                     let defaultInvestForMonth = 0;
                     if (i < 144) {
-                        if (currentY > 2033 || (currentY === 2033 && currentM >= 1)) defaultInvestForMonth = 25000;
-                        else if (currentY > 2031 || (currentY === 2031 && currentM >= 7)) defaultInvestForMonth = 15000;
-                        else if (currentY > 2027 || (currentY === 2027 && currentM >= 7)) defaultInvestForMonth = 4000;
-                        else defaultInvestForMonth = 4000;
+                        if (currentY > 2033 || (currentY === 2033 && currentM >= 1)) defaultInvestForMonth = 30000;
+                        else if (currentY > 2031 || (currentY === 2031 && currentM >= 7)) defaultInvestForMonth = 20000;
+                        else if (currentY > 2027 || (currentY === 2027 && currentM >= 7)) defaultInvestForMonth = 8000;
+                        else defaultInvestForMonth = 5000;
                     } else {
                         defaultInvestForMonth = 0; 
                     }
@@ -4488,8 +4575,8 @@
             if(r30Busy)return false;
             try{
                 r30Busy=true;const data=r30Snapshot();const checksum=await r30Digest(data);const analysis=r30Analyze(data);
-                const payload={format:R30_BACKUP_FORMAT,schema:2,version:'R38 FINAL',createdAt:new Date().toISOString(),integrity:{algorithm:'SHA-256',scope:'sorted-key-value-pairs-v1',digest:checksum},summary:{keys:analysis.keyCount,transactions:analysis.txCount,cashDividends:analysis.cashCount,errors:analysis.errors.length,warnings:analysis.warnings.length},data};
-                const name='00406A_R37_'+(safety?'還原前安全備份_':'完整校驗備份_')+r25Today()+'.json';
+                const payload={format:R30_BACKUP_FORMAT,schema:2,version:'R40',createdAt:new Date().toISOString(),integrity:{algorithm:'SHA-256',scope:'sorted-key-value-pairs-v1',digest:checksum},summary:{keys:analysis.keyCount,transactions:analysis.txCount,cashDividends:analysis.cashCount,errors:analysis.errors.length,warnings:analysis.warnings.length},data};
+                const name='00406A_R40_'+(safety?'還原前安全備份_':'完整校驗備份_')+r25Today()+'.json';
                 r27Download(name,JSON.stringify(payload,null,2),'application/json;charset=utf-8');
                 r30Text('r30_backup_note',`已送出「${name}」下載請求；共 ${analysis.keyCount} 類本機資料，SHA-256 ${checksum.slice(0,16)}…。請到下載資料夾確認檔案存在。`);
                 r30Text('r25_backup_status','R30 校驗備份已要求下載；請到手機下載資料夾確認。');
@@ -6086,6 +6173,140 @@
             node.addEventListener('click',e=>{const b=e.target.closest('button[data-r39-group]');if(b)r39ChooseCategory(b.dataset.r39Group);});
             r39AfterTab('overview');
         }
+
+        /* ===== R40：流動性雷達 2.0 — 純歷史量價分析（不寫入帳務、不新增連線） ===== */
+        const r40El=id=>document.getElementById(id);
+        const r40Put=(id,value)=>{const el=r40El(id);if(el)el.textContent=String(value);};
+        const r40Fmt=(n,d=0)=>Number.isFinite(n)?n.toLocaleString('zh-TW',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+        const r40Mean=xs=>xs.length?xs.reduce((a,b)=>a+b,0)/xs.length:null;
+        function r40Compute(raw,today){
+            if(!r24SafeDate(today))throw Error('分析日期不合法');
+            const map=new Map();let skipped=0;
+            for(const x of (Array.isArray(raw)?raw:[])){
+                if(!x || !r24SafeDate(x.date) || x.date>today){skipped++;continue;}
+                const close=Number(x.close),v=Number(x.Trading_Volume??x.volume);
+                if(!Number.isFinite(close)||close<=0||!Number.isFinite(v)||v<0){skipped++;continue;}
+                const hasNative=x.Trading_money!==null && x.Trading_money!==undefined && x.Trading_money!=='';
+                const native=hasNative?Number(x.Trading_money):NaN;
+                // 非零成交量卻回傳 0 元時，多半不是可用成交額；寧可標成估算。
+                const validNative=hasNative&&Number.isFinite(native)&&native>=0&&(v===0||native>0);
+                const money=validNative?native:close*v;
+                if(!Number.isFinite(money)||money<0){skipped++;continue;}
+                // 同一天如重複出現，最後一筆有效記錄取代先前資料，避免多算。
+                map.set(x.date,{date:x.date,close,shares:v,money,estimated:!validNative});
+            }
+            const all=[...map.values()].sort((a,b)=>a.date.localeCompare(b.date));
+            const rows=all.slice(-20),last5=rows.slice(-5),latest=rows.at(-1)||null;
+            const count=rows.length,avgVol=r40Mean(rows.map(x=>x.shares)),avgVol5=r40Mean(last5.map(x=>x.shares));
+            const avgMoney=r40Mean(rows.map(x=>x.money)),avgMoney5=r40Mean(last5.map(x=>x.money));
+            const volRatio=avgVol>0?avgVol5/avgVol:null,moneyRatio=avgMoney>0?avgMoney5/avgMoney:null;
+            const dateUTC=s=>Date.UTC(Number(s.slice(0,4)),Number(s.slice(5,7))-1,Number(s.slice(8,10)));
+            const age=latest?Math.round((dateUTC(today)-dateUTC(latest.date))/86400000):null;
+            const stale=age===null||age>7;
+            const enough=count>=15&&last5.length>=5;
+            const moneyEst=rows.filter(x=>x.estimated).length;
+            const zeroCount=rows.filter(x=>x.shares===0).length;
+            const closes=rows.map(x=>x.close),minClose=closes.length?Math.min(...closes):null,maxClose=closes.length?Math.max(...closes):null;
+            const closeRange=minClose>0?100*(maxClose-minClose)/minClose:null;
+            const alerts=[];
+            let grade='unknown',reason='資料不足，至少需要 15 個有效交易日';
+            if(!latest)alerts.push('沒有可用歷史成交量；可能是行情尚未載入或市場資料缺少必要欄位。');
+            else if(!enough)alerts.push(`僅有 ${count} 日有效量價，低於 15 日門檻；不提供風險分級。`);
+            if(stale&&latest)alerts.push(`最新資料停在 ${latest.date}，距今 ${age} 天；超過 7 個日曆日，先更新行情。`);
+            if(skipped)alerts.push(`已跳過 ${skipped} 筆日期、價格或成交量無效的紀錄。`);
+            if(moneyEst)alerts.push(`近 ${count} 日有 ${moneyEst} 日沒有有效官方成交額，以收盤價 × 成交股數估算；估算值可能和成交額不同。`);
+            if(zeroCount)alerts.push(`最近 ${count} 日有 ${zeroCount} 日零成交量；請核對是否真實無成交或資料來源缺漏。`);
+            if(enough&&!stale){
+                grade='normal';reason='尚未觸發本頁的低量能觀察門檻';
+                if(avgMoney<1e8){grade='high';reason='20 日平均成交額低於 1 億元';}
+                else if(avgMoney<5e8){grade='watch';reason='20 日平均成交額低於 5 億元';}
+                if(avgVol===0 || latest.shares===0){grade='high';reason='近期出現零量或 20 日總量為零';}
+                else if(volRatio!==null&&volRatio<0.30){grade='high';reason='最近 5 日成交量僅約 20 日均量的 '+r40Fmt(volRatio*100,1)+'%';}
+                else if(volRatio!==null&&volRatio<0.55){if(grade==='normal')grade='watch';reason+='；近 5 日量能相對走弱（'+r40Fmt(volRatio*100,1)+'%）';}
+                if(moneyRatio!==null&&moneyRatio<0.55)alerts.push(`5 日／20 日平均成交額比僅 ${r40Fmt(moneyRatio*100,1)}%，交易金額同步走弱。`);
+                if(volRatio!==null&&volRatio<0.55)alerts.push(`5 日／20 日平均成交量比為 ${r40Fmt(volRatio*100,1)}%，請持續觀察量能是否回升。`);
+                if(grade==='normal')alerts.push('未觸發此頁自訂門檻，不代表市場一定有足夠買賣深度，也不代表交易沒有折溢價或滑價。');
+            }
+            return {rows,latest,count,age,stale,enough,grade,reason,alerts,avgVol,avgVol5,avgMoney,avgMoney5,volRatio,moneyRatio,closeRange,moneyEst,zeroCount,skipped,ready:enough&&!stale};
+        }
+        let r40Last=null,r40Chart=null,r40ChartKey='';
+        function r40Holdings(){
+            try{
+                const r=r34Build();
+                if(!r.allValid||r.errors.length)return {shares:null,error:'逐筆交易有異常，請到資料安全中心檢查，無法帶入主帳戶股數。'};
+                return {shares:r.owners.main.shares,error:''};
+            }catch(e){return {shares:null,error:'主帳戶交易資料無法核對：'+e.message};}
+        }
+        function r40Build(){return r40Compute(rawPriceData,r25Today());}
+        function r40Render(){
+            if(!r40El('r40_module'))return;
+            const data=r40Build();r40Last=data;
+            const {latest,count,age,stale,ready,grade}=data;
+            r40Put('r40_quality',latest?`${count} 日量價 · ${stale?'資料已過期':'歷史資料'}`:'未載入歷史量價');
+            r40Put('r40_source',latest?`來源：FinMind TaiwanStockPrice，最近有效紀錄 ${latest.date}；近 ${count} 個有效交易日（成交量以股數換算為張）。${data.moneyEst?'部分成交額為收盤價乘成交量之估值。':''}`:'資料來源：尚無有效 FinMind 歷史量價。請輸入 FinMind 金鑰並更新行情。');
+            const label={unknown:'⚪ 無法分級：資料不足或過期',normal:'🟢 量能未觸發警示（不代表安全）',watch:'🟡 量能需注意',high:'🔴 量能高度注意'};
+            r40Put('r40_level',label[grade]);r40Put('r40_main_reason',stale&&latest?'最近資料已超過 7 個日曆日，請先重新取得最新行情':data.reason);
+            r40Put('r40_latest_date',latest?.date||'—');r40Put('r40_days_old',age===null?'未有有效交易日':`距分析日 ${age} 個日曆日${stale?'（可能過期）':''}`);
+            r40Put('r40_avg20_vol',ready?r40Fmt(data.avgVol/1000,1)+' 張':'—');
+            r40Put('r40_avg5_vol',ready?r40Fmt(data.avgVol5/1000,1)+' 張':'—');
+            r40Put('r40_avg20_money',ready?'NT$ '+r40Fmt(data.avgMoney/1e8,2)+' 億':'—');
+            r40Put('r40_volume_ratio',ready&&data.volRatio!==null?r40Fmt(data.volRatio*100,1)+'%':'—');
+            r40Put('r40_latest_vol',latest?r40Fmt(latest.shares/1000,1)+' 張':'—');
+            r40Put('r40_latest_money',latest?'NT$ '+r40Fmt(latest.money/1e8,2)+' 億':'—');
+            r40Put('r40_money_ratio',ready&&data.moneyRatio!==null?r40Fmt(data.moneyRatio*100,1)+'%':'—');
+            r40Put('r40_range',ready&&data.closeRange!==null?r40Fmt(data.closeRange,1)+'%':'—');
+            r40El('r40_alerts').innerHTML=data.alerts.length?data.alerts.map(t=>`<p class="bg-gray-900 rounded p-3">⚠️ ${r25Escape(t)}</p>`).join(''):'<p class="bg-gray-900 rounded p-3">資料足夠時顯示觀察提醒；本頁不推播。</p>';
+            const holding=r40Holdings();
+            const input=r40El('r40_order_shares'),custom=String(input.value||'').trim();
+            const shareNum=custom?Number(custom):holding.shares;
+            const participation=Number(r40El('r40_participation').value);
+            const validQty=Number.isSafeInteger(shareNum)&&shareNum>0&&shareNum<=1e9;
+            r40Put('r40_main_shares',holding.shares===null?'帳務需檢查':r40Fmt(holding.shares)+' 股');
+            r40Put('r40_order_display',validQty?r40Fmt(shareNum)+' 股':custom?'股數無效':holding.shares===0?'無持股':'—');
+            r40Put('r40_daily_capacity',ready&&data.avgVol>0?r40Fmt(data.avgVol*participation,0)+' 股／日':'—');
+            if(!ready){r40Put('r40_exit_days','—');r40Put('r40_order_note','交易量資料不足或過期：已停用容量估計，不以舊資料冒充現在可成交量。');}
+            else if(holding.error){r40Put('r40_exit_days','—');r40Put('r40_order_note',holding.error);}
+            else if(!validQty){r40Put('r40_exit_days','—');r40Put('r40_order_note',custom?'請輸入 1～1,000,000,000 的整數股數。':'主帳戶目前沒有持股。若要自行試算，請輸入預計交易股數。');}
+            else if(data.avgVol<=0){r40Put('r40_exit_days','—');r40Put('r40_order_note','最近 20 日平均成交量為零，無法進行容量估計。');}
+            else {
+                const capacity=data.avgVol*participation,days=Math.ceil(shareNum/capacity);
+                r40Put('r40_exit_days',days>9999?'> 9,999 天':r40Fmt(days)+' 天');
+                r40Put('r40_order_note',`以 20 日平均成交量 ${r40Fmt(data.avgVol/1000,1)} 張及每日參與比例 ${r40Fmt(participation*100)}% 試算，單日容量約 ${r40Fmt(capacity,0)} 股；不計市場變化、對手單、折溢價與滑價，無法保證能在估計天數內成交。`+(custom&&shareNum>holding.shares?' 試算股數超過主帳戶現有持股，僅供假設比較。':''));
+            }
+            r40El('r40_table_rows').innerHTML=data.rows.length?data.rows.slice().reverse().map(x=>`<tr><td class="p-2">${x.date}</td><td class="p-2 text-right">${r40Fmt(x.close,2)}</td><td class="p-2 text-right">${r40Fmt(x.shares/1000,1)}</td><td class="p-2 text-right">${r40Fmt(x.money/1e8,3)}</td><td class="p-2">${x.estimated?'估算':'原始成交額'}</td></tr>`).join(''):'<tr><td colspan="5" class="p-4 text-center text-amber-300">尚無有效量價資料</td></tr>';
+            // 輸入試算股數時不重建圖表；直到分頁可見且資料有變才建立。
+            if(!r40El('tab-safety').classList.contains('hidden'))r40DrawChart(data);
+        }
+        function r40DrawChart(data){
+            const label=r40El('r40_chart_note');
+            const signature=JSON.stringify(data.rows.map(x=>[x.date,x.shares,x.money]));
+            if(r40Chart&&r40ChartKey===signature)return;
+            if(r40Chart){r40Chart.destroy();r40Chart=null;r40ChartKey='';}
+            if(!data.rows.length){label.textContent='尚無有效資料，圖表暫停顯示。';return;}
+            if(typeof Chart==='undefined'){label.textContent='圖表套件尚未載入，請使用下方明細表查看資料。';return;}
+            try{
+                r40Chart=new Chart(r40El('r40_chart').getContext('2d'),{type:'bar',data:{labels:data.rows.map(x=>x.date.slice(5)),datasets:[{label:'成交量（張）',data:data.rows.map(x=>x.shares/1000),yAxisID:'y',backgroundColor:'rgba(34,211,238,.65)',borderWidth:0},{label:'成交額（億元）',data:data.rows.map(x=>x.money/1e8),type:'line',yAxisID:'y1',borderColor:'#fbbf24',backgroundColor:'#fbbf24',borderWidth:2,pointRadius:1,tension:.2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#cbd5e1'}}},scales:{x:{ticks:{color:'#94a3b8',maxTicksLimit:10}},y:{beginAtZero:true,position:'left',ticks:{color:'#94a3b8'}},y1:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false},ticks:{color:'#fbbf24'}}}}});
+                r40ChartKey=signature;
+                label.textContent='左軸成交量（張），右軸成交額（億元）；歷史統計，不是即時委託簿。';
+            }catch(e){label.textContent='圖表無法顯示，可查看下方完整量價表。';}
+        }
+        function r40UseMainShares(){const r=r40Holdings();if(r.shares===null){alert(r.error);return;}if(r.shares<=0){alert('主帳戶目前沒有持股；可自行輸入假設交易股數。');return;}r40El('r40_order_shares').value=String(r.shares);r40Render();}
+        function r40Refresh(){r40Render();if(!r40Last.latest)alert('尚無有效量價。請使用頁面頂部的「儲存更新」取得市場資料；此按鈕只重新整理已載入的歷史量價。');}
+        function r40ExportCsv(){
+            r40Render();const d=r40Last;if(!d||!d.rows.length){alert('沒有可匯出的有效歷史量價');return;}
+            const lines=[['00406A Tracker R40','歷史量能進階監測'],['資料截至',d.latest.date],['等級',d.grade],['說明',d.stale?'資料過期；不可判斷流動性':d.reason],['樣本交易日',d.count],['成交額估算天數',d.moneyEst],['20日平均量（股）',d.avgVol??''],['5日平均量（股）',d.avgVol5??''],['20日平均成交額（元）',d.avgMoney??''],['5日／20日量比',d.volRatio??''],['風險解釋','僅日線成交統計，並非買賣價差、委託深度或實際滑價'],[],['日期','收盤價（元）','成交量（股）','成交額（元）','成交額來源']];
+            for(const row of d.rows)lines.push([row.date,row.close,row.shares,row.money,row.estimated?'收盤價乘股數估算':'原始成交額']);
+            lines.push([],['警示與備註']);for(const t of d.alerts)lines.push([t]);
+            r27Download(`00406A-R40-流動性雷達-${d.latest.date}.csv`,'\ufeff'+lines.map(row=>row.map(r27CsvValue).join(',')).join('\r\n'),'text/csv;charset=utf-8');
+        }
+        function r40ExportHTML(){
+            r40Render();const d=r40Last;if(!d||!d.rows.length){alert('沒有有效資料可以匯出');return;}
+            const body=r40El('r40_module').cloneNode(true);for(const el of body.querySelectorAll('.r40-no-print,canvas'))el.remove();
+            const html='<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A R40 流動性監測 '+d.latest.date+'</title><style>body{font-family:Arial,sans-serif;color:#172033;background:#fff;margin:28px;line-height:1.6}section,.card{margin:0 0 18px;border:1px solid #ccd5e1;border-radius:8px;padding:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:5px;border-bottom:1px solid #ddd;text-align:left}p{margin:5px 0}h2,h3{margin:5px 0}button{display:none} @media print{@page{size:A4;margin:12mm}body{margin:0}.card{break-inside:avoid}}</style></head><body>'+body.innerHTML+'</body></html>';
+            r27Download(`00406A-R40-流動性雷達-${d.latest.date}.html`,html,'text/html;charset=utf-8');
+        }
+        function r40Print(){r40Render();if(!r40Last?.rows.length){alert('尚無有效量價資料，無法列印');return;}document.body.classList.add('r40-print-active');try{window.print();}catch(e){document.body.classList.remove('r40-print-active');alert('列印失敗：'+e.message);}}
+        function r40Init(){if(!r40El('r40_module'))return;window.addEventListener('afterprint',()=>document.body.classList.remove('r40-print-active'));r40Render();}
 
     </script>
 </body>
