@@ -1310,7 +1310,7 @@
                     <label class="text-sm text-gray-300">手動參考股價（元／股，可空白）<input type="number" id="r29_manual_price" min="0.01" step="0.01" inputmode="decimal" placeholder="留白則沿用行情" onchange="r29Save()" class="w-full mt-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-white"></label>
                 </div>
                 <div class="flex flex-wrap items-center gap-2 mt-4">
-                    <button type="button" onclick="r29Reset()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm">↩ 還原預設情境與目標</button>
+                    <button type="button" onclick="r29Reset()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm">↩ 重設試算情境</button>
                     <span id="r29_save_note" class="text-xs text-gray-400">只有此頁的試算偏好會儲存，絕不新增交易。</span>
                 </div>
                 <p id="r29_contrib_note" class="text-xs text-gray-400 mt-3">定投從下個月份起估算，避免重複計入本月已記帳交易。55 歲起不再追加外部資金。</p>
@@ -1635,7 +1635,7 @@
             <div class="card"><h3 class="text-lg font-bold text-cyan-300 mb-2">① 三帳戶歷來投入、實收與估算投資成果</h3><div class="overflow-x-auto"><table class="w-full min-w-[1000px] text-xs"><thead class="text-gray-400"><tr><th class="text-left p-2">帳戶</th><th class="text-right p-2">持股</th><th class="text-right p-2">自有投入</th><th class="text-right p-2">再投資買股</th><th class="text-right p-2">賣出淨收</th><th class="text-right p-2">實收股息</th><th class="text-right p-2">已實現交易損益</th><th class="text-right p-2">未實現損益</th><th class="text-right p-2">累計成果估值</th><th class="text-right p-2">成本對照比</th></tr></thead><tbody id="r37_performance_rows" class="divide-y divide-gray-700"></tbody></table></div><p class="text-xs text-gray-500 mt-3">累計成果包含估算賣出費用；價格若缺失且仍有持股，累計成果留白。已實現損益不等於現金流或投資報酬率。</p></div>
             <div class="card"><h3 class="text-lg font-bold text-emerald-300 mb-2">② 各帳戶實際領息趨勢</h3><div class="r37-chart-wrap" style="height:255px"><canvas id="r37_cash_chart" aria-label="近期主帳戶大寶二寶實收股息圖"></canvas></div><h3 class="text-lg font-bold text-indigo-300 mt-5 mb-2">③ 自有投入與實收股息分開比較</h3><div class="r37-chart-wrap" style="height:230px"><canvas id="r37_money_chart" aria-label="近期自有投入與實收股息對照圖"></canvas></div><p class="text-xs text-gray-500 mt-3">圖表與下方表格僅使用已登錄的實收股息；本月未結束，無法與完整月份等量比較。圖表載入失敗時仍可閱讀表格。</p></div>
             <div class="card"><h3 class="text-lg font-bold text-pink-300 mb-2">④ 逐月實收、投入與帳務現金流</h3><p id="r37_trend_scope" class="text-xs text-gray-400 mb-2">—</p><div class="overflow-x-auto"><table class="w-full min-w-[730px] text-xs"><thead class="text-gray-400"><tr><th class="p-2 text-left">月份</th><th class="p-2 text-right">已登錄實收</th><th class="p-2 text-right">自有投入</th><th class="p-2 text-right">再投資買股</th><th class="p-2 text-right">賣出淨收</th><th class="p-2 text-right">帳務淨現金流</th></tr></thead><tbody id="r37_trend_rows" class="divide-y divide-gray-700"></tbody></table></div></div>
-            <div class="card"><h3 class="text-lg font-bold text-amber-300 mb-2">⑤ 計算說明與資料限制</h3><p id="r37_disclaimer" class="text-sm text-gray-300">請先載入帳務。</p><p class="text-xs text-gray-500 mt-3">本頁不是經查核的績效報告，不推估未來殖利率、年化報酬或買賣時點。配息可能含本金，不能以股息率視為投資獲利。請到 R30 安全中心定期檢查及備份。</p></div>
+            <div class="card"><h3 class="text-lg font-bold text-amber-300 mb-2">⑤ 計算說明與資料限制</h3><p id="r37_disclaimer" class="text-sm text-gray-300">請先載入帳務。</p><p class="text-xs text-gray-500 mt-3">本頁不是經查核的績效報告，不推估未來殖利率、年化報酬或買賣時點。配息可能含本金，不能以股息率視為投資獲利。請定期以帳務健康檢查確認資料是否正常。</p></div>
           </div>
         </section>
 
@@ -1661,7 +1661,7 @@
               <p class="text-xs text-gray-400 mt-3">計算流向：買股（包括配息再投資）為負；賣出淨收、已登錄實際股息為正；未賣部位僅在計算截止日加入「假設賣出淨值」。若未實際記錄股息或已再投資但未登收入，XIRR 可能偏低。資料未涵蓋外部券商帳戶現金餘額、稅務差異或其他資產。</p>
             </div>
             <div class="card"><h3 class="text-lg font-bold text-cyan-300">年度資金流與領息核對</h3><p class="text-xs text-gray-400 mt-2">此表主帳戶買進與賣出獨立彙整、雙寶僅顯示個別實收，並非各年度 XIRR；要計算特定年度績效還需要該年初、年末的可驗證估值。</p><div class="overflow-x-auto mt-3"><table class="w-full min-w-[730px] text-xs"><thead class="text-gray-400"><tr><th class="text-left p-2">年度</th><th class="text-right p-2">主帳戶買股支出</th><th class="text-right p-2">賣出淨收入</th><th class="text-right p-2">主帳戶領息</th><th class="text-right p-2">大寶領息</th><th class="text-right p-2">二寶領息</th></tr></thead><tbody id="r38_year_rows" class="divide-y divide-gray-700"></tbody></table></div></div>
-            <div class="card border border-amber-900/50"><h3 class="text-lg font-bold text-amber-300">資料完整性與對帳提醒</h3><p id="r38_count" class="text-xs text-gray-400 mt-1">檢查中</p><div id="r38_audit" class="space-y-2 mt-3"></div><p class="text-xs text-gray-500 mt-4">僅提醒可能的帳務缺漏，不會自行新增、刪除、同步交易。R30 的 SHA-256 完整備份仍是原始帳務保存方式。財務資料請勿提交至公開 GitHub。</p></div>
+            <div class="card border border-amber-900/50"><h3 class="text-lg font-bold text-amber-300">資料完整性與對帳提醒</h3><p id="r38_count" class="text-xs text-gray-400 mt-1">檢查中</p><div id="r38_audit" class="space-y-2 mt-3"></div><p class="text-xs text-gray-500 mt-4">僅提醒可能的帳務缺漏，不會自行新增、刪除、同步交易。帳務僅存在目前瀏覽器中，請勿將個人交易資料提交公開 GitHub。</p></div>
           </div>
         </section>
 
@@ -1700,7 +1700,7 @@
             <div class="card"><h3 class="text-lg font-bold text-cyan-300 mb-3">② 所選期間三帳戶現金流比較</h3><div class="overflow-x-auto"><table class="w-full min-w-[660px] text-sm"><thead class="text-gray-400 border-b border-gray-700"><tr><th class="text-left p-2">帳戶</th><th class="text-right p-2">自有買進</th><th class="text-right p-2">再投資買進</th><th class="text-right p-2">賣出淨收</th><th class="text-right p-2">實收股息</th><th class="text-right p-2">帳務淨現金流</th></tr></thead><tbody id="r35_owner_rows" class="divide-y divide-gray-700"></tbody></table></div><p class="text-xs text-gray-500 mt-3">配息再投資是實際買入支出，不等於當月一定有實收股息。帳務淨現金流不是損益，也不能直接推算報酬率。</p></div>
             <div class="card"><h3 class="text-lg font-bold text-blue-300 mb-3">③ 選定年度每月實收股息與現金流</h3><div class="r35-chart-wrap" style="height:230px"><canvas id="r35_chart" aria-label="三個帳戶每月實收股息比較圖"></canvas></div><p id="r35_chart_note" class="text-xs text-gray-500 mt-2">圖表使用已登錄的淨入帳金額；下方表格不依賴圖表套件。</p><div class="overflow-x-auto mt-3"><table class="w-full min-w-[740px] text-xs"><thead class="text-gray-400 border-b border-gray-700"><tr><th class="text-left p-2">月份</th><th class="text-right p-2">主帳戶實收</th><th class="text-right p-2">大寶實收</th><th class="text-right p-2">二寶實收</th><th class="text-right p-2">買股支出</th><th class="text-right p-2">主帳戶淨現金流</th></tr></thead><tbody id="r35_month_rows" class="divide-y divide-gray-700"></tbody></table></div></div>
             <div class="card"><h3 class="text-lg font-bold text-amber-300 mb-3">④ 實收股息入帳明細（所選期間）</h3><p class="text-xs text-gray-400 mb-3">僅此處記錄「實際入帳」，交易裡的配息再投資與 ETF 公告不會自動合併。</p><div class="overflow-x-auto"><table class="w-full min-w-[560px] text-sm"><thead class="text-gray-400 border-b border-gray-700"><tr><th class="text-left p-2">日期</th><th class="text-left p-2">帳戶</th><th class="text-right p-2">實收金額</th><th class="text-left p-2">備註</th><th class="text-center p-2 r35-no-print">操作</th></tr></thead><tbody id="r35_cash_rows" class="divide-y divide-gray-700"></tbody></table></div></div>
-            <div class="card"><h3 class="text-lg font-bold text-rose-300 mb-3">⑤ 核對與資料品質</h3><div id="r35_warnings" class="text-sm text-gray-300 space-y-2"></div><p class="text-xs text-gray-500 mt-3">資料為個人手動帳務整理，非券商帳務證明。請與三帳戶實際入帳及成交對帳。新資料鍵會納入 R30 SHA-256 完整備份，不會自動同步 GitHub。</p></div>
+            <div class="card"><h3 class="text-lg font-bold text-rose-300 mb-3">⑤ 核對與資料品質</h3><div id="r35_warnings" class="text-sm text-gray-300 space-y-2"></div><p class="text-xs text-gray-500 mt-3">資料為個人手動帳務整理，非券商帳務證明。請與三帳戶實際入帳及成交對帳。三個帳戶資料各自保存在本機，不會自動同步 GitHub。</p></div>
           </div>
         </section>
 
@@ -3608,7 +3608,7 @@
         }
         function r25StoreCash(){
             try {localStorage.setItem(R25_CASH_KEY,JSON.stringify(r25CashRows));return true;}
-            catch(e){console.error(e);alert('瀏覽器儲存空間不足，入帳紀錄尚未存檔。請先備份其他資料。');return false;}
+            catch(e){console.error(e);alert('瀏覽器儲存空間不足，入帳紀錄尚未存檔。請檢查瀏覽器儲存空間。');return false;}
         }
         function r25SaveCash(){
             const date=document.getElementById('r25_cash_date').value;
@@ -4355,10 +4355,10 @@
             r29Render();
         }
         function r29Reset(){
-            if(!confirm('還原 R29 退休目標及情境的預設輸入？交易紀錄、股息及手帳不受影響。'))return;
+            if(!confirm('重設 R29 退休目標及情境的預設輸入？交易紀錄、股息及手帳不受影響。'))return;
             r29FillForm({...R29_DEFAULTS});
             try{localStorage.removeItem(R29_SETTINGS_KEY);}catch(e){}
-            r29Text('r29_save_note','已還原情境預設值；每月目標留白，請依需求設定。');r29Render();
+            r29Text('r29_save_note','已重設情境預設值；每月目標留白，請依需求設定。');r29Render();
         }
         function r29Init(){if(!r29Get('tab-retirement'))return;r29FillForm(r29ReadSettings());r29Ready=true;r29Render();}
         // 純函式，總報酬率含配發再投資；55歲後領出的配發現金從資產扣除，不額外疊加報酬。
@@ -4801,9 +4801,9 @@
             }catch(e){r32Corrupt+='完成狀態 JSON 損壞；';}
         }
         function r32Persist(key,value){
-            if(r32Corrupt){alert('R32 部分資料無法解析，為避免覆蓋損壞原檔，已暫停儲存。請先到 R30 安全中心下載備份，再檢查資料。');return false;}
+            if(r32Corrupt){alert('R32 部分資料無法解析，為避免覆蓋損壞原檔，已暫停儲存。請到帳務健康檢查核對問題。');return false;}
             try{localStorage.setItem(key,JSON.stringify(value));return true;}
-            catch(e){alert('R32 儲存失敗：本機儲存空間可能不足，請先備份。');return false;}
+            catch(e){alert('R32 儲存失敗：本機儲存空間可能不足，請檢查儲存狀況。');return false;}
         }
         function r32ApplyHome(){
             for(const elem of document.querySelectorAll('#tab-overview [data-r32-home]')){
@@ -4899,7 +4899,7 @@
                     <div class="flex flex-wrap justify-end gap-2 mt-3">${control}</div>
                 </article>`;
             }).join(''):'<p class="text-gray-400 text-sm bg-gray-900 p-4 rounded">目前沒有需要處理的提醒；可勾選「顯示已核對」查看完成事項。</p>';
-            const err=n('r32_error');if(r32Corrupt){err.classList.remove('hidden');err.textContent='⚠ 部分 R32 本機資料無法解析，已禁止覆寫。'+r32Corrupt+' 請先保存 R30 備份再處理。';}else{err.classList.add('hidden');err.textContent='';}
+            const err=n('r32_error');if(r32Corrupt){err.classList.remove('hidden');err.textContent='⚠ 部分 R32 本機資料無法解析，已禁止覆寫。'+r32Corrupt+' 請到帳務健康檢查核對後再處理。';}else{err.classList.add('hidden');err.textContent='';}
             r32RenderHomeOptions();
         }
         function r32SaveTask(){
@@ -5098,7 +5098,7 @@
             let id=Date.now();while(rows.some(t=>String(t.id)===String(id)))id++;
             const added={id,...latest},next=[...rows,added];
             // 確保確認後才寫入原有 00406A_TX_LOG；儲存失敗不更動頁面內帳務。
-            try{localStorage.setItem(TX_KEY,JSON.stringify(next));}catch(e){r33ShowError('瀏覽器儲存失敗，沒有寫入這筆交易。請先備份並檢查可用空間。');return;}
+            try{localStorage.setItem(TX_KEY,JSON.stringify(next));}catch(e){r33ShowError('瀏覽器儲存失敗，沒有寫入這筆交易。請檢查瀏覽器可用空間。');return;}
             transactionLog=next;r33PendingTx=null;
             try{updateTransactions();}catch(e){console.error('R33 更新帳務畫面失敗',e);r33ClosePanels();r33NavGo('transactions');alert('交易已保存，但畫面更新失敗；請重新整理並核對。');return;}
             r33ClosePanels();r33NavGo('transactions');
@@ -5239,7 +5239,7 @@
             if(r.price===null)warnings.push('尚未載入有效行情；市值與未實現損益留白。');
             if(!r.feeValid)warnings.push('賣出稅費比例不正確；未實現損益留白。');
             warnings.push('三帳戶實收股息分別由 R25／R35 台帳核對；ETF 配息公告不當作實收，市值變化不代表報酬率。');
-            warnings.push('請定期下載 R30 校驗備份，並與券商股數及實際成本對帳。');
+            warnings.push('請定期與券商股數及實際成本對帳。');
             r34El('r34_warnings').replaceChildren(...warnings.map(s=>{const p=document.createElement('p');p.textContent='• '+s;return p;}));
         }
         function r34ExportCsv(){
@@ -5306,7 +5306,7 @@
             r35Corrupt='';const raw=localStorage.getItem(R35_KIDS_CASH_KEY);
             if(raw===null){r35KidsCash=[];return;}
             try{r35KidsCash=r35ValidateKidRows(JSON.parse(raw));}
-            catch(e){r35KidsCash=[];r35Corrupt='雙寶股息原始資料損壞或不合法（'+e.message+'）；已保留原檔，禁止覆寫。請先到 R30 安全中心備份與檢查。';}
+            catch(e){r35KidsCash=[];r35Corrupt='雙寶股息原始資料損壞或不合法（'+e.message+'）；已保留原檔，禁止覆寫。請到帳務健康檢查核對問題。';}
         }
         function r35ReadStoredStrict(){
             const raw=localStorage.getItem(R35_KIDS_CASH_KEY);
@@ -5329,7 +5329,7 @@
                 r35Text('r35_form_status','請輸入已入帳日期（不可為未來）、正數淨額（小數至多兩位）及正確帳戶。');return;
             }
             try{
-                // 每次寫入前重新核對原始 localStorage，避免被其他分頁或備份還原改動後覆蓋舊資料。
+                // 每次寫入前重新核對原始 localStorage，避免被其他分頁或其他分頁改動後覆蓋舊資料。
                 const previous=r35ReadStoredStrict();
                 if(JSON.stringify(previous)!==JSON.stringify(r35KidsCash))throw Error('雙寶帳務在編輯期間已有變更，請重新載入頁面後核對。');
                 if(r35EditingId&&!previous.some(x=>x.id===r35EditingId))throw Error('要修改的紀錄已不存在');
@@ -5422,7 +5422,7 @@
             for(const [key,label] of [[TX_KEY,'逐筆交易'],[R25_CASH_KEY,'主帳戶實收股息'],[R35_KIDS_CASH_KEY,'雙寶實收股息']]){
                 const raw=localStorage.getItem(key);if(raw===null)continue;
                 try{const obj=JSON.parse(raw);if(!Array.isArray(obj))throw Error('格式不是陣列');if(key===R35_KIDS_CASH_KEY)r35ValidateKidRows(obj);if(key===R25_CASH_KEY&&r25ReadCashRows(obj).length!==obj.length)throw Error('入帳紀錄不合法');}
-                catch(e){r.issues.push(`${label}本機原始資料損壞，請在 R30 安全中心備份與查核。`);}
+                catch(e){r.issues.push(`${label}本機原始資料損壞，請在帳務健康檢查查看問題。`);}
             }
             if(r35Corrupt)r.issues.push(r35Corrupt);
             // 沿用 R34 的持股合法性檢查，超賣或其他不完整交易時不顯示可能誤導的淨現金流。
@@ -5464,7 +5464,7 @@
             if(!r.lifetime.kid_a.count||!r.lifetime.kid_b.count)messages.push('雙寶尚未登錄的月份不代表股息為零；目前只能統計已有資料。');
             if(r.months.some(m=>m.month>r.today.slice(0,7)))messages.push('年度表中尚未到來的月份使用零作佔位，並非預測，也不代表未來確定沒有配息。');
             if(r.total.reinvest&&!r.total.cash)messages.push('所選期間有配息再投資買股紀錄、但無實收股息紀錄，兩種資料不會自動互相補齊。');
-            messages.push('R25 主帳戶舊紀錄保留原地，雙寶各自使用 R35 新資料鍵，R30 完整備份會包含三帳戶。');
+            messages.push('主帳戶與雙寶帳務採獨立的資料鍵保存，不會合計或互相覆蓋。');
             r35El('r35_warnings').replaceChildren(...messages.map(txt=>{const e=document.createElement('p');e.textContent='• '+txt;return e;}));
             r35Text('r35_chart_note','圖表只取已登錄實收現金，不將交易中的再投資股數換算成額外收入。');
             if(r35Chart){try{r35Chart.destroy();}catch(e){}r35Chart=null;}
@@ -5513,7 +5513,7 @@
             if(!window.__r35PrintListener){window.__r35PrintListener=true;window.addEventListener('afterprint',()=>document.body.classList.remove('r35-print-active'));}
             r35Initialized=true;r35SetYears();r35Render();
         }
-        // R30 完整備份自動收集所有 00406A_ 前綴鍵；延伸既有健檢，補上雙寶新台帳的驗證。
+        // R47 維持唯讀健檢，補上雙寶新台帳的驗證。
         const r35PriorAnalyze=r30Analyze;
         r30Analyze=function(data){
             const result=r35PriorAnalyze(data);
@@ -5973,7 +5973,7 @@
                 const ids=['main','kid_a','kid_b'];
                 if(!report.valid){
                     r38Set('r38_status','⚠️ 資料異常：暫停績效分析');
-                    r38Set('r38_help','原始資料異常：'+report.problems.join('；')+'。請先由資料安全中心備份並核對。');
+                    r38Set('r38_help','原始資料異常：'+report.problems.join('；')+'。請到帳務健康檢查核對。');
                     r38El('r38_rate_rows').innerHTML='';r38El('r38_year_rows').innerHTML='';
                     r38El('r38_audit').innerHTML='<p class="text-red-300">帳務異常，已暫停計算。</p>';
                     r38El('r38_price_note').textContent='不會自動修正或覆寫原始帳務。';
