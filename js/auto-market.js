@@ -75,6 +75,7 @@ function applyFeed(feed){
   r42Live=false; // GitHub 排程快照不是即時官方連線。
   r42CheckNote=published.length?'GitHub 公開資料最後檢查 '+when+'（非即時；正式公告優先）':'尚無有效的排程除息公告';
   try{r42Render();if(r32Initialized)r32Render();}catch(e){console.warn('R44 提醒更新',e);}
+  window.dispatchEvent(new CustomEvent('r44:feed', {detail:{feed}}));
   return market.length+published.length;
 }
 async function refresh(force=false){
@@ -94,6 +95,7 @@ async function refresh(force=false){
     }catch(e){
       console.warn('R44 公開資料來源不可用',e);
       status('⚠️ 公開市場資料暫不可用；保留原有行情／配息資訊。');
+      window.dispatchEvent(new Event('r44:error'));
     }
   })().finally(()=>{inFlight=null;if(button)button.disabled=false;});
   return inFlight;
