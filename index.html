@@ -4069,8 +4069,7 @@
             clone.removeAttribute('id');
             // 完全靜態的選定月份報表：不含 API token、localStorage、腳本或帳務編輯功能。
             const style=`body{font-family:system-ui,-apple-system,sans-serif;margin:22px auto;padding:0 15px;max-width:900px;color:#172033;background:#fff;font-size:14px} .card{border:1px solid #cbd5e1;border-radius:8px;padding:18px;margin:0 0 14px;break-inside:avoid}h2{font-size:23px}h3{font-size:18px}p{line-height:1.55} .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.bg-gray-900{background:#f1f5f9;padding:10px;border-radius:5px}.text-xs{font-size:11px;color:#475569}.text-sm{font-size:13px}.text-lg{font-size:17px}table{width:100%;border-collapse:collapse}th,td{padding:7px 5px;border-bottom:1px solid #e2e8f0;text-align:left}td.text-right,th.text-right{text-align:right} .overflow-x-auto{overflow-x:auto}@media print{@page{size:A4;margin:13mm}body{margin:0;padding:0}.card{page-break-inside:avoid}}`;
-            r27Download(`00406A_R36_帳戶對照月報_${r.month}.html`,'<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A '+r.month+' 月報</title><style>'+style+'</style></head><body>'+clone.outerHTML+'    <script src="./js/auto-market.js"></script>
-</body></html>','text/html;charset=utf-8');
+            r27Download(`00406A_R36_帳戶對照月報_${r.month}.html`,'<!doctype html><html lang="zh-TW"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00406A '+r.month+' 月報</title><style>'+style+'</style></head><body>'+clone.outerHTML+'</body></html>','text/html;charset=utf-8');
         }
         // R25 股息入帳新增、修改或刪除時，月報立即刷新。
         const r27PreviousR25Render=r25Render;
@@ -6669,5 +6668,6 @@
         window.onload=function(...args){const out=r42PriorOnload&&r42PriorOnload.apply(this,args);r42Render();void r42Refresh(false);return out;};
 
     </script>
+    <script src="./js/auto-market.js"></script>
 </body>
 </html>
