@@ -5,7 +5,7 @@
 const NOTIFY_KEY='00406A_R46_NOTIFY_OPTIN';
 const SEEN_KEY='00406A_R46_PUBLIC_NOTICE_SEEN';
 const BASE_YEAR=2026, BASE_AGE=42;
-let reg=null,installEvent=null,lastUpdateCheck=0,publicFeed=null,fetchError=false;
+let reg=null,installEvent=null,lastUpdateCheck=0,publicFeed=null,fetchError=false,updateApproved=false;
 const el=id=>document.getElementById(id);
 const localDay=()=>{const d=new Date();return [
   d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');};
@@ -126,6 +126,7 @@ function updateAvailable(){
 }
 async function applyUpdate(){
   if(!reg||!reg.waiting)return;
+  updateApproved=true;
   reg.waiting.postMessage({type:'R46_SKIP_WAITING'});
 }
 function bindReg(found){
@@ -186,7 +187,7 @@ document.addEventListener('visibilitychange',()=>{
 if('serviceWorker' in navigator){
   let reloaded=false;
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    if(!reloaded){reloaded=true;location.reload();}
+    if(!reloaded&&updateApproved){reloaded=true;location.reload();}
   });
 }
 window.addEventListener('load',()=>{
