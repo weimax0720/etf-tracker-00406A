@@ -1,11 +1,14 @@
-name: R45 智慧首頁回歸測試
+name: R46 全站回歸測試
 
 on:
   push:
     paths:
       - 'index.html'
       - 'js/**'
-      - 'tests/r45-smoke.cjs'
+      - 'tests/**'
+      - 'sw.js'
+      - 'manifest.webmanifest'
+      - 'icons/**'
       - '.github/workflows/test-r45.yml'
   workflow_dispatch:
 
@@ -22,4 +25,6 @@ jobs:
         with:
           node-version: '22'
       - name: Check home and financial guardrails
-        run: node tests/r45-smoke.cjs
+        run: |
+          node tests/r45-smoke.cjs
+          node tests/r46-smoke.cjs
