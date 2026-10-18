@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R42｜簡潔版・除息公告同步修正</title>
+    <title>00406A Tracker R43｜簡潔版・預估配息同步</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -264,7 +264,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (42歲 ➔ 60歲) | 家族全連動旗艦版 · 分類導覽優化版</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 家族全連動旗艦版 · 分類導覽優化版</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="輸入 FinMind API 金鑰" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -410,7 +410,7 @@
                 <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-col justify-center">
                     <p class="text-sm text-gray-400">最近已知每股配息</p>
                     <div class="flex justify-between items-center mt-1">
-                        <p class="text-xl md:text-2xl font-bold text-blue-400"><span id="latest_dividend_overview">--</span> <span class="text-sm font-normal text-gray-400">元</span></p>
+                        <p class="text-xl md:text-2xl font-bold text-blue-400"><span id="latest_dividend_overview">--</span> <span class="text-sm font-normal text-gray-400">元</span></p><p id="r43_next_brief" class="text-xs text-amber-200 mt-2">下期配息待核對</p>
                         <span class="text-lg md:text-xl">💧</span>
                     </div>
                 </div>
@@ -820,19 +820,19 @@
 
         <!-- ================= 分頁 6：R24 配息分析中心 ================= -->
         <section id="tab-dividends" class="space-y-6 hidden" aria-label="R24 配息分析中心">
-            <!-- R42 除息公告排程：與 R24 已確認現金配息歷史分開，不計入實收台帳 -->
+            <!-- R43 除息公告排程與預估配息：與 R24 已確認現金配息歷史分開，不計入實收台帳 -->
             <div class="card border border-cyan-800/50" id="r42_dividend_schedule">
               <div class="flex flex-wrap justify-between items-center gap-2">
                 <div><h3 class="font-bold text-cyan-300">📅 最新除息安排</h3><p id="r42_schedule_note" class="text-xs text-gray-400 mt-1" role="status">核對官方排程中；尚未確認金額不會沿用上期。</p></div>
-                <button type="button" id="r42_refresh" onclick="r42Refresh(true)" class="rounded bg-cyan-800 hover:bg-cyan-700 px-3 py-2 text-xs">重新核對日期</button>
+                <button type="button" id="r42_refresh" onclick="r42Refresh(true)" class="rounded bg-cyan-800 hover:bg-cyan-700 px-3 py-2 text-xs">重新核對公告</button>
               </div>
               <div class="grid grid-cols-2 md:grid-cols-3 gap-2 mt-3">
                 <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">下次除息日</p><p id="r42_ex" class="text-lg font-bold mt-1">—</p></div>
                 <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">預定發放日</p><p id="r42_pay" class="text-lg font-bold mt-1">—</p></div>
-                <div class="bg-gray-900 p-3 rounded col-span-2 md:col-span-1"><p class="text-xs text-gray-400">本次公告每股金額</p><p id="r42_amount" class="text-lg font-bold mt-1 text-emerald-300">待確認</p></div>
+                <div class="bg-gray-900 p-3 rounded col-span-2 md:col-span-1"><p class="text-xs text-gray-400">本期每股配息（預估／正式）</p><p id="r42_amount" class="text-lg font-bold mt-1 text-emerald-300">待確認</p></div>
               </div>
               <p class="text-xs text-gray-400 mt-3">除息公告 ≠ 已收到股息。主帳戶與雙寶的實收金額，仍須依實際入帳分開登錄；尚未公告金額時，不顯示預估入帳數字。</p>
-              <a id="r42_official_link" href="https://www.twse.com.tw/zh/ETFortune/dividendList?startDate=2026&amp;endDate=2026&amp;stkNo=00406A" target="_blank" rel="noopener noreferrer" class="inline-block mt-2 underline text-xs text-cyan-300">↗ 證交所 ETF e添富公告原文</a>
+              <span id="r43_stage" class="inline-block text-xs rounded px-2 py-1 bg-gray-700 text-gray-200 mt-2" aria-live="polite">公告狀態待確認</span><a id="r42_official_link" href="https://www.twse.com.tw/zh/ETFortune/dividendList?startDate=2026&amp;endDate=2026&amp;stkNo=00406A" target="_blank" rel="noopener noreferrer" class="inline-block mt-2 underline text-xs text-cyan-300">↗ 證交所 ETF e添富公告原文</a><a id="r43_estimate_link" href="https://money.udn.com/money/story/5618/9817186" target="_blank" rel="noopener noreferrer" class="inline-block mt-2 ml-3 underline text-xs text-amber-300 hidden">↗ 2026/10/15 預估配息公告報導</a>
             </div>
             <div class="card border border-emerald-900/60">
                 <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
@@ -971,7 +971,7 @@
                 <h3 class="text-lg font-bold text-sky-300">🛡️ 帳務備份與還原</h3>
                 <p class="text-xs text-gray-400 mt-2">備份目前網站上的所有 00406A 本機資料（交易、手帳、配息入帳、退休設定與歷史行情快取），預設不匯出 FinMind API 金鑰。備份檔請自行妥善保管，不要上傳公開 GitHub。</p>
                 <div class="flex flex-wrap items-center gap-3 mt-4">
-                    <button type="button" onclick="r30Backup()" class="bg-sky-700 hover:bg-sky-600 text-sm px-4 py-2 rounded font-semibold">📥 下載 R42 校驗備份 JSON</button>
+                    <button type="button" onclick="r30Backup()" class="bg-sky-700 hover:bg-sky-600 text-sm px-4 py-2 rounded font-semibold">📥 下載 R43 校驗備份 JSON</button>
                     <label class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm cursor-pointer">📤 驗證後還原 JSON<input id="r25_restore_input" type="file" accept=".json,application/json" class="hidden" onchange="r30StageFile(this)"></label>
                 </div>
                 <button type="button" onclick="switchTab('security')" class="text-xs text-teal-300 underline mt-3">前往 R30 資料安全中心查看檢查與還原預覽 →</button>
@@ -1559,9 +1559,9 @@
             <div id="r30_issue_list" class="space-y-2 mt-4" aria-live="polite"><p class="text-gray-400 text-sm">讀取中</p></div>
           </div>
           <div class="card border border-emerald-900/60">
-            <h3 class="font-bold text-emerald-300 text-lg">② 下載 R42 完整備份</h3>
+            <h3 class="font-bold text-emerald-300 text-lg">② 下載 R43 完整備份</h3>
             <p class="text-sm text-gray-300 mt-2">備份使用 <strong>SHA-256 校驗碼</strong>；可在還原前檢查備份資料完整性（無法證明來源身分）。包含所有 00406A 本機資料（不含 FinMind API 金鑰），請勿上傳公開 GitHub。</p>
-            <div class="flex flex-wrap gap-3 items-center mt-4"><button type="button" id="r30_backup_btn" onclick="r30Backup()" class="bg-emerald-700 hover:bg-emerald-600 rounded px-5 py-3 font-semibold text-sm">📥 下載 R42 校驗備份 JSON</button><button type="button" onclick="r30VerifyCurrent()" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">🔎 計算目前資料指紋</button></div>
+            <div class="flex flex-wrap gap-3 items-center mt-4"><button type="button" id="r30_backup_btn" onclick="r30Backup()" class="bg-emerald-700 hover:bg-emerald-600 rounded px-5 py-3 font-semibold text-sm">📥 下載 R43 校驗備份 JSON</button><button type="button" onclick="r30VerifyCurrent()" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">🔎 計算目前資料指紋</button></div>
             <p id="r30_backup_note" class="text-xs text-gray-400 mt-3" role="status">下載後請開啟手機的「下載」資料夾，確認 JSON 檔確實存在。產生下載請求不等於已備份至雲端。</p>
             <p id="r30_fingerprint" class="text-xs text-gray-500 mt-2 break-all"></p>
           </div>
@@ -2598,11 +2598,11 @@
                 const currentMonth = today.getMonth() + 1;
                 let currentDefaultInvest = 5000;
                 if (currentYear > 2033 || (currentYear === 2033 && currentMonth >= 1)) {
-                    currentDefaultInvest = 25000;
+                    currentDefaultInvest = 30000;
                 } else if (currentYear > 2031 || (currentYear === 2031 && currentMonth >= 7)) {
-                    currentDefaultInvest = 15000;
+                    currentDefaultInvest = 20000;
                 } else if (currentYear > 2027 || (currentYear === 2027 && currentMonth >= 7)) {
-                    currentDefaultInvest = 4000;
+                    currentDefaultInvest = 8000;
                 }
                 const shares = Math.floor(currentDefaultInvest / currentPrice);
                 document.getElementById('buyable_shares_label').innerText = `約 ${currentDefaultInvest / 1000} 千元購買力參考`;
@@ -2858,7 +2858,7 @@
                     runningShares += (agg.regShares + agg.extraShares + agg.divShares - agg.sellShares);
                     
                     projectedData.push({
-                        index: i, year: currentY, month: currentM, age: 42 + Math.floor(i / 12),
+                        index: i, year: currentY, month: currentM, age: 43 + Math.floor(i / 12),
                         isHistorical: true,
                         execPrice: avgBuyPrice,
                         investAmount: agg.regCost,
@@ -2872,9 +2872,9 @@
                 } else {
                     let defaultInvestForMonth = 0;
                     if (i < 144) {
-                        if (currentY > 2033 || (currentY === 2033 && currentM >= 1)) defaultInvestForMonth = 25000;
-                        else if (currentY > 2031 || (currentY === 2031 && currentM >= 7)) defaultInvestForMonth = 15000;
-                        else if (currentY > 2027 || (currentY === 2027 && currentM >= 7)) defaultInvestForMonth = 4000;
+                        if (currentY > 2033 || (currentY === 2033 && currentM >= 1)) defaultInvestForMonth = 30000;
+                        else if (currentY > 2031 || (currentY === 2031 && currentM >= 7)) defaultInvestForMonth = 20000;
+                        else if (currentY > 2027 || (currentY === 2027 && currentM >= 7)) defaultInvestForMonth = 8000;
                         else defaultInvestForMonth = 5000;
                     } else {
                         defaultInvestForMonth = 0; 
@@ -2892,7 +2892,7 @@
                     runningShares += (regularShares + extraS + dripShares);
                     
                     projectedData.push({
-                        index: i, year: currentY, month: currentM, age: 42 + Math.floor(i / 12),
+                        index: i, year: currentY, month: currentM, age: 43 + Math.floor(i / 12),
                         isHistorical: false, 
                         execPrice: execPrice, isManualPrice: (manualPrice !== undefined && manualPrice !== ''),
                         defaultInvest: defaultInvestForMonth,
@@ -3057,7 +3057,7 @@
             
             for(let i = 0; i <= 17; i++) {
                 let y = startYear + i;
-                let age = 42 + i;
+                let age = 43 + i;
                 let activeClass = (y === currentSelectedYear) ? 'active bg-emerald-500 text-white border-emerald-600' : 'bg-gray-800 text-gray-400 border-gray-700 hover:text-white';
                 
                 let phaseLabel = '';
@@ -4337,9 +4337,9 @@
             if(idx>=0 && custom && Object.prototype.hasOwnProperty.call(custom,idx) && custom[idx]!=='' ){
                 const v=Number(custom[idx]);if(Number.isFinite(v)&&v>=0&&v<=1000000)return v;
             }
-            if(y>2032)return 25000;
-            if(y>2031 || (y===2031&&m>=7))return 15000;
-            if(y>2027 || (y===2027&&m>=7))return 4000;
+            if(y>2032)return 30000;
+            if(y>2031 || (y===2031&&m>=7))return 20000;
+            if(y>2027 || (y===2027&&m>=7))return 8000;
             return 5000;
         }
         function r29FormValues(){
@@ -4633,8 +4633,8 @@
             if(r30Busy)return false;
             try{
                 r30Busy=true;const data=r30Snapshot();const checksum=await r30Digest(data);const analysis=r30Analyze(data);
-                const payload={format:R30_BACKUP_FORMAT,schema:2,version:'R42',createdAt:new Date().toISOString(),integrity:{algorithm:'SHA-256',scope:'sorted-key-value-pairs-v1',digest:checksum},summary:{keys:analysis.keyCount,transactions:analysis.txCount,cashDividends:analysis.cashCount,errors:analysis.errors.length,warnings:analysis.warnings.length},data};
-                const name='00406A_R42_'+(safety?'還原前安全備份_':'完整校驗備份_')+r25Today()+'.json';
+                const payload={format:R30_BACKUP_FORMAT,schema:2,version:'R43',createdAt:new Date().toISOString(),integrity:{algorithm:'SHA-256',scope:'sorted-key-value-pairs-v1',digest:checksum},summary:{keys:analysis.keyCount,transactions:analysis.txCount,cashDividends:analysis.cashCount,errors:analysis.errors.length,warnings:analysis.warnings.length},data};
+                const name='00406A_R43_'+(safety?'還原前安全備份_':'完整校驗備份_')+r25Today()+'.json';
                 r27Download(name,JSON.stringify(payload,null,2),'application/json;charset=utf-8');
                 r30Text('r30_backup_note',`已送出「${name}」下載請求；共 ${analysis.keyCount} 類本機資料，SHA-256 ${checksum.slice(0,16)}…。請到下載資料夾確認檔案存在。`);
                 r30Text('r25_backup_status','R30 校驗備份已要求下載；請到手機下載資料夾確認。');
@@ -6494,9 +6494,10 @@
 
         /* ===== R42 除息公告同步：排程與已確認配息分開，避免舊公告被冒充下一期 ===== */
         function r42OfficialPage(){const year=r42LocalToday().slice(0,4);return `https://www.twse.com.tw/zh/ETFortune/dividendList?startDate=${year}&endDate=${year}&stkNo=00406A`;}
-        // 截至 2026-10-18 人工核對證交所 ETF e添富：除息日與發放日已排定，金額當時未列出。
+        // 截至 2026-10-18 證交所：2026-11-03 日程已排定，正式金額欄尚空。中信投信 10/15 預估 0.138 元（已核對公開報導）。
         // 僅當此日期尚未到期且網頁無法連線時顯示，不當成即時官方同步，也絕不自動延伸至下個月。
-        const R42_VERIFIED_20261018={exDate:'2026-11-03',payDate:'2026-11-27',amount:null,source:'證交所公告（2026-10-18 已核對；非即時）'};
+        const R42_VERIFIED_20261018={exDate:'2026-11-03',payDate:'2026-11-27',amount:null,stage:'scheduled',source:'證交所除息排程（2026-10-18 已核對；非即時）'};
+        const R43_VERIFIED_ESTIMATES=[{exDate:'2026-11-03',payDate:'2026-11-27',amount:0.138,stage:'estimated',published:'2026-10-15',source:'中信投信 2026-10-15 預估配息（已核對公開報導；非即時）',url:'https://money.udn.com/money/story/5618/9817186'}];
         let r42OfficialRows=[],r42FetchedAt=0,r42FetchJob=null,r42Live=false,r42CheckNote='';
         const r42Put=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=String(value);};
         function r42LocalToday(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
@@ -6519,70 +6520,86 @@
             const priceText=(cells[5]||'').replace(/[,\s]/g,'');
             const validMoney=/^\d+(?:\.\d{1,5})?$/.test(priceText);
             const money=validMoney?Number(priceText):NaN;
-            rows.push({exDate,payDate,amount:Number.isFinite(money)&&money>0&&money<100?money:null,source:'證交所 ETF e添富（本次查詢）'});
+            rows.push({exDate,payDate,amount:Number.isFinite(money)&&money>0&&money<100?money:null,stage:Number.isFinite(money)&&money>0&&money<100?'confirmed':'scheduled',source:'證交所 ETF e添富（本次查詢）'});
           }
           return [...new Map(rows.map(x=>[x.exDate,x])).values()].sort((a,b)=>a.exDate.localeCompare(b.exDate));
         }
+        // 第一順位：證交所本次查詢的正式配息金額；第二：同一除息日的已核對預估公告。
+        // 預估資料必須除息日一致，且到期即停止作為下期資料，絕不延續上一期金額。
+        function r43EnrichAnnouncement(row,today){
+          if(!row)return null;
+          const valid=Number.isFinite(row.amount)&&row.amount>0;
+          if(valid)return {...row,stage:row.stage==='confirmed'?'confirmed':row.stage==='estimated'?'estimated':'source_amount'};
+          const forecast=R43_VERIFIED_ESTIMATES.find(x=>x.exDate===row.exDate&&x.published<=today&&row.exDate>=today);
+          return forecast?{...row,amount:forecast.amount,stage:'estimated',source:forecast.source,url:forecast.url,published:forecast.published}:row;
+        }
         function r42NextAnnouncement(today=r42LocalToday()){
-          const official=r42OfficialRows.filter(x=>x.exDate>=today).sort((a,b)=>a.exDate.localeCompare(b.exDate))[0];
-          if(official)return official;
-          // FinMind 也可能先取得未來日程；其金額不可被上一筆配息取代。
-          const finmind=r24Rows.filter(x=>x.exDate>=today).sort((a,b)=>a.exDate.localeCompare(b.exDate))[0];
-          if(today<=R42_VERIFIED_20261018.exDate && (!finmind||finmind.exDate>=R42_VERIFIED_20261018.exDate))return R42_VERIFIED_20261018;
-          if(finmind)return {...finmind,source:'FinMind（待核對官方日程）'};
-          return null;
+          const official=r42OfficialRows.filter(x=>x.exDate>=today).sort((a,b)=>a.exDate.localeCompare(b.exDate))[0]||null;
+          const finmind=r24Rows.filter(x=>x.exDate>=today).sort((a,b)=>a.exDate.localeCompare(b.exDate))[0]||null;
+          const fallback=today<=R42_VERIFIED_20261018.exDate?R42_VERIFIED_20261018:null;
+          // 排序依日期，不因較遠期的公告蓋過已核對的近期除息。
+          const nextDate=[official,finmind,fallback].filter(Boolean).map(x=>x.exDate).sort()[0];
+          if(!nextDate)return null;
+          const o=official?.exDate===nextDate?official:null;
+          const f=finmind?.exDate===nextDate?finmind:null;
+          const confirmed=o&&Number.isFinite(o.amount)&&o.amount>0;
+          // 證交所已填正式金額時優先；官方尚空時，FinMind 同一期金額仍須註明待核對。
+          if(confirmed)return r43EnrichAnnouncement(o,today);
+          if(f&&Number.isFinite(f.amount)&&f.amount>0)return r43EnrichAnnouncement({...(o||{}),...f,exDate:nextDate,payDate:o?.payDate||f.payDate,stage:'source_amount',source:'FinMind 資料（官方金額待核對）'},today);
+          if(o)return r43EnrichAnnouncement(o,today);
+          if(fallback?.exDate===nextDate)return r43EnrichAnnouncement(fallback,today);
+          return r43EnrichAnnouncement({...f,stage:'scheduled',source:'FinMind 日期（待核對）'},today);
         }
         function r42Render(){
           const today=r42LocalToday(),next=r42NextAnnouncement(today),last=r24Rows.length?r24Rows[r24Rows.length-1]:null;
-          const number=next&&Number.isFinite(next.amount)&&next.amount>0;
-          const amountText=number?`${r24Amount(next.amount)} 元／股`:'金額待公告';
+          const hasAmount=!!next&&Number.isFinite(next.amount)&&next.amount>0;
+          const estimated=next?.stage==='estimated',confirmed=next?.stage==='confirmed';
+          const stageLabel=!next?'待查證':confirmed?'正式公告':estimated?'已公告預估':hasAmount?'來源金額待核對':'金額待公告';
+          const amountText=hasAmount?`${r24Amount(next.amount)} 元／股${estimated?'（預估）':confirmed?'（正式）':'（待核對）'}`:'金額待公告';
           const officialLink=document.getElementById('r42_official_link');if(officialLink)officialLink.href=r42OfficialPage();
+          const estimateLink=document.getElementById('r43_estimate_link');if(estimateLink){estimateLink.classList.toggle('hidden',!estimated);if(estimated&&next.url)estimateLink.href=next.url;}
           r42Put('r42_ex',next?next.exDate:'尚未取得');
           r42Put('r42_pay',next?(next.payDate||'尚未公告'):'尚未取得');
           r42Put('r42_amount',next?amountText:'—');
-          const status=next?`${next.source}；${number?'已取得本期金額':'除息日期已有排程，金額尚未在此來源確認'}。`:'尚無可確認的下一次除息日；請查閱證交所公告。';
+          r42Put('r43_stage',stageLabel);
+          const status=next?`${stageLabel}｜${next.source}。`:'尚無可確認的下一次除息日；請查閱證交所公告。';
           r42Put('r42_schedule_note',status+(r42Live?'':r42CheckNote?' '+r42CheckNote:''));
-          const exDateEl=document.getElementById('ex_div_date');
-          if(exDateEl)exDateEl.textContent=next?next.exDate:'下期未確認';
+          const exDateEl=document.getElementById('ex_div_date');if(exDateEl)exDateEl.textContent=next?next.exDate:'下期未確認';
           r42Put('pay_date',next?(next.payDate||'待公告'):'待公告');
           r42Put('div_amount',next?amountText:'待公告');
-          const count=document.getElementById('ex_div_countdown');
-          if(count){
-            if(next){const d=new Date(next.exDate+'T00:00:00'),now=new Date(today+'T00:00:00'),days=Math.round((d-now)/86400000);count.textContent=days===0?'今日除息':`倒數 ${days} 天`;}
-            else count.textContent='尚無下一期';
-            count.className='text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded';
+          const countdown=document.getElementById('ex_div_countdown');
+          if(countdown){
+            if(next){const d=new Date(next.exDate+'T00:00:00'),now=new Date(today+'T00:00:00'),days=Math.round((d-now)/86400000);countdown.textContent=days===0?'今日除息':`倒數 ${days} 天`;}
+            else countdown.textContent='尚無下一期';
+            countdown.className='text-xs bg-gray-700 text-gray-300 px-2 py-1 rounded';
           }
-          // 既有最新配息金額是歷史「有金額」的一期，不是下一次的金額。
-          r42Put('r24_home_brief',next?`下次 ${next.exDate} 除息，${amountText}；${next.payDate||'待公告'} 發放（${next.source}）。`:last?`最近已知配息 ${last.exDate} 每股 ${r24Amount(last.amount)} 元；下期日期待核對。`:'配息公告尚未取得。');
+          r42Put('r43_next_brief',next?`下期 ${next.exDate}：${amountText}`:'下期尚未確認');
+          // 歷史配息 KPI 保持 FinMind 已知歷史金額，不以未確認預估值混入歷史統計。
+          r42Put('r24_home_brief',next?`下次 ${next.exDate} 除息，${amountText}；${next.payDate||'待公告'} 預定發放。`:last?`最近已知配息 ${last.exDate} 每股 ${r24Amount(last.amount)} 元；下期日期待核對。`:'配息公告尚未取得。');
           if(next){
             const regular=transactionLog.some(t=>t.type==='buy_regular'&&String(t.date).slice(0,7)===today.slice(0,7));
-            r42Put('r23_reminder',`預定 ${next.exDate} 除息（${amountText}）；${regular?'本月已登錄定投':'本月尚無主帳戶定投紀錄'}。以投信正式公告為準。`);
+            r42Put('r23_reminder',`${next.exDate} 預定除息（${amountText}）；${regular?'本月已登錄定投':'本月尚無主帳戶定投紀錄'}。預估不等於實收。`);
           }
-          // 一旦已知下期除息但沒有本期配息金額，禁止以上一期金額試算下一次入帳、降本與補充保費。
-          if(!next || !number){
+          // 估算使用「今日主帳戶真實庫存」，並非推測未來除息資格或銀行實收款。
+          if(!next||!hasAmount){
             r42Put('real_dividend_income',next?'待公告':'下次待確認');
-            r42Put('eligible_shares_badge',next?`下次除息 ${next.exDate} · 金額待公告`:'下一期除息尚未確認');
+            r42Put('eligible_shares_badge',next?`下次 ${next.exDate} · 金額待公告`:'下次除息尚未確認');
             r42Put('adj_breakeven_price','—');
-            r42Put('health_ins_status',next?'本期配息金額待公告，暫不試算':'下次配息日與金額尚未確認');
+            r42Put('health_ins_status',next?'金額尚未查得，暫不試算':'除息日期及金額待核對');
             r42Put('health_ins_icon','ℹ️');
-          }else if(last?.exDate!==next.exDate){
-            // 官方金額已確認但 FinMind 尚未更新時，僅針對下一次除息重算，避免沿用上一期金額。
+          }else{
             try{
               const book=r34Build();
               if(!book.allValid)throw Error('帳務有異常');
-              const count=transactionLog.filter(x=>x&&x.date<next.exDate&&x.date<=today)
-                .reduce((sum,x)=>{
-                  if(['buy_regular','buy_extra','dividend'].includes(x.type))return sum+Number(x.shares);
-                  if(x.type==='sell')return sum-Number(x.shares);
-                  return sum;
-                },0);
-              if(!Number.isFinite(count)||count<0||!Number.isSafeInteger(count))throw Error('股數無效');
-              const payout=count*next.amount;
+              const held=book.owners.main.shares,basis=book.owners.main.basis;
+              if(!Number.isSafeInteger(held)||held<0||!Number.isFinite(basis)||basis<0)throw Error('持股或成本異常');
+              const payout=held*next.amount;
+              if(!Number.isFinite(payout))throw Error('試算金額異常');
               r42Put('real_dividend_income',Math.round(payout).toLocaleString('zh-TW'));
-              r42Put('eligible_shares_badge',`預估符合條件 ${count.toLocaleString('zh-TW')} 股`);
-              const basis=book.owners.main.basis,held=book.owners.main.shares,fee=Number(document.getElementById('sell_tax_fee_pct')?.value||0);
+              r42Put('eligible_shares_badge',`${estimated?'預估':'試算'} · 今日主帳戶 ${held.toLocaleString('zh-TW')} 股`);
+              const fee=Number(document.getElementById('sell_tax_fee_pct')?.value);
               r42Put('adj_breakeven_price',held>0&&Number.isFinite(fee)&&fee>=0&&fee<100?(Math.max(0,basis-payout)/held*(1+fee/100)).toFixed(2):'—');
-              r42Put('health_ins_status','依本期已確認每股金額試算；實際扣費以券商及法規為準');
+              r42Put('health_ins_status',`${estimated?'依預估配息':'依公告金額'}與今日持股試算；非實際入帳或除息資格認定`);
               r42Put('health_ins_icon','ℹ️');
             }catch(e){
               r42Put('real_dividend_income','需核對帳務');
@@ -6592,7 +6609,7 @@
               r42Put('health_ins_icon','⚠️');
             }
           }
-          // 本函式只變更公告展示，絕不寫入本機交易、實收台帳、歷史 R24 現金配息。
+          // 僅更新畫面，不寫交易、本機實收股息、R24 歷史分配或模擬帳務。
           return next;
         }
         async function r42RequestHtml(url,timeout=5500){
@@ -6616,7 +6633,7 @@
             }
             r42Live=false;r42FetchedAt=Date.now();r42CheckNote='即時查詢暫不可用；日期為先前已核對公告，請點下方連結確認。';
             r42Render();if(r32Initialized)r32Render();
-          })().finally(()=>{r42FetchJob=null;if(button){button.disabled=false;button.textContent='重新核對日期';}});
+          })().finally(()=>{r42FetchJob=null;if(button){button.disabled=false;button.textContent='重新核對公告';}});
           return r42FetchJob;
         }
         // R32 僅補一項「除息日期核對」提醒；與實收股息入帳、現有發放日提醒分開。
@@ -6627,7 +6644,7 @@
             const gap=r32DayDiff(next.exDate,today);
             if(gap>=0&&gap<=30){
               const id='r42-ex-'+next.exDate;
-              items.push({id,kind:'div',title:'預定除息日核對',due:next.exDate,desc:`${next.exDate} 預定除息；${Number.isFinite(next.amount)?r24Amount(next.amount)+' 元／股':'金額尚待確認'}。請查核投信公告，勿當作已收到的股息。`,done:!!r32Done[id]});
+              items.push({id,kind:'div',title:'預定除息日核對',due:next.exDate,desc:`${next.exDate} 預定除息；${Number.isFinite(next.amount)?r24Amount(next.amount)+' 元／股'+(next.stage==='estimated'?'（預估）':''): '金額尚待確認'}。請查核投信公告，勿當作已收到的股息。`,done:!!r32Done[id]});
               items.sort((a,b)=>Number(a.done)-Number(b.done)||(a.due||'9999').localeCompare(b.due||'9999')||a.id.localeCompare(b.id));
             }
           }
