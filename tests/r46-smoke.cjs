@@ -29,6 +29,13 @@ assert.equal(manifest.display,'standalone');
 assert.equal(manifest.start_url,'./index.html');
 assert.equal(manifest.scope,'./');
 assert.ok(manifest.icons.length>0);
+for(const [size,filename] of [[192,'icons/tracker-192.png'],[512,'icons/tracker-512.png']]){
+  const raw=fs.readFileSync(path.join(base,filename));
+  assert.equal(raw.subarray(0,8).toString('hex'),'89504e470d0a1a0a');
+  assert.equal(raw.readUInt32BE(16),size);
+  assert.equal(raw.readUInt32BE(20),size);
+  assert.ok(manifest.icons.some(icon=>icon.src==='./'+filename && icon.sizes===size+'x'+size));
+}
 assert.match(icon, /<svg /);
 assert.match(sw, /networkOrCached\(req,APP_CACHE,true\)/);
 assert.match(sw, /networkOrCached\(req,DATA_CACHE\)/);
