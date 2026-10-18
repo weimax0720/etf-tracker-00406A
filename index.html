@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R45｜智慧首頁・自動資料版</title>
+    <title>00406A Tracker R46｜手機離線・智慧提醒版</title>
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icons/tracker-icon.svg" type="image/svg+xml">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -264,7 +269,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-blue-400">MAX的 00406A 追蹤儀表板</h1>
                     <span class="badge bg-purple-900 text-purple-200 border border-purple-500">主動型 ETF</span>
                 </div>
-                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫 (43歲 ➔ 60歲) | 家族全連動旗艦版 · 分類導覽優化版</p>
+                <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫（目前 <span id="r46_age_now">42</span> 歲 → 60 歲）｜2026 年度基準 42 歲</p>
             </div>
             <div class="flex space-x-2 w-full md:w-auto">
                 <input type="password" id="api_key" placeholder="FinMind 金鑰（選填）" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -275,7 +280,12 @@
         <!-- R44 公開市場資料更新狀態（不含私人投資帳務） -->
         <div id="r44_status_bar" class="flex flex-wrap gap-2 justify-between items-center bg-gray-800 border border-cyan-900/50 rounded-lg px-3 py-2 text-xs text-gray-300">
           <span id="r44_sync_status" role="status" aria-live="polite">🌐 準備檢查 GitHub 公開市場資料…</span>
+          <span id="r46_connectivity" class="text-xs text-cyan-200">檢查連線中</span>
           <button id="r44_refresh_btn" type="button" onclick="r44Refresh(true)" class="rounded bg-gray-700 hover:bg-gray-600 px-3 py-2">↻ 檢查最新資料</button>
+        </div>
+        <div id="r46_update_banner" hidden class="bg-cyan-950/50 border border-cyan-700 rounded-lg px-3 py-2 text-sm flex flex-wrap gap-2 items-center justify-between" role="status">
+          <span class="text-cyan-100">📲 APP 有新版可用，請先完成手邊操作再更新。</span>
+          <button type="button" onclick="r46ApplyUpdate()" class="bg-cyan-700 hover:bg-cyan-600 rounded px-3 py-2 text-white">更新 APP</button>
         </div>
         <!-- R39：分類式導覽。原有 19 個頁面與 id 原封保留，僅收合導覽入口。 -->
         <nav id="r39_category_nav" class="r39-no-print" aria-label="功能分類">
@@ -582,13 +592,13 @@
 
             <div class="card" data-r32-home="projection">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-green-400">🌱 17 年動態複利投影 (55歲後停扣滑行)</h2>
+                    <h2 class="text-xl font-semibold text-green-400">🌱 18 年動態複利投影 (55歲後停扣滑行)</h2>
                     <span class="badge bg-green-900 text-green-300">Coast FIRE 模式</span>
                 </div>
                 <div class="bg-gray-800 p-5 rounded-lg mb-6 border border-yellow-500/40 grid grid-cols-1 md:grid-cols-2 gap-4 shadow-lg">
                     <div>
                         <p class="text-sm text-yellow-500 font-bold mb-1">🎯 55歲階段目標 (停扣新資金時)</p>
-                        <p class="text-gray-400 text-sm">累積 12 年後停止投入，讓資產自行滾動</p>
+                        <p class="text-gray-400 text-sm">累積約 13 年後停止投入，讓資產自行滾動</p>
                         <div class="mt-2 flex items-baseline gap-2">
                             <p class="text-3xl font-bold text-yellow-400">NT$ <span id="monthly_dividend_55">0</span></p>
                             <span class="text-gray-400 text-sm">/ 月</span>
@@ -1294,7 +1304,8 @@
                     <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">距 55 歲停扣</p><p id="r29_months_55" class="text-lg font-bold mt-1">—</p></div>
                     <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">距 60 歲目標</p><p id="r29_months_60" class="text-lg font-bold mt-1">—</p></div>
                 </div>
-                <p id="r29_price_note" class="text-xs text-gray-400 mt-3">須有有效的 FinMind／Yahoo 參考價，或提供手動參考價；手動輸入不代表實際市場價格。</p>
+                <p id="r46_age_in_retirement" class="text-xs text-rose-200 mt-3">2026 年以 42 歲為基準；55 歲 2039 年，60 歲 2044 年。九月為沿用計畫的試算月份，非實際生日。</p>
+                 <p id="r29_price_note" class="text-xs text-gray-400 mt-3">須有有效的 FinMind／Yahoo 參考價，或提供手動參考價；手動輸入不代表實際市場價格。</p>
             </div>
             <div class="card border border-rose-900/50 r29-no-print">
                 <h3 class="text-lg font-bold text-pink-200 mb-3">① 設定退休目標與未來投入</h3>
@@ -1328,8 +1339,8 @@
                 <div class="card border border-rose-800/50">
                     <div class="flex flex-wrap justify-between items-center gap-3"><div><p class="text-xs tracking-widest text-rose-300">00406A · RETIREMENT GOAL TRACKER</p><h2 class="text-xl font-bold mt-2">55 歲停扣 / 60 歲退休追蹤</h2><p id="r29_report_meta" class="text-xs text-gray-400 mt-2">請先取得行情並設定假設。</p></div><p class="text-xs text-gray-400">MAX Tracker · R29</p></div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">55 歲退休階段 · 2038/09</p><p id="r29_goal55_label" class="text-lg font-bold mt-2">尚未設定每月目標</p><div class="h-2 bg-gray-700 rounded mt-3 overflow-hidden"><div id="r29_bar55" class="h-full bg-cyan-400" style="width:0%"></div></div><p id="r29_goal55_detail" class="text-xs text-gray-400 mt-2">—</p></div>
-                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">60 歲退休階段 · 2043/09</p><p id="r29_goal60_label" class="text-lg font-bold mt-2">尚未設定每月目標</p><div class="h-2 bg-gray-700 rounded mt-3 overflow-hidden"><div id="r29_bar60" class="h-full bg-emerald-400" style="width:0%"></div></div><p id="r29_goal60_detail" class="text-xs text-gray-400 mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">55 歲退休階段 · 2039/09</p><p id="r29_goal55_label" class="text-lg font-bold mt-2">尚未設定每月目標</p><div class="h-2 bg-gray-700 rounded mt-3 overflow-hidden"><div id="r29_bar55" class="h-full bg-cyan-400" style="width:0%"></div></div><p id="r29_goal55_detail" class="text-xs text-gray-400 mt-2">—</p></div>
+                        <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">60 歲退休階段 · 2044/09</p><p id="r29_goal60_label" class="text-lg font-bold mt-2">尚未設定每月目標</p><div class="h-2 bg-gray-700 rounded mt-3 overflow-hidden"><div id="r29_bar60" class="h-full bg-emerald-400" style="width:0%"></div></div><p id="r29_goal60_detail" class="text-xs text-gray-400 mt-2">—</p></div>
                     </div>
                 </div>
                 <div class="card"><h3 class="text-lg font-bold text-rose-200 mb-3">③ 55／60 歲三情境比較</h3>
@@ -1434,6 +1445,19 @@
 
         <!-- ================= R32：提醒、待辦與個人化首頁 ================= -->
         <section id="tab-reminders" class="space-y-5 hidden" aria-label="R32 智慧提醒與首頁設定">
+            <!-- R46 網頁開啟時的選用通知（不是背景推播） -->
+            <div class="card border border-cyan-800/60">
+              <div class="flex flex-wrap gap-3 items-center justify-between">
+                <div><h2 class="text-lg font-bold text-cyan-300">📲 手機與公開市場提醒</h2><p class="text-sm text-gray-300 mt-2" id="r46_alert_brief">正在檢查下一次除息與更新狀態…</p></div>
+                <div class="flex flex-wrap gap-2">
+                  <button id="r46_notify_button" type="button" onclick="r46EnableNotifications()" class="bg-cyan-800 hover:bg-cyan-700 rounded px-4 py-3 text-sm">啟用系統通知</button>
+                  <button id="r46_install_btn" hidden type="button" onclick="r46Install()" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">安裝到手機</button>
+                </div>
+              </div>
+              <p id="r46_notification_status" role="status" class="text-xs text-gray-400 mt-3">通知需先經使用者授權。</p>
+              <p id="r46_offline_help" class="text-xs text-gray-500 mt-2">首次離線安裝須使用 HTTPS 連線。</p>
+              <p class="text-xs text-amber-200 mt-2">僅在開啟／重新載入 APP 時核對公開市場異常；關閉 APP 不會收到背景推播。原有提醒中心的定投與備份待辦不會自動記帳。</p>
+            </div>
             <div class="card border border-orange-800/60">
                 <div class="flex flex-wrap justify-between items-start gap-3">
                     <div><h2 class="text-xl font-bold text-orange-300">🔔 R32 智慧提醒與個人化首頁</h2><p class="text-sm text-gray-300 mt-2">定投待辦、配息發放核對、自訂事項、備份提醒與首頁區塊開關。</p></div>
@@ -1997,7 +2021,7 @@
         
         const startYear = 2026;
         const startMonth = 9;   
-        const totalMonths = 205; 
+        const totalMonths = 217; 
         
         let customInvestMap = {}; 
         let customPriceMap = {};  
@@ -2900,7 +2924,7 @@
                     runningShares += (agg.regShares + agg.extraShares + agg.divShares - agg.sellShares);
                     
                     projectedData.push({
-                        index: i, year: currentY, month: currentM, age: 43 + Math.floor(i / 12),
+                        index: i, year: currentY, month: currentM, age: 42 + (currentY - startYear),
                         isHistorical: true,
                         execPrice: avgBuyPrice,
                         investAmount: agg.regCost,
@@ -2913,7 +2937,7 @@
                     });
                 } else {
                     let defaultInvestForMonth = 0;
-                    if (i < 144) {
+                    if (i < 156) {
                         if (currentY > 2033 || (currentY === 2033 && currentM >= 1)) defaultInvestForMonth = 30000;
                         else if (currentY > 2031 || (currentY === 2031 && currentM >= 7)) defaultInvestForMonth = 20000;
                         else if (currentY > 2027 || (currentY === 2027 && currentM >= 7)) defaultInvestForMonth = 8000;
@@ -2934,7 +2958,7 @@
                     runningShares += (regularShares + extraS + dripShares);
                     
                     projectedData.push({
-                        index: i, year: currentY, month: currentM, age: 43 + Math.floor(i / 12),
+                        index: i, year: currentY, month: currentM, age: 42 + (currentY - startYear),
                         isHistorical: false, 
                         execPrice: execPrice, isManualPrice: (manualPrice !== undefined && manualPrice !== ''),
                         defaultInvest: defaultInvestForMonth,
@@ -2949,7 +2973,7 @@
                 simulatedPrice *= (1 + monthlyGrowthRate); 
             }
 
-            const target55Data = projectedData[143] || projectedData[projectedData.length - 1]; 
+            const target55Data = projectedData[155] || projectedData[projectedData.length - 1]; 
             const target60Data = projectedData[projectedData.length - 1]; 
             
             document.getElementById('monthly_dividend_55').innerText = Math.round(target55Data.dividendIncome || (target55Data.totalShares * baseDividend)).toLocaleString();
@@ -3097,9 +3121,9 @@
             let htmlMain = '';
             let htmlKids = '';
             
-            for(let i = 0; i <= 17; i++) {
+            for(let i = 0; i <= 18; i++) {
                 let y = startYear + i;
-                let age = 43 + i;
+                let age = 42 + i;
                 let activeClass = (y === currentSelectedYear) ? 'active bg-emerald-500 text-white border-emerald-600' : 'bg-gray-800 text-gray-400 border-gray-700 hover:text-white';
                 
                 let phaseLabel = '';
@@ -4360,7 +4384,7 @@
 
         // ===== R29 退休目標追蹤：只讀主帳戶成本與行情；設定另存，絕不寫入交易紀錄 =====
         const R29_SETTINGS_KEY='00406A_R29_RETIREMENT_SETTINGS_V1';
-        const R29_STOP='2038-09',R29_RETIRE='2043-09';
+        const R29_STOP='2039-09',R29_RETIRE='2044-09';
         const R29_DEFAULTS=Object.freeze({goal55:'',goal60:'',after55:'reinvest',contribution:'schedule',flat:'5000',manualPrice:'',ret_low:'-2',yield_low:'3',ret_mid:'4',yield_mid:'5',ret_high:'7',yield_high:'7'});
         const R29_FIELDS=Object.freeze({goal55:'r29_goal55',goal60:'r29_goal60',after55:'r29_after55',contribution:'r29_contribution',flat:'r29_flat',manualPrice:'r29_manual_price',ret_low:'r29_ret_low',yield_low:'r29_yield_low',ret_mid:'r29_ret_mid',yield_mid:'r29_yield_mid',ret_high:'r29_ret_high',yield_high:'r29_yield_high'});
         const r29Get=id=>document.getElementById(id);
@@ -4372,7 +4396,7 @@
         function r29MonthFromIndex(index){const year=Math.floor(index/12),month=index%12+1;return `${year}-${String(month).padStart(2,'0')}`;}
         function r29MonthsUntil(ym,now){return Math.max(0,r29MonthIndex(ym)-r29MonthIndex(now));}
         function r29YearlyInvest(ym,custom){
-            // 和原本 R23～R28 的 2026/09～2038/08 投資階梯相同；尊重原手帳中手動覆寫的月份金額。
+            // 2026 年齡基準改為 42 歲，對齊手帳 2026/09～2039/08 投資階梯；保留手動覆寫。
             if(ym>=R29_STOP)return 0;
             const y=Number(ym.slice(0,4)),m=Number(ym.slice(5,7));
             const idx=(y-2026)*12+m-9;
@@ -4509,7 +4533,7 @@
             const currentGoal55=Number(settings.goal55),currentGoal60=Number(settings.goal60);
             r29Text('r29_report_meta',`估算起點 ${today}｜起始市值 ${r29Cash(result.base)}｜${result.manual?'手動參考價':'當前取得行情'}｜55 歲後 ${settings.after55==='withdraw'?'領現金':'持續再投資'}`);
             const plan=settings.contribution==='schedule'?'沿用手帳階梯定投；若手帳有手動月投入額，優先使用':settings.contribution==='flat'?`固定每月 ${r29Cash(Number(settings.flat))}`:'未來不再新增投入';
-            r29Text('r29_contrib_note',`${plan}。只模擬下個月起的新資金；2038/09 起停止外部投入。基準情境假設到 55 歲前新增投入 ${r29Cash(result.variants.mid.contribTotal)}（${result.variants.mid.contribMonths} 個有投入的月份）。`);
+            r29Text('r29_contrib_note',`${plan}。只模擬下個月起的新資金；2039/09 起停止外部投入。基準情境假設到 55 歲前新增投入 ${r29Cash(result.variants.mid.contribTotal)}（${result.variants.mid.contribMonths} 個有投入的月份）。`);
             const labels={low:'保守',mid:'基準',high:'樂觀'};
             const tbody=r29Get('r29_scenarios');
             if(tbody)tbody.innerHTML=['low','mid','high'].map(k=>{const x=result.variants[k];return `<tr><td class="p-2 font-bold">${labels[k]}<div class="text-xs text-gray-400">${x.annualReturn}%／${x.annualYield}%</div></td><td class="p-2 text-right">${r29Cash(x.at55?.value)}</td><td class="p-2 text-right">${r29Cash(x.monthIncome55)}</td><td class="p-2 text-right">${r29Cash(x.at60?.value)}</td><td class="p-2 text-right">${r29Cash(x.monthIncome60)}</td><td class="p-2 text-right">${r29Cash(x.cashTaken)}</td></tr>`;}).join('');
@@ -6707,5 +6731,6 @@
     </script>
     <script src="./js/auto-market.js"></script>
     <script src="./js/r45-smart.js"></script>
+    <script src="./js/r46-mobile.js"></script>
 </body>
 </html>
