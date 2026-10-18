@@ -1,14 +1,786 @@
 {
   "schema": 1,
   "code": "00406A",
-  "checkedAt": null,
-  "pricesUpdatedAt": null,
-  "dividendsUpdatedAt": null,
-  "prices": [],
-  "dividends": [],
+  "checkedAt": "2026-10-18T16:12:23+08:00",
+  "pricesUpdatedAt": "2026-10-18T16:12:23+08:00",
+  "dividendsUpdatedAt": "2026-10-18T16:12:23+08:00",
+  "prices": [
+    {
+      "date": "2026-07-01",
+      "close": 10.42,
+      "Trading_Volume": 34174644.0,
+      "Trading_money": 355357428.0,
+      "open": 10.39,
+      "max": 10.45,
+      "min": 10.28,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-02",
+      "close": 10.41,
+      "Trading_Volume": 18744323.0,
+      "Trading_money": 193709927.0,
+      "open": 10.24,
+      "max": 10.42,
+      "min": 10.17,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-03",
+      "close": 10.48,
+      "Trading_Volume": 20438763.0,
+      "Trading_money": 212665007.0,
+      "open": 10.34,
+      "max": 10.52,
+      "min": 10.2,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-06",
+      "close": 10.23,
+      "Trading_Volume": 17193077.0,
+      "Trading_money": 177313613.0,
+      "open": 10.55,
+      "max": 10.57,
+      "min": 10.17,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-07",
+      "close": 9.86,
+      "Trading_Volume": 37201515.0,
+      "Trading_money": 370911755.0,
+      "open": 10.24,
+      "max": 10.26,
+      "min": 9.83,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-08",
+      "close": 9.78,
+      "Trading_Volume": 23785260.0,
+      "Trading_money": 232166810.0,
+      "open": 9.92,
+      "max": 9.92,
+      "min": 9.65,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-09",
+      "close": 9.86,
+      "Trading_Volume": 9761709.0,
+      "Trading_money": 96974973.0,
+      "open": 9.81,
+      "max": 10.03,
+      "min": 9.8,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-13",
+      "close": 9.73,
+      "Trading_Volume": 12653595.0,
+      "Trading_money": 123918926.0,
+      "open": 10.0,
+      "max": 10.0,
+      "min": 9.7,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-14",
+      "close": 9.44,
+      "Trading_Volume": 30203308.0,
+      "Trading_money": 283639372.0,
+      "open": 9.7,
+      "max": 9.73,
+      "min": 9.16,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-15",
+      "close": 9.76,
+      "Trading_Volume": 19316798.0,
+      "Trading_money": 188169371.0,
+      "open": 9.55,
+      "max": 9.81,
+      "min": 9.5,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-16",
+      "close": 9.64,
+      "Trading_Volume": 77301033.0,
+      "Trading_money": 745329525.0,
+      "open": 9.8,
+      "max": 9.8,
+      "min": 9.52,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-17",
+      "close": 8.82,
+      "Trading_Volume": 165937028.0,
+      "Trading_money": 1508312775.0,
+      "open": 9.26,
+      "max": 9.32,
+      "min": 8.82,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-20",
+      "close": 8.72,
+      "Trading_Volume": 79687375.0,
+      "Trading_money": 697022284.0,
+      "open": 8.85,
+      "max": 8.98,
+      "min": 8.56,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-21",
+      "close": 9.17,
+      "Trading_Volume": 50581883.0,
+      "Trading_money": 458967542.0,
+      "open": 8.9,
+      "max": 9.2,
+      "min": 8.89,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-22",
+      "close": 9.46,
+      "Trading_Volume": 63813008.0,
+      "Trading_money": 606607846.0,
+      "open": 9.46,
+      "max": 9.57,
+      "min": 9.42,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-23",
+      "close": 9.52,
+      "Trading_Volume": 64093326.0,
+      "Trading_money": 610204156.0,
+      "open": 9.64,
+      "max": 9.65,
+      "min": 9.44,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-24",
+      "close": 9.2,
+      "Trading_Volume": 127172441.0,
+      "Trading_money": 1180784065.0,
+      "open": 9.43,
+      "max": 9.49,
+      "min": 9.17,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-27",
+      "close": 9.13,
+      "Trading_Volume": 124537894.0,
+      "Trading_money": 1125211930.0,
+      "open": 9.21,
+      "max": 9.21,
+      "min": 8.94,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-28",
+      "close": 8.53,
+      "Trading_Volume": 211120578.0,
+      "Trading_money": 1832952006.0,
+      "open": 8.83,
+      "max": 8.85,
+      "min": 8.53,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-29",
+      "close": 8.03,
+      "Trading_Volume": 206638455.0,
+      "Trading_money": 1675664978.0,
+      "open": 8.57,
+      "max": 8.61,
+      "min": 7.88,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-30",
+      "close": 8.06,
+      "Trading_Volume": 172797187.0,
+      "Trading_money": 1403566742.0,
+      "open": 7.97,
+      "max": 8.36,
+      "min": 7.87,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-07-31",
+      "close": 8.59,
+      "Trading_Volume": 72478854.0,
+      "Trading_money": 617718517.0,
+      "open": 8.5,
+      "max": 8.6,
+      "min": 8.44,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-03",
+      "close": 8.81,
+      "Trading_Volume": 65949392.0,
+      "Trading_money": 578325215.0,
+      "open": 8.59,
+      "max": 8.9,
+      "min": 8.55,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-04",
+      "close": 8.97,
+      "Trading_Volume": 81075174.0,
+      "Trading_money": 725525546.0,
+      "open": 8.83,
+      "max": 9.08,
+      "min": 8.81,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-05",
+      "close": 9.27,
+      "Trading_Volume": 79442309.0,
+      "Trading_money": 740879248.0,
+      "open": 9.42,
+      "max": 9.42,
+      "min": 9.2,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-06",
+      "close": 9.35,
+      "Trading_Volume": 39387733.0,
+      "Trading_money": 365335365.0,
+      "open": 9.2,
+      "max": 9.39,
+      "min": 9.12,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-07",
+      "close": 9.23,
+      "Trading_Volume": 39808645.0,
+      "Trading_money": 369032724.0,
+      "open": 9.38,
+      "max": 9.4,
+      "min": 9.2,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-10",
+      "close": 9.37,
+      "Trading_Volume": 45555663.0,
+      "Trading_money": 427901661.0,
+      "open": 9.39,
+      "max": 9.45,
+      "min": 9.33,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-11",
+      "close": 9.4,
+      "Trading_Volume": 32154674.0,
+      "Trading_money": 300434069.0,
+      "open": 9.37,
+      "max": 9.41,
+      "min": 9.27,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-12",
+      "close": 9.53,
+      "Trading_Volume": 42776765.0,
+      "Trading_money": 406246750.0,
+      "open": 9.43,
+      "max": 9.53,
+      "min": 9.43,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-13",
+      "close": 9.69,
+      "Trading_Volume": 48281365.0,
+      "Trading_money": 468285031.0,
+      "open": 9.69,
+      "max": 9.75,
+      "min": 9.62,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-14",
+      "close": 9.78,
+      "Trading_Volume": 49228299.0,
+      "Trading_money": 481755483.0,
+      "open": 9.74,
+      "max": 9.85,
+      "min": 9.73,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-17",
+      "close": 9.84,
+      "Trading_Volume": 42461937.0,
+      "Trading_money": 417393857.0,
+      "open": 9.82,
+      "max": 9.87,
+      "min": 9.74,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-18",
+      "close": 9.68,
+      "Trading_Volume": 228310626.0,
+      "Trading_money": 2237668831.0,
+      "open": 9.96,
+      "max": 9.99,
+      "min": 9.66,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-19",
+      "close": 9.5,
+      "Trading_Volume": 207370569.0,
+      "Trading_money": 1977827497.0,
+      "open": 9.5,
+      "max": 9.68,
+      "min": 9.43,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-20",
+      "close": 9.58,
+      "Trading_Volume": 144353163.0,
+      "Trading_money": 1373091278.0,
+      "open": 9.67,
+      "max": 9.68,
+      "min": 9.43,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-21",
+      "close": 9.43,
+      "Trading_Volume": 186617968.0,
+      "Trading_money": 1764380928.0,
+      "open": 9.58,
+      "max": 9.58,
+      "min": 9.39,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-24",
+      "close": 9.36,
+      "Trading_Volume": 203403349.0,
+      "Trading_money": 1916098868.0,
+      "open": 9.44,
+      "max": 9.52,
+      "min": 9.35,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-25",
+      "close": 9.41,
+      "Trading_Volume": 228109136.0,
+      "Trading_money": 2105661508.0,
+      "open": 9.27,
+      "max": 9.41,
+      "min": 9.16,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-26",
+      "close": 9.66,
+      "Trading_Volume": 198117948.0,
+      "Trading_money": 1892794889.0,
+      "open": 9.43,
+      "max": 9.68,
+      "min": 9.39,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-27",
+      "close": 9.7,
+      "Trading_Volume": 185415195.0,
+      "Trading_money": 1804520986.0,
+      "open": 9.81,
+      "max": 9.82,
+      "min": 9.64,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-28",
+      "close": 9.81,
+      "Trading_Volume": 176496160.0,
+      "Trading_money": 1732910241.0,
+      "open": 9.8,
+      "max": 9.86,
+      "min": 9.75,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-08-31",
+      "close": 9.67,
+      "Trading_Volume": 431531602.0,
+      "Trading_money": 4145870941.0,
+      "open": 9.65,
+      "max": 9.7,
+      "min": 9.51,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-01",
+      "close": 9.96,
+      "Trading_Volume": 297314824.0,
+      "Trading_money": 2948247567.0,
+      "open": 9.76,
+      "max": 10.0,
+      "min": 9.74,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-02",
+      "close": 9.64,
+      "Trading_Volume": 227374632.0,
+      "Trading_money": 2203313145.0,
+      "open": 9.78,
+      "max": 9.79,
+      "min": 9.63,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-03",
+      "close": 9.46,
+      "Trading_Volume": 202872481.0,
+      "Trading_money": 1939841809.0,
+      "open": 9.73,
+      "max": 9.73,
+      "min": 9.45,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-04",
+      "close": 9.57,
+      "Trading_Volume": 125639325.0,
+      "Trading_money": 1196900636.0,
+      "open": 9.61,
+      "max": 9.65,
+      "min": 9.43,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-07",
+      "close": 9.69,
+      "Trading_Volume": 127487858.0,
+      "Trading_money": 1237794324.0,
+      "open": 9.7,
+      "max": 9.76,
+      "min": 9.66,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-08",
+      "close": 9.61,
+      "Trading_Volume": 123874950.0,
+      "Trading_money": 1195423654.0,
+      "open": 9.73,
+      "max": 9.75,
+      "min": 9.58,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-09",
+      "close": 9.66,
+      "Trading_Volume": 107012185.0,
+      "Trading_money": 1038116272.0,
+      "open": 9.66,
+      "max": 9.76,
+      "min": 9.62,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-10",
+      "close": 9.6,
+      "Trading_Volume": 141193856.0,
+      "Trading_money": 1352224156.0,
+      "open": 9.62,
+      "max": 9.62,
+      "min": 9.53,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-11",
+      "close": 9.44,
+      "Trading_Volume": 275295563.0,
+      "Trading_money": 2599255225.0,
+      "open": 9.46,
+      "max": 9.5,
+      "min": 9.4,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-14",
+      "close": 9.39,
+      "Trading_Volume": 193984876.0,
+      "Trading_money": 1810754711.0,
+      "open": 9.32,
+      "max": 9.45,
+      "min": 9.25,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-15",
+      "close": 9.28,
+      "Trading_Volume": 172774482.0,
+      "Trading_money": 1611699130.0,
+      "open": 9.37,
+      "max": 9.44,
+      "min": 9.27,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-16",
+      "close": 9.34,
+      "Trading_Volume": 200946349.0,
+      "Trading_money": 1878584770.0,
+      "open": 9.33,
+      "max": 9.44,
+      "min": 9.29,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-17",
+      "close": 9.31,
+      "Trading_Volume": 480086185.0,
+      "Trading_money": 4517402234.0,
+      "open": 9.5,
+      "max": 9.58,
+      "min": 9.31,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-18",
+      "close": 9.59,
+      "Trading_Volume": 202589259.0,
+      "Trading_money": 1929954922.0,
+      "open": 9.47,
+      "max": 9.59,
+      "min": 9.46,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-21",
+      "close": 9.7,
+      "Trading_Volume": 219274887.0,
+      "Trading_money": 2124399731.0,
+      "open": 9.7,
+      "max": 9.75,
+      "min": 9.64,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-22",
+      "close": 9.84,
+      "Trading_Volume": 273137945.0,
+      "Trading_money": 2702901742.0,
+      "open": 9.88,
+      "max": 9.98,
+      "min": 9.81,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-23",
+      "close": 9.92,
+      "Trading_Volume": 188142199.0,
+      "Trading_money": 1864711315.0,
+      "open": 9.92,
+      "max": 9.95,
+      "min": 9.87,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-24",
+      "close": 10.0,
+      "Trading_Volume": 234727738.0,
+      "Trading_money": 2334657668.0,
+      "open": 9.89,
+      "max": 10.0,
+      "min": 9.85,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-29",
+      "close": 9.85,
+      "Trading_Volume": 667138285.0,
+      "Trading_money": 6608030103.0,
+      "open": 10.02,
+      "max": 10.02,
+      "min": 9.8,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-09-30",
+      "close": 9.91,
+      "Trading_Volume": 343691070.0,
+      "Trading_money": 3416063443.0,
+      "open": 9.99,
+      "max": 10.0,
+      "min": 9.89,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-10-01",
+      "close": 10.0,
+      "Trading_Volume": 308261323.0,
+      "Trading_money": 3063949182.0,
+      "open": 9.95,
+      "max": 10.01,
+      "min": 9.89,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-10-02",
+      "close": 10.13,
+      "Trading_Volume": 378437176.0,
+      "Trading_money": 3816006561.0,
+      "open": 10.02,
+      "max": 10.13,
+      "min": 10.01,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-10-05",
+      "close": 10.31,
+      "Trading_Volume": 371300397.0,
+      "Trading_money": 3806898097.0,
+      "open": 10.13,
+      "max": 10.33,
+      "min": 10.12,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-10-06",
+      "close": 10.33,
+      "Trading_Volume": 190191514.0,
+      "Trading_money": 1958715310.0,
+      "open": 10.37,
+      "max": 10.38,
+      "min": 10.24,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-10-07",
+      "close": 10.24,
+      "Trading_Volume": 276458470.0,
+      "Trading_money": 2839464184.0,
+      "open": 10.3,
+      "max": 10.35,
+      "min": 10.22,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-10-08",
+      "close": 10.16,
+      "Trading_Volume": 280821092.0,
+      "Trading_money": 2844636589.0,
+      "open": 10.12,
+      "max": 10.2,
+      "min": 10.05,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-10-12",
+      "close": 10.18,
+      "Trading_Volume": 229191572.0,
+      "Trading_money": 2316569475.0,
+      "open": 10.1,
+      "max": 10.2,
+      "min": 10.06,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-10-13",
+      "close": 9.85,
+      "Trading_Volume": 1200005148.0,
+      "Trading_money": 11884538216.0,
+      "open": 10.01,
+      "max": 10.02,
+      "min": 9.83,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-10-14",
+      "close": 9.91,
+      "Trading_Volume": 309102652.0,
+      "Trading_money": 3068897494.0,
+      "open": 9.94,
+      "max": 9.97,
+      "min": 9.88,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-10-15",
+      "close": 9.3,
+      "Trading_Volume": 1772699807.0,
+      "Trading_money": 16695899301.0,
+      "open": 9.6,
+      "max": 9.65,
+      "min": 9.3,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-10-16",
+      "close": 9.32,
+      "Trading_Volume": 792217925.0,
+      "Trading_money": 7417404249.0,
+      "open": 9.36,
+      "max": 9.44,
+      "min": 9.28,
+      "stock_id": "00406A"
+    }
+  ],
+  "dividends": [
+    {
+      "exDate": "2026-07-31",
+      "payDate": "2026-08-26",
+      "amount": 0.128,
+      "stage": "confirmed",
+      "source": "臺灣證券交易所 ETF e添富"
+    },
+    {
+      "exDate": "2026-09-02",
+      "payDate": "2026-09-30",
+      "amount": 0.138,
+      "stage": "confirmed",
+      "source": "臺灣證券交易所 ETF e添富"
+    },
+    {
+      "exDate": "2026-10-05",
+      "payDate": "2026-11-02",
+      "amount": 0.138,
+      "stage": "confirmed",
+      "source": "臺灣證券交易所 ETF e添富"
+    },
+    {
+      "exDate": "2026-11-03",
+      "payDate": "2026-11-27",
+      "amount": null,
+      "stage": "scheduled",
+      "source": "臺灣證券交易所 ETF e添富"
+    }
+  ],
   "sources": {
-    "prices": "尚未執行第一次排程",
-    "dividends": "尚未執行第一次排程"
+    "prices": "臺灣證券交易所每日成交資料",
+    "dividends": "臺灣證券交易所 ETF e添富"
   },
-  "errors": []
+  "errors": [
+    "TWSE 2025 配息：證交所網頁未回傳可辨識的 00406A 表格（避免清空舊資料）"
+  ]
 }
