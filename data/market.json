@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "code": "00406A",
+  "checkedAt": null,
+  "pricesUpdatedAt": null,
+  "dividendsUpdatedAt": null,
+  "prices": [],
+  "dividends": [],
+  "sources": {
+    "prices": "尚未執行第一次排程",
+    "dividends": "尚未執行第一次排程"
+  },
+  "errors": []
+}
