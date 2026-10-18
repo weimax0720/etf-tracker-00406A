@@ -6469,7 +6469,7 @@
             const data=r40Build();r40Last=data;
             const {latest,count,age,stale,ready,grade}=data;
             r40Put('r40_quality',latest?`${count} 日量價 · ${stale?'資料已過期':'歷史資料'}`:'未載入歷史量價');
-            r40Put('r40_source',latest?`來源：FinMind TaiwanStockPrice，最近有效紀錄 ${latest.date}；近 ${count} 個有效交易日（成交量以股數換算為張）。${data.moneyEst?'部分成交額為收盤價乘成交量之估值。':''}`:'資料來源：尚無有效 FinMind 歷史量價。請輸入 FinMind 金鑰並更新行情。');
+            r40Put('r40_source',latest?`來源：公開市場歷史量價（證交所／FinMind 可能混合），最近有效紀錄 ${latest.date}；近 ${count} 個有效交易日（成交量以股數換算為張）。${data.moneyEst?'部分成交額為收盤價乘成交量之估值。':''}`:'資料來源：尚無有效的公開歷史量價。請檢查 GitHub 自動更新，長期資料亦可使用 FinMind。');
             const label={unknown:'⚪ 無法分級：資料不足或過期',normal:'🟢 量能未觸發警示（不代表安全）',watch:'🟡 量能需注意',high:'🔴 量能高度注意'};
             r40Put('r40_level',label[grade]);r40Put('r40_main_reason',stale&&latest?'最近資料已超過 7 個日曆日，請先重新取得最新行情':data.reason);
             r40Put('r40_latest_date',latest?.date||'—');r40Put('r40_days_old',age===null?'未有有效交易日':`距分析日 ${age} 個日曆日${stale?'（可能過期）':''}`);
