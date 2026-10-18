@@ -123,11 +123,6 @@
       else if (Array.isArray(feed.errors) && feed.errors.length)
         attention.push('部分公開資料來源更新失敗，請檢查 GitHub Actions 紀錄。');
     }
-    const confirmed = validDate(input.backupConfirmed) ? input.backupConfirmed : '';
-    const backupAge = confirmed ? dayDiff(today, confirmed) : null;
-    if (backupAge !== null && backupAge >= 30)
-      attention.push('距上次「人工確認已備份」超過 30 天；請重新匯出 R30 備份並確認下載成功。');
-
     const highest = attention.length > 0;
     state = highest ? '需留意' : (marketOld || feedOld || !next ? '資料待核對' : '已核對近期資料');
     const checkedLabel = feed?.checkedAt ?
@@ -158,11 +153,9 @@
     } catch (e) { console.warn('R45 無法讀取主帳戶帳務', e); main.invalid=true; }
     let announcement = null;
     try {announcement = r42NextAnnouncement(today);}catch (e) {console.warn('R45 除息資料未就緒',e);}
-    let backupConfirmed='';
-    try {backupConfirmed=r32Prefs?.backupConfirmed || '';}catch (_) {}
     let prices=[];
     try {prices=Array.isArray(rawPriceData)?rawPriceData:[];}catch (_) {}
-    return {today,feed:publicFeed,feedError,prices,main,announcement,backupConfirmed};
+    return {today,feed:publicFeed,feedError,prices,main,announcement};
   }
   function render() {
     if (!$('brief')) return null;
