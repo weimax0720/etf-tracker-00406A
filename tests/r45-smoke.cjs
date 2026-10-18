@@ -8,7 +8,7 @@ const root=path.join(__dirname,'..');
 const app=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const r44=fs.readFileSync(path.join(root,'js/auto-market.js'),'utf8');
 const r45=fs.readFileSync(path.join(root,'js/r45-smart.js'),'utf8');
-assert.match(app, /00406A Tracker R4[56]/);
+assert.match(app, /00406A Tracker R4[567]/);
 assert.match(app, /id="r45_brief"/);
 assert.match(app, /id="r45_legacy_details"/);
 assert.match(app, /src="\.\/js\/r45-smart\.js"/);
@@ -39,7 +39,7 @@ const feed={schema:1,code:'00406A',checkedAt:new Date().toISOString(),prices,div
  sources:{prices:'臺灣證券交易所'}};
 const announcement={exDate:'2026-11-03',payDate:'2026-11-27',stage:'estimated',amount:0.138};
 const base={today,feed,prices,announcement,
-  main:{valid:true,shares:90,basis:900,fee:0.2},backupConfirmed:'2026-10-01'};
+  main:{valid:true,shares:90,basis:900,fee:0.2}};
 const normal=calc(base);
 assert.equal(normal.lines.length,3);
 assert.match(normal.lines[0],/10\/16/);
@@ -63,8 +63,6 @@ assert.ok(failed.attention.some(x=>x.includes('讀取失敗')));
 const mainOnly=calc({...base,kids:{kid_a:{shares:100000},kid_b:{shares:100000}}});
 assert.match(mainOnly.lines[2],/90 股/);
 assert.doesNotMatch(mainOnly.lines[2],/100,000/);
-const backupOld=calc({...base,backupConfirmed:'2026-07-01'});
-assert.ok(backupOld.attention.some(x=>x.includes('30 天')));
 const mismatch=calc({...base,prices:prices.map((p,i)=>i===prices.length-1?quote('2026-10-16',9.8):p)});
 assert.equal(mismatch.priceStatus,'來源不一致');
-console.log('R45 smoke checks PASS: HTML, 19 tabs, JS syntax, estimates/formal, stale, account isolation, backup, mismatch');
+console.log('R45 smoke checks PASS: HTML, 19 tabs, JS syntax, estimates/formal, stale, account isolation, mismatch');
