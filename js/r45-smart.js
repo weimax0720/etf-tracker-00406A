@@ -75,7 +75,7 @@
       dividendStatus = stage;
       lines.push(dateLabel(next.exDate) + ' 預定除息；' +
         (validAmount ? '每股 ' + amount.toFixed(3) + ' 元（' + stage + '）' : '金額待公告') +
-        '。預估不等於實際入帳。');
+        '。公告／預估都不代表已實際入帳。');
       const exDays = dayDiff(next.exDate, today);
       if (exDays !== null && exDays <= 7 && next.stage !== 'confirmed') {
         attention.push('距預定除息日 ' + exDays + ' 天，目前配息仍非正式確認金額。');
