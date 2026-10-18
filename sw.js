@@ -1,8 +1,8 @@
-/* R46 離線 Shell：僅儲存公開資源。絕不攔截／快取個人 API 或銀行紀錄。 */
+/* R47 離線 Shell：僅儲存公開資源。絕不攔截／快取個人 API 或銀行紀錄。 */
 'use strict';
-const APP_CACHE='00406A-r46-shell-v2';
-const DATA_CACHE='00406A-r46-public-data-v1';
-const ALLOWED_CACHE_PREFIX='00406A-r46-';
+const APP_CACHE='00406A-r47-shell-v1';
+const DATA_CACHE='00406A-r47-public-data-v1';
+const ALLOWED_CACHE_PREFIXES=['00406A-r46-','00406A-r47-'];
 const SHELL=['./','./index.html','./js/auto-market.js','./js/r45-smart.js','./js/r46-mobile.js',
              './manifest.webmanifest','./icons/tracker-icon.svg','./icons/tracker-192.png','./icons/tracker-512.png'];
 const PUBLIC_FEED='./data/market.json';
@@ -63,7 +63,7 @@ self.addEventListener('install',event=>{
 self.addEventListener('activate',event=>{
   event.waitUntil((async()=>{
     const names=await caches.keys();
-    await Promise.all(names.filter(k=>k.startsWith(ALLOWED_CACHE_PREFIX)&&
+    await Promise.all(names.filter(k=>ALLOWED_CACHE_PREFIXES.some(p=>k.startsWith(p))&&
       k!==APP_CACHE&&k!==DATA_CACHE).map(k=>caches.delete(k)));
     await self.clients.claim();
   })());
