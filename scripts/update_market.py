@@ -244,7 +244,7 @@ def main():
             result["errors"].append("FinMind 配息：" + str(exc))
 
     twse_rows = []
-    for year in (TODAY.year - 1, TODAY.year):
+    for year in range(max(2026, TODAY.year - 1), TODAY.year + 1):
         try:
             twse_rows.extend(twse_dividends(year))
         except Exception as exc:
