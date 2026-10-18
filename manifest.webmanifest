@@ -1,0 +1,19 @@
+{
+  "name": "00406A Tracker｜專屬投資追蹤",
+  "short_name": "00406A Tracker",
+  "description": "00406A 主帳戶與雙寶獨立記帳，公開行情及配息自動更新，支援離線檢視。",
+  "lang": "zh-TW",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "./icons/tracker-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
