@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R46｜手機離線・智慧提醒版</title>
+    <title>00406A Tracker R47｜極簡帳務健檢版</title>
     <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -443,8 +443,8 @@
             </div>
             <!-- R30 安全中心捷徑 -->
             <div class="bg-gray-800 border border-teal-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="security">
-                <div><p class="text-sm font-bold text-teal-300">🔐 R30 資料安全與備份</p><p id="r30_home_brief" class="text-xs text-gray-300 mt-1">自動檢查交易與實收股息紀錄；建議定期下載完整備份。</p></div>
-                <button type="button" onclick="switchTab('security')" class="rounded bg-teal-700 hover:bg-teal-600 px-3 py-2 text-sm font-medium">開啟安全中心 →</button>
+                <div><p class="text-sm font-bold text-teal-300">🩺 帳務健康檢查</p><p id="r30_home_brief" class="text-xs text-gray-300 mt-1">自動檢查主帳戶與雙寶的交易、實收股息紀錄。</p></div>
+                <button type="button" onclick="switchTab('security')" class="rounded bg-teal-700 hover:bg-teal-600 px-3 py-2 text-sm font-medium">查看健康檢查 →</button>
             </div>
             <!-- R31 資料管理：只讀查詢；實際編輯返回原本帳務頁 -->
             <div class="bg-gray-800 border border-lime-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="records">
@@ -1020,16 +1020,7 @@
                 </div>
             </div>
 
-            <div class="card border border-blue-900/50">
-                <h3 class="text-lg font-bold text-sky-300">🛡️ 帳務備份與還原</h3>
-                <p class="text-xs text-gray-400 mt-2">備份目前網站上的所有 00406A 本機資料（交易、手帳、配息入帳、退休設定與歷史行情快取），預設不匯出 FinMind API 金鑰。備份檔請自行妥善保管，不要上傳公開 GitHub。</p>
-                <div class="flex flex-wrap items-center gap-3 mt-4">
-                    <button type="button" onclick="r30Backup()" class="bg-sky-700 hover:bg-sky-600 text-sm px-4 py-2 rounded font-semibold">📥 下載 R43 校驗備份 JSON</button>
-                    <label class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm cursor-pointer">📤 驗證後還原 JSON<input id="r25_restore_input" type="file" accept=".json,application/json" class="hidden" onchange="r30StageFile(this)"></label>
-                </div>
-                <button type="button" onclick="switchTab('security')" class="text-xs text-teal-300 underline mt-3">前往 R30 資料安全中心查看檢查與還原預覽 →</button>
-                <p id="r25_backup_status" role="status" class="text-xs text-gray-400 mt-3">R30 已啟用：選擇 JSON 後先進入資料安全中心預覽、校驗，確認後才允許還原。</p>
-            </div>
+            <div class="card border border-blue-900/50"><div class="flex flex-wrap items-center justify-between gap-3"><div><h3 class="text-lg font-bold text-sky-300">🩺 帳務健康檢查</h3><p class="text-xs text-gray-400 mt-2">檢查交易格式、超賣及實收股息，不修改任何帳務。</p></div><button type="button" onclick="switchTab('security')" class="bg-sky-800 rounded px-4 py-3 text-sm">查看結果 →</button></div></div>
         </section>
 
         <!-- ================= R26：智慧加碼模擬器 ================= -->
@@ -1267,7 +1258,7 @@
                     <p id="r28_yoy_note" class="text-xs text-gray-400 mt-3">—</p>
                 </div>
                 <div class="card"><h3 class="text-lg font-bold text-emerald-300 mb-3">六、年度觀察及資料提醒</h3><div id="r28_observations" class="text-sm text-gray-300 space-y-2">尚無資料</div>
-                    <p class="text-xs text-gray-500 mt-4">本報表非經查核之損益表、稅務申報資料或報酬率保證。買賣相關交易費用按已輸入金額處理。ETF 配息公告並非實收股息；請定期備份帳務 JSON。</p>
+                    <p class="text-xs text-gray-500 mt-4">本報表非經查核之損益表、稅務申報資料或報酬率保證。買賣相關交易費用按已輸入金額處理。ETF 配息公告並非實收股息；請定期與券商明細核對。</p>
                 </div>
 
                  <!-- R36：家庭年度現金流直接整合 R28 年度列印及匯出 -->
@@ -1373,7 +1364,7 @@
                 <div class="flex flex-wrap gap-2 mt-4">
                     <button type="button" onclick="switchTab('transactions')" class="bg-blue-700 hover:bg-blue-600 rounded px-4 py-3 text-sm font-semibold">＋ 新增／編輯交易</button>
                     <button type="button" onclick="switchTab('assets');document.getElementById('r25_cash_date')?.scrollIntoView({behavior:'smooth',block:'center'})" class="bg-teal-700 hover:bg-teal-600 rounded px-4 py-3 text-sm font-semibold">＋ 登錄實收股息</button>
-                    <button type="button" onclick="switchTab('security')" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">🔐 查看備份</button>
+                    <button type="button" onclick="switchTab('security')" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">🩺 帳務健檢</button>
                 </div>
             </div>
             <div class="card border border-gray-700">
@@ -1457,11 +1448,11 @@
               </div>
               <p id="r46_notification_status" role="status" class="text-xs text-gray-400 mt-3">通知需先經使用者授權。</p>
               <p id="r46_offline_help" class="text-xs text-gray-500 mt-2">首次離線安裝須使用 HTTPS 連線。</p>
-              <p class="text-xs text-amber-200 mt-2">僅在開啟／重新載入 APP 時核對公開市場異常；關閉 APP 不會收到背景推播。原有提醒中心的定投與備份待辦不會自動記帳。</p>
+              <p class="text-xs text-amber-200 mt-2">僅在開啟／重新載入 APP 時核對公開市場異常；關閉 APP 不會收到背景推播。原有定投與配息提醒不會自動記帳。</p>
             </div>
             <div class="card border border-orange-800/60">
                 <div class="flex flex-wrap justify-between items-start gap-3">
-                    <div><h2 class="text-xl font-bold text-orange-300">🔔 R32 智慧提醒與個人化首頁</h2><p class="text-sm text-gray-300 mt-2">定投待辦、配息發放核對、自訂事項、備份提醒與首頁區塊開關。</p></div>
+                    <div><h2 class="text-xl font-bold text-orange-300">🔔 R32 智慧提醒與個人化首頁</h2><p class="text-sm text-gray-300 mt-2">定投待辦、配息發放核對、自訂事項與首頁區塊開關。</p></div>
                     <span id="r32_status" class="text-xs text-gray-300 bg-gray-900 px-3 py-2 rounded border border-gray-700" role="status">本機提醒</span>
                 </div>
                 <p class="text-xs text-amber-200 mt-3">此版本僅在開啟／操作網頁時檢查提醒，<strong>沒有 Android 背景推播、鬧鐘或自動下單。</strong> 提醒的「已核對」不代表真的買進或收到股息。</p>
@@ -1469,9 +1460,9 @@
                     <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">目前待核對</p><p id="r32_pending_count" class="text-xl font-bold mt-1">—</p></div>
                     <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">已逾期（按設定）</p><p id="r32_overdue_count" class="text-xl font-bold text-amber-300 mt-1">—</p></div>
                     <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">已核對／已有交易</p><p id="r32_done_count" class="text-xl font-bold text-emerald-300 mt-1">—</p></div>
-                    <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">備份確認狀態</p><p id="r32_backup_age" class="text-sm font-bold mt-2">尚未確認</p></div>
+                    </div>
                 </div>
-                <div class="flex flex-wrap gap-2 mt-4"><button type="button" onclick="r32Render()" class="px-4 py-3 rounded bg-orange-700 hover:bg-orange-600 text-sm">↻ 重新檢查提醒</button><button type="button" onclick="switchTab('security')" class="px-4 py-3 rounded bg-gray-700 hover:bg-gray-600 text-sm">🔐 安全備份中心</button></div>
+                <div class="flex flex-wrap gap-2 mt-4"><button type="button" onclick="r32Render()" class="px-4 py-3 rounded bg-orange-700 hover:bg-orange-600 text-sm">↻ 重新檢查提醒</button><button type="button" onclick="switchTab('security')" class="px-4 py-3 rounded bg-gray-700 hover:bg-gray-600 text-sm">🩺 帳務健康檢查</button></div>
                 <p id="r32_error" class="text-sm text-red-300 mt-3 hidden" role="alert"></p>
             </div>
             <div class="card border border-indigo-900/60">
@@ -1592,80 +1583,32 @@
                 <div id="r32_list" class="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-4" role="list"><p class="text-gray-400 text-sm">等待載入</p></div>
                 <p id="r32_list_note" class="text-xs text-gray-500 mt-3">勾選僅更新核對狀態，不能取代實際買賣或股息入帳記錄。</p>
             </div>
-            <div class="card border border-teal-900/60">
-                <h3 class="font-bold text-teal-300 text-lg">⑤ 備份確認提醒</h3>
-                <p class="text-sm text-gray-300 mt-2">建議每 30 天確認一次備份；本頁只記錄你<strong>親自確認下載資料夾裡有 JSON 檔</strong>的日期，不會聲稱已自動備份。</p>
-                <div class="flex flex-wrap gap-2 mt-3"><button type="button" onclick="switchTab('security')" class="px-4 py-3 rounded bg-teal-800 hover:bg-teal-700 text-sm">先去下載校驗備份</button><button type="button" onclick="r32ConfirmBackup()" class="px-4 py-3 rounded bg-gray-700 hover:bg-gray-600 text-sm">✓ 我已親自確認備份檔存在</button></div>
-                <p id="r32_backup_note" class="text-xs text-gray-400 mt-3">尚未設定備份確認日期。</p>
-            </div>
             <div class="card border border-violet-900/60">
-                <div class="flex flex-wrap justify-between items-center gap-3"><h3 class="font-bold text-violet-300 text-lg">⑥ 個人化首頁顯示內容</h3><button type="button" onclick="r32ResetHome()" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm">恢復全部顯示</button></div>
+                <div class="flex flex-wrap justify-between items-center gap-3"><h3 class="font-bold text-violet-300 text-lg">⑤ 個人化首頁顯示內容</h3><button type="button" onclick="r32ResetHome()" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-sm">恢復全部顯示</button></div>
                 <p class="text-xs text-gray-400 mt-2">取消勾選僅隱藏首頁區塊，不會刪除交易、報表、原有分頁，也不會停止既有運算。</p>
                 <div id="r32_home_checks" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-4"></div>
                 <div class="flex flex-wrap gap-2 mt-4"><button type="button" onclick="r32HomePreset('compact')" class="px-4 py-3 rounded bg-violet-800 hover:bg-violet-700 text-sm">精簡首頁</button><button type="button" onclick="r32HomePreset('all')" class="px-4 py-3 rounded bg-gray-700 hover:bg-gray-600 text-sm">顯示全部</button><button type="button" onclick="switchTab('overview')" class="px-4 py-3 rounded bg-blue-700 hover:bg-blue-600 text-sm">查看我的首頁 →</button></div>
-                <p id="r32_home_note" class="text-xs text-gray-500 mt-3">首頁設定只儲存在本機，會納入 R30 的完整帳務 JSON 備份。</p>
+                <p id="r32_home_note" class="text-xs text-gray-500 mt-3">首頁設定只儲存在這台瀏覽器，不會上傳公開 GitHub。</p>
             </div>
         </section>
-        <section id="tab-security" class="space-y-5 hidden" aria-label="R30 資料安全中心">
+        <section id="tab-security" class="space-y-5 hidden" aria-label="R47 帳務健康檢查">
           <div class="card border border-teal-800/60">
-            <div class="flex flex-wrap items-start justify-between gap-3">
-              <div><h2 class="text-xl font-bold text-teal-300">🔐 資料安全與備份</h2><p class="text-sm text-gray-400 mt-2">保護這台裝置的主帳戶、雙寶、配息入帳、手帳與退休設定。<strong class="text-white">GitHub 不會自動同步瀏覽器本機帳務資料。</strong></p></div>
-              <span id="r30_status" role="status" class="text-xs bg-gray-900 border border-gray-700 rounded px-3 py-2">等待檢查</span>
-            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3"><div><h2 class="text-xl font-bold text-teal-300">🩺 帳務健康檢查</h2><p class="text-sm text-gray-300 mt-2">主帳戶與雙寶獨立核對交易、超賣和實收股息，不會自行修改資料。</p></div><span id="r30_status" class="text-xs bg-gray-900 border border-gray-700 rounded px-3 py-2" role="status">等待檢查</span></div>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
-              <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">本機交易筆數</p><p id="r30_tx_count" class="text-lg font-bold mt-2">—</p></div>
-              <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶實收股息筆數</p><p id="r30_cash_count" class="text-lg font-bold mt-2">—</p></div>
+              <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">交易筆數</p><p id="r30_tx_count" class="text-lg font-bold mt-2">—</p></div>
+              <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">主帳戶實收股息</p><p id="r30_cash_count" class="text-lg font-bold mt-2">—</p></div>
               <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">本機資料類別</p><p id="r30_key_count" class="text-lg font-bold mt-2">—</p></div>
-              <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">發現的異常／提醒</p><p id="r30_issue_count" class="text-lg font-bold mt-2">—</p></div>
+              <div class="bg-gray-900 rounded p-3"><p class="text-xs text-gray-400">異常與提醒</p><p id="r30_issue_count" class="text-lg font-bold mt-2">—</p></div>
             </div>
-            <p class="text-xs text-emerald-300 mt-2">雙寶已登錄實收股息：<span id="r35_r30_cash_count">0 筆</span>（R35 台帳）</p>
-            <p class="text-xs text-gray-500 mt-3">檢查只讀取資料，不會自行刪除、修正或新增交易。數字正常不代表所有原始輸入必然正確，請定期與券商紀錄對帳。</p>
+            <p class="text-xs text-emerald-300 mt-2">雙寶已登錄實收股息：<span id="r35_r30_cash_count">0 筆</span></p>
+            <p class="text-xs text-gray-500 mt-3">本機資料只存在此瀏覽器；清除網站資料或裝置遺失，紀錄可能無法恢復。</p>
           </div>
           <div class="card">
-            <div class="flex flex-wrap justify-between gap-3 items-center"><div><h3 class="font-bold text-cyan-300 text-lg">① 本機帳務健康檢查</h3><p class="text-xs text-gray-400 mt-1">檢查交易格式、重複識別碼、超賣、未來交易，以及實際領息紀錄。</p></div><button type="button" onclick="r30Scan()" class="bg-cyan-700 hover:bg-cyan-600 rounded px-4 py-2 text-sm">重新檢查</button></div>
-            <div id="r30_issue_list" class="space-y-2 mt-4" aria-live="polite"><p class="text-gray-400 text-sm">讀取中</p></div>
-          </div>
-          <div class="card border border-emerald-900/60">
-            <h3 class="font-bold text-emerald-300 text-lg">② 下載 R43 完整備份</h3>
-            <p class="text-sm text-gray-300 mt-2">備份使用 <strong>SHA-256 校驗碼</strong>；可在還原前檢查備份資料完整性（無法證明來源身分）。包含所有 00406A 本機資料（不含 FinMind API 金鑰），請勿上傳公開 GitHub。</p>
-            <div class="flex flex-wrap gap-3 items-center mt-4"><button type="button" id="r30_backup_btn" onclick="r30Backup()" class="bg-emerald-700 hover:bg-emerald-600 rounded px-5 py-3 font-semibold text-sm">📥 下載 R43 校驗備份 JSON</button><button type="button" onclick="r30VerifyCurrent()" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">🔎 計算目前資料指紋</button></div>
-            <p id="r30_backup_note" class="text-xs text-gray-400 mt-3" role="status">下載後請開啟手機的「下載」資料夾，確認 JSON 檔確實存在。產生下載請求不等於已備份至雲端。</p>
-            <p id="r30_fingerprint" class="text-xs text-gray-500 mt-2 break-all"></p>
-          </div>
-          <div class="card border border-indigo-900/60">
-            <h3 class="font-bold text-indigo-300 text-lg">③ 預覽備份並檢查完整性</h3>
-            <p class="text-sm text-gray-300 mt-2">支援 R25～R29 舊版 JSON（無校驗碼，會顯示提醒）與 R30 校驗備份。<strong>選取檔案不會立即還原。</strong></p>
-            <label class="block border-2 border-dashed border-indigo-800 bg-gray-900 rounded-lg p-4 mt-4 text-sm cursor-pointer">📂 選擇備份 JSON 檔案
-              <input id="r30_restore_input" type="file" accept=".json,application/json" onchange="r30StageFile(this)" class="mt-3 block w-full text-xs text-gray-300">
-            </label>
-            <p id="r30_import_status" class="text-sm text-gray-400 mt-3" role="status">尚未選取備份檔案。</p>
-            <div id="r30_preview" class="hidden bg-gray-900 rounded p-4 mt-3 space-y-3">
-              <p id="r30_preview_header" class="font-semibold text-indigo-200"></p>
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-                <div><p class="text-xs text-gray-500">備份版本</p><p id="r30_preview_version">—</p></div>
-                <div><p class="text-xs text-gray-500">備份時間</p><p id="r30_preview_date">—</p></div>
-                <div><p class="text-xs text-gray-500">交易筆數</p><p id="r30_preview_tx">—</p></div>
-                <div><p class="text-xs text-gray-500">實收股息筆數</p><p id="r30_preview_cash">—</p></div>
-              </div>
-              <p id="r30_preview_checksum" class="text-sm"></p>
-              <p id="r30_preview_diff" class="text-sm text-gray-300"></p>
-              <div id="r30_preview_issues" class="text-xs text-amber-300 space-y-2"></div>
-            </div>
-          </div>
-          <div class="card border border-red-900/60">
-            <h3 class="font-bold text-red-300 text-lg">④ 最終還原確認（高風險操作）</h3>
-            <p class="text-sm text-gray-300 mt-2">僅覆蓋備份檔案包含的同名資料，其他本機鍵值不刪除；保留目前 API 金鑰。確認前必須另外下載一次「還原前安全備份」。</p>
-            <div class="mt-4 space-y-3">
-              <button type="button" onclick="r30Backup(true)" id="r30_safety_backup" class="bg-red-800 hover:bg-red-700 rounded px-4 py-3 text-sm font-semibold">🛟 下載還原前安全備份</button>
-              <label class="flex items-start gap-2 text-sm text-gray-300"><input type="checkbox" id="r30_accept" onchange="r30UpdateRestoreButton()" class="mt-1"><span>我已在手機下載資料夾確認「還原前安全備份」確實存在，且了解同名資料會被覆蓋。</span></label>
-              <label class="block text-sm text-gray-300">請輸入 <strong class="text-red-300">還原</strong> 二字以解鎖操作<input id="r30_confirm_word" type="text" autocomplete="off" placeholder="還原" oninput="r30UpdateRestoreButton()" class="block mt-2 w-full max-w-xs bg-gray-900 border border-red-900 rounded px-3 py-3 text-base text-white"></label>
-              <button type="button" id="r30_restore_btn" onclick="r30ApplyRestore()" disabled class="bg-red-700 hover:bg-red-600 disabled:opacity-40 disabled:cursor-not-allowed rounded px-5 py-3 text-sm font-bold">確認覆蓋並還原</button>
-              <button type="button" onclick="r30ClearPreview()" class="bg-gray-700 hover:bg-gray-600 rounded px-4 py-3 text-sm">取消並清除預覽</button>
-            </div>
-            <p id="r30_restore_note" class="text-xs text-gray-400 mt-3" role="status">尚未選取並驗證備份檔案，無法還原。</p>
+            <div class="flex flex-wrap justify-between gap-3 items-center"><div><h3 class="text-lg font-bold text-cyan-300">帳務健康檢查</h3><p class="text-xs text-gray-400 mt-1">查看重複紀錄、異常日期、超賣與實收股息。</p></div><button type="button" onclick="r30Scan()" class="bg-cyan-700 hover:bg-cyan-600 rounded px-4 py-3 text-sm">↻ 重新檢查</button></div>
+            <div id="r30_issue_list" class="space-y-2 mt-4" aria-live="polite">讀取中</div>
+            <p class="text-xs text-gray-500 mt-3">檢查不會寫入帳務；發現問題請返回原記帳頁核對。</p>
           </div>
         </section>
-
 
         <!-- ================= R37 家庭投資績效與領息趨勢（只讀、不寫入交易） ================= -->
         <section id="tab-performance" class="space-y-5 hidden" aria-label="R37 家庭投資績效與實收領息趨勢">
