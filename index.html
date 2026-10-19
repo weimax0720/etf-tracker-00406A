@@ -426,7 +426,7 @@
             </div>
             <!-- R27 月報快捷入口：所有金額只讀取本機帳務 -->
             <div class="bg-gray-800 border border-sky-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="monthly">
-                <div><p class="text-sm font-bold text-sky-300">🗓️ R27 智慧月報</p><p id="r27_home_brief" class="text-xs text-gray-300 mt-1">整理當月交易、股息、月底庫存、成交價與配息公告；可列印 PDF、下載 CSV。</p></div>
+                <div><p class="text-sm font-bold text-sky-300">🗓️ R27 智慧月報</p><p id="r27_home_brief" class="text-xs text-gray-300 mt-1">整理當月交易、實收股息、月底庫存、成交價與配息公告。</p></div>
                 <button type="button" onclick="switchTab('report')" class="rounded bg-sky-700 hover:bg-sky-600 px-3 py-2 text-sm font-medium">開啟月報 →</button>
             </div>
             <div class="bg-gray-800 border border-amber-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="annual">
@@ -445,7 +445,7 @@
             </div>
             <!-- R31 資料管理：只讀查詢；實際編輯返回原本帳務頁 -->
             <div class="bg-gray-800 border border-lime-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="records">
-                <div><p class="text-sm font-bold text-lime-300">🔎 R31 資料管理</p><p id="r31_home_brief" class="text-xs text-gray-300 mt-1">快速搜尋主帳戶、雙寶逐筆交易及實收股息，支援期間篩選與 CSV。</p></div>
+                <div><p class="text-sm font-bold text-lime-300">🔎 R31 資料管理</p><p id="r31_home_brief" class="text-xs text-gray-300 mt-1">快速搜尋主帳戶、雙寶逐筆交易及實收股息，支援期間與條件篩選。</p></div>
                 <button type="button" onclick="switchTab('records')" class="rounded bg-lime-800 hover:bg-lime-700 px-3 py-2 text-sm font-medium">開啟資料管理 →</button>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4" data-r32-home="market">
@@ -1118,7 +1118,7 @@
                     <button type="button" onclick="r27SetCurrentMonth()" class="rounded bg-sky-800 hover:bg-sky-700 px-4 py-2 text-sm">回本月</button>
                 </div>
                 
-                <p class="text-xs text-gray-500 mt-3">Android Chrome 的列印選單若支援「儲存為 PDF」，即可直接匯出。無法列印時，請先下載獨立 HTML 報表再開啟列印。報表只含選定月份摘要，不含 API 金鑰。</p>
+                
             </div>
             <div class="r27-paper space-y-5" id="r27_paper">
                 <div class="card border border-sky-900/50">
@@ -1162,7 +1162,7 @@
                     <div class="overflow-x-auto"><table class="w-full min-w-[640px] text-sm text-left"><thead class="text-gray-400 border-b border-gray-700"><tr><th class="p-2">日期</th><th class="p-2">帳戶</th><th class="p-2">類型</th><th class="p-2 text-right">股數</th><th class="p-2 text-right">單價</th><th class="p-2 text-right">收付金額（元）</th></tr></thead><tbody id="r27_detail_rows" class="divide-y divide-gray-700"></tbody></table></div>
                 </div>
                 <div class="card"><h3 class="text-lg font-bold text-blue-300 mb-3">六、月度觀察</h3><div id="r27_observations" class="text-sm text-gray-300 space-y-2">資料整理中。</div>
-                    <p class="text-xs text-gray-500 mt-4">本報表使用交易紀錄與可得的市場資料，非經會計師查核的損益表；不預測配息與報酬、不提供自動買賣決策。匯出前請確認原始資料無誤。</p>
+                    <p class="text-xs text-gray-500 mt-4">本報表使用交易紀錄與可得的市場資料，非經會計師查核的損益表；不預測配息與報酬、不提供自動買賣決策。請定期核對原始資料。</p>
                 </div>
 
                  <!-- R36：家庭月度實收股息與現金流，直接隨 R27 月報列印及匯出 -->
@@ -3373,9 +3373,9 @@
             if(!key){alert('請先輸入 FinMind API 金鑰，再更新行情。');return;}
             if(r23Refreshing)return;
             r23Refreshing=true;
-            const btn=document.getElementById('r23_refresh');btn.disabled=true;btn.textContent='更新中…';
+            const btn=document.getElementById('r23_refresh');if(btn){btn.disabled=true;btn.textContent='更新中…';}
             try {await fetchData(key);r23Render();}
-            finally {r23Refreshing=false;btn.disabled=false;btn.textContent='🔄 更新全部';}
+            finally {r23Refreshing=false;if(btn){btn.disabled=false;btn.textContent='🔄 更新全部';}}
         }
         // 原本函式仍為唯一資料計算來源；只在完成後更新 R23 視圖。
         const r23OldTransactions = updateTransactions;
