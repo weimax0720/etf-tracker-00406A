@@ -99,6 +99,7 @@
         if(!res.ok)throw new Error('HTTP '+res.status);
         const quote=await res.json();
         if(!apply(quote)){
+          latest=null;
           expire();
           status(quote,'🕒 證交所盤中報價已過期或尚未取得；改用最近收盤參考價');
         }
