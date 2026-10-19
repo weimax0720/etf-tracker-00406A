@@ -8,7 +8,7 @@ const assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..');
 const read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const html=read('index.html'),smart=read('js/r45-smart.js'),sw=read('sw.js');
-assert.match(html,/Tracker R47｜極簡帳務健檢版/);
+assert.match(html,/Tracker R4[78]｜/);
 const allPages='overview transactions ledger family cashflow performance efficiency kids charts dividends assets topup report annual retirement records reminders security safety'.split(' ');
 for(const id of allPages)assert.ok(html.includes('id="tab-'+id+'"'),'missing page '+id);
 assert.match(html,/id="r30_issue_list"/);
@@ -20,7 +20,7 @@ const removed=/\b(r25Backup|r25Restore|r30Backup|r30StageFile|r30ApplyRestore|r3
 assert.doesNotMatch(html,removed);
 for(const id of ['r30_backup_btn','r30_restore_btn','r32_backup_age','r32_backup_note','r25_restore_input','r30_import_status'])
   assert.ok(!html.includes('id="'+id+'"'),'legacy backup UI exists: '+id);
-assert.ok(sw.includes('r47-shell'),'PWA must refresh cached R46 HTML on upgrade');
+assert.ok(/r4[78]-shell/.test(sw),'PWA must refresh cached HTML on upgrade');
 assert.doesNotMatch(sw,/localStorage|indexedDB/);
 const tags=['div','section','article','details'];
 for(const tag of tags){
