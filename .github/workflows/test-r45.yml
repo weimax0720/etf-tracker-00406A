@@ -1,4 +1,4 @@
-name: R47 全站回歸測試
+name: R48 全站回歸測試
 
 on:
   push:
@@ -29,3 +29,4 @@ jobs:
           node tests/r45-smoke.cjs
           node tests/r46-smoke.cjs
           node tests/r47-smoke.cjs
+          node tests/r48-smoke.cjs
