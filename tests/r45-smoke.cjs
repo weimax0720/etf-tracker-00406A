@@ -8,7 +8,7 @@ const root=path.join(__dirname,'..');
 const app=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const r44=fs.readFileSync(path.join(root,'js/auto-market.js'),'utf8');
 const r45=fs.readFileSync(path.join(root,'js/r45-smart.js'),'utf8');
-assert.match(app, /00406A Tracker R4[567]/);
+assert.match(app, /00406A Tracker R4[5678]/);
 assert.match(app, /id="r45_brief"/);
 assert.match(app, /id="r45_legacy_details"/);
 assert.match(app, /src="\.\/js\/r45-smart\.js"/);
