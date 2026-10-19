@@ -1,11 +1,13 @@
-/* R48 離線 Shell：僅儲存公開資源。絕不攔截／快取個人 API 或銀行紀錄。 */
+/* R49 延續 R48 離線 Shell：僅儲存公開資源。絕不攔截／快取個人 API 或銀行紀錄。 */
 'use strict';
-const APP_CACHE='00406A-r48-shell-v1';
-const DATA_CACHE='00406A-r48-public-data-v1';
-const ALLOWED_CACHE_PREFIXES=['00406A-r46-','00406A-r47-','00406A-r48-'];
-const SHELL=['./','./index.html','./js/auto-market.js','./js/r45-smart.js','./js/r46-mobile.js',
+// previous r48-shell-v1 will be invalidated after user accepts the APP update.
+const APP_CACHE='00406A-r49-shell-v1';
+const DATA_CACHE='00406A-r49-public-data-v1';
+const ALLOWED_CACHE_PREFIXES=['00406A-r46-','00406A-r47-','00406A-r48-','00406A-r49-'];
+const SHELL=['./','./index.html','./js/auto-market.js','./js/r45-smart.js','./js/r46-mobile.js','./js/r49-live-quote.js',
              './manifest.webmanifest','./icons/tracker-icon.svg','./icons/tracker-192.png','./icons/tracker-512.png'];
 const PUBLIC_FEED='./data/market.json';
+const QUOTE_FEED='./data/quote.json';
 const CDN_HOSTS=new Set(['cdn.tailwindcss.com','cdn.jsdelivr.net']);
 function isCDN(request) {
   try {
@@ -17,6 +19,7 @@ function isShell(url) {
   return SHELL.some(f=>new URL(f,self.registration.scope).pathname===url.pathname);
 }
 function feedUrl() {return new URL(PUBLIC_FEED,self.registration.scope);}
+function quoteUrl() {return new URL(QUOTE_FEED,self.registration.scope);}
 async function networkOrCached(request,cacheName,fallback) {
   const cache=await caches.open(cacheName);
   try {
@@ -84,7 +87,7 @@ self.addEventListener('fetch',event=>{
     return;
   }
   if(url.origin!==self.location.origin || !url.pathname.startsWith(new URL(self.registration.scope).pathname))return;
-  if(url.pathname===feedUrl().pathname){
+  if(url.pathname===feedUrl().pathname || url.pathname===quoteUrl().pathname){
     event.respondWith(networkOrCached(req,DATA_CACHE));
     return;
   }
