@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00406A Tracker R47｜極簡帳務健檢版</title>
+    <title>00406A Tracker R48｜自動閱讀・零匯出按鈕版</title>
     <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -272,17 +272,14 @@
                 </div>
                 <p class="text-gray-400 mt-1 text-sm md:text-base">專屬理財計畫（目前 <span id="r46_age_now">42</span> 歲 → 60 歲）｜2026 年度基準 42 歲</p>
             </div>
-            <div class="flex space-x-2 w-full md:w-auto">
-                <input type="password" id="api_key" placeholder="FinMind 金鑰（選填）" class="w-full md:w-auto px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
-                <button onclick="saveAndLoad()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-medium transition whitespace-nowrap">更新行情</button>
-            </div>
+            <input type="hidden" id="api_key" autocomplete="off">
         </div>
 
         <!-- R44 公開市場資料更新狀態（不含私人投資帳務） -->
         <div id="r44_status_bar" class="flex flex-wrap gap-2 justify-between items-center bg-gray-800 border border-cyan-900/50 rounded-lg px-3 py-2 text-xs text-gray-300">
           <span id="r44_sync_status" role="status" aria-live="polite">🌐 準備檢查 GitHub 公開市場資料…</span>
           <span id="r46_connectivity" class="text-xs text-cyan-200">檢查連線中</span>
-          <button id="r44_refresh_btn" type="button" onclick="r44Refresh(true)" class="rounded bg-gray-700 hover:bg-gray-600 px-3 py-2">↻ 檢查最新資料</button>
+          
         </div>
         <div id="r46_update_banner" hidden class="bg-cyan-950/50 border border-cyan-700 rounded-lg px-3 py-2 text-sm flex flex-wrap gap-2 items-center justify-between" role="status">
           <span class="text-cyan-100">📲 APP 有新版可用，請先完成手邊操作再更新。</span>
@@ -328,7 +325,7 @@
                   </div>
                   <div class="flex flex-wrap gap-2 items-center">
                     <span id="r45_state" role="status" aria-live="polite" class="text-xs text-cyan-200 bg-cyan-950 border border-cyan-900 rounded-lg px-2 py-1">讀取中</span>
-                    <button type="button" onclick="r45Refresh()" class="text-xs text-white bg-gray-700 hover:bg-gray-600 rounded-lg px-3 py-2">↻ 重新整理</button>
+                    
                   </div>
                 </div>
                 <p id="r45_asof" class="text-xs text-gray-400 mb-3">正在核對公開資料與本機帳務…</p>
@@ -357,7 +354,7 @@
             <section class="card border border-cyan-800/60" aria-label="R23 智慧投資助理">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <div><h2 class="text-xl font-bold text-cyan-300">🤖 今日投資摘要</h2><p class="text-xs text-gray-400 mt-1">規則分析，非 AI 對話或買賣訊號；市場資料僅供參考</p></div>
-                    <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span><button type="button" onclick="r23Refresh()" id="r23_refresh" class="bg-cyan-700 hover:bg-cyan-600 px-3 py-2 rounded text-sm text-white">🔄 更新全部</button></div>
+                    <div class="flex flex-wrap items-center gap-2"><span id="r23_updated" class="text-xs text-gray-400" aria-live="polite">尚未更新行情</span></div>
                 </div>
                 <p id="r23_summary" class="text-sm text-gray-200 bg-gray-900 rounded p-3 mb-4" aria-live="polite">載入交易紀錄與公開市場資料後顯示摘要；可使用 GitHub 自動資料更新。</p>
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
@@ -692,7 +689,7 @@
 
                 <!-- 表格上方新增：月份篩選器 -->
                 <div class="flex justify-between items-end mb-2 mt-6">
-                    <div class="flex flex-wrap items-center gap-2"><h3 class="text-sm font-bold text-gray-400">交易明細列表</h3><button type="button" onclick="switchTab('records')" class="text-xs text-lime-300 rounded border border-lime-800 px-3 py-2 hover:bg-gray-800">🔎 進階搜尋／CSV</button></div>
+                    <div class="flex flex-wrap items-center gap-2"><h3 class="text-sm font-bold text-gray-400">交易明細列表</h3><button type="button" onclick="switchTab('records')" class="text-xs text-lime-300 rounded border border-lime-800 px-3 py-2 hover:bg-gray-800">🔎 進階搜尋</button></div>
                     <div class="flex items-center gap-2">
                         <label class="text-xs text-gray-500">篩選月份:</label>
                         <select id="tx_month_filter" onchange="updateTransactions()" class="px-3 py-1.5 bg-gray-800 border border-gray-600 rounded text-white text-sm focus:outline-none focus:border-blue-500">
@@ -877,7 +874,7 @@
             <div class="card border border-cyan-800/50" id="r42_dividend_schedule">
               <div class="flex flex-wrap justify-between items-center gap-2">
                 <div><h3 class="font-bold text-cyan-300">📅 最新除息安排</h3><p id="r42_schedule_note" class="text-xs text-gray-400 mt-1" role="status">核對官方排程中；尚未確認金額不會沿用上期。</p></div>
-                <button type="button" id="r42_refresh" onclick="r42Refresh(true)" class="rounded bg-cyan-800 hover:bg-cyan-700 px-3 py-2 text-xs">重新核對公告</button>
+                
               </div>
               <div class="grid grid-cols-2 md:grid-cols-3 gap-2 mt-3">
                 <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">下次除息日</p><p id="r42_ex" class="text-lg font-bold mt-1">—</p></div>
@@ -928,7 +925,7 @@
             <div class="card">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <div><h3 class="text-lg font-bold text-emerald-300">📋 公告配息明細</h3><p class="text-xs text-gray-400" id="r24_list_sub">資料載入後可查看</p></div>
-                    <button type="button" id="r24_export" onclick="r24DownloadCsv()" disabled class="rounded bg-blue-700 hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed px-3 py-2 text-sm">下載歷史配息 CSV</button>
+                    
                 </div>
                 <div class="overflow-x-auto rounded border border-gray-700">
                     <table class="w-full min-w-[620px] text-sm text-left">
@@ -1088,7 +1085,7 @@
             <div class="card">
                 <div class="flex flex-wrap justify-between items-center gap-3 mb-3">
                     <div><h3 class="text-lg font-bold text-blue-300">④ 五種投入金額一覽比較</h3><p class="text-xs text-gray-400 mt-1">點選列可切換所選方案；四種固定預算與自訂金額一起比較。</p></div>
-                    <button type="button" onclick="r26ExportCsv()" id="r26_export" class="text-sm rounded bg-blue-700 hover:bg-blue-600 disabled:opacity-40 px-3 py-2" disabled>下載試算 CSV</button>
+                    
                 </div>
                 <div class="overflow-x-auto border border-gray-700 rounded">
                     <table class="w-full text-sm min-w-[820px] text-right"><thead class="bg-gray-900 text-gray-400"><tr>
@@ -1120,11 +1117,7 @@
                     <button type="button" onclick="r27MoveMonth(1)" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm">下個月 →</button>
                     <button type="button" onclick="r27SetCurrentMonth()" class="rounded bg-sky-800 hover:bg-sky-700 px-4 py-2 text-sm">回本月</button>
                 </div>
-                <div class="flex flex-wrap gap-2 mt-4 border-t border-gray-700 pt-4">
-                    <button type="button" onclick="r27Print()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-2 text-sm font-semibold">🖨️ 列印／另存 PDF</button>
-                    <button type="button" onclick="r27ExportCSV()" class="rounded bg-emerald-700 hover:bg-emerald-600 px-4 py-2 text-sm font-semibold">📥 下載月報 CSV（含家庭）</button>
-                    <button type="button" onclick="r27ExportHTML()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm font-semibold">📄 下載可列印 HTML</button>
-                </div>
+                
                 <p class="text-xs text-gray-500 mt-3">Android Chrome 的列印選單若支援「儲存為 PDF」，即可直接匯出。無法列印時，請先下載獨立 HTML 報表再開啟列印。報表只含選定月份摘要，不含 API 金鑰。</p>
             </div>
             <div class="r27-paper space-y-5" id="r27_paper">
@@ -1206,11 +1199,7 @@
                     <button type="button" onclick="r28ThisYear()" class="rounded bg-amber-800 hover:bg-amber-700 px-4 py-2 text-sm">回今年</button>
                     <button type="button" onclick="r28LoadHistory()" id="r28_load_history" class="rounded bg-indigo-700 hover:bg-indigo-600 px-4 py-2 text-sm">🔄 補載所選年／前年歷史行情</button>
                 </div>
-                <div class="flex flex-wrap gap-2 mt-4 border-t border-gray-700 pt-4">
-                    <button type="button" onclick="r28Print()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-2 text-sm font-semibold">🖨️ 列印／另存 PDF</button>
-                    <button type="button" onclick="r28ExportCSV()" class="rounded bg-emerald-700 hover:bg-emerald-600 px-4 py-2 text-sm font-semibold">📥 年度 CSV（含家庭）</button>
-                    <button type="button" onclick="r28ExportHTML()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm font-semibold">📄 獨立 HTML 報告</button>
-                </div>
+                
                 <p id="r28_price_loading" role="status" class="text-xs text-gray-400 mt-3">過去年度價格可能不在目前 FinMind 最近一年行情內；請使用「補載歷史行情」，僅取得該年與前年所需資料。</p>
             </div>
             <div class="r28-paper space-y-5" id="r28_paper">
@@ -1318,7 +1307,7 @@
             <div class="card r29-no-print">
                 <div class="flex flex-wrap justify-between items-start gap-3">
                     <div><h3 class="text-lg font-bold text-cyan-300">② 三種報酬／配發假設</h3><p class="text-xs text-gray-400 mt-1">年化<strong>總報酬</strong>已包含假設配發再投資的效果；配發率僅用於估算現金流，不會再額外加到總報酬。</p></div>
-                    <button type="button" onclick="r29ExportCSV()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-2 text-sm">📥 下載試算 CSV</button>
+                    
                 </div>
                 <div class="overflow-x-auto mt-3 border border-gray-700 rounded"><table class="w-full min-w-[520px] text-sm"><thead class="bg-gray-900 text-gray-400"><tr><th class="text-left p-3">假設</th><th class="text-right p-3">年化總報酬 (%)</th><th class="text-right p-3">假設年度現金配發率 (%)</th></tr></thead><tbody class="divide-y divide-gray-700">
                     <tr><td class="p-3 font-bold text-blue-300">保守</td><td class="p-2 text-right"><input type="number" id="r29_ret_low" min="-50" max="50" step="0.5" value="-2" onchange="r29Save()" class="w-24 text-right bg-gray-900 border border-gray-700 rounded p-2"></td><td class="p-2 text-right"><input type="number" id="r29_yield_low" min="0" max="25" step="0.5" value="3" onchange="r29Save()" class="w-24 text-right bg-gray-900 border border-gray-700 rounded p-2"></td></tr>
@@ -1349,7 +1338,7 @@
                 </div>
                 <div class="card"><h3 class="text-lg font-bold text-indigo-300 mb-3">⑥ 模型注意事項與資料來源</h3><div id="r29_notes" class="text-sm text-gray-300 space-y-2">尚無有效資料。</div></div>
             </div>
-            <div class="card r29-no-print"><div class="flex flex-wrap gap-2"><button type="button" onclick="r29Print()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-2 text-sm">🖨️ 列印／另存 PDF</button><button type="button" onclick="r29ExportHTML()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm">📄 下載獨立 HTML</button></div><p class="text-xs text-gray-500 mt-3">輸出內容只含退休試算，不含 API 金鑰、交易編輯與本機儲存資料。紙本報告不含可互動圖表，但保留里程碑表。</p></div>
+            
         </section>
 
         <!-- ================= R47：只讀帳務健康檢查 ================= -->
@@ -1406,7 +1395,7 @@
             <div class="card">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <h3 class="text-lg font-bold text-lime-300">② 篩選結果摘要</h3>
-                    <button type="button" onclick="r31ExportCsv()" id="r31_export" class="bg-emerald-700 hover:bg-emerald-600 disabled:opacity-40 rounded px-4 py-3 text-sm font-semibold" disabled>📥 匯出篩選結果 CSV</button>
+                    
                 </div>
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
                     <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">符合條件筆數</p><p id="r31_count" class="text-lg font-bold mt-1">0 筆</p></div>
@@ -1461,7 +1450,7 @@
                     <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">已逾期（按設定）</p><p id="r32_overdue_count" class="text-xl font-bold text-amber-300 mt-1">—</p></div>
                     <div class="bg-gray-900 p-3 rounded"><p class="text-xs text-gray-400">已核對／已有交易</p><p id="r32_done_count" class="text-xl font-bold text-emerald-300 mt-1">—</p></div>
                 </div>
-                <div class="flex flex-wrap gap-2 mt-4"><button type="button" onclick="r32Render()" class="px-4 py-3 rounded bg-orange-700 hover:bg-orange-600 text-sm">↻ 重新檢查提醒</button><button type="button" onclick="switchTab('security')" class="px-4 py-3 rounded bg-gray-700 hover:bg-gray-600 text-sm">🩺 帳務健康檢查</button></div>
+                <div class="flex flex-wrap gap-2 mt-4"><button type="button" onclick="switchTab('security')" class="px-4 py-3 rounded bg-gray-700 hover:bg-gray-600 text-sm">🩺 帳務健康檢查</button></div>
                 <p id="r32_error" class="text-sm text-red-300 mt-3 hidden" role="alert"></p>
             </div>
             <div class="card border border-indigo-900/60">
@@ -1603,7 +1592,7 @@
             <p class="text-xs text-gray-500 mt-3">本機資料只存在此瀏覽器；清除網站資料或裝置遺失，紀錄可能無法恢復。</p>
           </div>
           <div class="card">
-            <div class="flex flex-wrap justify-between gap-3 items-center"><div><h3 class="text-lg font-bold text-cyan-300">帳務健康檢查</h3><p class="text-xs text-gray-400 mt-1">查看重複紀錄、異常日期、超賣與實收股息。</p></div><button type="button" onclick="r30Scan()" class="bg-cyan-700 hover:bg-cyan-600 rounded px-4 py-3 text-sm">↻ 重新檢查</button></div>
+            <div class="flex flex-wrap justify-between gap-3 items-center"><div><h3 class="text-lg font-bold text-cyan-300">帳務健康檢查</h3><p class="text-xs text-gray-400 mt-1">查看重複紀錄、異常日期、超賣與實收股息。</p></div></div>
             <div id="r30_issue_list" class="space-y-2 mt-4" aria-live="polite">讀取中</div>
             <p class="text-xs text-gray-500 mt-3">檢查不會寫入帳務；發現問題請返回原記帳頁核對。</p>
           </div>
@@ -1618,7 +1607,7 @@
               <label class="text-sm text-gray-300">趨勢表顯示帳戶<select id="r37_owner" onchange="r37RangeChanged()" class="block mt-1 w-full rounded bg-gray-900 border border-gray-600 px-3 py-3 text-base"><option value="all">主帳戶（不含雙寶）</option><option value="main">主帳戶</option><option value="kid_a">大寶</option><option value="kid_b">二寶</option></select></label>
               <label class="text-sm text-gray-300">手動假設股價（可空白）<input id="r37_manual_price" type="number" min="0.01" max="1000000" step="0.01" inputmode="decimal" placeholder="空白使用最新行情" onchange="r37Render()" class="block mt-1 w-full rounded bg-gray-900 border border-gray-600 px-3 py-3 text-base"></label>
             </div>
-            <div class="flex flex-wrap gap-2 mt-4"><button type="button" onclick="r37Render()" class="rounded bg-fuchsia-800 hover:bg-fuchsia-700 px-4 py-3 text-sm">↻ 重新計算</button><button type="button" onclick="r37ExportCsv()" class="rounded bg-emerald-700 hover:bg-emerald-600 px-4 py-3 text-sm">📥 下載績效 CSV</button><button type="button" onclick="r37ExportHTML()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-3 text-sm">📄 下載獨立 HTML</button><button type="button" onclick="r37Print()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-3 text-sm">🖨️ 列印／PDF</button></div>
+            
             <p class="text-xs text-amber-200 mt-3">⚠️ 股息只計「實際已登錄淨入帳」，沒有記錄不代表確定沒收到。手動股價只用於本頁估值，不會修改 FinMind 行情；所有分析都是唯讀。</p>
           </div>
           <div id="r37_paper" class="space-y-5">
@@ -1647,10 +1636,10 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
               <label class="text-sm text-gray-300">手動假設股價（可留空）<input id="r38_price" type="number" min="0.01" max="1000000" step="0.01" inputmode="decimal" placeholder="空白依最近行情計算" onchange="r38Render()" class="block w-full mt-2 bg-gray-900 border border-violet-800 rounded px-3 py-3 text-base text-white"></label>
-              <div class="flex gap-2 flex-wrap items-end"><button type="button" onclick="r38Render()" class="bg-violet-700 hover:bg-violet-600 rounded px-4 py-3 text-sm">重新驗算</button><button type="button" onclick="switchTab('security')" class="bg-teal-800 hover:bg-teal-700 rounded px-4 py-3 text-sm">🔐 帳務安全中心</button></div>
+              <div class="flex gap-2 flex-wrap items-end"><button type="button" onclick="switchTab('security')" class="bg-teal-800 hover:bg-teal-700 rounded px-4 py-3 text-sm">🔐 帳務安全中心</button></div>
             </div>
             <p id="r38_price_note" class="text-xs text-gray-400 mt-3">須有最新參考行情才能計算持股的期末價值；可用手動假設價測試，並不寫入市場資料。</p>
-            <div class="flex gap-2 flex-wrap mt-4"><button type="button" onclick="r38Csv()" class="rounded bg-emerald-700 hover:bg-emerald-600 px-4 py-3 text-sm">📥 XIRR／現金流 CSV</button><button type="button" onclick="r38Html()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-3 text-sm">📄 獨立 HTML</button><button type="button" onclick="r38Print()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-3 text-sm">🖨️ 列印／另存 PDF</button></div>
+            
           </div>
           <div id="r38_paper" class="space-y-5">
             <div class="card border border-violet-800/60"><h3 class="text-xl font-bold text-violet-300">主帳戶資金加權年化報酬率</h3><p class="text-xs text-gray-400 mt-2">XIRR 是依資金流日期折現求得，並非每年實際到手配息率。期末持股採參考股價與假設賣出費用估值，未來結果不保證。</p>
@@ -1669,7 +1658,7 @@
           <div class="card border border-emerald-800/60 r35-no-print">
             <div class="flex flex-wrap items-start justify-between gap-3"><div><h2 class="text-xl font-bold text-emerald-300">💵 實際領息與現金流</h2><p class="text-sm text-gray-300 mt-2">主帳戶沿用 R25 實際股息台帳；大寶、二寶新增獨立實際入帳台帳。只統計已發生的真實入帳及交易，不使用公告金額推算實收。</p></div><span id="r35_status" role="status" class="bg-gray-900 border border-gray-700 text-xs text-gray-300 rounded px-3 py-2">載入中</span></div>
             <div class="flex flex-wrap items-end gap-3 mt-4"><label class="text-sm text-gray-300">年度<select id="r35_year" onchange="r35Render()" class="block mt-1 bg-gray-900 border border-emerald-700 rounded px-3 py-2 text-white text-base"></select></label><label class="text-sm text-gray-300">月份（可選全部）<select id="r35_month" onchange="r35Render()" class="block mt-1 bg-gray-900 border border-emerald-700 rounded px-3 py-2 text-white text-base"><option value="all">全年</option></select></label><button type="button" onclick="r35GoThisYear()" class="rounded bg-gray-700 px-4 py-3 text-sm">回今年</button></div>
-            <div class="flex flex-wrap gap-2 mt-4"><button type="button" onclick="r35Render()" class="rounded bg-emerald-800 px-4 py-3 text-sm">↻ 重新彙整</button><button type="button" onclick="r35ExportCsv()" class="rounded bg-blue-700 px-4 py-3 text-sm">📥 下載 CSV</button><button type="button" onclick="r35ExportHTML()" class="rounded bg-gray-700 px-4 py-3 text-sm">📄 下載獨立 HTML</button><button type="button" onclick="r35Print()" class="rounded bg-indigo-700 px-4 py-3 text-sm">🖨️ 列印／PDF</button></div>
+            
             <p class="text-xs text-amber-200 mt-3">本金投入與配息再投資仍以逐筆交易為準。勾選提醒、公告發放或模擬手帳都不會自動新增一筆真實入帳；同一次股息請勿重複登錄。</p>
           </div>
           <div class="card border border-pink-900/50 r35-no-print">
@@ -1710,12 +1699,7 @@
               <div><h2 class="text-xl font-bold text-cyan-300">👨‍👩‍👧‍👦 帳戶資產比較</h2><p class="text-sm text-gray-300 mt-2">真實逐筆交易計算，主帳戶、大寶、二寶各自獨立移動平均成本；不含手帳的未來模擬股數。</p></div>
               <span id="r34_status" class="bg-gray-900 border border-gray-700 text-xs text-gray-300 rounded px-3 py-2" role="status">整理家庭帳務中</span>
             </div>
-            <div class="flex flex-wrap gap-2 mt-4">
-              <button type="button" onclick="r34Render()" class="bg-cyan-700 hover:bg-cyan-600 px-4 py-3 text-sm rounded">↻ 重新彙整</button>
-              <button type="button" onclick="r34ExportCsv()" class="bg-emerald-700 hover:bg-emerald-600 px-4 py-3 text-sm rounded">📥 家庭資產 CSV</button>
-              <button type="button" onclick="r34ExportHTML()" class="bg-gray-700 hover:bg-gray-600 px-4 py-3 text-sm rounded">📄 獨立 HTML</button>
-              <button type="button" onclick="r34Print()" class="bg-blue-700 hover:bg-blue-600 px-4 py-3 text-sm rounded">🖨️ 列印／另存 PDF</button>
-            </div>
+            
             <p class="text-xs text-gray-400 mt-3">只讀取當前瀏覽器已保存的交易和主帳戶入帳股息。所有市值按同一筆「最近載入參考價」估算，可能不是即時價格；若無行情則不顯示市值或未實現損益。</p>
           </div>
           <div id="r34_paper" class="space-y-5">
@@ -1752,12 +1736,7 @@
                     <p class="text-sm text-gray-300 mt-2">00406A 成交量／成交額變化、量能萎縮警示，以及主帳戶持股容量試算。<strong class="text-cyan-200">僅觀察 ETF 整體市場交易；雙寶持股不納入容量試算。</strong></p></div>
                   <span id="r40_quality" class="text-xs text-gray-300 border border-gray-700 bg-gray-900 rounded px-3 py-2" role="status">尚未取得行情</span>
                 </div>
-                <div class="flex flex-wrap gap-2 mt-4 r40-no-print">
-                  <button type="button" onclick="r40Refresh()" class="rounded bg-cyan-800 hover:bg-cyan-700 px-4 py-3 text-sm font-semibold">↻ 重新分析已載入行情</button>
-                  <button type="button" onclick="r40ExportCsv()" class="rounded bg-emerald-800 hover:bg-emerald-700 px-4 py-3 text-sm">📥 成交量 CSV</button>
-                  <button type="button" onclick="r40ExportHTML()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-3 text-sm">📄 獨立 HTML</button>
-                  <button type="button" onclick="r40Print()" class="rounded bg-blue-800 hover:bg-blue-700 px-4 py-3 text-sm">🖨️ 列印／PDF</button>
-                </div>
+                
                 <p id="r40_source" class="mt-3 text-xs text-gray-400" aria-live="polite">資料來源：目前尚未載入 FinMind TaiwanStockPrice。</p>
               </div>
               <div class="card border border-slate-700/80">
@@ -4701,7 +4680,7 @@
             r31Node('r31_buy_cost').textContent='買股支出（含配息再投資）：'+r25Money2(st.buyCost);
             r31Node('r31_reinvest_cost').textContent='其中配息再投資買股：'+r25Money2(st.reinvest);
             r31Node('r31_sale_proceeds').textContent='賣出淨收入：'+r25Money2(st.sales);
-            r31Node('r31_export').disabled=!rows.length;
+            const r31ExportButton=r31Node('r31_export');if(r31ExportButton)r31ExportButton.disabled=!rows.length;
             const totalPages=Math.max(1,Math.ceil(rows.length/R31_PAGE_SIZE));r31CurrentPage=Math.min(Math.max(1,r31CurrentPage),totalPages);
             const begin=(r31CurrentPage-1)*R31_PAGE_SIZE,display=rows.slice(begin,begin+R31_PAGE_SIZE);
             r31Node('r31_page_status').textContent=`第 ${r31CurrentPage}／${totalPages} 頁`;
