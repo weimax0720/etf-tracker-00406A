@@ -8,7 +8,7 @@ const read=file=>fs.readFileSync(path.join(base,file),'utf8');
 const html=read('index.html'), mobile=read('js/r46-mobile.js'), sw=read('sw.js');
 const manifest=JSON.parse(read('manifest.webmanifest'));
 const icon=read('icons/tracker-icon.svg');
-assert.match(html, /Tracker R4[67]｜/);
+assert.match(html, /Tracker R4[678]｜/);
 assert.match(html, /<link rel="manifest" href="\.\/manifest\.webmanifest">/);
 assert.match(html, /r46_connectivity/);
 assert.match(html, /r46_update_banner/);
