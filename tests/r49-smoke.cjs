@@ -30,7 +30,7 @@ const p=type=>localParts.find(x=>x.type===type).value;
 const today=p('year')+'-'+p('month')+'-'+p('day');
 const context={currentPrice:10,rawPriceData:[{date:'2026-10-16',close:9.03}],
   document:{hidden:false,getElementById:getNode,addEventListener(){}},
-  window:{addEventListener(){},
+  window:{addEventListener(){},setInterval(){},
     updateHoldingCalculations(){calls.push('holding');},
     runDynamicSimulation(){calls.push('forecast');},
     runKidsSimulation(){calls.push('kids');},
