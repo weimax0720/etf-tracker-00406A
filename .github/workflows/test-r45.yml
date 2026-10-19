@@ -6,6 +6,7 @@ on:
       - 'index.html'
       - 'js/**'
       - 'tests/**'
+      - 'scripts/update_quote.py'
       - 'sw.js'
       - 'manifest.webmanifest'
       - 'icons/**'
@@ -30,3 +31,5 @@ jobs:
           node tests/r46-smoke.cjs
           node tests/r47-smoke.cjs
           node tests/r48-smoke.cjs
+          node tests/r49-smoke.cjs
+          python -m py_compile scripts/update_quote.py
