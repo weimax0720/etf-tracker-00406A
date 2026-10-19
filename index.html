@@ -312,7 +312,7 @@
             <button onclick="switchTab('report')" id="btn-report" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-sky-300 whitespace-nowrap">🗓️ R27 智慧月報</button>
             <button onclick="switchTab('annual')" id="btn-annual" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-amber-200 whitespace-nowrap">🏆 R28 年度總結</button>
             <button onclick="switchTab('retirement')" id="btn-retirement" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-rose-200 whitespace-nowrap">🌅 R29 退休目標</button>
-            <button onclick="switchTab('security')" id="btn-security" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-teal-300 whitespace-nowrap">🔐 R30 資料安全</button>
+            <button onclick="switchTab('security')" id="btn-security" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-teal-300 whitespace-nowrap">🩺 帳務健檢</button>
             <button onclick="switchTab('safety')" id="btn-safety" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">🛡️ 流動性雷達</button>
         </div>
 
@@ -441,7 +441,7 @@
                 <div><p class="text-sm font-bold text-rose-200">🌅 R29 退休目標追蹤</p><p id="r29_home_brief" class="text-xs text-gray-300 mt-1">55 歲停扣、60 歲退休進度；三情境試算與目標差額。</p></div>
                 <button type="button" onclick="switchTab('retirement')" class="rounded bg-rose-800 hover:bg-rose-700 px-3 py-2 text-sm font-medium">開啟退休目標 →</button>
             </div>
-            <!-- R30 安全中心捷徑 -->
+            <!-- R47 帳務健康檢查入口 -->
             <div class="bg-gray-800 border border-teal-700/50 rounded-lg px-4 py-3 flex flex-wrap items-center justify-between gap-3" data-r32-home="security">
                 <div><p class="text-sm font-bold text-teal-300">🩺 帳務健康檢查</p><p id="r30_home_brief" class="text-xs text-gray-300 mt-1">自動檢查主帳戶與雙寶的交易、實收股息紀錄。</p></div>
                 <button type="button" onclick="switchTab('security')" class="rounded bg-teal-700 hover:bg-teal-600 px-3 py-2 text-sm font-medium">查看健康檢查 →</button>
@@ -1352,7 +1352,7 @@
             <div class="card r29-no-print"><div class="flex flex-wrap gap-2"><button type="button" onclick="r29Print()" class="rounded bg-blue-700 hover:bg-blue-600 px-4 py-2 text-sm">🖨️ 列印／另存 PDF</button><button type="button" onclick="r29ExportHTML()" class="rounded bg-gray-700 hover:bg-gray-600 px-4 py-2 text-sm">📄 下載獨立 HTML</button></div><p class="text-xs text-gray-500 mt-3">輸出內容只含退休試算，不含 API 金鑰、交易編輯與本機儲存資料。紙本報告不含可互動圖表，但保留里程碑表。</p></div>
         </section>
 
-        <!-- ================= R30：資料安全中心（所有預覽及健檢唯讀） ================= -->
+        <!-- ================= R47：只讀帳務健康檢查 ================= -->
         <!-- ================= R31：智慧資料管理／手機友善查詢（唯讀） ================= -->
         <section id="tab-records" class="space-y-5 hidden" aria-label="R31 資料管理與搜尋">
             <div class="card border border-lime-800/60">
@@ -4961,7 +4961,7 @@
           ['核心功能',[['overview','🏠 資產總覽'],['transactions','📓 逐筆記帳'],['records','🔎 資料管理'],['reminders','🔔 智慧提醒']]],
           ['家庭存股',[['family','👨‍👩‍👧‍👦 家庭資產總覽'],['cashflow','💵 家庭現金流'],['performance','📊 帳戶績效趨勢'],['efficiency','🏆 FINAL 獨立帳戶 XIRR'],['ledger','📝 我的存股手帳'],['kids','👧 雙寶存股手帳']]],
           ['分析與試算',[['charts','📈 走勢分析'],['dividends','💰 配息中心'],['assets','🎯 資產分析'],['topup','🧮 智慧加碼'],['report','🗓️ 智慧月報'],['annual','🏆 年度總結'],['retirement','🌅 退休目標']]],
-          ['安全與風險',[['security','🔐 資料安全'],['safety','🛡️ 流動性雷達']]]
+          ['風險與健檢',[['security','🩺 帳務健檢'],['safety','🛡️ 流動性雷達']]]
         ];
         const R33_TYPES={
           main:[['buy_regular','定期買進'],['buy_extra','額外加碼'],['dividend','配息再投資買股'],['sell','賣出']],
@@ -5060,7 +5060,7 @@
             if(r33IsSale(type)&&fee>=price*shares)throw Error('賣出手續費不可高於或等於成交金額。');
             if(editingTxId!==null)throw Error('原記帳頁仍在編輯其他交易。請先完成或取消編輯再使用快速新增，以免混淆。');
             const raw=localStorage.getItem(TX_KEY);
-            if(raw!==null){try{const parsed=JSON.parse(raw);if(!Array.isArray(parsed))throw Error('交易存檔格式異常');}catch(e){throw Error('本機交易原始資料格式異常，已禁止覆寫；請先到 R30 安全中心檢查。');}}
+            if(raw!==null){try{const parsed=JSON.parse(raw);if(!Array.isArray(parsed))throw Error('交易存檔格式異常');}catch(e){throw Error('本機交易原始資料格式異常，已禁止覆寫；請先到 帳務健康檢查檢查。');}}
             const next={date,type,price,shares,fee};
             if(r33IsSale(type))r33CheckSale(next);
             return next;
@@ -5069,7 +5069,7 @@
         function r33CheckSale(candidate){
             const owner=r33OwnersType(candidate.type);
             const existing=transactionLog.filter(t=>r33OwnersType(String(t.type||''))===owner);
-            if(existing.some(t=>!r33DateValid(t.date)||!Number.isInteger(Number(t.shares))||Number(t.shares)<=0))throw Error('此帳戶已有不完整或異常交易，請先到 R30 核對，再新增賣出。');
+            if(existing.some(t=>!r33DateValid(t.date)||!Number.isInteger(Number(t.shares))||Number(t.shares)<=0))throw Error('此帳戶已有不完整或異常交易，請先到帳務健康檢查核對，再新增賣出。');
             const rows=[...existing.map(t=>({date:t.date,type:t.type,shares:Number(t.shares),id:Number(t.id)||0})),{...candidate,id:Date.now()}];
             rows.sort((a,b)=>a.date.localeCompare(b.date)||a.id-b.id);
             let balance=0;
@@ -5131,7 +5131,7 @@
             const rows=(Array.isArray(txs)?txs:[]).filter(Boolean).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))||(Number(a.id)||0)-(Number(b.id)||0));
             for(const row of rows){
                 const meta=row.type==='buy'?['main','定期買進','external']:R27_TYPES[row.type];
-                if(!meta){errors.push('出現不支援的交易類型，請至資料安全中心檢查');continue;}
+                if(!meta){errors.push('出現不支援的交易類型，請至帳務健康檢查檢查');continue;}
                 const [id,,kind]=meta,ac=owners[id];
                 if(!r24SafeDate(row.date)){ac.invalid=true;errors.push(ac.label+'有無效交易日期');continue;}
                 if(row.date>today){future.push(row);continue;}
@@ -5186,7 +5186,7 @@
                 const raw=localStorage.getItem(key);if(raw===null)continue;
                 try{if(!Array.isArray(JSON.parse(raw)))throw Error('非陣列');}
                 catch(e){
-                    r.errors.push(label+'原始 JSON 損壞或不是陣列，請至 R30 資料安全中心處理');
+                    r.errors.push(label+'原始 JSON 損壞或不是陣列，請至 帳務健康檢查處理');
                     r.allValid=false;r.totals.market=null;r.totals.unrealized=null;
                     if(key===TX_KEY)R34_IDS.forEach(id=>r.owners[id].invalid=true);
                     else r.cashInvalid=true;
@@ -5213,7 +5213,7 @@
                 r34_main_cash:r.cashInvalid?'入帳資料異常':r34Money(r.mainCash)
             }))r34Set(id,val);
             r34Set('r34_price_note',r.price===null?'尚無有效的本次載入參考股價；庫存市值和未實現損益不估算。':`使用最近載入的單一參考股價 NT$ ${r.price.toFixed(2)}；可能為前一交易日或快取，非保證即時報價。${r.feeValid?'未實現損益已扣假設賣出費率。':'賣出費率設定異常，因此未實現損益不計算。'}`);
-            r34Set('r34_home_brief',!valid?'家庭交易紀錄存在異常，請至 R30 資料安全中心檢查。':`主帳戶 ${t.shares.toLocaleString('zh-TW')} 股（不含雙寶）；${t.market===null?'行情尚未取得':`參考市值 ${r34Money(t.market)}`}。`);
+            r34Set('r34_home_brief',!valid?'家庭交易紀錄存在異常，請至 帳務健康檢查檢查。':`主帳戶 ${t.shares.toLocaleString('zh-TW')} 股（不含雙寶）；${t.market===null?'行情尚未取得':`參考市值 ${r34Money(t.market)}`}。`);
             const card=r34El('r34_account_cards');
             card.innerHTML=R34_IDS.map(id=>{
                 const a=o[id],bad=a.invalid;
@@ -5233,7 +5233,7 @@
                 return `<tr><td class="p-2 whitespace-nowrap">${m}</td><td class="p-2">${R27_OWNERS[id]}</td><td class="p-2 text-right">${r34Money(x.external)}</td><td class="p-2 text-right">${r34Money(x.reinvest)}</td><td class="p-2 text-right">${r34Money(x.sales)}</td></tr>`;
             })).join('');
             const warnings=[];
-            if(!valid)warnings.push('⚠️ '+r.errors.join('；')+'。此時合計數字會停用，請開啟 R30 資料安全中心查核。');
+            if(!valid)warnings.push('⚠️ '+r.errors.join('；')+'。此時合計數字會停用，請開啟 帳務健康檢查查核。');
             if(r.futureCount)warnings.push(`有 ${r.futureCount} 筆未來日期交易，不納入本次真實資產統計。`);
             if(r.price===null)warnings.push('尚未載入有效行情；市值與未實現損益留白。');
             if(!r.feeValid)warnings.push('賣出稅費比例不正確；未實現損益留白。');
@@ -5477,9 +5477,9 @@
         }
         function r35SyncFamily(){
             const id=r35El('r35_family_cash_brief');if(!id)return;
-            if(r35Corrupt){id.textContent='雙寶股息資料異常，請先到 R30 安全中心核對';return;}
+            if(r35Corrupt){id.textContent='雙寶股息資料異常，請先到 帳務健康檢查核對';return;}
             const rawMain=localStorage.getItem(R25_CASH_KEY);
-            if(rawMain!==null){try{const obj=JSON.parse(rawMain);if(!Array.isArray(obj)||r25ReadCashRows(obj).length!==obj.length)throw Error('主帳戶實收紀錄不合法');}catch(e){id.textContent='主帳戶入帳原始資料異常，請先到 R30 安全中心核對';return;}}
+            if(rawMain!==null){try{const obj=JSON.parse(rawMain);if(!Array.isArray(obj)||r25ReadCashRows(obj).length!==obj.length)throw Error('主帳戶實收紀錄不合法');}catch(e){id.textContent='主帳戶入帳原始資料異常，請先到 帳務健康檢查核對';return;}}
             const value=r25CashRows.filter(x=>x.date<=r25Today()).reduce((s,x)=>s+x.amount,0);
             id.textContent='主帳戶累積已登錄實收股息：'+r35Money(value)+'（大寶、二寶另列，不納入主帳戶）';
         }
@@ -5576,7 +5576,7 @@
             try{
                 const {report:r,problems}=r36Prepared(previous.month.slice(0,4),previous.month.slice(5,7));
                 const bad=!!problems.length||previous.invalid;
-                r36Put('r36_month_status',bad?'⚠ 部分原始資料無效；已隱藏主帳戶實收與淨現金流，請到 R30 資料安全檢查':`${previous.month}｜主帳戶已登錄實收入帳 ${r.total.cashCount} 筆（主帳戶原欄位保持不變）`);
+                r36Put('r36_month_status',bad?'⚠ 部分原始資料無效；已隱藏主帳戶實收與淨現金流，請到 帳務健康檢查檢查':`${previous.month}｜主帳戶已登錄實收入帳 ${r.total.cashCount} 筆（主帳戶原欄位保持不變）`);
                 r36Put('r36_month_cash',bad?'資料異常':r36Amount(r.total.cash));
                 r36Put('r36_month_a',bad?'—':r36Amount(r.owners.kid_a.cash));
                 r36Put('r36_month_b',bad?'—':r36Amount(r.owners.kid_b.cash));
@@ -5601,7 +5601,7 @@
             try{
                 const {report:r,problems}=r36Prepared(previous.year,'all');
                 const bad=!!problems.length||previous.invalid;
-                r36Put('r36_annual_status',bad?'⚠ 交易或原始台帳異常；請到 R30 資料安全核對':`${r.year} 年${r.year===Number(r25Today().slice(0,4))?'（截至今日，尚未全年結算）':''}｜主帳戶 ${r.total.cashCount} 筆已登錄實收`);
+                r36Put('r36_annual_status',bad?'⚠ 交易或原始台帳異常；請到 帳務健康檢查核對':`${r.year} 年${r.year===Number(r25Today().slice(0,4))?'（截至今日，尚未全年結算）':''}｜主帳戶 ${r.total.cashCount} 筆已登錄實收`);
                 r36Put('r36_annual_cash',bad?'資料異常':r36Amount(r.total.cash));
                 r36Put('r36_annual_a',bad?'—':r36Amount(r.owners.kid_a.cash));
                 r36Put('r36_annual_b',bad?'—':r36Amount(r.owners.kid_b.cash));
@@ -5789,7 +5789,7 @@
             }catch(e){r37Last=null;r37Set('r37_status','⚠ 無法建立分析：'+e.message);r37Set('r37_scope','請檢查輸入欄位及帳務資料');['r37_cash_total','r37_realized_total','r37_unrealized_total','r37_profit_total','r37_ratio_total'].forEach(id=>r37Set(id,'—'));r37El('r37_performance_rows').innerHTML='';r37El('r37_trend_rows').innerHTML='';}
         }
         function r37ExportCsv(){
-            r37Render();const r=r37Last;if(!r||!r.valid){alert('原始資料異常，請先到 R30 資料安全中心檢查，不匯出可能誤導的績效。');return;}
+            r37Render();const r=r37Last;if(!r||!r.valid){alert('原始資料異常，請先到 帳務健康檢查檢查，不匯出可能誤導的績效。');return;}
             const lines=[['00406A Tracker R37','家庭投資績效與實收股息趨勢'],['資料截至',r.today],['行情來源',r.manual?'手動假設價':'最新已載入行情'],['參考股價',r.price??'未取得'],['注意','未登錄股息不可當作已發放零元；累計成果對照比不是年化投資報酬率'],[],['帳戶','持股','自有投入','配息再投資投入','賣出淨收入','實收股息','已實現損益','未實現損益','累計成果估值','成本對照比%']];
             for(const id of R37_OWNERS){const a=r.owners[id];lines.push([R37_LABEL[id],a.shares,a.external,a.reinvest,a.sales,a.cash,a.realized,a.unrealized??'',a.profit??'',a.ratio??'']);}
             lines.push([],['月份','帳戶','已登錄實收股息','自有買入','配息再投資買入','賣出淨收','帳務淨現金流']);
@@ -6299,7 +6299,7 @@
         function r40Holdings(){
             try{
                 const r=r34Build();
-                if(!r.allValid||r.errors.length)return {shares:null,error:'逐筆交易有異常，請到資料安全中心檢查，無法帶入主帳戶股數。'};
+                if(!r.allValid||r.errors.length)return {shares:null,error:'逐筆交易有異常，請到帳務健康檢查檢查，無法帶入主帳戶股數。'};
                 return {shares:r.owners.main.shares,error:''};
             }catch(e){return {shares:null,error:'主帳戶交易資料無法核對：'+e.message};}
         }
@@ -6485,7 +6485,7 @@
               r42Put('health_ins_icon','ℹ️');
             }catch(e){
               r42Put('real_dividend_income','需核對帳務');
-              r42Put('eligible_shares_badge','請至 R30 檢查帳務');
+              r42Put('eligible_shares_badge','請至帳務健康檢查核對');
               r42Put('adj_breakeven_price','—');
               r42Put('health_ins_status','帳務資料異常，暫停推算');
               r42Put('health_ins_icon','⚠️');
