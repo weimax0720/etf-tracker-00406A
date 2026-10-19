@@ -1,0 +1,47 @@
+name: 00406A 盤中最近成交價（非逐筆即時）
+
+on:
+  schedule:
+    # UTC 00:57 = 台灣 08:57；UTC 01:02~05:57 = 09:02~13:57 (週一至週五)
+    # GitHub Actions 只保證最短五分鐘排程頻率，不保證準點執行。
+    - cron: '57 0 * * 1-5'
+    - cron: '2-57/5 1-5 * * 1-5'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/update_quote.py'
+      - '.github/workflows/update-quote.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: etf-00406a-intraday-quote
+  cancel-in-progress: false
+
+jobs:
+  quote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check quote fetcher syntax
+        run: python -m py_compile scripts/update_quote.py
+      - name: Request public TWSE last-trade snapshot
+        run: python scripts/update_quote.py
+      - name: Commit public quote only if exchange trade changed
+        run: |
+          git add data/quote.json
+          if git diff --cached --quiet; then
+            echo "No new trade; retaining last snapshot"
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "data: publish 00406A TWSE last-trade quote"
+          git push
