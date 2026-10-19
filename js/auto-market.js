@@ -29,7 +29,7 @@ function applyFeed(feed){
     for(const row of market){if(!index.has(row.date)||row.date>=oldLast)index.set(row.date,row);}
     rawPriceData=[...index.values()].sort((a,b)=>a.date.localeCompare(b.date));
     const recent=rawPriceData[rawPriceData.length-1];
-    const live=el('price_label')?.textContent.includes('盤中即時');
+    const live=el('price_label')?.textContent.includes('盤中即時') || (window.R49Quote && window.R49Quote.isCurrent());
     if(recent&&recent.date===market[market.length-1].date&&!live){
       currentPrice=Number(recent.close);
       if(el('latest_price'))el('latest_price').textContent=currentPrice.toFixed(2);
