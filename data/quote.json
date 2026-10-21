@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "code": "00406A",
-  "price": 9.15,
-  "tradeDate": "2026-10-20",
-  "tradeTime": "13:30:00",
-  "exchangeAt": "2026-10-20T13:30:00+08:00",
-  "retrievedAt": "2026-10-20T13:53:41+08:00",
+  "price": 9.21,
+  "tradeDate": "2026-10-21",
+  "tradeTime": "13:23:59",
+  "exchangeAt": "2026-10-21T13:23:59+08:00",
+  "retrievedAt": "2026-10-21T13:24:15+08:00",
   "source": "臺灣證券交易所 MIS 最近成交價"
 }
