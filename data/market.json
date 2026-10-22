@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "code": "00406A",
-  "checkedAt": "2026-10-21T20:58:49+08:00",
-  "pricesUpdatedAt": "2026-10-21T20:58:49+08:00",
-  "dividendsUpdatedAt": "2026-10-21T20:58:49+08:00",
+  "checkedAt": "2026-10-22T14:09:16+08:00",
+  "pricesUpdatedAt": "2026-10-22T14:09:16+08:00",
+  "dividendsUpdatedAt": "2026-10-22T14:09:16+08:00",
   "prices": [
     {
       "date": "2026-07-01",
@@ -773,6 +773,16 @@
       "open": 9.31,
       "max": 9.42,
       "min": 9.16,
+      "stock_id": "00406A"
+    },
+    {
+      "date": "2026-10-22",
+      "close": 9.06,
+      "Trading_Volume": 1035630000.0,
+      "Trading_money": 9467461520.0,
+      "open": 9.32,
+      "max": 9.39,
+      "min": 9.05,
       "stock_id": "00406A"
     }
   ],
