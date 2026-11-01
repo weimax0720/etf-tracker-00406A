@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "code": "00406A",
-  "checkedAt": "2026-10-31T21:41:28+08:00",
-  "pricesUpdatedAt": "2026-10-31T21:41:28+08:00",
-  "dividendsUpdatedAt": "2026-10-31T21:41:28+08:00",
+  "checkedAt": "2026-11-01T15:36:51+08:00",
+  "pricesUpdatedAt": "2026-11-01T15:36:51+08:00",
+  "dividendsUpdatedAt": "2026-11-01T15:36:51+08:00",
   "prices": [
     {
       "date": "2026-07-01",
@@ -860,5 +860,7 @@
     "prices": "臺灣證券交易所每日成交資料",
     "dividends": "臺灣證券交易所 ETF e添富"
   },
-  "errors": []
+  "errors": [
+    "TWSE 2026-11 價格：證交所單月價格 API 無有效回應"
+  ]
 }
