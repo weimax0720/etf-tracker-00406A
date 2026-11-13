@@ -1,9 +1,9 @@
-/* R49 延續 R48 離線 Shell：僅儲存公開資源。絕不攔截／快取個人 API 或銀行紀錄。 */
+/* R50 延續 R49 離線 Shell：僅儲存公開資源。絕不攔截／快取個人 API 或銀行紀錄。 */
 'use strict';
-// previous r48-shell-v1 will be invalidated after user accepts the APP update.
-const APP_CACHE='00406A-r49-shell-v1';
-const DATA_CACHE='00406A-r49-public-data-v1';
-const ALLOWED_CACHE_PREFIXES=['00406A-r46-','00406A-r47-','00406A-r48-','00406A-r49-'];
+// previous r48-shell-v1 and 00406A-r49-shell-v1 are invalidated after APP update is accepted.
+const APP_CACHE='00406A-r50-shell-v1';
+const DATA_CACHE='00406A-r50-public-data-v1';
+const ALLOWED_CACHE_PREFIXES=['00406A-r46-','00406A-r47-','00406A-r48-','00406A-r49-','00406A-r50-'];
 const SHELL=['./','./index.html','./js/auto-market.js','./js/r45-smart.js','./js/r46-mobile.js','./js/r49-live-quote.js',
              './manifest.webmanifest','./icons/tracker-icon.svg','./icons/tracker-192.png','./icons/tracker-512.png'];
 const PUBLIC_FEED='./data/market.json';
