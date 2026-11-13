@@ -1,4 +1,4 @@
-name: R48 全站回歸測試
+name: R50 全站回歸測試
 
 on:
   push:
@@ -32,4 +32,5 @@ jobs:
           node tests/r47-smoke.cjs
           node tests/r48-smoke.cjs
           node tests/r49-smoke.cjs
+          node tests/r50-smoke.cjs
           python -m py_compile scripts/update_quote.py
