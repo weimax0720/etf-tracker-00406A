@@ -305,6 +305,7 @@
             <button onclick="switchTab('kids')" id="btn-kids" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-pink-400 whitespace-nowrap">👧 雙寶存股手帳</button>
             <button onclick="switchTab('charts')" id="btn-charts" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-gray-400 whitespace-nowrap">📈 走勢與日週月</button>
             <button onclick="switchTab('dividends')" id="btn-dividends" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-emerald-400 whitespace-nowrap">💰 R24 配息中心</button>
+            <button onclick="switchTab('news')" id="btn-news" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-sky-300 whitespace-nowrap">📰 消息面</button>
             <button onclick="switchTab('assets')" id="btn-assets" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-amber-300 whitespace-nowrap">🎯 R25 資產分析</button>
             <button onclick="switchTab('topup')" id="btn-topup" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-violet-300 whitespace-nowrap">🧮 R26 智慧加碼</button>
             <button onclick="switchTab('report')" id="btn-report" class="tab-btn px-4 py-2 rounded-t font-medium text-sm bg-gray-800 border border-b-0 border-gray-700 text-sky-300 whitespace-nowrap">🗓️ R27 智慧月報</button>
@@ -1726,6 +1727,59 @@
           </div>
         </section>
 
+
+        <!-- R51：公開新聞標題索引；與私人帳務／報表完全隔離。 -->
+        <section id="tab-news" class="space-y-5 hidden" aria-label="R51 00406A 消息面">
+          <div class="card border border-sky-800/70">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p class="text-xs text-sky-300 tracking-widest">00406A · NEWS WATCH</p>
+                <h2 class="text-2xl font-bold text-white mt-1">📰 ETF 消息面</h2>
+                <p class="text-sm text-gray-300 mt-2">觀察 00406A、配息、持股變動、台股大盤和相關產業新聞。只索引新聞標題與來源，點開原文閱讀。</p>
+              </div>
+              <button type="button" id="r51_check" class="rounded-lg bg-sky-800 hover:bg-sky-700 px-4 py-3 text-sm font-medium text-white">檢查新消息</button>
+            </div>
+            <p id="r51_status" role="status" aria-live="polite" class="mt-3 text-xs text-amber-200">🕒 準備讀取消息來源…</p>
+            <p class="mt-2 text-xs text-gray-400">來源為 Google 新聞 RSS 索引的第三方媒體，通常每日排程更新三次；來源可能延遲或暫時無法讀取。新聞不等同投信或證交所正式公告。</p>
+          </div>
+          <div class="card border border-cyan-900/60">
+            <h3 class="text-base font-semibold text-cyan-200">🏛️ 官方資訊核對</h3>
+            <p class="text-xs text-gray-400 mt-1">配息、除息、持股等關鍵資料請以官方公告為準，不以媒體報導替代。</p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <a class="inline-block rounded-lg border border-cyan-700 bg-cyan-950/50 px-4 py-3 text-sm text-cyan-100 hover:bg-cyan-900/50" href="https://www.twse.com.tw/zh/ETFortune/etfInfo/00406A" target="_blank" rel="noopener noreferrer">證交所 ETF 商品資訊 ↗</a>
+              <a id="r51_twse_dividends" class="inline-block rounded-lg border border-cyan-700 bg-cyan-950/50 px-4 py-3 text-sm text-cyan-100 hover:bg-cyan-900/50" href="https://www.twse.com.tw/zh/ETFortune/dividendList?stkNo=00406A" target="_blank" rel="noopener noreferrer">證交所配息公告 ↗</a>
+            </div>
+          </div>
+          <div class="card border border-gray-700">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <label class="text-sm text-gray-300">消息分類
+                <select id="r51_category" class="block w-full mt-2 rounded-lg border border-gray-600 bg-gray-900 px-3 py-3 text-white">
+                  <option value="all">全部消息</option>
+                  <option value="etf">00406A 動態</option>
+                  <option value="dividend">配息與除息</option>
+                  <option value="holdings">持股調整</option>
+                  <option value="market">台股大盤</option>
+                  <option value="industry">產業消息</option>
+                </select>
+              </label>
+              <label class="text-sm text-gray-300">搜尋新聞標題／來源
+                <input id="r51_search" type="search" autocomplete="off" placeholder="例如：00406A、元大金、配息" class="block w-full mt-2 rounded-lg border border-gray-600 bg-gray-900 px-3 py-3 text-base text-white">
+              </label>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-2 mt-4 mb-3">
+              <h3 class="text-lg font-semibold text-sky-300">最近新聞標題</h3>
+              <span id="r51_count" class="text-xs text-gray-400">等待公開來源</span>
+            </div>
+            <div id="r51_list" class="space-y-3" aria-live="polite">
+              <p class="rounded-lg border border-gray-700 p-5 text-gray-400 text-sm">準備讀取新聞索引…</p>
+            </div>
+            <div class="mt-4 text-center">
+              <button type="button" id="r51_more" hidden class="rounded-lg bg-gray-700 hover:bg-gray-600 px-5 py-3 text-sm">顯示更多消息</button>
+            </div>
+            <p class="text-xs text-gray-400 mt-4">新聞僅是公開資訊索引，不保證完整、即時或正確。標題可能含媒體觀點，不代表股價必然上漲或下跌；本頁不提供買賣訊號，也不修改任何交易與股息紀錄。</p>
+          </div>
+        </section>
+
         <!-- ================= 分頁 7：流動性與風險雷達 (Safety) ================= -->
         <div id="tab-safety" class="space-y-6 hidden">
 
@@ -2014,7 +2068,7 @@
         };
 
         function switchTab(tabId) {
-            ['overview', 'transactions', 'ledger', 'family', 'cashflow', 'performance', 'efficiency', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'records', 'reminders', 'security', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'family', 'cashflow', 'performance', 'efficiency', 'kids', 'charts', 'dividends', 'news', 'assets', 'topup', 'report', 'annual', 'retirement', 'records', 'reminders', 'security', 'safety'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
                 document.getElementById(`btn-${id}`).classList.remove('active', 'bg-blue-600', 'text-white');
                 if (id === 'efficiency') document.getElementById(`btn-${id}`).classList.remove('text-violet-200');
@@ -2037,7 +2091,7 @@
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).classList.add('active', 'bg-blue-600', 'text-white');
             
-            ['overview', 'transactions', 'ledger', 'family', 'cashflow', 'performance', 'efficiency', 'kids', 'charts', 'dividends', 'assets', 'topup', 'report', 'annual', 'retirement', 'records', 'reminders', 'security', 'safety'].forEach(id => {
+            ['overview', 'transactions', 'ledger', 'family', 'cashflow', 'performance', 'efficiency', 'kids', 'charts', 'dividends', 'news', 'assets', 'topup', 'report', 'annual', 'retirement', 'records', 'reminders', 'security', 'safety'].forEach(id => {
                 if(id !== tabId) {
                     if (id === 'efficiency') document.getElementById(`btn-${id}`).classList.add('text-violet-200');
                     else if (id === 'performance') document.getElementById(`btn-${id}`).classList.add('text-fuchsia-300');
@@ -2072,6 +2126,7 @@
             if(tabId === 'performance') r37Render();
             if(tabId === 'efficiency') r38Render();
             if(tabId === 'safety') r40Render();
+            if(tabId === 'news' && window.R51News) window.R51News.open();
             r33AfterTab(tabId);
             r39AfterTab(tabId);
         }
@@ -6020,7 +6075,7 @@
         const R39_GROUPS=[
           {id:'frequent',icon:'🏠',name:'常用',desc:'首頁、記帳、搜尋、提醒',pages:[['overview','資產總覽'],['transactions','逐筆記帳'],['records','資料管理'],['reminders','智慧提醒']]},
           {id:'accounts',icon:'👨‍👧‍👦',name:'帳戶與領息',desc:'三帳戶分開管理',pages:[['ledger','主帳戶手帳'],['kids','雙寶存股手帳'],['family','帳戶資產總覽'],['cashflow','實收股息與現金流'],['assets','主帳戶資產分析']]},
-          {id:'analysis',icon:'📊',name:'投資分析',desc:'績效、行情、試算',pages:[['charts','價格走勢'],['dividends','公告配息'],['performance','帳戶績效趨勢'],['efficiency','XIRR 年化績效'],['topup','智慧加碼'],['retirement','退休目標']]},
+          {id:'analysis',icon:'📊',name:'投資分析',desc:'績效、行情、試算',pages:[['charts','價格走勢'],['dividends','公告配息'],['news','消息面'],['performance','帳戶績效趨勢'],['efficiency','XIRR 年化績效'],['topup','智慧加碼'],['retirement','退休目標']]},
           {id:'reports',icon:'🗓️',name:'月報／年報',desc:'查看與匯出報表',pages:[['report','智慧月報'],['annual','年度總結']]},
           {id:'security',icon:'🩺',name:'風險與健檢',desc:'帳務檢查、量能監測',pages:[['security','帳務健康檢查'],['safety','流動性雷達']]}
         ];
@@ -6529,5 +6584,6 @@
     <script src="./js/r45-smart.js"></script>
     <script src="./js/r46-mobile.js"></script>
     <script src="./js/r49-live-quote.js"></script>
+    <script src="./js/r51-news.js"></script>
 </body>
 </html>
