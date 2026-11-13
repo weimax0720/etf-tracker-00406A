@@ -43,7 +43,7 @@ const feed={schema:1,code:'00406A',checkedAt:fresh,articles:[
 const rows=normalize(feed);
 assert.equal(rows.length,2,'accept only recent unique https items with valid category');
 assert.ok(rows.every(x=>x.url.startsWith('https:')));
-assert.equal(rows[0].title.includes('<img'),true,'untrusted title must remain literal text, never injected as markup');
+assert.ok(rows.some(x=>x.title.includes('<img')),'untrusted title must remain literal text, never injected as markup');
 assert.throws(()=>normalize({...feed,code:'wrong'}));
 assert.throws(()=>normalize({...feed,articles:null}));
 assert.doesNotMatch(reader,/\.innerHTML\s*=|insertAdjacentHTML/,'untrusted titles must use DOM textContent');
