@@ -1,0 +1,43 @@
+name: 00406A 消息面自動更新
+
+on:
+  schedule:
+    # UTC 01:43 / 07:43 / 12:43 = 台灣 09:43 / 15:43 / 20:43
+    - cron: '43 1,7,12 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/update_news.py'
+      - '.github/workflows/update-news.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: etf-00406a-news-feed
+  cancel-in-progress: false
+
+jobs:
+  headlines:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate public news indexer
+        run: python -m py_compile scripts/update_news.py
+      - name: Read public RSS titles only
+        run: python scripts/update_news.py
+      - name: Commit public headline index only when changed
+        run: |
+          git add data/news.json
+          if git diff --cached --quiet; then
+            echo "News feed unchanged"
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "data: refresh 00406A public news headlines"
+          git push
