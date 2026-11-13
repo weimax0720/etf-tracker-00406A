@@ -6,6 +6,36 @@ let latestSnapshot=null, inFlight=null, lastCheck=0;
 function el(id){return document.getElementById(id);}
 function status(message){const node=el('r44_sync_status');if(node)node.textContent=message;}
 function day(s){return typeof s==='string'&&typeof r24SafeDate==='function'&&r24SafeDate(s)===s;}
+/* R50：只有正式公告能更新共用複利配息基準；日期較新的 FinMind 有效資料不被舊公告覆蓋。
+   預估／排程金額只供提醒，不會寫入私人帳務或自動登錄實收股息。 */
+function syncConfirmedDividend(official){
+  const newest=[...official].sort((a,b)=>a.exDate.localeCompare(b.exDate)).at(-1);
+  if(!newest)return;
+  const existingDate=day(currentExDivDate)?currentExDivDate:'';
+  if(existingDate>newest.exDate)return;
+  const changed=Number(latestDividend)!==newest.amount || existingDate!==newest.exDate;
+  latestDividend=newest.amount;
+  currentExDivDate=newest.exDate;
+  if(el('latest_dividend_overview'))el('latest_dividend_overview').textContent=String(newest.amount);
+  if(el('risk_div_value')){
+    el('risk_div_value').textContent=newest.amount+' 元';
+    el('risk_div_value').className=newest.amount<0.10
+      ?'text-lg font-bold text-red-500 mt-1'
+      :'text-lg font-bold text-green-400 mt-1';
+  }
+  if(el('risk_div_light'))el('risk_div_light').textContent=newest.amount<0.10?'🔴':'🟢';
+  if(!changed)return;
+  // 主帳戶、雙寶使用同一個最新正式配息基準，但原有三套帳務資料仍完全獨立。
+  for(const [name,fn] of [
+    ['主帳戶複利',()=>runDynamicSimulation()],
+    ['雙寶複利',()=>runKidsSimulation()],
+    ['首頁摘要',()=>r23Render()],
+    ['主帳戶資產',()=>r25Render()],
+    ['家庭資產',()=>r34Render()],
+    ['加碼模擬',()=>r26Render()],
+    ['退休情境',()=>{if(!el('tab-retirement')?.classList.contains('hidden'))r29Render();}]
+  ]){try{fn();}catch(e){console.warn('R50 更新'+name,e);}}
+}
 function applyFeed(feed){
   if(!feed||feed.schema!==1||feed.code!=='00406A'||!Array.isArray(feed.prices)||!Array.isArray(feed.dividends))
     throw Error('版本、商品代號或資料結構不符');
@@ -63,6 +93,7 @@ function applyFeed(feed){
       try{localStorage.setItem(R24_DIV_CACHE_KEY,JSON.stringify({at:r24CacheAt,rows:r24Rows}));}
       catch(e){console.warn('R44 無法儲存公開配息快取',e);}
       try{r24Render();}catch(e){console.warn('R44 配息圖表更新',e);}
+      syncConfirmedDividend(official);
     }
   }
   const when=feed.checkedAt?String(feed.checkedAt).replace('T',' ').slice(0,16):'尚未首次執行';
@@ -109,4 +140,7 @@ fetchData=async function(...args){
   return result;
 };
 window.addEventListener('load',()=>{void refresh(false);});
+// 網頁長時間停留前景時，也能接收到 GitHub 後續發布的新正式配息公告。
+window.setInterval(()=>{if(!document.hidden)void refresh(false);},10*60*1000);
+window.addEventListener('focus',()=>{void refresh(false);});
 })();
