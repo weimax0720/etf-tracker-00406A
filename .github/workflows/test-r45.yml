@@ -1,4 +1,4 @@
-name: R50 全站回歸測試
+name: R51 全站回歸測試
 
 on:
   push:
@@ -7,6 +7,8 @@ on:
       - 'js/**'
       - 'tests/**'
       - 'scripts/update_quote.py'
+      - 'scripts/update_news.py'
+      - 'data/news.json'
       - 'sw.js'
       - 'manifest.webmanifest'
       - 'icons/**'
@@ -33,4 +35,6 @@ jobs:
           node tests/r48-smoke.cjs
           node tests/r49-smoke.cjs
           node tests/r50-smoke.cjs
-          python -m py_compile scripts/update_quote.py
+          node tests/r51-smoke.cjs
+          python tests/r51-news-parser.py
+          python -m py_compile scripts/update_quote.py scripts/update_news.py
