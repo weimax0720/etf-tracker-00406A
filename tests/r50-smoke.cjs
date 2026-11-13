@@ -20,7 +20,7 @@ const sandbox={
   fetch:async()=>({ok:true,json:async()=>payload}),
   currentPrice:8,rawPriceData:[],latestDividend:0,currentExDivDate:'',
   r42LocalToday:()=> '2026-11-13',
-  r24SafeDate:s=>typeof s==='string'&&/^\\d{4}-\\d{2}-\\d{2}$/.test(s)?s:'',
+  r24SafeDate:s=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)?s:'',
   r24ParseRows:rows=>[...new Map(rows.filter(x=>Number(x.amount)>0).map(x=>[x.exDate,{...x}])).values()]
     .sort((a,b)=>a.exDate.localeCompare(b.exDate)),
   r42OfficialRows:[],r24Rows:[],r24Source:'',r24CacheAt:'',R24_DIV_CACHE_KEY:'00406A_R24_DIV_CACHE_V1',
