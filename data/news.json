@@ -1,15 +1,36 @@
 {
   "schema": 1,
   "code": "00406A",
-  "checkedAt": "2026-11-15T16:27:42+08:00",
-  "updatedAt": "2026-11-15T16:27:42+08:00",
+  "checkedAt": "2026-11-16T03:07:45+08:00",
+  "updatedAt": "2026-11-16T03:07:45+08:00",
   "source": "Google 新聞 RSS（標題索引；來源為第三方媒體，不是證交所公告）",
   "articles": [
     {
       "category": "industry",
+      "title": "陳慧明：沒有黃仁勳的輝達 全球 AI 供應鏈硬體恐邁入長空結構重組 | 太報",
+      "source": "LINE TODAY",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE4wZHB2NWhEUklZeGwxc0NCc1N4Zm1LZzZlU0oxVDV0OVpVbHd3ZWg0akNKeXhoRllnTkdEOUVhS25Eemp3N1I0ZUNhT0dreUlVME5OckRR?oc=5",
+      "publishedAt": "2026-11-16T00:52:50+08:00"
+    },
+    {
+      "category": "market",
+      "title": "【即時新聞】台積電獲土洋法人力挺！投信連24買助攻最新盤面焦點",
+      "source": "CMoney",
+      "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFBONGhTMWgwOGotUHYzVXhfZ3NQS1NQUUV0bTZGZmRHeUVEajNQV2RKRnlHY1otSkdtXzNySG9nNDh4WjhxdWtYOFVtYlBkc0U1ZkJzTkFuOVI?oc=5",
+      "publishedAt": "2026-11-15T19:05:14+08:00"
+    },
+    {
+      "category": "market",
+      "title": "台積電超強業績當靠山／台股連4紅收復4萬4大關",
+      "source": "自由時報",
+      "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFA4ZXVIRmNBZHUyMG9vREZBLUs2RE1ELWd4RlduZ1VNeGx0TER3Vk5fRzZnN2NCZ1hfMVl0RTJWSFFvRktsQ2hIeTgzal9XMFdjeGJocWdDRE4?oc=5",
+      "publishedAt": "2026-11-15T13:46:17+08:00"
+    },
+    {
+      "category": "industry",
       "title": "AI步入「商業變現」時代 獲利能力才是股市核心",
-      "source": "自由財經",
       "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBrNW8yMDVlUXZLSTR1dk5rbWZNN1VPYmlhLXlnbGdpaDVWeUNKWUlSMGFkN0hzY0VfeXozcjVkZzN2VWpsRlg5T3MwSzJSYktzZjNHTlpMeDZaR0JTU19v0gFkQVVfeXFMTVg1R2FYblJiMFB1MmdzeTlGT0t3WnhwT3F1cjBzNEJGYkJNUXpia195eTYza2hWXzM3aFRFUTRQMFAwdFlCeWFoRzZ3TGJ3aTQxNklRNWtyQ1d3T3ZtVUE4Z2FJaw?oc=5",
+      "source": "自由財經",
       "publishedAt": "2026-11-15T11:40:00+08:00"
     },
     {
@@ -43,15 +64,22 @@
     {
       "category": "market",
       "title": "〈台股風向球〉外資期貨做空未轉向前 題材股輪動維繫多方熱度",
-      "source": "鉅亨網",
-      "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5iNnNNZl9iOS1vWkp5RW0xd1dLNnlrcDNOeHJzV3RNWW5zaTlJR1AzNTlSZG1pU3VOUlN6VExDWG9URE80MFgtX08taw?oc=5",
+      "source": "TradingView",
+      "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE9CTDg5OFZmQlpwekhrYkVQdXM3dVRVRXE0TFpNRV9EdVdpSXRQSnRFeUg0VWNKTVBiZ2p1T3Z3ZFBieU5TQUZYdm5Jc19Sbm4zVDllbk1acTVfMmlBblg0Z0hTNnY?oc=5",
       "publishedAt": "2026-11-14T23:48:58+08:00"
+    },
+    {
+      "category": "industry",
+      "title": "台股周漲10%！十大強勢股齊飆逾4成 漲幅王列注意股、PCB 成焦點",
+      "source": "經濟日報",
+      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9USWJJbXliTlVhbklodEZYdWNpNS1xZTRLRjYtYVlobWhFUkNCVzRPOHlIWkY0b2syQzlZckw4WXllMkxXNVl0allFUEoweElBN1Qxbk9nT3otZ9IBX0FVX3lxTE9xVXZtQWwzck1oUmJGd05sUFZxLUpDSEs4YVVyemRpY1B6QWZhRXdCY01GaWtXMEJTOEh6TFlIZnY4VHg2RmVDd2dGQllPRTZwcEpqdHJjRGVXTk5qaFNB?oc=5",
+      "publishedAt": "2026-11-14T16:00:00+08:00"
     },
     {
       "category": "market",
       "title": "【11/12籌碼→11/13盤中】投信接盤、融資沒退乾淨",
-      "source": "CMoney",
       "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE56aFd1bFF0VnhCaThkOTZiU3phMXJWazkzZU5nR0VuaE9QajgyRWo0WlgwVEZFc1Z4c3pHVXk1ZnZYYV95YjdTM0pzZVhPRUxENGw3OG1VNE0?oc=5",
+      "source": "CMoney",
       "publishedAt": "2026-11-14T15:53:24+08:00"
     },
     {
@@ -71,8 +99,8 @@
     {
       "category": "market",
       "title": "國安基金 限空令都擋不住！外資狂賣、台幣重貶 滿手AI股該砍還是留 Ft.摩爾投顧分析師 陳昆仁",
-      "source": "工商時報",
       "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9hQ3o4S196MzNNQVlBRjJPWHkyZ1hlbDhTdEJ2WDQyRWVQcUlVN3lJeENLdVBZTFVwMENVUUNuVnlMdUpKbzVhb2N6cHV3b1RDRVFGdXhmTzVaSjctT3RN?oc=5",
+      "source": "工商時報",
       "publishedAt": "2026-11-13T21:30:00+08:00"
     },
     {
@@ -83,11 +111,25 @@
       "publishedAt": "2026-11-13T18:52:11+08:00"
     },
     {
+      "category": "etf",
+      "title": "主動中信台灣收益(00406A)成分股、持股明細總覽",
+      "source": "口袋證券",
+      "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE1WY2JRaGJuM2RzS09ZWkUtUzhsdXRNd0tXZ0RlX1Nlb25SRzJXTC1MTENCX3dJOXlXY05jMEpxdGs1dTJ5Q1dZdElhWXQ?oc=5",
+      "publishedAt": "2026-11-13T16:00:00+08:00"
+    },
+    {
+      "category": "etf",
+      "title": "主動中信台灣收益(00406A)持股明細總覽",
+      "source": "口袋證券",
+      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5jN295SXhhZEwtMWJMX2VxTWRTTHY3X1ZFVWN3UFZfdXBZS0xQRzduOEJDTmFPNTlMTDE5TmtZUWFfZVBMX25TbEhldExSdHdGald6UndjVXRCMXFu?oc=5",
+      "publishedAt": "2026-11-13T16:00:00+08:00"
+    },
+    {
       "category": "industry",
-      "title": "台股周漲10%！十大強勢股齊飆逾4成 漲幅王列注意股、PCB 成焦點",
-      "source": "經濟日報",
-      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE9USWJJbXliTlVhbklodEZYdWNpNS1xZTRLRjYtYVlobWhFUkNCVzRPOHlIWkY0b2syQzlZckw4WXllMkxXNVl0allFUEoweElBN1Qxbk9nT3otZ9IBX0FVX3lxTE9xVXZtQWwzck1oUmJGd05sUFZxLUpDSEs4YVVyemRpY1B6QWZhRXdCY01GaWtXMEJTOEh6TFlIZnY4VHg2RmVDd2dGQllPRTZwcEpqdHJjRGVXTk5qaFNB?oc=5",
-      "publishedAt": "2026-11-13T16:11:19+08:00"
+      "title": "臻鼎-KY (4958) 深度解析：AI 伺服器與矽光子雙引擎，引領全球 PCB 霸主再創高峰",
+      "source": "913 理財估測站",
+      "url": "https://news.google.com/rss/articles/CBMiQ0FVX3lxTFBLT3ZpelZPN2xWZmkwakM2M3k4TXlxdzA4Q3hHaDBUZlhEMV9FYWs5MFY3azdVX3hiUzRhaTVxYmNidkU?oc=5",
+      "publishedAt": "2026-11-13T16:00:00+08:00"
     },
     {
       "category": "market",
@@ -99,8 +141,8 @@
     {
       "category": "market",
       "title": "外資回頭大買288億！聯發科、創意領軍猛攻 台股近千家上漲",
-      "source": "三立新聞網SETN.com",
       "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE1RRnlSNG1YcW1wUFR3YnJfVno5a1NPRTQzWHJUOTc4YS1IZnRSdEdobi1xWHpLeG8tdG96aEVEN1VvS2g3bnhKc1dCb1LSAUxBVV95cUxNUUZ5UjRtWHFtcFBUd2JyX1Z6OWtTT0U0M1hyVDk3OGEtSGZ0UnRHaG4tcVh6S3hvLXRvemhFRDdVb0toN254SnNXQm9S?oc=5",
+      "source": "三立新聞網SETN.com",
       "publishedAt": "2026-11-13T15:43:00+08:00"
     },
     {
@@ -127,8 +169,8 @@
     {
       "category": "etf",
       "title": "00406A持續破發還能存？高配息背後藏選擇權代價：專家曝最適合配置法| 存股族愛ETF | 股市",
-      "source": "udn",
       "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1zTVpWeWs5R1UxUV9CRU9PbjJ4SlNfaUlCWmkzRXgtYXd2ZFJxdGdiYmFrUF9SRUE1ekh4NE81Y2RoR3FCSmVfZWlsVHRLVVdaRi1V?oc=5",
+      "source": "udn",
       "publishedAt": "2026-11-13T11:42:31+08:00"
     },
     {
@@ -148,8 +190,8 @@
     {
       "category": "etf",
       "title": "國民高息ETF「4檔淌血」痛失7億元！外資另狂砍00406A淪賣超王 3檔主動式遭倒貨破3萬張",
-      "source": "Yahoo股市",
       "url": "https://news.google.com/rss/articles/CBMi2gNBVV95cUxPNVFHR2xuZ1pLbl82Q0ZUdFhobjhmOTR5RGxTT3lJdXE4MzVNSVlFejluR1JYb0Y2LUxZeEpUbUJXcm9qdEZRMVRpU0VvVWpFbWJZREZEU1B0QWlnOUVfTlBtbG53alllYThLckU5cVlOWk5PSUsySVlwUkhGOVh4dWRmcjVXTWN4b2REOVUwUVJTZTZhSk51MW9vaS1sRTFvV3pOa19zcTV0RWVMRlhVYlNQWGxSdS11NHR6NlNoRjBka25sTVprdXNEcFRxWDRuT3RPRUJwcW1IeTNsaTVXTTRrRFRwQTk3c2R2MDl6bWVMYlBET0ljSHpJalA4Mk5taXd5U2QtN19WanJFckZqVDYwQnFCNTAwVzlubEJjNVlZRFhZOU94Q051SC1tT056R0tlNi1SOXhIbG4wYWdqSHZGQ2pQdmVNRG0xU2ZoUUNELW5LQ1FSd1oycHhTNm5HQllOWXpYbzc5dUpkX1Z4X3NhQXlJak5LaFppUFBpRlo1MHpOSERoMUZVUElOWklPOWJHelVvcHdRWlRobFZGaWM4T1JUZHdMajNsejRFX2xMV2RuMlVfRGZjYm5IY2llTFhQMW83Z1ltNlM2Qm56YVdkcGFET0xpRlE?oc=5",
+      "source": "Yahoo股市",
       "publishedAt": "2026-11-13T07:00:00+08:00"
     },
     {
@@ -169,8 +211,8 @@
     {
       "category": "market",
       "title": "外資只賣6.8億卻猛砍AI股！仁寶遭倒5.2萬張台積電、廣達也入列| 財經",
-      "source": "Newtalk新聞",
       "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE5qSThLZlFLX0RCdkpUcmE4b3ltNF9KTkpSaGtIMlZuM29xNG5hTzFsUmJaU2kyeFVmOF9XUXJzRzlGaXEyTTJWRW11QzNFa1RsS2Z1UE9uMHpPOGM?oc=5",
+      "source": "Newtalk新聞",
       "publishedAt": "2026-11-12T17:04:34+08:00"
     },
     {
@@ -224,13 +266,6 @@
     },
     {
       "category": "market",
-      "title": "台積電超強業績當靠山／台股連4紅收復4萬4大關",
-      "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTFA4ZXVIRmNBZHUyMG9vREZBLUs2RE1ELWd4RlduZ1VNeGx0TER3Vk5fRzZnN2NCZ1hfMVl0RTJWSFFvRktsQ2hIeTgzal9XMFdjeGJocWdDRE4?oc=5",
-      "source": "自由時報",
-      "publishedAt": "2026-11-12T05:32:07+08:00"
-    },
-    {
-      "category": "market",
       "title": "台股狂飆1545點！台積電、PCB領軍反攻 外資卻連10日賣超",
       "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE9IbERnS2pZRUxnb2FBenFrbUtjSThsQnF1UG1OckFCQXlTck1xMU51UUJYU25tcW1LZjdXY1JhamxqTWRJY29tTW9sODc2a3hPTF9JSGlkcnZTS2pnbHBNOXVYTVltcV9lWFYxVzRxZWxhWFE?oc=5",
       "source": "民報",
@@ -249,20 +284,6 @@
       "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE9sNlkxeGpwSDFWLUhvOFl5RGM4Q1c3N1ZWWmtaUGkwVXB1MDZrYzBOb2QzV3pCdTR6QnlHTWpENlh0TF9ydG95M2tXelFDM3c1RjZLcmkzSkE?oc=5",
       "source": "CMoney",
       "publishedAt": "2026-11-11T16:50:46+08:00"
-    },
-    {
-      "category": "etf",
-      "title": "主動中信台灣收益(00406A)成分股、持股明細總覽",
-      "url": "https://news.google.com/rss/articles/CBMiTEFVX3lxTE1WY2JRaGJuM2RzS09ZWkUtUzhsdXRNd0tXZ0RlX1Nlb25SRzJXTC1MTENCX3dJOXlXY05jMEpxdGs1dTJ5Q1dZdElhWXQ?oc=5",
-      "source": "口袋證券",
-      "publishedAt": "2026-11-11T16:00:00+08:00"
-    },
-    {
-      "category": "etf",
-      "title": "主動中信台灣收益(00406A)持股明細總覽",
-      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE5jN295SXhhZEwtMWJMX2VxTWRTTHY3X1ZFVWN3UFZfdXBZS0xQRzduOEJDTmFPNTlMTDE5TmtZUWFfZVBMX25TbEhldExSdHdGald6UndjVXRCMXFu?oc=5",
-      "source": "口袋證券",
-      "publishedAt": "2026-11-11T16:00:00+08:00"
     },
     {
       "category": "industry",
@@ -302,8 +323,8 @@
     {
       "category": "holdings",
       "title": "11/10 00406A(主動中信台灣收益) 持股異動｜新增 1 檔-ETF股長",
-      "source": "CMoney投資網誌",
       "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxQNzk1Nzh4Q1JENUtZQlZxanoyQ3FXakRGWGRiZHFGRlNxTG5KQkJxM1BqTGVaMUIyU0VHLVFSR3hnZk9xclBuc0p6QVZKUTlzZ0hJQ2gwamZOSlBYeGRCNXJMcW1WNFJMMzZJRkFkZzQyLVAzdmZuTy1yaUQzU2pHOQ?oc=5",
+      "source": "CMoney投資網誌",
       "publishedAt": "2026-11-10T18:52:26+08:00"
     },
     {
@@ -323,15 +344,15 @@
     {
       "category": "etf",
       "title": "【即時新聞】最新00406a配息有撐，急彈5%不只台積電這檔將轉強？",
-      "source": "CMoney投資網誌",
       "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQc2xoVDBvRmlBaVdMMWxQQjFxVFluMTZtdEVhSk93dlZKcUduemtPMHNmU2Y5RGY1Wmo4d1lGc0hrUm0zeGozcUlOOHpzaHVweXBsUXJIZnlUYzE4N1pSOXFjUEZYbGhSVDlOb2RUSEJNMUxtdE5RekkxLUh0ZUlRdUtvOTV1NjI5cmlzeFdoRTE?oc=5",
+      "source": "CMoney投資網誌",
       "publishedAt": "2026-11-10T10:51:17+08:00"
     },
     {
       "category": "etf",
       "title": "00406A股價連跌、配息恐縮水？收益平準金反增33％ 最新淨值組成曝光",
-      "source": "UDN",
       "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE9YblFwZUU2TTI1Zkp0akYzMjFFdmJWMUtnV0xESWZYUzIxZWU5MEJZR0JDbjdvMGFFM0Y1RG9aN3d2bklkQ04xR0VuM3NsdURkcWpV0gFYQVVfeXFMTURhZ2kxUUdHYkxFVmt1OE11dmh4RzdhLWlCS1NIYzBLXzJJdnluS2lFX3FybHREUmNoRzNuQkE5bTBLMnNBMWkzNHVLYXUxeExqYk9maTVzYw?oc=5",
+      "source": "UDN",
       "publishedAt": "2026-11-10T08:47:51+08:00"
     },
     {
@@ -392,38 +413,17 @@
     },
     {
       "category": "etf",
-      "title": "00406A上演大怒神！盤中一度殺破前低又急拉 136萬張爆量登成交王",
-      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1Uc21jSzlWVFZ3ZmdRYjBoWjdjWVFoVkZtaUk2enNzdUVqOWd6MXl4Zy05RjJFbW9WZ2dSWDRYa1NrNWs1YmlEOFlNbGRRemtHbGRIMDh0N214OW8yS1hv0gFkQVVfeXFMT2hLRzhNSTlaN0ZWMDBjal9JelI5dUdBRnpmLWppV3pNTFF1YldqMVFKQUVzLWxLVVhBLUtSODRYd202UkxyNlpseHBKQVR0enZuRVktdmdqSkw0Y2ZtelhxSWRaTA?oc=5",
-      "source": "自由財經",
+      "title": "逃命潮？瑤池金母的00981A、00406A已爆逾百萬張巨量 最慘跌到「掛牌最低價」",
+      "source": "Yahoo股市",
+      "url": "https://news.google.com/rss/articles/CBMiyANBVV95cUxNdHE1Tmo0ZmZjcndEeG81bXNveDZpYlk5RG9feWE5TDA3OHRWc1o3bDk2bWpSeTVzdW50M3NwU0xFenVMTEZfNUh0UVBoUS1UeGdYT2UtWldEY1pqSHRIZndLXzZQQWJHU1N1cUdlN2lmQ0ZKQjR3Ulc2djZsSVNCVVRmbkNGeGZndDZodWhLRkJCS1VFY0ExVmRYZEJuQ01vTmhHYlNLNE1ZQ05KaUVhWkxhNEJ0UzZHZS1aWEJpS04yaUEyZ0UzTFNMQ29reHpqX2dnWFY4UHl0VTlQOFh3bDBIMEljTXg0QU16b0lXRXFoM3JvU1ItX3FpVTRZd2VQclF6ajVGQUdXWl9mMEplVVJkdHpRUGVseXRqN0VGN3ZzUW9HZ0NtSXE1dVQ0RHNYQW1BVXA4TW5KRWFHajRhT3ZHbTlhOWwySGl4YV84b0pnVDhUQ01RVEVLWW5CZkZPbTZzNUVtVi15ODRNOG9RUkVicTczSnBrVzBNM0ZPc3lqaFpTWkZaOEFURmVMUF9kMjdMaU5iZTBjT2gzMW5vSUdfTzRGaERjOUkzckt6QTA0SEpxTEkxWlRYVVFfcl9qNXJXanF1VGo?oc=5",
       "publishedAt": "2026-11-04T16:00:00+08:00"
     },
     {
       "category": "etf",
-      "title": "00406A配息0.138元，除息日發息日！股價破發撿便宜爆天量，會是「撿不完的便宜」？專家給答案",
-      "source": "今周刊",
-      "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOSGc3Tk13djNwTk0za0lzczRvX1BPcWtBNjd4RXo5ODkwOHpTeFNBZUNLc21UN3hQRktOdWcwdFh2R09rWkpXWExnejZjSnprMC1UN3hhOHo5cVdSTGVIOXZvQU53QjJGYk9PXzlOUVFEM0tTdHUzQm5MamV0WHFiSA?oc=5",
-      "publishedAt": "2026-11-03T16:00:00+08:00"
-    },
-    {
-      "category": "etf",
-      "title": "00406A配息飆19%、股價會跌到7.X元？為何越跌越多人買？適合退休族躺平領息？教授看成分股「心頭一震」示警3風險",
-      "source": "今周刊",
-      "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxPYkRIR3lvTFI2WHJCbVpfSWV3N2pVQ0FBTnIydXY3VHZtd1hIMHhPb0FYVG9JYTRDQ1JiNG15VTFnaEs5bDkwcUFrclVDM2MzMjhKbUNUUWlGRXBnZVdfbV9nZ0hYUmtmN0pKMVZud1J4VFNVOFZnZThRMXctSkozbA?oc=5",
-      "publishedAt": "2026-11-03T16:00:00+08:00"
-    },
-    {
-      "category": "holdings",
-      "title": "11/3 00406A(主動中信台灣收益) 持股異動｜刪除 2 檔-ETF股長",
-      "source": "CMoney投資網誌",
-      "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxPc3pOTnJhV0Rnc2lhNFFPM2Zra2ZlZVBkT0xMWVpUNTBBNVNNS2VYQkdQZkw1TnltamlZbVJVaHNWc05Db2RFOVRBOEdoazZ6N25WSm8zM1o1MHFCRWUyRXZwaHFkeDNXTnRyV2p4S2pGbWNDdEhZRXpDVzRBWXB4aA?oc=5",
-      "publishedAt": "2026-11-03T16:00:00+08:00"
-    },
-    {
-      "category": "etf",
-      "title": "00406A暴配19％，本金60萬就能月領1萬？股價跌到7塊多，退休族能買？老手給答案：高配息不是白吃的午餐",
-      "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNVUwxNVplQjU1Q3paalJqSzVvRmVHNTdCc0pueDEwUWF3bEk4V2VkT2l4eWhuYl9XY1ozMk5iazlmSGtGSDU3LVMwN0FPZ3VXb1h6NVZGd3FkNE1faVJrc3NhQ2RpSG1LdVRmZnN6YzBTQUtVOUNtVHRNdjczVVBfWQ?oc=5",
-      "source": "今周刊",
-      "publishedAt": "2026-11-03T16:00:00+08:00"
+      "title": "00406A上演大怒神！盤中一度殺破前低又急拉 136萬張爆量登成交王",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1Uc21jSzlWVFZ3ZmdRYjBoWjdjWVFoVkZtaUk2enNzdUVqOWd6MXl4Zy05RjJFbW9WZ2dSWDRYa1NrNWs1YmlEOFlNbGRRemtHbGRIMDh0N214OW8yS1hv0gFkQVVfeXFMT2hLRzhNSTlaN0ZWMDBjal9JelI5dUdBRnpmLWppV3pNTFF1YldqMVFKQUVzLWxLVVhBLUtSODRYd202UkxyNlpseHBKQVR0enZuRVktdmdqSkw0Y2ZtelhxSWRaTA?oc=5",
+      "source": "自由財經",
+      "publishedAt": "2026-11-04T16:00:00+08:00"
     }
   ],
   "errors": []
