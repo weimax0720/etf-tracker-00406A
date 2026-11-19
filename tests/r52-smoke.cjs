@@ -44,6 +44,12 @@ response={schema:1,code:'00406A',checkedAt:new Date().toISOString(),
  previous:{date:'2026-11-17',stocks:[item('2330',11.1)]},
  changes:[{code:'2330',name:'台積電',type:'increase',previousShares:80000,
    shares:100000,sharesDelta:20000,previousWeight:11.1,weight:12.5,weightDeltaPp:1.4}],
+ derivativeChanges:{
+   futures:[{code:'TX',name:'臺股期貨',previousQuantity:8,quantity:10,quantityDelta:2,
+     previousReportedWeight:22.7,reportedWeight:24.1,weightDeltaPp:1.4}],
+   options:[{code:'TXX',name:'台指賣出買權',previousQuantity:-20,quantity:-22,quantityDelta:-2,
+     previousReportedWeight:-7.5,reportedWeight:-8.3,weightDeltaPp:-0.8}]
+ },
  metrics:{maxSingleStockPct:12.5,stockWeightPct:19.1,top10WeightPct:19.1,
    premiumPct:2.05,priceDate:fresh,adjustedPriceDrawdownPct:15.9,
    grossExposurePct:null,sectorConcentrationPct:null,optionNotionalPct:null,
@@ -56,6 +62,8 @@ async function test(){
  assert.match(element('r52_coverage').textContent,/4 \/ 7 項/);
  assert.equal(element('r52_futures').children.length,1);
  assert.equal(element('r52_options').children.length,1);
+ assert.match(element('r52_futures').children[0].children[2].textContent,/口數變化.*\+2/);
+ assert.match(element('r52_options').children[0].children[2].textContent,/口數變化.*-2/);
  assert.equal(element('r52_changes').children.length,1);
  assert.match(element('r52_changes').children[0].children[1].textContent,/20,000/);
  assert.ok(element('r52_risks').children.filter(x=>x.children[2].textContent.includes('待核對')).length>=3);
