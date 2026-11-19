@@ -1,6 +1,6 @@
 /* R52 延續 R51 離線 Shell：僅儲存公開資源。絕不攔截／快取個人 API 或銀行紀錄。 */
 'use strict';
-// Previous R48-R51 and R52 v1 shells are replaced after the user accepts the APP update.
+// Previous r48-shell-v1, 00406A-r49-shell-v1, 00406A-r50-shell-v1, 00406A-r51-shell-v1 and 00406A-r52-shell-v1 are replaced after user confirms.
 const APP_CACHE='00406A-r52-shell-v2';
 const DATA_CACHE='00406A-r52-public-data-v2';
 const ALLOWED_CACHE_PREFIXES=['00406A-r46-','00406A-r47-','00406A-r48-','00406A-r49-','00406A-r50-','00406A-r51-','00406A-r52-'];
