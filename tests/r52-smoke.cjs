@@ -81,9 +81,13 @@ async function test(){
  assert.match(drawdownCard.children[4].textContent,/不是你的實際虧損/);
  assert.equal(drawdownCard.children[5].open,true,'large drawdown must show explanation');
  const premiumCard=riskCards[5];
- assert.match(premiumCard.children[4].textContent,/折價/,'negative premium must be explained as discount');
+ assert.match(premiumCard.children[4].textContent,/溢價/,'positive premium must be explained as premium');
  assert.match(riskCards[1].children[4].textContent,/無法判定/,'unknown derivatives exposure must explain missing basis');
  assert.match(riskCards[3].children[4].textContent,/口數/,'option notional must not be inferred from contracts');
+ response={...response,metrics:{...response.metrics,premiumPct:-0.47}};
+ await obj.refresh(true);
+ assert.match(element('r52_risks').children[5].children[4].textContent,/折價/,'negative premium must read as discount, not premium danger');
+ assert.equal(element('r52_risks').children[5].children[5].open,false,'green discount is collapsible');
  response={...response,latest:null,previous:null,changes:[],
   metrics:{...response.metrics,maxSingleStockPct:null,premiumPct:null,
    adjustedPriceDrawdownPct:null,dividendLatest:null,dividendPrevious:null}};
