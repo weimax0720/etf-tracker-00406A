@@ -254,6 +254,20 @@ def main():
             latest=updated
         else:
             errors.append("來源資料日期早於快取，已保留較新的持股")
+        # First activation: retrieve one earlier portfolio day so that the
+        # initial R52 view already shows real, dated changes.
+        if latest and not previous:
+            d=dt.date.fromisoformat(latest["date"])
+            for back in range(1,7):
+                q=(d-dt.timedelta(days=back)).strftime("%Y/%m/%d")
+                try:
+                    older=parse_portfolio(post("/API/etf/ETFHoldingWeight",
+                                               {"token":token},{"FID":fid,"StartDate":q}))
+                    if older["date"]<latest["date"]:
+                        previous=older
+                        break
+                except (ValueError, OSError):
+                    continue
     except Exception as exc:
         errors.append("官方持股來源暫不可用："+type(exc).__name__+"："+str(exc)[:135])
     if not latest:
@@ -261,7 +275,8 @@ def main():
     output={
         "schema":1,"code":CODE,"checkedAt":NOW.isoformat(timespec="seconds"),
         "latest":latest,"previous":previous,
-        "changes": changes(previous,latest) if previous and latest and previous["date"]<latest["date"] else [],
+        "changes": changes(previous,latest) if previous and latest and
+                   0<(dt.date.fromisoformat(latest["date"])-dt.date.fromisoformat(previous["date"])).days<=5 else [],
         "metrics":market_metrics(latest or {}),
         "errors":errors,
         "methodNotes":["股數差分可能包含申購／贖回與價格變動，不代表經理人實際成交",
