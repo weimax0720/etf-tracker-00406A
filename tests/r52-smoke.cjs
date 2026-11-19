@@ -5,7 +5,7 @@ const dir=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(dir,p),
 const html=read('index.html'),script=read('js/r52-risk.js'),sw=read('sw.js');
 const ci=read('.github/workflows/update-portfolio.yml'),py=read('scripts/update_portfolio.py');
 for(const id of ['r52_panel','r52_status','r52_risks','r52_changes','r52_holdings',
-                 'r52_futures','r52_options','r52_overall','r52_official']){
+                 'r52_futures','r52_options','r52_overall','r52_plain_summary','r52_official']){
  assert.ok(html.includes('id="'+id+'"'),'missing '+id);
 }
 assert.match(html,/src="\.\/js\/r52-risk\.js"/);
@@ -67,12 +67,30 @@ async function test(){
  assert.equal(element('r52_changes').children.length,1);
  assert.match(element('r52_changes').children[0].children[1].textContent,/20,000/);
  assert.ok(element('r52_risks').children.filter(x=>x.children[2].textContent.includes('待核對')).length>=3);
+ assert.match(element('r52_plain_summary').textContent,/目前最該注意/);
+ assert.match(element('r52_plain_summary').textContent,/單一股票權重/);
+ const riskCards=element('r52_risks').children;
+ assert.equal(riskCards.length,7,'all seven warning categories explained');
+ const stockCard=riskCards[0];
+ assert.match(stockCard.children[4].textContent,/最大持股|最大一檔|股票/);
+ assert.equal(stockCard.children[5].open,true,'red/yellow cards expand their explanation automatically');
+ assert.match(stockCard.children[5].children[1].textContent,/這是什麼/);
+ assert.match(stockCard.children[5].children[2].textContent,/可以怎麼做/);
+ const drawdownCard=riskCards[4];
+ assert.match(drawdownCard.children[4].textContent,/不是今天跌了/,'drawdown must not be misread as one-day loss');
+ assert.match(drawdownCard.children[4].textContent,/不是你的實際虧損/);
+ assert.equal(drawdownCard.children[5].open,true,'large drawdown must show explanation');
+ const premiumCard=riskCards[5];
+ assert.match(premiumCard.children[4].textContent,/折價/,'negative premium must be explained as discount');
+ assert.match(riskCards[1].children[4].textContent,/無法判定/,'unknown derivatives exposure must explain missing basis');
+ assert.match(riskCards[3].children[4].textContent,/口數/,'option notional must not be inferred from contracts');
  response={...response,latest:null,previous:null,changes:[],
   metrics:{...response.metrics,maxSingleStockPct:null,premiumPct:null,
    adjustedPriceDrawdownPct:null,dividendLatest:null,dividendPrevious:null}};
  await obj.refresh(true);
  assert.match(element('r52_overall').textContent,/部分待核對/);
  assert.doesNotMatch(element('r52_overall').textContent,/🟢 未觸發/);
+ assert.match(element('r52_plain_summary').textContent,/灰燈不是安全保證/);
  assert.throws(()=>obj.validate({...response,code:'XYZ'}));
  assert.throws(()=>obj.validate({...response,latest:{date:'fake',stocks:[]}}));
  const live=JSON.parse(read('data/portfolio.json'));
