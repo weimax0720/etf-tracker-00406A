@@ -1,0 +1,44 @@
+name: R52 00406A 官方持股與風險監控更新
+
+on:
+  schedule:
+    # UTC 01:31 / 10:31 / 13:31 = 台灣 09:31 / 18:31 / 21:31
+    - cron: '31 1,10,13 * * 1-5'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/update_portfolio.py'
+      - '.github/workflows/update-portfolio.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: etf-00406a-portfolio
+  cancel-in-progress: false
+
+jobs:
+  public-portfolio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check parser syntax
+        run: python -m py_compile scripts/update_portfolio.py
+      - name: Retrieve official public CTBC portfolio
+        run: python scripts/update_portfolio.py
+      - name: Commit public portfolio index only
+        run: |
+          git add data/portfolio.json
+          if git diff --cached --quiet; then
+            echo "Public portfolio unchanged"
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "data: refresh 00406A public portfolio and risk observations"
+          git pull --rebase origin main
+          git push
