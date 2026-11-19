@@ -1,8 +1,8 @@
-/* R52 延續 R51 離線 Shell：僅儲存公開資源。絕不攔截／快取個人 API 或銀行紀錄。 */
+/* R52.1 新手警戒說明沿用安全離線 Shell；僅儲存公開資源。 */
 'use strict';
 // Previous r48-shell-v1, 00406A-r49-shell-v1, 00406A-r50-shell-v1, 00406A-r51-shell-v1 and 00406A-r52-shell-v1 are replaced after user confirms.
-const APP_CACHE='00406A-r52-shell-v2';
-const DATA_CACHE='00406A-r52-public-data-v2';
+const APP_CACHE='00406A-r52-shell-v3';
+const DATA_CACHE='00406A-r52-public-data-v3';
 const ALLOWED_CACHE_PREFIXES=['00406A-r46-','00406A-r47-','00406A-r48-','00406A-r49-','00406A-r50-','00406A-r51-','00406A-r52-'];
 const SHELL=['./','./index.html','./js/auto-market.js','./js/r45-smart.js','./js/r46-mobile.js','./js/r49-live-quote.js','./js/r51-news.js','./js/r52-risk.js',
              './manifest.webmanifest','./icons/tracker-icon.svg','./icons/tracker-192.png','./icons/tracker-512.png'];
