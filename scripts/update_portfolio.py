@@ -163,6 +163,27 @@ def changes(previous, current):
     result.sort(key=lambda x:(-abs(x["weightDeltaPp"]),-abs(x["sharesDelta"]),x["code"]))
     return result[:180]
 
+def derivative_changes(previous, current, key):
+    """Compare disclosed contract quantities and reported weights, not inferred exposures."""
+    if not previous or not current or key not in ("futures","options"):
+        return []
+    prior = {(r.get("code"),r.get("name")):r for r in previous.get(key,[]) if isinstance(r,dict)}
+    after = {(r.get("code"),r.get("name")):r for r in current.get(key,[]) if isinstance(r,dict)}
+    out = []
+    for ident in sorted(prior.keys() | after.keys()):
+        old,now=prior.get(ident,{}),after.get(ident,{})
+        old_qty,qty=num(old.get("quantity")) or 0,num(now.get("quantity")) or 0
+        old_pct,pct=num(old.get("reportedWeight")),num(now.get("reportedWeight"))
+        diff=qty-old_qty
+        delta_pct=round(pct-old_pct,4) if pct is not None and old_pct is not None else None
+        if not diff and (delta_pct is None or abs(delta_pct)<0.005):
+            continue
+        out.append({"code":ident[0],"name":ident[1],
+                    "previousQuantity":old_qty,"quantity":qty,"quantityDelta":diff,
+                    "previousReportedWeight":old_pct,"reportedWeight":pct,
+                    "weightDeltaPp":delta_pct})
+    return out[:50]
+
 def market_metrics(portfolio):
     """Close-only data adjusted for confirmed distributions: market total-return proxy, NOT fund NAV drawdown."""
     out={"premiumPct":None,"adjustedPriceDrawdownPct":None,
@@ -277,6 +298,12 @@ def main():
         "latest":latest,"previous":previous,
         "changes": changes(previous,latest) if previous and latest and
                    0<(dt.date.fromisoformat(latest["date"])-dt.date.fromisoformat(previous["date"])).days<=5 else [],
+        "derivativeChanges":{
+            category: derivative_changes(previous,latest,category)
+            if previous and latest and
+                0<(dt.date.fromisoformat(latest["date"])-dt.date.fromisoformat(previous["date"])).days<=5 else []
+            for category in ("futures","options")
+        },
         "metrics":market_metrics(latest or {}),
         "errors":errors,
         "methodNotes":["股數差分可能包含申購／贖回與價格變動，不代表經理人實際成交",
