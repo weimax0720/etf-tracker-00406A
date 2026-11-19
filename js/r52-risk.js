@@ -55,7 +55,17 @@ function validate(raw){
     unknownGroups:Array.isArray(latest?.unknownGroups)?latest.unknownGroups.map(x=>String(x).slice(0,40)):[],
     nav:numeric(latest?.nav),priceDate:day(metrics.priceDate)?metrics.priceDate:null,
     checkedAt:String(raw.checkedAt||'').slice(0,35),
-    metrics:safe,changes,errors:Array.isArray(raw.errors)?raw.errors.slice(0,10).map(x=>String(x).slice(0,180)):[]
+    metrics:safe,changes,
+    derivativeChanges:Object.fromEntries(['futures','options'].map(cat=>[cat,
+      (Array.isArray(raw.derivativeChanges?.[cat])?raw.derivativeChanges[cat].slice(0,50):[])
+      .filter(x=>x&&typeof x==='object').map(x=>({
+        code:String(x.code||'').slice(0,40),name:String(x.name||'').slice(0,100),
+        previousQuantity:numeric(x.previousQuantity),quantity:numeric(x.quantity),
+        delta:numeric(x.quantityDelta),
+        previousWeight:numeric(x.previousReportedWeight),weight:numeric(x.reportedWeight),
+        weightDeltaPp:numeric(x.weightDeltaPp)
+      }))])),
+    errors:Array.isArray(raw.errors)?raw.errors.slice(0,10).map(x=>String(x).slice(0,180)):[]
   };
 }
 function renderRisks(data,stale){
@@ -130,15 +140,27 @@ function renderPositions(d){
       stock.append(item);
     }
   }
-  for(const [host,rows] of [[future,d?.futures],[option,d?.options]]){
+  for(const [host,rows,category] of [[future,d?.futures,'futures'],[option,d?.options,'options']]){
     if(!host)continue;
     host.replaceChildren();
-    if(!rows?.length){host.append(create('p','text-sm text-slate-400','來源尚未提供可辨識的該類部位；不代表基金沒有此類部位。'));continue;}
-    for(const x of rows.slice(0,15)){
+    const changes=d?.derivativeChanges?.[category]||[];
+    if(!rows?.length&&!changes.length){host.append(create('p','text-sm text-slate-400','來源尚未提供可辨識的該類部位；不代表基金沒有此類部位。'));continue;}
+    const byCode=new Map(changes.map(x=>[x.code+'|'+x.name,x]));
+    for(const x of (rows||[]).slice(0,15)){
       const card=create('div','rounded bg-slate-900/60 p-2 text-sm space-y-1');
       card.append(create('p','text-slate-200',x.name||x.code));
-      card.append(create('p','text-xs text-slate-400','揭露數量／口數 '+fmt(x.amount,0)+'｜揭露權重 '+(x.weight===null?'未提供':fmt(x.weight)+'%')));
+      card.append(create('p','text-xs text-slate-400','本次數量／口數 '+fmt(x.amount,0)+'｜揭露權重 '+(x.weight===null?'未提供':fmt(x.weight)+'%')));
+      const change=byCode.get(x.code+'|'+x.name);
+      if(change){
+        card.append(create('p','text-xs text-cyan-200','前期 '+fmt(change.previousQuantity,0)+' → 本次 '+fmt(change.quantity,0)+
+          '｜口數變化 '+(change.delta>0?'+':'')+fmt(change.delta,0)+
+          '｜權重差 '+(change.weightDeltaPp===null?'待核對':(change.weightDeltaPp>0?'+':'')+fmt(change.weightDeltaPp)+' pp')));
+      }
       host.append(card);
+    }
+    for(const x of changes.filter(x=>!rows?.some(r=>r.code===x.code&&r.name===x.name))){
+      const removed=create('p','text-xs text-amber-200','退出或未再列示：'+x.name+'｜前期 '+fmt(x.previousQuantity,0)+' → 本次 '+fmt(x.quantity,0));
+      host.append(removed);
     }
   }
   put('r52_stock_total',d?.holdings.length?d.holdings.length+' 檔股票｜合計 '+fmt(d.metrics.stockWeightPct)+'%':'股票資料待取得');
