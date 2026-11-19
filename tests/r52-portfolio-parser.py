@@ -32,6 +32,15 @@ assert parsed["futures"][0]["quantity"]==4540
 assert parsed["options"][0]["quantity"]==-6300
 assert parsed["unknownGroups"]==["CASH"]
 assert parsed["nav"]==6.40
+prev_derivative={**parsed,"futures":[{**parsed["futures"][0],"quantity":4400,
+                                           "reportedWeight":22.5}],
+                 "options":[{**parsed["options"][0],"quantity":-6000,
+                                            "reportedWeight":-7.1}]}
+future_delta=p.derivative_changes(prev_derivative,parsed,"futures")
+option_delta=p.derivative_changes(prev_derivative,parsed,"options")
+assert len(future_delta)==1 and future_delta[0]["quantityDelta"]==140
+assert option_delta[0]["quantityDelta"]==-300
+assert abs(future_delta[0]["weightDeltaPp"]-1.44)<0.001
 
 older={**parsed,"date":(p.TODAY-dt.timedelta(days=1)).isoformat(),
        "stocks":[dict(row) for row in parsed["stocks"]]}
