@@ -1,14 +1,15 @@
-/* R51 延續 R50 離線 Shell：僅儲存公開資源。絕不攔截／快取個人 API 或銀行紀錄。 */
+/* R52 延續 R51 離線 Shell：僅儲存公開資源。絕不攔截／快取個人 API 或銀行紀錄。 */
 'use strict';
-// previous r48-shell-v1, 00406A-r49-shell-v1 and 00406A-r50-shell-v1 are invalidated after APP update is accepted.
-const APP_CACHE='00406A-r51-shell-v1';
-const DATA_CACHE='00406A-r51-public-data-v1';
-const ALLOWED_CACHE_PREFIXES=['00406A-r46-','00406A-r47-','00406A-r48-','00406A-r49-','00406A-r50-','00406A-r51-'];
-const SHELL=['./','./index.html','./js/auto-market.js','./js/r45-smart.js','./js/r46-mobile.js','./js/r49-live-quote.js','./js/r51-news.js',
+// previous r48-shell-v1, 00406A-r49-shell-v1 and 00406A-r50-shell-v1 and 00406A-r51-shell-v1 are invalidated after APP update is accepted.
+const APP_CACHE='00406A-r52-shell-v1';
+const DATA_CACHE='00406A-r52-public-data-v1';
+const ALLOWED_CACHE_PREFIXES=['00406A-r46-','00406A-r47-','00406A-r48-','00406A-r49-','00406A-r50-','00406A-r51-','00406A-r52-'];
+const SHELL=['./','./index.html','./js/auto-market.js','./js/r45-smart.js','./js/r46-mobile.js','./js/r49-live-quote.js','./js/r51-news.js','./js/r52-risk.js',
              './manifest.webmanifest','./icons/tracker-icon.svg','./icons/tracker-192.png','./icons/tracker-512.png'];
 const PUBLIC_FEED='./data/market.json';
 const QUOTE_FEED='./data/quote.json';
 const NEWS_FEED='./data/news.json';
+const PORTFOLIO_FEED='./data/portfolio.json';
 const CDN_HOSTS=new Set(['cdn.tailwindcss.com','cdn.jsdelivr.net']);
 function isCDN(request) {
   try {
@@ -22,6 +23,7 @@ function isShell(url) {
 function feedUrl() {return new URL(PUBLIC_FEED,self.registration.scope);}
 function quoteUrl() {return new URL(QUOTE_FEED,self.registration.scope);}
 function newsUrl() {return new URL(NEWS_FEED,self.registration.scope);}
+function portfolioUrl() {return new URL(PORTFOLIO_FEED,self.registration.scope);}
 async function networkOrCached(request,cacheName,fallback) {
   const cache=await caches.open(cacheName);
   try {
@@ -89,7 +91,7 @@ self.addEventListener('fetch',event=>{
     return;
   }
   if(url.origin!==self.location.origin || !url.pathname.startsWith(new URL(self.registration.scope).pathname))return;
-  if(url.pathname===feedUrl().pathname || url.pathname===quoteUrl().pathname || url.pathname===newsUrl().pathname){
+  if(url.pathname===feedUrl().pathname || url.pathname===quoteUrl().pathname || url.pathname===newsUrl().pathname || url.pathname===portfolioUrl().pathname){
     event.respondWith(networkOrCached(req,DATA_CACHE));
     return;
   }
