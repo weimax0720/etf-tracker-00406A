@@ -1759,9 +1759,17 @@
               <div class="rounded-lg bg-slate-900/70 mt-3 p-3">
                 <div id="r52_overall" class="text-lg font-bold text-white">⚪ 風險狀態待核對</div>
                 <p id="r52_coverage" class="text-xs text-slate-400 mt-1">只有資料完整的項目才判讀</p>
+                <p id="r52_plain_summary" class="mt-3 text-sm leading-relaxed text-slate-100" aria-live="polite">正在整理目前應注意的項目…</p>
               </div>
-              <p class="mt-2 text-xs text-slate-400">保守門檻為 APP 自訂觀察規則，非投信官方評級或法規界線；「未觸發」不等於安全。</p>
-              <div id="r52_risks" class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4" aria-live="polite"></div>
+              <div class="rounded-lg bg-slate-900/80 border border-slate-700 p-3 mt-3 space-y-2" aria-label="警戒燈號白話說明">
+                <p class="font-semibold text-slate-100 text-sm">💡 第一次看？燈號這樣理解</p>
+                <p class="text-sm text-slate-200"><strong class="text-red-300">🔴 高度警戒</strong>：某個指標跨過預先設定的紅線，請優先了解原因；<strong>不代表一定會跌，也不是叫你立刻賣出。</strong></p>
+                <p class="text-sm text-slate-200"><strong class="text-amber-300">🟡 注意</strong>：接近或達到第一道觀察門檻，適合持續留意。</p>
+                <p class="text-sm text-slate-200"><strong class="text-slate-100">⚪ 待核對</strong>：缺少可靠數據，<strong>不是零風險</strong>，也不表示已超標。</p>
+                <p class="text-sm text-slate-200"><strong class="text-emerald-300">🟢 未觸發</strong>：這一項目前沒超過 APP 門檻，但不保證投資安全。</p>
+              </div>
+              <p class="mt-2 text-xs text-slate-400">保守門檻為 APP 自訂觀察規則，非投信官方評級或法規界線；各項卡片都能展開「📖 看懂這項警戒與下一步」。</p>
+              <div id="r52_risks" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mt-4" aria-live="polite"></div>
               <div id="r52_notes" class="mt-3 space-y-1"></div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
