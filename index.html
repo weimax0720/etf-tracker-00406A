@@ -1742,6 +1742,63 @@
             <p id="r51_status" role="status" aria-live="polite" class="mt-3 text-xs text-amber-200">🕒 準備讀取消息來源…</p>
             <p class="mt-2 text-xs text-gray-400">來源為 Google 新聞 RSS 索引的第三方媒體，通常每日排程更新三次；來源可能延遲或暫時無法讀取。新聞不等同投信或證交所正式公告。</p>
           </div>
+
+          <!-- R52｜投信公開持股與保守型風險提示。不讀取或修改私人帳務。 -->
+          <section id="r52_panel" class="space-y-4" aria-label="R52 經理人持股與風險監控">
+            <div class="card border border-amber-900/60">
+              <div class="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p class="text-xs text-amber-300 tracking-widest">R52 · PORTFOLIO &amp; RISK</p>
+                  <h3 class="text-xl font-bold text-white mt-1">🛡️ 經理人持股、期貨與風險預警</h3>
+                  <p class="mt-2 text-sm text-slate-300">依中信投信公開投資組合與已取得的市場資料，每日自動檢查；只有可驗證數據才判定燈號。</p>
+                </div>
+                <button id="r52_check" type="button" class="rounded-lg bg-amber-800 hover:bg-amber-700 px-4 py-3 text-sm">檢查公開快照</button>
+              </div>
+              <p id="r52_status" role="status" aria-live="polite" class="mt-3 text-sm text-slate-300">⚪ 等待取得官方持股資料</p>
+              <p id="r52_comparison" class="mt-1 text-xs text-slate-400">等待比較基準日</p>
+              <div class="rounded-lg bg-slate-900/70 mt-3 p-3">
+                <div id="r52_overall" class="text-lg font-bold text-white">⚪ 風險狀態待核對</div>
+                <p id="r52_coverage" class="text-xs text-slate-400 mt-1">只有資料完整的項目才判讀</p>
+              </div>
+              <p class="mt-2 text-xs text-slate-400">保守門檻為 APP 自訂觀察規則，非投信官方評級或法規界線；「未觸發」不等於安全。</p>
+              <div id="r52_risks" class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-4" aria-live="polite"></div>
+              <div id="r52_notes" class="mt-3 space-y-1"></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div class="card border border-cyan-900/50">
+                <div class="flex flex-wrap justify-between items-center gap-2">
+                  <h4 class="text-lg font-bold text-cyan-300">📊 個股持股與權重調整</h4>
+                  <span id="r52_change_count" class="text-xs text-slate-400">等待兩期資料</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">顯示持股快照差異：股數、增減股數、前後權重及變動百分點（pp）。不等同經理人實際買賣成交。</p>
+                <div id="r52_changes" class="space-y-2 mt-3"></div>
+                <button id="r52_toggle_details" hidden type="button" class="mt-3 w-full border border-slate-600 rounded-lg px-4 py-3 text-sm bg-slate-800">顯示全部異動</button>
+              </div>
+              <div class="card border border-cyan-900/50">
+                <h4 class="text-lg font-bold text-cyan-300">🏆 最新十大股票權重</h4>
+                <p id="r52_stock_total" class="text-xs text-slate-400 mt-2">等待公開持股</p>
+                <div id="r52_holdings" class="space-y-2 mt-3"></div>
+              </div>
+              <div class="card border border-violet-900/60">
+                <h4 class="text-lg font-bold text-violet-300">📈 期貨部位</h4>
+                <p class="text-xs text-slate-400 mt-2">僅顯示來源確實揭露的契約、口數與原始權重。未能核對名目曝險時，總曝險顯示待核對。</p>
+                <div id="r52_futures" class="space-y-2 mt-3"></div>
+              </div>
+              <div class="card border border-violet-900/60">
+                <h4 class="text-lg font-bold text-violet-300">🛡️ 選擇權／Covered Call</h4>
+                <p class="text-xs text-slate-400 mt-2">合約口數不是 Delta 名目比重；缺乏可驗證履約條件或名目額時不推算風險。</p>
+                <div id="r52_options" class="space-y-2 mt-3"></div>
+              </div>
+            </div>
+            <div class="card border border-slate-700">
+              <div class="flex flex-wrap gap-2 items-center justify-between">
+                <h4 class="text-sm font-bold text-amber-300">📚 數據口徑與官方來源</h4>
+                <a id="r52_official" href="https://www.ctbcinvestments.com/Etf/00682450/Info" target="_blank" rel="noopener noreferrer" class="text-sm text-cyan-200 underline">中信投信基金資訊 ↗</a>
+              </div>
+              <p class="text-xs text-slate-400 mt-2">股票與衍生品每天可能因價格、申購贖回、避險或基金操作而變動；持股快照不能證明每筆經理人買賣。市價配息調整後回落只是以已取得歷史行情重建的近似指標，不是官方淨值回撤；折溢價僅在淨值與收盤價同一資料日且有效時才判讀。</p>
+              <p class="text-xs text-slate-400 mt-2">本頁只使用公開資訊，不自動下單、不寫入主帳戶或雙寶帳務；資料不足會顯示「待核對」。</p>
+            </div>
+          </section>
           <div class="card border border-cyan-900/60">
             <h3 class="text-base font-semibold text-cyan-200">🏛️ 官方資訊核對</h3>
             <p class="text-xs text-gray-400 mt-1">配息、除息、持股等關鍵資料請以官方公告為準，不以媒體報導替代。</p>
@@ -2127,6 +2184,7 @@
             if(tabId === 'efficiency') r38Render();
             if(tabId === 'safety') r40Render();
             if(tabId === 'news' && window.R51News) window.R51News.open();
+            if(tabId === 'news' && window.R52Risk) window.R52Risk.open();
             r33AfterTab(tabId);
             r39AfterTab(tabId);
         }
@@ -6585,5 +6643,6 @@
     <script src="./js/r46-mobile.js"></script>
     <script src="./js/r49-live-quote.js"></script>
     <script src="./js/r51-news.js"></script>
+    <script src="./js/r52-risk.js"></script>
 </body>
 </html>
