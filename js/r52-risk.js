@@ -68,6 +68,88 @@ function validate(raw){
     errors:Array.isArray(raw.errors)?raw.errors.slice(0,10).map(x=>String(x).slice(0,180)):[]
   };
 }
+
+/* R52.1 新手解讀：把資料口徑、目前數值和可核對的下一步拆開。
+   只做資訊提示，不能依紅燈推論一定下跌或建議立即交易。 */
+function explainRisk(r, value, level, data, stale){
+  const metric=data?.metrics||{},n=value===null?'尚無數值':fmt(value,r.id==='dividend'?3:2)+r.unit;
+  const unknown=level==='unknown';
+  const base={
+    stock:{
+      what:'這是在看：00406A 持有的「最大一檔股票」佔整檔基金多少，並不是你自己帳戶的持股比例。',
+      action:'可以先看看下方「最新十大股票權重」及每日持股變動；單一股票越集中，該股票波動對基金的影響通常越大。'
+    },
+    exposure:{
+      what:'「曝險」是基金受股市漲跌影響的整體程度。股票加期貨可能超過100%，但也要扣除避險方向。',
+      action:'先確認期貨的合約、口數、方向與名目金額；只有揭露權重或口數，不能直接推算總曝險。'
+    },
+    sector:{
+      what:'同一產業（例如半導體）多檔股票合計佔基金多少；產業太集中時，容易一起受同類消息影響。',
+      action:'要先取得可靠的產業分類並加總；個股權重不能直接當成產業權重。'
+    },
+    option:{
+      what:'賣出買權（Covered Call）可能獲得權利金，但部分上漲空間可能被限制；此處想追蹤買權部位的名目規模。',
+      action:'先核對契約乘數、履約條件及 Delta；揭露的負數權重和賣出口數不等於可直接比較的名目比重。'
+    },
+    drawdown:{
+      what:'這是在看「已有歷史資料區間」的 ETF 市價，經已確認配息調整後，從區間最高的累積表現回落多少。',
+      action:'請比較較長期的基金淨值／總報酬與自己的實際買入成本；這個數字不能直接當成你帳戶的虧損。'
+    },
+    premium:{
+      what:'比較同一日期 ETF 市場成交價和每單位淨值；正數＝買得比淨值貴（溢價），負數＝折價。',
+      action:'可核對投信公告淨值與市場成交價是否同一日；本燈號目前只針對「正溢價」設定門檻。'
+    },
+    dividend:{
+      what:'這是 ETF 每一股最近一次「正式公告」的配息，不是你帳戶已經領到的現金。',
+      action:'可到配息中心查看前後期和發放日；配息金額不保證未來相同，也不代表基金沒有跌價。'
+    }
+  };
+  const part=base[r.id];
+  let reason='';
+  switch(r.id){
+    case 'stock':{
+      const top=(data?.holdings||[]).reduce((a,b)=>b.weight!==null&&(!a||b.weight>a.weight)?b:a,null);
+      const stock=top?(top.code+' '+top.name):'最大持股';
+      reason=unknown?(stale?'官方持股資料已過期，暫不判定股票集中程度。':'尚無可核對的完整官方股票權重。'):
+        stock+'約佔 '+n+'。'+(level==='high'?'已達12%高度警戒門檻，單一個股影響較大。':level==='watch'?'已超過8%注意門檻，但不代表這檔股票一定會跌。':'未達8%注意門檻。');
+      break;
+    }
+    case 'exposure':
+      reason=unknown?'目前缺少能一致核對的期貨名目金額、方向與避險部位，所以無法判定是否超過105%。這不代表沒有使用期貨。':
+        '計算後總曝險為 '+n+'；'+(level==='high'?'達115%高度警戒。':level==='watch'?'達105%注意門檻。':'未達105%注意門檻。');
+      break;
+    case 'sector':
+      reason=unknown?'目前沒有可靠的個股產業分類加總，不能憑猜測判定產業集中度。':
+        '最高產業比重 '+n+'；'+(level==='high'?'達35%高度警戒。':level==='watch'?'達25%注意門檻。':'未達25%注意門檻。');
+      break;
+    case 'option':
+      reason=unknown?'即使下面看得到選擇權口數或負權重，目前仍無法用可比的名目金額計算20%或25%的警戒。':
+        '名目比重 '+n+'；'+(level==='high'?'達25%高度警戒。':level==='watch'?'達20%注意門檻。':'未達20%注意門檻。');
+      break;
+    case 'drawdown':
+      reason=unknown?'歷史收盤資料、配息資訊或交易日連續性不足，暫不能計算。':
+        '目前計算約回落 '+n+'（行情參考日：'+(data?.priceDate||'待核對')+'）。'+
+        (level==='high'?'超過15%紅燈門檻。':level==='watch'?'超過10%黃燈門檻。':'未達10%注意門檻。')+
+        '不是今天跌了 '+n+'、不是基金官方淨值回撤，也不是你的實際虧損。';
+      break;
+    case 'premium':
+      reason=unknown?'沒有同一日期的有效市價與淨值，因此不能可靠地比較折溢價。':
+        value<0?'目前是「折價」約 '+fmt(Math.abs(value))+'%，不是溢價；綠燈只表示沒有觸發正溢價警戒。':
+        value===0?'市價與淨值約相同。':
+        '目前是「溢價」'+n+'；'+(level==='high'?'高於2%高度警戒。':level==='watch'?'高於1%注意門檻。':'未達1%注意門檻。');
+      break;
+    case 'dividend':{
+      const prev=metric.dividendPrevious;
+      const drop=value!==null&&prev!==null&&prev>0?(prev-value)/prev*100:null;
+      reason=unknown?'尚缺前一期或最新正式配息金額，不能確定是否出現配息下降。':
+        '最近正式公告 '+n+(prev!==null?'，前一期 '+fmt(prev,3)+'元':'')+
+        (level==='high'?'；已低於每股0.10元的警戒線。':level==='watch'?'；比前一期減少約 '+fmt(drop,1)+'%，達10%注意門檻。':
+          '；目前沒有觸發配息下降警戒。');
+      break;
+    }
+  }
+  return {headline:part.what,reason,action:part.action};
+}
 function renderRisks(data,stale){
   const host=el('r52_risks');if(!host)return;
   host.replaceChildren();
@@ -99,11 +181,26 @@ function renderRisks(data,stale){
     item.append(create('p','text-xs mt-1 text-slate-400',r.id==='dividend'
       ?'低於 0.10 元紅燈；較前期減少 10% 黃燈'
       :'注意 ≥ '+r.warn+'%；高度警戒 ≥ '+r.high+'%'));
+    const explain=explainRisk(r,value,level,data,stale);
+    // 先顯示最直接的一句話；黃燈/紅燈的詳細解讀預設打開。
+    item.append(create('p','text-sm leading-relaxed mt-3 text-slate-100',explain.reason));
+    const detail=create('details','mt-3 rounded-lg border border-slate-600/70 bg-slate-950/40 p-3');
+    detail.open=(level==='high'||level==='watch');
+    detail.append(create('summary','cursor-pointer text-sm font-semibold text-cyan-200','📖 看懂這項警戒與下一步'));
+    detail.append(create('p','text-sm leading-relaxed mt-3 text-slate-200','這是什麼？'+explain.headline));
+    detail.append(create('p','text-sm leading-relaxed mt-2 text-slate-200','可以怎麼做？'+explain.action));
+    item.append(detail);
     host.append(item);
   }
   const label=high?'🔴 '+high+' 項高度警戒':watch?'🟡 '+watch+' 項注意':unknown?'⚪ 部分待核對':'🟢 未觸發設定門檻';
   put('r52_overall',label+'｜'+unknown+' 項待核對');
   put('r52_coverage','已判讀 '+(high+watch+known)+' / '+entries.length+' 項｜不代表基金無風險');
+  const urgent=entries.filter(x=>x.level==='high'),heads=urgent.length?urgent:entries.filter(x=>x.level==='watch');
+  put('r52_plain_summary',heads.length
+    ?'目前最該注意：'+heads.map(x=>x.r.name+(x.value===null?'':' '+fmt(x.value,x.r.id==='dividend'?3:2)+x.r.unit)).join('、')+
+      '。請往下看對應卡片的白話說明與資料日期；這不是自動賣出建議。'
+    :unknown?'目前沒有觸發已知警戒，但仍有 '+unknown+' 項資料不足，灰燈不是安全保證。'
+    :'目前未觸發自訂門檻；仍可能有其他市場風險。');
 }
 function renderChanges(d){
   const holder=el('r52_changes');if(!holder)return;
