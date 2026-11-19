@@ -11,7 +11,7 @@ for(const id of ['r52_panel','r52_status','r52_risks','r52_changes','r52_holding
 assert.match(html,/src="\.\/js\/r52-risk\.js"/);
 assert.match(html,/window\.R52Risk\) window\.R52Risk\.open/);
 assert.equal((html.match(/id="btn-[^"]+" class="tab-btn/g)||[]).length,20,'20 existing tabs must remain');
-assert.match(sw,/const APP_CACHE='00406A-r52-shell-v2'/);
+assert.match(sw,/const APP_CACHE='00406A-r52-shell-v3'/);
 assert.match(sw,/portfolioUrl\(\)/);
 assert.match(sw,/js\/r52-risk\.js/);
 assert.match(ci,/scripts\/update_portfolio\.py/);
