@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "code": "00406A",
-  "checkedAt": "2026-11-19T17:45:32+08:00",
+  "checkedAt": "2026-11-20T03:04:30+08:00",
   "latest": {
     "date": "2026-11-19",
     "stocks": [
@@ -375,14 +375,14 @@
         "code": "6187",
         "name": "萬潤科技",
         "shares": 2000,
-        "weight": 0
+        "weight": 0.0
       }
     ],
     "futures": [
       {
         "code": "TX",
         "name": "臺股期貨",
-        "quantity": 4540,
+        "quantity": 4540.0,
         "reportedWeight": 23.65
       }
     ],
@@ -390,19 +390,19 @@
       {
         "code": "TX4",
         "name": "臺指選擇權第四週週三到期契約",
-        "quantity": -6000,
+        "quantity": -6000.0,
         "reportedWeight": -3.48
       },
       {
         "code": "TXX",
         "name": "臺指選擇權第三週週五到期契約",
-        "quantity": -25300,
+        "quantity": -25300.0,
         "reportedWeight": -7.6
       }
     ],
     "nav": 6.4,
-    "fundAssets": 148220725003,
-    "units": 23158562000,
+    "fundAssets": 148220725003.0,
+    "units": 23158562000.0,
     "source": "中國信託投信 ETF 投資組合 API",
     "sourceUrl": "https://www.ctbcinvestments.com/Etf/00682450/Info",
     "unknownGroups": [
@@ -970,7 +970,7 @@
       "shares": 2000,
       "sharesDelta": -158000,
       "previousWeight": 0.08,
-      "weight": 0,
+      "weight": 0.0,
       "weightDeltaPp": -0.08
     },
     {
@@ -1381,6 +1381,42 @@
       "weightDeltaPp": -0.01
     }
   ],
+  "derivativeChanges": {
+    "futures": [
+      {
+        "code": "TX",
+        "name": "臺股期貨",
+        "previousQuantity": 4540.0,
+        "quantity": 4540.0,
+        "quantityDelta": 0.0,
+        "previousReportedWeight": 23.94,
+        "reportedWeight": 23.65,
+        "weightDeltaPp": -0.29
+      }
+    ],
+    "options": [
+      {
+        "code": "TX4",
+        "name": "臺指選擇權第四週週三到期契約",
+        "previousQuantity": -6000.0,
+        "quantity": -6000.0,
+        "quantityDelta": 0.0,
+        "previousReportedWeight": -5.18,
+        "reportedWeight": -3.48,
+        "weightDeltaPp": 1.7
+      },
+      {
+        "code": "TXX",
+        "name": "臺指選擇權第三週週五到期契約",
+        "previousQuantity": -25300.0,
+        "quantity": -25300.0,
+        "quantityDelta": 0.0,
+        "previousReportedWeight": -17.73,
+        "reportedWeight": -7.6,
+        "weightDeltaPp": 10.13
+      }
+    ]
+  },
   "metrics": {
     "premiumPct": -0.469,
     "adjustedPriceDrawdownPct": 37.269,
@@ -1399,41 +1435,5 @@
     "股數差分可能包含申購／贖回與價格變動，不代表經理人實際成交",
     "期貨與選擇權列示部位不可直接加權成淨曝險；缺乏契約名目/Delta時顯示待核對",
     "市價配息調整後回落是近可用資料的價格代理指標，不是基金淨值總報酬"
-  ],
-  "derivativeChanges": {
-    "futures": [
-      {
-        "code": "TX",
-        "name": "臺股期貨",
-        "previousQuantity": 4540,
-        "quantity": 4540,
-        "quantityDelta": 0,
-        "previousReportedWeight": 23.94,
-        "reportedWeight": 23.65,
-        "weightDeltaPp": -0.29
-      }
-    ],
-    "options": [
-      {
-        "code": "TX4",
-        "name": "臺指選擇權第四週週三到期契約",
-        "previousQuantity": -6000,
-        "quantity": -6000,
-        "quantityDelta": 0,
-        "previousReportedWeight": -5.18,
-        "reportedWeight": -3.48,
-        "weightDeltaPp": 1.7
-      },
-      {
-        "code": "TXX",
-        "name": "臺指選擇權第三週週五到期契約",
-        "previousQuantity": -25300,
-        "quantity": -25300,
-        "quantityDelta": 0,
-        "previousReportedWeight": -17.73,
-        "reportedWeight": -7.6,
-        "weightDeltaPp": 10.13
-      }
-    ]
-  }
+  ]
 }
