@@ -1,10 +1,31 @@
 {
   "schema": 1,
   "code": "00406A",
-  "checkedAt": "2026-11-20T04:59:23+08:00",
-  "updatedAt": "2026-11-20T04:59:23+08:00",
+  "checkedAt": "2026-11-20T17:12:17+08:00",
+  "updatedAt": "2026-11-20T17:12:17+08:00",
   "source": "Google 新聞 RSS（標題索引；來源為第三方媒體，不是證交所公告）",
   "articles": [
+    {
+      "category": "market",
+      "title": "三大法人》聯手賣超522億元，外資連5賣、投信轉空砍87億 | 下班經濟學 | 財經",
+      "source": "風傳媒",
+      "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBsNG84VU1PM1pBLWo0dnNlQmVRT3hpOEdtODhBc1BYZlgwTDRXMkF0M3RFNWtMV2M0M2lLLWtMSUFCSkVRUEd2NUxZTWdFdw?oc=5",
+      "publishedAt": "2026-11-20T15:33:00+08:00"
+    },
+    {
+      "category": "industry",
+      "title": "第一金觀點｜台股AI紅利續上修，第一金投信台股TISA級別基金 選擇更多元！",
+      "source": "鉅亨買基金",
+      "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNNFQ2MS1PeWJBWlRfNWloQmlYVUtfOWFrXzA0S0tDYlBWMzBEb0xYU1hkUTFNUFJxZnJ1NVNiMVZNYjdkQjlYUUdieXlvTGlfWktZWWlSaHlCQU12Q09tY3gtQjE1Z3ZVRkhPQXJ3M25ya3A5RTJnTi1rNGpJdjRBbTRB?oc=5",
+      "publishedAt": "2026-11-20T10:17:24+08:00"
+    },
+    {
+      "category": "industry",
+      "title": "比較越南、泰國與馬來西亞三國在吸引台灣半導體封測與AI伺服器供應鏈布局上的政策優惠、基礎設施與產業聚落差異。",
+      "source": "Yahoo新聞",
+      "url": "https://news.google.com/rss/articles/CBMipAVBVV95cUxNbU1CR3RrOHdCMzg2OXVDRFhIQ1U3RnV2N3hnaDJpeVh4aGxHNWp4MWZ5UEVpMTItZmpQci1qdXRaWTBYMmFYSzBHX0IyNXQyaHE5MkxidEtvMWxzczdTSzdiM0pQWm9WQVV0czVVNXBJaEdJZlJpTS1nX09CZG1ncEtEMjhFUUVVbGtGUVhQU1lOMnJuLUg0LVJEZUt3OWFWYVRIUF8zUE5hbVpLWWFieWJubjVVbTRfVmlaREZ1b1hYMHVIV3FpOHlYUFFabGQyd3ZoOWk2eVctRjF0TWNqcURyenBQSHVBSXY1S0s2RkNqS0hvUHdIaWtrQ0M1MkNuOW1nS3FEREo3emFqZGRHb2k5LXozMVdDdGVEYjl3TzFCTHBNMmZLY0F0cnA0WFdKekRabC04QVdfWVZjNFc3Unlpem5iOFQ3SzdYX3NxOXpFM2Z1M1ZxRmE2dGx2cnhvOGwtRWtLZC1hSUwwZFU5blhKOW9zR3dQY21vVXYzX1dISG1MZnNnbEJwVFpxeFk5bEYtUWFRRC1lR0hMbzhVNjlINkZJTHdWM2xHWFhWeHR1c0Zqcm10cW1TaUVSX2Q2Vkx0aUVqN05lbTRWYUpmT2QxX3VVcHZzMW90dGQ2eVRHOUlKSTZYOURRQjgtUVpmU3o0eWIxeU1IZU5ZRlhFYXNWVWZZV01LQzlUTHFrSTBzRTVtRHhHdzBxZHZ2ZXNYRElqa2l0RWwxQnRUXzFoVUN2OXBKaTNvNzdwNUZhMDRxdXY5TXZYY3RXajk3b0RUZUtUMnZ2RzB2b2dCbnlsTTlKNzV0WlB4X1lMMFVOdGpDbjl1ME9GRG5jTVp6bVh6T0lybkVqd0FiOVc1eGpMMHRQcjFlcnYxZXRMUk43cXh1aWpi?oc=5",
+      "publishedAt": "2026-11-19T23:06:44+08:00"
+    },
     {
       "category": "market",
       "title": "台股史上第7大殺盤！外資連5砍台積電 進出前10一文看",
@@ -15,8 +36,8 @@
     {
       "category": "market",
       "title": "外資狂提款243億 上市櫃逾2100家綠油油",
-      "source": "鏡週刊Mirror Media",
       "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE9CcTZ6N0ExWlV1alV0SHhWTVQ2MmlYemxxaHN3dmlCVVNidEJLdU8xZXhzTWdrNDVtWVRiZDlNUjNtb0duTGZGWGxOZktUOFBidnJMTTBMZC1Bempva3fSAWJBVV95cUxNdDZfTUdKMUJxTGJ6MldkM3VKczdXSkxDM3E3bk12SXlQaEFodmpoSUgxTm8tZmdXS0cyVmcwZlR3QTB4RFRwNW5xSHNUajI2d3BjbXQxQmZpNnhmdWNlWExndw?oc=5",
+      "source": "鏡週刊Mirror Media",
       "publishedAt": "2026-11-19T15:31:00+08:00"
     },
     {
@@ -43,15 +64,15 @@
     {
       "category": "market",
       "title": "台股開低跌49點！40K保衛戰 台積電跌10元",
-      "source": "PChome Online 新聞",
       "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxOcVMyeW5EbEpwbzBBSE5mYzVJd3dCa255YldfX3IwS0xJaThrbjJJNXVxcFdrNTdFNTl6MFY1N3FxQ3RHcEl1SVFuWk9YMWhpNUJVdWFXUkFCUlNJdmQxQ0tfYWdkMmpmOThwV1daQWV1ZmlFOHNvX2RjMDFFNHpJUDVKWVdSWGxRLUYw?oc=5",
+      "source": "PChome Online 新聞",
       "publishedAt": "2026-11-19T09:06:30+08:00"
     },
     {
       "category": "etf",
       "title": "年化配息率飆24%！「國家隊」搶進00406A超5.14萬張另加碼2檔「槓桿型ETF」3.25萬張、豪撒6億元",
-      "source": "Yahoo股市",
       "url": "https://news.google.com/rss/articles/CBMiyAJBVV95cUxPdzRPeXlsb3JrdE1oclJfQlhJdFZ2WlNDQTJxNG9mWlNEMHBDT1gtRzF6RUZPZUFkY2VCVFQ5S0JzbVVreXJIQmJsSzRnYXRtTlVFdkpRVlhvTWdOWUZFQ2E5MzNoVkp1ZlRsczVVU1NObHBDTnRzWS1JTWl4a2lxblhvcXcwMDNMTFBtclMwb21aX05wRFNQNVlMaHFmbmIyNWRiLXZRb2Z6TzFkeWhCVFF3akVDb2ViVENMd3dEZ055c0FhWldORm5LQ0pwOGR4eDZTRFJ2c0x4WlZpbUJpdnpfd0MzaUIwZS00RXJORjBqbTRHbnNMM1BTNm03LUpnWE1PTURablFaYU94OVMzMm5wZjRaWWcteHNySmFNUjVHelFUNVA0emthVUJHNVBLaGJTVlBXaFZ4M1dUenJWVmNnNWY5anJ5?oc=5",
+      "source": "Yahoo股市",
       "publishedAt": "2026-11-19T07:00:00+08:00"
     },
     {
@@ -92,8 +113,8 @@
     {
       "category": "market",
       "title": "0050、正2全遭殃！外資單日狂倒5檔ETF「投信也連7砍元大金、玉山金」內外資聯手狙擊這幾檔- 上市櫃",
-      "source": "旺得富理財網",
       "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBJR2UxTGxVaF85SDA5YXp1Zl90ekYxZ055Nk10UGdWLTFnd0dwcXRTQkVKRUNSN1BjUk9SNG93V3FLSjVKNHBJN1A4dmRWbEVBNlBNVFEydTlYUWlqNUV5NW03ejhLSFhEbHc?oc=5",
+      "source": "旺得富理財網",
       "publishedAt": "2026-11-18T18:19:41+08:00"
     },
     {
@@ -120,29 +141,29 @@
     {
       "category": "market",
       "title": "台股兩樣情！外資提款765億 「這幾檔」逆勢噴出成電子領頭羊",
-      "source": "三立新聞網SETN.com",
+      "source": "三立新聞",
       "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE1wRFo3bFdybEtmU2pVUFBEQWdCTTU0YWFhZ2ZETl9pTHR1NGRreTVGSEdVVTNkYklfOTBtS3R3UDZBXzR3YWRKTtIBTEFVX3lxTE1yQzlNdHdrbkJ6UFFDeHFxZ21tNzZRUVZOX1J3VDlyZDYtVF8wTWc4VmlMZVBCaE9rR3ZmSjhvckhRNE51cEY3alM3cDE?oc=5",
       "publishedAt": "2026-11-18T15:36:00+08:00"
     },
     {
       "category": "market",
       "title": "外資狠砍765億 這幾檔逆勢噴出",
-      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9iMjJlVlZEcV91U1RDQUlHai1OQWxEaURWZ3I3SlNSZnpqWjE5TnY2WVc5VC1TMUpTajNmSU4talh4R01fM2dKNkpOZ05LbDh5VUQ5X1Y0V0xBSEZF0gFiQVVfeXFMT1RQZEMxVjRPY0RyZ0hfNndDcGNJb1JQOERBSXNEZXZQWks0aXduZHE2Tk9YcTZsYjR1RTdxMmhJQnNqM1FFaUo4YmxNWjUzQUY2QXhCcVZHR0lNTkpEVnBLcUE?oc=5",
       "source": "鏡週刊Mirror Media",
+      "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE9UUGRDMVY0T2NEcmdIXzZ3Q3BjSW9SUDhEQUlzRGV2UFpLNGl3bmRxNk5PWHE2bGI0dUU3cTJoSUJzajNRRWlKOGJsTVo1M0FGNkF4QnFWR0dJTU5KRFZwS3FB0gFiQVVfeXFMT1RQZEMxVjRPY0RyZ0hfNndDcGNJb1JQOERBSXNEZXZQWks0aXduZHE2Tk9YcTZsYjR1RTdxMmhJQnNqM1FFaUo4YmxNWjUzQUY2QXhCcVZHR0lNTkpEVnBLcUE?oc=5",
       "publishedAt": "2026-11-18T15:36:00+08:00"
     },
     {
       "category": "etf",
       "title": "年化配息率逾20%、股價卻逼近前低！分析師揭00406A「掩護性買權」真相：大漲反而輸0050",
-      "source": "Yahoo股市",
       "url": "https://news.google.com/rss/articles/CBMiiwNBVV95cUxORno1bUQzY2Y2UVJyNkxmQUpZY01sX0FVODZLLW92dnBrSTYyS0IxVWF0aG9xeUVPLWV1bWVGb0ZBaGdSWHFTMmxaLTV3YkpIVWtZcTJNeXRLM3NHYVBHaFRsUVZLMGQ4cV9iRjJJY3JFTFMxZzl3REtsaU1ZWk4wUFF0SV9UR241YXItTlNrOGxKeEtBT1o4UDJDek5GeXpNZGZEbXJZYVA3eWFwQUdCWWNXdjN5czJKNG1WRnZfOXBPZ3BfV0hWT1BPaEQ4emNiRDNKNTY1OUtXYkxMczZzQmF4VFVsTTRnTnRGV0RFZndEU1FmSFVPVlQ2ZlVTNU9oc1NreHF4d1k5SXplRjlYVUVldjdGM1hYQkZkRGxTdlE0bjlzTUxEYjgwdVN6ZVNpOFRXWURfWWFFQWM5VFoyY0ZGZTZSRm5jSkNvdEN6MlVPek1UVEVDS2xGbXpvRl9HU0RuLTJwRW9MdmRHX3YzWmNyYVVaSHdncXFueWthY2JLZjJadm1fb2hVcw?oc=5",
+      "source": "Yahoo股市",
       "publishedAt": "2026-11-18T14:31:01+08:00"
     },
     {
       "category": "etf",
       "title": "8檔主動式ETF觸低爆「甜甜價」 00406A飆80萬張奪成交王",
-      "source": "ETtoday財經雲",
       "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE91c2x3WklkcGRoSGFRNVNRNmlPa0E4VjNZWkI3R2o4ZzFhaFN2SUdFZlU1dG02alJIZnM4YjYyMlJvNWh4WUI3bnJUODV5Y0VwQlHSAVBBVV95cUxQalM1TGZDYUh6VHpzeE44My1mazJ6cjBMS3FKaTF5OVpvZEpKbENDbkJjN0ZUc3RBWHlsdVVLaXBsTDVzLXh6VHJTT2MtdnlZMw?oc=5",
+      "source": "ETtoday財經雲",
       "publishedAt": "2026-11-18T12:05:00+08:00"
     },
     {
@@ -162,16 +183,23 @@
     {
       "category": "etf",
       "title": "00406A高配息又免繳二代健保！專家示警千億規模藏1致命傷：大跌恐賠比大盤兇| 存股族愛ETF | 股市",
-      "source": "udn",
       "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE9ycXdzMEE1eDFuSFQ4RzdYWndfcUI1bTlIRktFTXltQWdzbjB4SzQxTk5qSzY4dC1VRzdldmVZeGdPQkdSYVlyMV9adV91TVRZYXJj?oc=5",
+      "source": "udn",
       "publishedAt": "2026-11-18T09:37:15+08:00"
     },
     {
       "category": "market",
       "title": "【1118台股盤前】台股巨震1,747點險守4萬大關！市場聚焦輝達財報能否救世，急跌地板股策略鎖定【志聖】、【新日興】、【帆宣】｜豐雲學堂2026 年 11 月",
-      "url": "https://news.google.com/rss/articles/CBMikAVBVV95cUxQMmFEcUJrVzhhajg3eUJjQkFXNTlsd3ZrSlQ0bkFKQmY3bzBFNWU0ZVZxY1FlQmFLZVAtZmUtWjhWMFRQbjZNTWhldFJzR25ZLTBfWFNod2V4ZTlBVlVxLTdUWFN5cHBGdFFIYTBNSXphS1RuaHp4Ym1CSzhuN2VCRExzUnFITDU1MmZjZHF4VHJHWG92Qk5pdHJiSnlmWktWS0J6YXdaN0lRbllxNEQyR25aU2tEN2k1TWdWb2RwSzJfQWVYZkJHazFFelV2aW5PazlFYzJONmtDa2VHZE85NHRGVlFoeHJhdFBVVHdmcDgyN0wtU01HbktxbjF0MmFhMEtTcFFoajVmTGROMGxxMkxDVHdaYlhOblNkQmctcm1XT0Jac0w0Q0k5TU1VWXVxQUZvcWxESl91NldWQXM2emgxQUJNMlRERHdHNFpQc3owdVVJQW1veHlLR2YyOEctdl9vSGttc1lsTGYzUmdXTkM0Q05lYURGZE85RDV1c2hxclRidlBuSld6V1BweFNaX2RSNUhDSU5LeGNfdTR6TzNkZzZwQldQRTNIODlkR2tuN0swQ1hnZF9VaWt3a29GSVY2YTA3RGZOVWtPT25oamhMd1RsMHNFT3ZsUjRRX1hJQXBiOUJYZzlTc3czdlFYTVF5QmZPZVpNVXJOeVdtUUdwamZSM0ZndGRwVW4tQ0Niejkxb1lveW01SV9Ob0xyZDBoWVJselRWTWRlbFpPWlhkTmRJT3FoMUxCZ0MzY2Y0TUJmY3ZQSTE5VTBGNFZXaDBwTnBlMENlS0xmdGFOY3MyMXh5bEFGS2owZDVTLXlhUVV4eDlPeHBQVG1BcldQYUcwNnA2SnhOWWEwak0yYg?oc=5",
       "source": "永豐金證券",
+      "url": "https://news.google.com/rss/articles/CBMikAVBVV95cUxQMmFEcUJrVzhhajg3eUJjQkFXNTlsd3ZrSlQ0bkFKQmY3bzBFNWU0ZVZxY1FlQmFLZVAtZmUtWjhWMFRQbjZNTWhldFJzR25ZLTBfWFNod2V4ZTlBVlVxLTdUWFN5cHBGdFFIYTBNSXphS1RuaHp4Ym1CSzhuN2VCRExzUnFITDU1MmZjZHF4VHJHWG92Qk5pdHJiSnlmWktWS0J6YXdaN0lRbllxNEQyR25aU2tEN2k1TWdWb2RwSzJfQWVYZkJHazFFelV2aW5PazlFYzJONmtDa2VHZE85NHRGVlFoeHJhdFBVVHdmcDgyN0wtU01HbktxbjF0MmFhMEtTcFFoajVmTGROMGxxMkxDVHdaYlhOblNkQmctcm1XT0Jac0w0Q0k5TU1VWXVxQUZvcWxESl91NldWQXM2emgxQUJNMlRERHdHNFpQc3owdVVJQW1veHlLR2YyOEctdl9vSGttc1lsTGYzUmdXTkM0Q05lYURGZE85RDV1c2hxclRidlBuSld6V1BweFNaX2RSNUhDSU5LeGNfdTR6TzNkZzZwQldQRTNIODlkR2tuN0swQ1hnZF9VaWt3a29GSVY2YTA3RGZOVWtPT25oamhMd1RsMHNFT3ZsUjRRX1hJQXBiOUJYZzlTc3czdlFYTVF5QmZPZVpNVXJOeVdtUUdwamZSM0ZndGRwVW4tQ0Niejkxb1lveW01SV9Ob0xyZDBoWVJselRWTWRlbFpPWlhkTmRJT3FoMUxCZ0MzY2Y0TUJmY3ZQSTE5VTBGNFZXaDBwTnBlMENlS0xmdGFOY3MyMXh5bEFGS2owZDVTLXlhUVV4eDlPeHBQVG1BcldQYUcwNnA2SnhOWWEwak0yYg?oc=5",
       "publishedAt": "2026-11-18T08:05:42+08:00"
+    },
+    {
+      "category": "industry",
+      "title": "王文洋父女登胡潤百富榜第 61 名！黃世聰：宏和、宏昌搭上 AI 浪潮 | 科技新報",
+      "source": "LINE TODAY",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE53Qzh1RnU0TC1ra01JMVZUbGVjZTZ5OTNHRkdNWjFObm84NUlhc1F6RjNzOG8xZ3dlR3c5Y3N6NGRzb3RmdnItcjYwbm91bG5ZbkNSSmRR?oc=5",
+      "publishedAt": "2026-11-18T07:35:57+08:00"
     },
     {
       "category": "market",
@@ -225,8 +253,8 @@
     {
       "category": "industry",
       "title": "王文洋父女登胡潤百富榜第61名 黃世聰：旗下兩檔A股搭上AI浪潮",
-      "source": "鏡週刊Mirror Media",
       "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE9UWGtVZGNheW93YjdGd3pQdDQ2S3VWRW1odzM0cVJRRWVKaXNsRlF0TDhFMVRfbXR4YWVNa1k2NlpXMWw4QTJnT3hXN2Vfc05heUswcUVobFFmS0QtZjhEVnFMVWpnTzhpbWVv0gFrQVVfeXFMT1RYa1VkY2F5b3diN0Z3elB0NDZLdVZFbWh3MzRxUlFFZUppc2xGUXRMOEUxVF9tdHhhZU1rWTY2WlcxbDhBMmdPeFc3ZV9zTmF5SzBxRWhsUWZLRC1mOERWcUxVamdPOGltZW8?oc=5",
+      "source": "鏡週刊Mirror Media",
       "publishedAt": "2026-11-17T15:29:00+08:00"
     },
     {
@@ -246,8 +274,8 @@
     {
       "category": "dividend",
       "title": "1表看》股災散戶的錢往哪跑？00878今除息、00406A單月殖利率逾2％ ETF受益人數衝破2049萬…市值型＋高股息人氣王揭曉- 基金",
-      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1MRDJNOGxXeXdGaEh4Tzdqc1FsSlZBNFAyMEhYTGdJZnp4RUZpNjQ0cFA4Y3l0clZ6VFVvVWlYanY0cGhpeWtublIxOWVMSEpFLVJhNXV0YVJGMTBaNzd6Y2J2SDlfdnZ3N0E?oc=5",
       "source": "旺得富理財網",
+      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1MRDJNOGxXeXdGaEh4Tzdqc1FsSlZBNFAyMEhYTGdJZnp4RUZpNjQ0cFA4Y3l0clZ6VFVvVWlYanY0cGhpeWtublIxOWVMSEpFLVJhNXV0YVJGMTBaNzd6Y2J2SDlfdnZ3N0E?oc=5",
       "publishedAt": "2026-11-17T14:35:40+08:00"
     },
     {
@@ -288,15 +316,15 @@
     {
       "category": "industry",
       "title": "王文洋父女登胡潤百富榜第 61 名！黃世聰：宏和、宏昌搭上 AI 浪潮",
-      "source": "TechNews 科技新報",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE0wclFQTHA0VG9pOE12SmdIT0lpTDVrR0hpb2Rxb2JaalhsdDhBR194cVZBYVVVVjdoelYwSDZyYkp2Mm14T0gtU0s1VWEyekVGSkppbi1abjZESDFHeTBCbkxqUG1TSF9FdC1ucA?oc=5",
+      "source": "TechNews 科技新報",
       "publishedAt": "2026-11-17T12:11:51+08:00"
     },
     {
       "category": "industry",
       "title": "AI伺服器材料變天！從M9到PTFE，台虹、台郡、亞電誰有機會突圍？-交易玩家-台股",
-      "source": "商周財富網",
       "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE41dGkwWmpGclBTenZOM1BEQ1NrTGphZlhOQTlwa2wwV0F1RDQ1MUtOVkJlcXdld21ydUFpZURDV0p5MzdHYkgwbTE0SUVfQ09Vb2cteUxKV2RHX0xXNnVTVU43LTBQYUFyaEtEa3VMVk9td0F3SGc?oc=5",
+      "source": "商周財富網",
       "publishedAt": "2026-11-17T11:18:15+08:00"
     },
     {
@@ -307,7 +335,7 @@
       "publishedAt": "2026-11-17T11:11:53+08:00"
     },
     {
-      "category": "etf",
+      "category": "dividend",
       "title": "00406A配息有擋頭！58萬股民喜迎 今再湧67萬張成交量稱王",
       "source": "ETtoday財經雲",
       "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE54dGZrUzBDczVoUTZPMHM4Z09EbjBKdXU4cTVEdDJzSndLMHJuT19GX0VuQTBxS2l2ZTE2ZU5XM0U4RFJGRzliSzBqc21OY1lKekHSAVBBVV95cUxQTGYxV25oY0VCbVc4NFJKMktDUlpVZjJud3ZvTDB2M3Z5RTR1cnI5ZzFKcWRnU1ZRX1V1ZS1aUnJvYjJmakNPQ3EtTHl0emlFVQ?oc=5",
@@ -323,8 +351,8 @@
     {
       "category": "etf",
       "title": "00406A買進就套牢！台股暴跌2635點詹璇依提醒投資人注意3件事| 存股族愛ETF | 股市",
-      "source": "UDN",
       "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFB4enA5cjRES1gxZ09iX2NKRFpBYy1wWDlLZTN4MXk4amhzVGEwS0c0ZGl0RFpkdUJheHFNZFBjcGhPLVlDQ1otREdzd2ljQVExYmFV?oc=5",
+      "source": "UDN",
       "publishedAt": "2026-11-17T08:10:52+08:00"
     },
     {
@@ -349,7 +377,7 @@
       "publishedAt": "2026-11-16T18:01:11+08:00"
     },
     {
-      "category": "etf",
+      "category": "dividend",
       "title": "00406A配息0.138元，股價跌到7元更划算？波動比0050大，上市5個月含息仍賠錢...老手揭「6年回本」最大陷阱",
       "source": "今周刊",
       "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxPRmtMX1k1bmZubjNFTng3VlpiNXAzeGVCQUVpLUdEa25UdDVZZVJhcTlUUk0wYjJ3dVFWeGxsbW5FVVBiVmFpQl9VM3R0RzRDenhhSloxOUJJR3c4ZFFDb0ZQT0NaVVo3M0xpNkJ0S0o3Q2pBRWd2RHFoOEdUWFVaUA?oc=5",
@@ -384,7 +412,7 @@
       "publishedAt": "2026-11-16T16:18:00+08:00"
     },
     {
-      "category": "etf",
+      "category": "dividend",
       "title": "00406A股價摔到7元，12月仍預估配息0.138元！年化配息率23%藏什麼風險？",
       "source": "數位時代",
       "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE5iaFNwLUxVSWlqb0k2SDBmRUtoWlRmbDUzOG0zc2Vwa1ZNd0YzaWxpV1N3OXZFWFc2eUF1Q3Mxd1FLUXBHSGRqaXZHR2hvWUhaNUsxR2QyWXdnUDN5RHI1ZWVuR0RnMVhJdHoyeGM1QXFabGZqU0x3?oc=5",
@@ -396,35 +424,9 @@
       "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFBCOW5HdXhBN2hMU1RWbkQ5ZmRDdm9XLWg2Y25tUDlfc29mRVdMamZvcHRtWkJSc1lXZlVwOHhLemZpdzBkd25lODdfRQ?oc=5",
       "source": "三立新聞網SETN.com",
       "publishedAt": "2026-11-16T15:42:21+08:00"
-    },
-    {
-      "category": "market",
-      "title": "台股血流成河！投信竟轉頭狠砍逾千億 逾2千家遭綠浪吞沒",
-      "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTFBCOW5HdXhBN2hMU1RWbkQ5ZmRDdm9XLWg2Y25tUDlfc29mRVdMamZvcHRtWkJSc1lXZlVwOHhLemZpdzBkd25lODdfRQ?oc=5",
-      "source": "三立新聞網SETN.com",
-      "publishedAt": "2026-11-16T15:37:06+08:00"
-    },
-    {
-      "category": "market",
-      "title": "投信竟轉頭狠砍逾千億 2千家遭綠浪吞沒",
-      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9iVjU4VHVoa3V2WFhGSktXLXVZa3ZXX3VVaUFuM21Zcl9ma0dLWkFkMmdud3lJZUJIVnZJaFBWZUEwU2hZS0lGNEFpeUxGQ215SE1RaUVCX0s0aGtG?oc=5",
-      "source": "鏡週刊Mirror Media",
-      "publishedAt": "2026-11-16T15:34:00+08:00"
-    },
-    {
-      "category": "market",
-      "title": "三大法人》台股突殺2635點、法人再賣超1140億！外資轉賣702億，投信終結連24買、反手賣180億",
-      "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE54UDl0akhRc1VpY2hkVk5Mamdrb3AzTlNHc1A2Wl9mdE5pWi1zQmQ2NGxZaEFjTUpwYXNPWFZYTlNjbTVaWWp3REdQVzVJQQ?oc=5",
-      "source": "風傳媒",
-      "publishedAt": "2026-11-16T15:18:00+08:00"
-    },
-    {
-      "category": "industry",
-      "title": "輝達風暴牽連台股狂瀉2635點 AI供應鏈成重災區台積電失守2300元",
-      "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE1vWWJtZDVNenNLeHlPSks0andpWFNmLThkcnFPdWEtOHZsWWZLM3ZjWG53LVBCQnVWTm0tREQ4Yi13LXh4bkViZWlWR0VtMENBQ192SkpDX3FBZ9IBX0FVX3lxTE5uMU1WdlJtRkNHSWt3aWkyRVJteXdndXNVRUE2cEZHR2dCcnY4bGszdlVBb09sTmppUVlMZFJVRHhpYjQ1eVA1VDI3Y1pKT0ZyMmpxZ0ppVGc5QmpZWV9j?oc=5",
-      "source": "經濟日報",
-      "publishedAt": "2026-11-16T14:45:49+08:00"
     }
   ],
-  "errors": []
+  "errors": [
+    "etf: HTTPError"
+  ]
 }
