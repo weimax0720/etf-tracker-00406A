@@ -1,8 +1,386 @@
 {
   "schema": 1,
   "code": "00406A",
-  "checkedAt": "2026-11-24T06:07:39+08:00",
+  "checkedAt": "2026-11-24T19:13:58+08:00",
   "latest": {
+    "date": "2026-11-24",
+    "stocks": [
+      {
+        "code": "2330",
+        "name": "台灣積體電路製造",
+        "shares": 6234000,
+        "weight": 8.17
+      },
+      {
+        "code": "2454",
+        "name": "聯發科技",
+        "shares": 2563000,
+        "weight": 6.08
+      },
+      {
+        "code": "2383",
+        "name": "台光電子材料",
+        "shares": 2780000,
+        "weight": 5.53
+      },
+      {
+        "code": "3017",
+        "name": "奇鋐科技",
+        "shares": 3247000,
+        "weight": 4.95
+      },
+      {
+        "code": "3037",
+        "name": "欣興電子",
+        "shares": 12685000,
+        "weight": 4.56
+      },
+      {
+        "code": "3653",
+        "name": "健策精密工業",
+        "shares": 1557000,
+        "weight": 3.7
+      },
+      {
+        "code": "8046",
+        "name": "南亞電路板",
+        "shares": 6296000,
+        "weight": 2.72
+      },
+      {
+        "code": "2345",
+        "name": "智邦科技",
+        "shares": 3043000,
+        "weight": 2.65
+      },
+      {
+        "code": "6223",
+        "name": "旺矽科技",
+        "shares": 1052000,
+        "weight": 2.58
+      },
+      {
+        "code": "2368",
+        "name": "金像電子",
+        "shares": 4848000,
+        "weight": 2.44
+      },
+      {
+        "code": "1303",
+        "name": "南亞塑膠工業",
+        "shares": 14678000,
+        "weight": 2.14
+      },
+      {
+        "code": "3711",
+        "name": "日月光投資控股",
+        "shares": 6737000,
+        "weight": 2.09
+      },
+      {
+        "code": "2308",
+        "name": "台達電子工業",
+        "shares": 3123000,
+        "weight": 1.99
+      },
+      {
+        "code": "6274",
+        "name": "台燿科技",
+        "shares": 3830000,
+        "weight": 1.69
+      },
+      {
+        "code": "3443",
+        "name": "創意電子",
+        "shares": 504000,
+        "weight": 1.66
+      },
+      {
+        "code": "2059",
+        "name": "川湖科技",
+        "shares": 425000,
+        "weight": 1.54
+      },
+      {
+        "code": "3189",
+        "name": "景碩科技",
+        "shares": 5006000,
+        "weight": 1.51
+      },
+      {
+        "code": "3665",
+        "name": "貿聯控股",
+        "shares": 1630800,
+        "weight": 1.5
+      },
+      {
+        "code": "2303",
+        "name": "聯華電子",
+        "shares": 22168000,
+        "weight": 1.26
+      },
+      {
+        "code": "4958",
+        "name": "臻鼎科技控股",
+        "shares": 5179000,
+        "weight": 1.11
+      },
+      {
+        "code": "2882",
+        "name": "國泰金融控股",
+        "shares": 16906000,
+        "weight": 1.04
+      },
+      {
+        "code": "3008",
+        "name": "大立光電",
+        "shares": 425000,
+        "weight": 0.99
+      },
+      {
+        "code": "6669",
+        "name": "緯穎科技服務",
+        "shares": 1071711,
+        "weight": 0.95
+      },
+      {
+        "code": "3661",
+        "name": "世芯電子",
+        "shares": 320000,
+        "weight": 0.73
+      },
+      {
+        "code": "6805",
+        "name": "富世達股份有限公司",
+        "shares": 765000,
+        "weight": 0.72
+      },
+      {
+        "code": "1326",
+        "name": "台灣化學纖維",
+        "shares": 18900000,
+        "weight": 0.71
+      },
+      {
+        "code": "6446",
+        "name": "藥華醫藥",
+        "shares": 1016000,
+        "weight": 0.68
+      },
+      {
+        "code": "2885",
+        "name": "元大金融控股",
+        "shares": 16656000,
+        "weight": 0.63
+      },
+      {
+        "code": "8996",
+        "name": "高力熱處理工業",
+        "shares": 1052000,
+        "weight": 0.58
+      },
+      {
+        "code": "1815",
+        "name": "富喬工業",
+        "shares": 8500000,
+        "weight": 0.56
+      },
+      {
+        "code": "6147",
+        "name": "頎邦科技",
+        "shares": 7077000,
+        "weight": 0.56
+      },
+      {
+        "code": "2886",
+        "name": "兆豐金融控股",
+        "shares": 17030000,
+        "weight": 0.55
+      },
+      {
+        "code": "3231",
+        "name": "緯創資通",
+        "shares": 5800000,
+        "weight": 0.55
+      },
+      {
+        "code": "6715",
+        "name": "嘉基科技",
+        "shares": 3110000,
+        "weight": 0.55
+      },
+      {
+        "code": "2881",
+        "name": "富邦金融控股",
+        "shares": 6200000,
+        "weight": 0.52
+      },
+      {
+        "code": "4938",
+        "name": "和碩聯合科技",
+        "shares": 10000000,
+        "weight": 0.5
+      },
+      {
+        "code": "2327",
+        "name": "國巨*",
+        "shares": 2420000,
+        "weight": 0.48
+      },
+      {
+        "code": "2887",
+        "name": "台新新光金融控股股份有限公司",
+        "shares": 22760000,
+        "weight": 0.48
+      },
+      {
+        "code": "3167",
+        "name": "大量科技",
+        "shares": 1330000,
+        "weight": 0.48
+      },
+      {
+        "code": "6213",
+        "name": "聯茂電子",
+        "shares": 1821000,
+        "weight": 0.46
+      },
+      {
+        "code": "3105",
+        "name": "穩懋半導體",
+        "shares": 1616000,
+        "weight": 0.43
+      },
+      {
+        "code": "2884",
+        "name": "玉山金融控股",
+        "shares": 17036000,
+        "weight": 0.41
+      },
+      {
+        "code": "6510",
+        "name": "中華精測科技",
+        "shares": 275000,
+        "weight": 0.4
+      },
+      {
+        "code": "2382",
+        "name": "廣達電腦",
+        "shares": 2054000,
+        "weight": 0.34
+      },
+      {
+        "code": "2317",
+        "name": "鴻海精密工業",
+        "shares": 2345000,
+        "weight": 0.31
+      },
+      {
+        "code": "3491",
+        "name": "昇達科技",
+        "shares": 330000,
+        "weight": 0.27
+      },
+      {
+        "code": "2449",
+        "name": "京元電子",
+        "shares": 2410000,
+        "weight": 0.24
+      },
+      {
+        "code": "2890",
+        "name": "永豐金融控股",
+        "shares": 10300000,
+        "weight": 0.24
+      },
+      {
+        "code": "1560",
+        "name": "中國砂輪企業",
+        "shares": 425000,
+        "weight": 0.15
+      },
+      {
+        "code": "8358",
+        "name": "金居開發",
+        "shares": 955000,
+        "weight": 0.15
+      },
+      {
+        "code": "2486",
+        "name": "一詮精密工業",
+        "shares": 1139000,
+        "weight": 0.09
+      },
+      {
+        "code": "2481",
+        "name": "強茂",
+        "shares": 1410000,
+        "weight": 0.08
+      },
+      {
+        "code": "2395",
+        "name": "研華",
+        "shares": 121000,
+        "weight": 0.04
+      },
+      {
+        "code": "4770",
+        "name": "上品綜合工業股份有限公司",
+        "shares": 270000,
+        "weight": 0.04
+      },
+      {
+        "code": "6285",
+        "name": "啟碁科技",
+        "shares": 325000,
+        "weight": 0.04
+      },
+      {
+        "code": "1727",
+        "name": "臺灣中華化學工業",
+        "shares": 750000,
+        "weight": 0.03
+      },
+      {
+        "code": "8150",
+        "name": "南茂科技",
+        "shares": 455000,
+        "weight": 0.02
+      }
+    ],
+    "futures": [
+      {
+        "code": "TX",
+        "name": "臺股期貨",
+        "quantity": 4750.0,
+        "reportedWeight": 22.46
+      }
+    ],
+    "options": [
+      {
+        "code": "TXY",
+        "name": "臺指選擇權第四週週五到期契約",
+        "quantity": -5786.0,
+        "reportedWeight": -5.81
+      },
+      {
+        "code": "TX4",
+        "name": "臺指選擇權第四週週三到期契約",
+        "quantity": -13950.0,
+        "reportedWeight": -14.46
+      }
+    ],
+    "nav": 6.52,
+    "fundAssets": 170586274173.0,
+    "units": 26160062000.0,
+    "source": "中國信託投信 ETF 投資組合 API",
+    "sourceUrl": "https://www.ctbcinvestments.com/Etf/00682450/Info",
+    "unknownGroups": [
+      "MARGIN",
+      "CASH"
+    ]
+  },
+  "previous": {
     "date": "2026-11-23",
     "stocks": [
       {
@@ -374,447 +752,28 @@
       "CASH"
     ]
   },
-  "previous": {
-    "date": "2026-11-20",
-    "stocks": [
-      {
-        "code": "2330",
-        "name": "台灣積體電路製造",
-        "shares": 6234000,
-        "weight": 8.98
-      },
-      {
-        "code": "2454",
-        "name": "聯發科技",
-        "shares": 2563000,
-        "weight": 6.16
-      },
-      {
-        "code": "2383",
-        "name": "台光電子材料",
-        "shares": 2780000,
-        "weight": 5.61
-      },
-      {
-        "code": "3017",
-        "name": "奇鋐科技",
-        "shares": 3224000,
-        "weight": 5.1
-      },
-      {
-        "code": "3037",
-        "name": "欣興電子",
-        "shares": 12685000,
-        "weight": 4.89
-      },
-      {
-        "code": "3653",
-        "name": "健策精密工業",
-        "shares": 1277000,
-        "weight": 3.4
-      },
-      {
-        "code": "8046",
-        "name": "南亞電路板",
-        "shares": 6296000,
-        "weight": 2.84
-      },
-      {
-        "code": "2345",
-        "name": "智邦科技",
-        "shares": 3043000,
-        "weight": 2.69
-      },
-      {
-        "code": "6223",
-        "name": "旺矽科技",
-        "shares": 1052000,
-        "weight": 2.69
-      },
-      {
-        "code": "2368",
-        "name": "金像電子",
-        "shares": 4848000,
-        "weight": 2.47
-      },
-      {
-        "code": "3711",
-        "name": "日月光投資控股",
-        "shares": 6737000,
-        "weight": 2.21
-      },
-      {
-        "code": "1303",
-        "name": "南亞塑膠工業",
-        "shares": 14678000,
-        "weight": 2.17
-      },
-      {
-        "code": "2308",
-        "name": "台達電子工業",
-        "shares": 3123000,
-        "weight": 2.02
-      },
-      {
-        "code": "3443",
-        "name": "創意電子",
-        "shares": 504000,
-        "weight": 1.95
-      },
-      {
-        "code": "6274",
-        "name": "台燿科技",
-        "shares": 3830000,
-        "weight": 1.71
-      },
-      {
-        "code": "3189",
-        "name": "景碩科技",
-        "shares": 5006000,
-        "weight": 1.69
-      },
-      {
-        "code": "2059",
-        "name": "川湖科技",
-        "shares": 413000,
-        "weight": 1.59
-      },
-      {
-        "code": "3665",
-        "name": "貿聯控股",
-        "shares": 1630800,
-        "weight": 1.52
-      },
-      {
-        "code": "2303",
-        "name": "聯華電子",
-        "shares": 22168000,
-        "weight": 1.28
-      },
-      {
-        "code": "4958",
-        "name": "臻鼎科技控股",
-        "shares": 5179000,
-        "weight": 1.15
-      },
-      {
-        "code": "2327",
-        "name": "國巨*",
-        "shares": 4840000,
-        "weight": 1.03
-      },
-      {
-        "code": "6669",
-        "name": "緯穎科技服務",
-        "shares": 1071711,
-        "weight": 1.02
-      },
-      {
-        "code": "3008",
-        "name": "大立光電",
-        "shares": 345000,
-        "weight": 0.91
-      },
-      {
-        "code": "5274",
-        "name": "信驊科技",
-        "shares": 155000,
-        "weight": 0.87
-      },
-      {
-        "code": "3081",
-        "name": "聯亞光電工業",
-        "shares": 821000,
-        "weight": 0.8
-      },
-      {
-        "code": "6446",
-        "name": "藥華醫藥",
-        "shares": 1016000,
-        "weight": 0.8
-      },
-      {
-        "code": "1326",
-        "name": "台灣化學纖維",
-        "shares": 18900000,
-        "weight": 0.78
-      },
-      {
-        "code": "6805",
-        "name": "富世達股份有限公司",
-        "shares": 736000,
-        "weight": 0.76
-      },
-      {
-        "code": "3661",
-        "name": "世芯電子",
-        "shares": 320000,
-        "weight": 0.74
-      },
-      {
-        "code": "2885",
-        "name": "元大金融控股",
-        "shares": 16656000,
-        "weight": 0.71
-      },
-      {
-        "code": "8996",
-        "name": "高力熱處理工業",
-        "shares": 1052000,
-        "weight": 0.7
-      },
-      {
-        "code": "6715",
-        "name": "嘉基科技",
-        "shares": 3110000,
-        "weight": 0.64
-      },
-      {
-        "code": "2886",
-        "name": "兆豐金融控股",
-        "shares": 17030000,
-        "weight": 0.63
-      },
-      {
-        "code": "2881",
-        "name": "富邦金融控股",
-        "shares": 6200000,
-        "weight": 0.61
-      },
-      {
-        "code": "3231",
-        "name": "緯創資通",
-        "shares": 5800000,
-        "weight": 0.61
-      },
-      {
-        "code": "1815",
-        "name": "富喬工業",
-        "shares": 8500000,
-        "weight": 0.6
-      },
-      {
-        "code": "2882",
-        "name": "國泰金融控股",
-        "shares": 8565000,
-        "weight": 0.6
-      },
-      {
-        "code": "6147",
-        "name": "頎邦科技",
-        "shares": 7077000,
-        "weight": 0.59
-      },
-      {
-        "code": "4938",
-        "name": "和碩聯合科技",
-        "shares": 10000000,
-        "weight": 0.56
-      },
-      {
-        "code": "2887",
-        "name": "台新新光金融控股股份有限公司",
-        "shares": 22760000,
-        "weight": 0.55
-      },
-      {
-        "code": "3167",
-        "name": "大量科技",
-        "shares": 1330000,
-        "weight": 0.49
-      },
-      {
-        "code": "2884",
-        "name": "玉山金融控股",
-        "shares": 17036000,
-        "weight": 0.48
-      },
-      {
-        "code": "6510",
-        "name": "中華精測科技",
-        "shares": 275000,
-        "weight": 0.47
-      },
-      {
-        "code": "6213",
-        "name": "聯茂電子",
-        "shares": 1821000,
-        "weight": 0.46
-      },
-      {
-        "code": "3105",
-        "name": "穩懋半導體",
-        "shares": 1616000,
-        "weight": 0.44
-      },
-      {
-        "code": "2317",
-        "name": "鴻海精密工業",
-        "shares": 2345000,
-        "weight": 0.35
-      },
-      {
-        "code": "3491",
-        "name": "昇達科技",
-        "shares": 330000,
-        "weight": 0.29
-      },
-      {
-        "code": "2449",
-        "name": "京元電子",
-        "shares": 2410000,
-        "weight": 0.27
-      },
-      {
-        "code": "2890",
-        "name": "永豐金融控股",
-        "shares": 10300000,
-        "weight": 0.27
-      },
-      {
-        "code": "2481",
-        "name": "強茂",
-        "shares": 3810000,
-        "weight": 0.23
-      },
-      {
-        "code": "3264",
-        "name": "欣銓科技",
-        "shares": 2198000,
-        "weight": 0.21
-      },
-      {
-        "code": "8358",
-        "name": "金居開發",
-        "shares": 955000,
-        "weight": 0.17
-      },
-      {
-        "code": "1560",
-        "name": "中國砂輪企業",
-        "shares": 425000,
-        "weight": 0.16
-      },
-      {
-        "code": "6278",
-        "name": "台灣表面黏著科技",
-        "shares": 1428000,
-        "weight": 0.16
-      },
-      {
-        "code": "2486",
-        "name": "一詮精密工業",
-        "shares": 1139000,
-        "weight": 0.09
-      },
-      {
-        "code": "6531",
-        "name": "愛普科技",
-        "shares": 163000,
-        "weight": 0.06
-      },
-      {
-        "code": "2395",
-        "name": "研華",
-        "shares": 121000,
-        "weight": 0.05
-      },
-      {
-        "code": "4770",
-        "name": "上品綜合工業股份有限公司",
-        "shares": 270000,
-        "weight": 0.04
-      },
-      {
-        "code": "6285",
-        "name": "啟碁科技",
-        "shares": 325000,
-        "weight": 0.04
-      },
-      {
-        "code": "1727",
-        "name": "臺灣中華化學工業",
-        "shares": 750000,
-        "weight": 0.03
-      },
-      {
-        "code": "8150",
-        "name": "南茂科技",
-        "shares": 455000,
-        "weight": 0.02
-      },
-      {
-        "code": "6187",
-        "name": "萬潤科技",
-        "shares": 2000,
-        "weight": 0.0
-      }
-    ],
-    "futures": [
-      {
-        "code": "TX",
-        "name": "臺股期貨",
-        "quantity": 4540.0,
-        "reportedWeight": 23.34
-      }
-    ],
-    "options": [
-      {
-        "code": "TXY",
-        "name": "臺指選擇權第四週週五到期契約",
-        "quantity": -9300.0,
-        "reportedWeight": -6.9
-      },
-      {
-        "code": "TX4",
-        "name": "臺指選擇權第四週週三到期契約",
-        "quantity": -19950.0,
-        "reportedWeight": -11.11
-      }
-    ],
-    "nav": 5.86,
-    "fundAssets": 139283511981.0,
-    "units": 23770062000.0,
-    "source": "中國信託投信 ETF 投資組合 API",
-    "sourceUrl": "https://www.ctbcinvestments.com/Etf/00682450/Info",
-    "unknownGroups": [
-      "MARGIN",
-      "CASH"
-    ]
-  },
   "changes": [
     {
-      "code": "5274",
-      "name": "信驊科技",
-      "type": "removed",
-      "previousShares": 155000,
-      "shares": 0,
-      "sharesDelta": -155000,
-      "previousWeight": 0.87,
-      "weight": 0,
-      "weightDeltaPp": -0.87
+      "code": "2882",
+      "name": "國泰金融控股",
+      "type": "increase",
+      "previousShares": 8565000,
+      "shares": 16906000,
+      "sharesDelta": 8341000,
+      "previousWeight": 0.54,
+      "weight": 1.04,
+      "weightDeltaPp": 0.5
     },
     {
-      "code": "3081",
-      "name": "聯亞光電工業",
-      "type": "removed",
-      "previousShares": 821000,
-      "shares": 0,
-      "sharesDelta": -821000,
-      "previousWeight": 0.8,
-      "weight": 0,
-      "weightDeltaPp": -0.8
-    },
-    {
-      "code": "2327",
-      "name": "國巨*",
-      "type": "decrease",
-      "previousShares": 4840000,
-      "shares": 2420000,
-      "sharesDelta": -2420000,
-      "previousWeight": 1.03,
-      "weight": 0.5,
-      "weightDeltaPp": -0.53
+      "code": "2382",
+      "name": "廣達電腦",
+      "type": "new",
+      "previousShares": 0,
+      "shares": 2054000,
+      "sharesDelta": 2054000,
+      "previousWeight": 0,
+      "weight": 0.34,
+      "weightDeltaPp": 0.34
     },
     {
       "code": "2330",
@@ -823,75 +782,9 @@
       "previousShares": 6234000,
       "shares": 6234000,
       "sharesDelta": 0,
-      "previousWeight": 8.98,
-      "weight": 8.45,
-      "weightDeltaPp": -0.53
-    },
-    {
-      "code": "3653",
-      "name": "健策精密工業",
-      "type": "increase",
-      "previousShares": 1277000,
-      "shares": 1557000,
-      "sharesDelta": 280000,
-      "previousWeight": 3.4,
-      "weight": 3.83,
-      "weightDeltaPp": 0.43
-    },
-    {
-      "code": "3443",
-      "name": "創意電子",
-      "type": "weight_only",
-      "previousShares": 504000,
-      "shares": 504000,
-      "sharesDelta": 0,
-      "previousWeight": 1.95,
-      "weight": 1.72,
-      "weightDeltaPp": -0.23
-    },
-    {
-      "code": "3264",
-      "name": "欣銓科技",
-      "type": "removed",
-      "previousShares": 2198000,
-      "shares": 0,
-      "sharesDelta": -2198000,
-      "previousWeight": 0.21,
-      "weight": 0,
-      "weightDeltaPp": -0.21
-    },
-    {
-      "code": "3037",
-      "name": "欣興電子",
-      "type": "weight_only",
-      "previousShares": 12685000,
-      "shares": 12685000,
-      "sharesDelta": 0,
-      "previousWeight": 4.89,
-      "weight": 4.72,
-      "weightDeltaPp": -0.17
-    },
-    {
-      "code": "6278",
-      "name": "台灣表面黏著科技",
-      "type": "removed",
-      "previousShares": 1428000,
-      "shares": 0,
-      "sharesDelta": -1428000,
-      "previousWeight": 0.16,
-      "weight": 0,
-      "weightDeltaPp": -0.16
-    },
-    {
-      "code": "2481",
-      "name": "強茂",
-      "type": "decrease",
-      "previousShares": 3810000,
-      "shares": 1410000,
-      "sharesDelta": -2400000,
-      "previousWeight": 0.23,
-      "weight": 0.08,
-      "weightDeltaPp": -0.15
+      "previousWeight": 8.45,
+      "weight": 8.17,
+      "weightDeltaPp": -0.28
     },
     {
       "code": "2454",
@@ -900,31 +793,9 @@
       "previousShares": 2563000,
       "shares": 2563000,
       "sharesDelta": 0,
-      "previousWeight": 6.16,
-      "weight": 6.3,
-      "weightDeltaPp": 0.14
-    },
-    {
-      "code": "3189",
-      "name": "景碩科技",
-      "type": "weight_only",
-      "previousShares": 5006000,
-      "shares": 5006000,
-      "sharesDelta": 0,
-      "previousWeight": 1.69,
-      "weight": 1.56,
-      "weightDeltaPp": -0.13
-    },
-    {
-      "code": "3008",
-      "name": "大立光電",
-      "type": "increase",
-      "previousShares": 345000,
-      "shares": 425000,
-      "sharesDelta": 80000,
-      "previousWeight": 0.91,
-      "weight": 1.03,
-      "weightDeltaPp": 0.12
+      "previousWeight": 6.3,
+      "weight": 6.08,
+      "weightDeltaPp": -0.22
     },
     {
       "code": "2383",
@@ -933,119 +804,42 @@
       "previousShares": 2780000,
       "shares": 2780000,
       "sharesDelta": 0,
-      "previousWeight": 5.61,
-      "weight": 5.73,
-      "weightDeltaPp": 0.12
+      "previousWeight": 5.73,
+      "weight": 5.53,
+      "weightDeltaPp": -0.2
     },
     {
-      "code": "8996",
-      "name": "高力熱處理工業",
+      "code": "3017",
+      "name": "奇鋐科技",
       "type": "weight_only",
-      "previousShares": 1052000,
-      "shares": 1052000,
+      "previousShares": 3247000,
+      "shares": 3247000,
       "sharesDelta": 0,
-      "previousWeight": 0.7,
-      "weight": 0.6,
-      "weightDeltaPp": -0.1
+      "previousWeight": 5.12,
+      "weight": 4.95,
+      "weightDeltaPp": -0.17
     },
     {
-      "code": "2881",
-      "name": "富邦金融控股",
+      "code": "3037",
+      "name": "欣興電子",
       "type": "weight_only",
-      "previousShares": 6200000,
-      "shares": 6200000,
+      "previousShares": 12685000,
+      "shares": 12685000,
       "sharesDelta": 0,
-      "previousWeight": 0.61,
-      "weight": 0.54,
-      "weightDeltaPp": -0.07
+      "previousWeight": 4.72,
+      "weight": 4.56,
+      "weightDeltaPp": -0.16
     },
     {
-      "code": "6715",
-      "name": "嘉基科技",
+      "code": "3653",
+      "name": "健策精密工業",
       "type": "weight_only",
-      "previousShares": 3110000,
-      "shares": 3110000,
+      "previousShares": 1557000,
+      "shares": 1557000,
       "sharesDelta": 0,
-      "previousWeight": 0.64,
-      "weight": 0.57,
-      "weightDeltaPp": -0.07
-    },
-    {
-      "code": "6531",
-      "name": "愛普科技",
-      "type": "removed",
-      "previousShares": 163000,
-      "shares": 0,
-      "sharesDelta": -163000,
-      "previousWeight": 0.06,
-      "weight": 0,
-      "weightDeltaPp": -0.06
-    },
-    {
-      "code": "2368",
-      "name": "金像電子",
-      "type": "weight_only",
-      "previousShares": 4848000,
-      "shares": 4848000,
-      "sharesDelta": 0,
-      "previousWeight": 2.47,
-      "weight": 2.53,
-      "weightDeltaPp": 0.06
-    },
-    {
-      "code": "2882",
-      "name": "國泰金融控股",
-      "type": "weight_only",
-      "previousShares": 8565000,
-      "shares": 8565000,
-      "sharesDelta": 0,
-      "previousWeight": 0.6,
-      "weight": 0.54,
-      "weightDeltaPp": -0.06
-    },
-    {
-      "code": "2885",
-      "name": "元大金融控股",
-      "type": "weight_only",
-      "previousShares": 16656000,
-      "shares": 16656000,
-      "sharesDelta": 0,
-      "previousWeight": 0.71,
-      "weight": 0.65,
-      "weightDeltaPp": -0.06
-    },
-    {
-      "code": "2886",
-      "name": "兆豐金融控股",
-      "type": "weight_only",
-      "previousShares": 17030000,
-      "shares": 17030000,
-      "sharesDelta": 0,
-      "previousWeight": 0.63,
-      "weight": 0.57,
-      "weightDeltaPp": -0.06
-    },
-    {
-      "code": "6510",
-      "name": "中華精測科技",
-      "type": "weight_only",
-      "previousShares": 275000,
-      "shares": 275000,
-      "sharesDelta": 0,
-      "previousWeight": 0.47,
-      "weight": 0.41,
-      "weightDeltaPp": -0.06
-    },
-    {
-      "code": "1303",
-      "name": "南亞塑膠工業",
-      "type": "weight_only",
-      "previousShares": 14678000,
-      "shares": 14678000,
-      "sharesDelta": 0,
-      "previousWeight": 2.17,
-      "weight": 2.22,
-      "weightDeltaPp": 0.05
+      "previousWeight": 3.83,
+      "weight": 3.7,
+      "weightDeltaPp": -0.13
     },
     {
       "code": "2345",
@@ -1054,75 +848,53 @@
       "previousShares": 3043000,
       "shares": 3043000,
       "sharesDelta": 0,
-      "previousWeight": 2.69,
-      "weight": 2.74,
-      "weightDeltaPp": 0.05
+      "previousWeight": 2.74,
+      "weight": 2.65,
+      "weightDeltaPp": -0.09
     },
     {
-      "code": "2887",
-      "name": "台新新光金融控股股份有限公司",
+      "code": "2368",
+      "name": "金像電子",
       "type": "weight_only",
-      "previousShares": 22760000,
-      "shares": 22760000,
+      "previousShares": 4848000,
+      "shares": 4848000,
       "sharesDelta": 0,
-      "previousWeight": 0.55,
-      "weight": 0.5,
-      "weightDeltaPp": -0.05
+      "previousWeight": 2.53,
+      "weight": 2.44,
+      "weightDeltaPp": -0.09
     },
     {
-      "code": "1326",
-      "name": "台灣化學纖維",
+      "code": "6223",
+      "name": "旺矽科技",
       "type": "weight_only",
-      "previousShares": 18900000,
-      "shares": 18900000,
+      "previousShares": 1052000,
+      "shares": 1052000,
       "sharesDelta": 0,
-      "previousWeight": 0.78,
-      "weight": 0.74,
-      "weightDeltaPp": -0.04
+      "previousWeight": 2.67,
+      "weight": 2.58,
+      "weightDeltaPp": -0.09
     },
     {
-      "code": "2308",
-      "name": "台達電子工業",
+      "code": "8046",
+      "name": "南亞電路板",
       "type": "weight_only",
-      "previousShares": 3123000,
-      "shares": 3123000,
+      "previousShares": 6296000,
+      "shares": 6296000,
       "sharesDelta": 0,
-      "previousWeight": 2.02,
-      "weight": 2.06,
-      "weightDeltaPp": 0.04
+      "previousWeight": 2.81,
+      "weight": 2.72,
+      "weightDeltaPp": -0.09
     },
     {
-      "code": "2884",
-      "name": "玉山金融控股",
+      "code": "1303",
+      "name": "南亞塑膠工業",
       "type": "weight_only",
-      "previousShares": 17036000,
-      "shares": 17036000,
+      "previousShares": 14678000,
+      "shares": 14678000,
       "sharesDelta": 0,
-      "previousWeight": 0.48,
-      "weight": 0.44,
-      "weightDeltaPp": -0.04
-    },
-    {
-      "code": "3231",
-      "name": "緯創資通",
-      "type": "weight_only",
-      "previousShares": 5800000,
-      "shares": 5800000,
-      "sharesDelta": 0,
-      "previousWeight": 0.61,
-      "weight": 0.57,
-      "weightDeltaPp": -0.04
-    },
-    {
-      "code": "3665",
-      "name": "貿聯控股",
-      "type": "weight_only",
-      "previousShares": 1630800,
-      "shares": 1630800,
-      "sharesDelta": 0,
-      "previousWeight": 1.52,
-      "weight": 1.56,
-      "weightDeltaPp": 0.04
+      "previousWeight": 2.22,
+      "weight": 2.14,
+      "weightDeltaPp": -0.08
     },
     {
       "code": "3711",
@@ -1131,20 +903,9 @@
       "previousShares": 6737000,
       "shares": 6737000,
       "sharesDelta": 0,
-      "previousWeight": 2.21,
-      "weight": 2.17,
-      "weightDeltaPp": -0.04
-    },
-    {
-      "code": "6274",
-      "name": "台燿科技",
-      "type": "weight_only",
-      "previousShares": 3830000,
-      "shares": 3830000,
-      "sharesDelta": 0,
-      "previousWeight": 1.71,
-      "weight": 1.75,
-      "weightDeltaPp": 0.04
+      "previousWeight": 2.17,
+      "weight": 2.09,
+      "weightDeltaPp": -0.08
     },
     {
       "code": "6446",
@@ -1153,20 +914,64 @@
       "previousShares": 1016000,
       "shares": 1016000,
       "sharesDelta": 0,
-      "previousWeight": 0.8,
-      "weight": 0.76,
-      "weightDeltaPp": -0.04
+      "previousWeight": 0.76,
+      "weight": 0.68,
+      "weightDeltaPp": -0.08
     },
     {
-      "code": "6669",
-      "name": "緯穎科技服務",
+      "code": "2308",
+      "name": "台達電子工業",
       "type": "weight_only",
-      "previousShares": 1071711,
-      "shares": 1071711,
+      "previousShares": 3123000,
+      "shares": 3123000,
       "sharesDelta": 0,
-      "previousWeight": 1.02,
-      "weight": 0.98,
-      "weightDeltaPp": -0.04
+      "previousWeight": 2.06,
+      "weight": 1.99,
+      "weightDeltaPp": -0.07
+    },
+    {
+      "code": "2059",
+      "name": "川湖科技",
+      "type": "weight_only",
+      "previousShares": 425000,
+      "shares": 425000,
+      "sharesDelta": 0,
+      "previousWeight": 1.6,
+      "weight": 1.54,
+      "weightDeltaPp": -0.06
+    },
+    {
+      "code": "3443",
+      "name": "創意電子",
+      "type": "weight_only",
+      "previousShares": 504000,
+      "shares": 504000,
+      "sharesDelta": 0,
+      "previousWeight": 1.72,
+      "weight": 1.66,
+      "weightDeltaPp": -0.06
+    },
+    {
+      "code": "3665",
+      "name": "貿聯控股",
+      "type": "weight_only",
+      "previousShares": 1630800,
+      "shares": 1630800,
+      "sharesDelta": 0,
+      "previousWeight": 1.56,
+      "weight": 1.5,
+      "weightDeltaPp": -0.06
+    },
+    {
+      "code": "6274",
+      "name": "台燿科技",
+      "type": "weight_only",
+      "previousShares": 3830000,
+      "shares": 3830000,
+      "sharesDelta": 0,
+      "previousWeight": 1.75,
+      "weight": 1.69,
+      "weightDeltaPp": -0.06
     },
     {
       "code": "2303",
@@ -1175,19 +980,74 @@
       "previousShares": 22168000,
       "shares": 22168000,
       "sharesDelta": 0,
-      "previousWeight": 1.28,
-      "weight": 1.31,
-      "weightDeltaPp": 0.03
+      "previousWeight": 1.31,
+      "weight": 1.26,
+      "weightDeltaPp": -0.05
     },
     {
-      "code": "2317",
-      "name": "鴻海精密工業",
+      "code": "3189",
+      "name": "景碩科技",
       "type": "weight_only",
-      "previousShares": 2345000,
-      "shares": 2345000,
+      "previousShares": 5006000,
+      "shares": 5006000,
       "sharesDelta": 0,
-      "previousWeight": 0.35,
-      "weight": 0.32,
+      "previousWeight": 1.56,
+      "weight": 1.51,
+      "weightDeltaPp": -0.05
+    },
+    {
+      "code": "3008",
+      "name": "大立光電",
+      "type": "weight_only",
+      "previousShares": 425000,
+      "shares": 425000,
+      "sharesDelta": 0,
+      "previousWeight": 1.03,
+      "weight": 0.99,
+      "weightDeltaPp": -0.04
+    },
+    {
+      "code": "4958",
+      "name": "臻鼎科技控股",
+      "type": "weight_only",
+      "previousShares": 5179000,
+      "shares": 5179000,
+      "sharesDelta": 0,
+      "previousWeight": 1.15,
+      "weight": 1.11,
+      "weightDeltaPp": -0.04
+    },
+    {
+      "code": "1326",
+      "name": "台灣化學纖維",
+      "type": "weight_only",
+      "previousShares": 18900000,
+      "shares": 18900000,
+      "sharesDelta": 0,
+      "previousWeight": 0.74,
+      "weight": 0.71,
+      "weightDeltaPp": -0.03
+    },
+    {
+      "code": "2884",
+      "name": "玉山金融控股",
+      "type": "weight_only",
+      "previousShares": 17036000,
+      "shares": 17036000,
+      "sharesDelta": 0,
+      "previousWeight": 0.44,
+      "weight": 0.41,
+      "weightDeltaPp": -0.03
+    },
+    {
+      "code": "3661",
+      "name": "世芯電子",
+      "type": "weight_only",
+      "previousShares": 320000,
+      "shares": 320000,
+      "sharesDelta": 0,
+      "previousWeight": 0.76,
+      "weight": 0.73,
       "weightDeltaPp": -0.03
     },
     {
@@ -1197,42 +1057,20 @@
       "previousShares": 10000000,
       "shares": 10000000,
       "sharesDelta": 0,
-      "previousWeight": 0.56,
-      "weight": 0.53,
+      "previousWeight": 0.53,
+      "weight": 0.5,
       "weightDeltaPp": -0.03
     },
     {
-      "code": "8046",
-      "name": "南亞電路板",
+      "code": "6669",
+      "name": "緯穎科技服務",
       "type": "weight_only",
-      "previousShares": 6296000,
-      "shares": 6296000,
+      "previousShares": 1071711,
+      "shares": 1071711,
       "sharesDelta": 0,
-      "previousWeight": 2.84,
-      "weight": 2.81,
+      "previousWeight": 0.98,
+      "weight": 0.95,
       "weightDeltaPp": -0.03
-    },
-    {
-      "code": "6805",
-      "name": "富世達股份有限公司",
-      "type": "increase",
-      "previousShares": 736000,
-      "shares": 765000,
-      "sharesDelta": 29000,
-      "previousWeight": 0.76,
-      "weight": 0.74,
-      "weightDeltaPp": -0.02
-    },
-    {
-      "code": "3017",
-      "name": "奇鋐科技",
-      "type": "increase",
-      "previousShares": 3224000,
-      "shares": 3247000,
-      "sharesDelta": 23000,
-      "previousWeight": 5.1,
-      "weight": 5.12,
-      "weightDeltaPp": 0.02
     },
     {
       "code": "1815",
@@ -1241,86 +1079,64 @@
       "previousShares": 8500000,
       "shares": 8500000,
       "sharesDelta": 0,
-      "previousWeight": 0.6,
-      "weight": 0.58,
+      "previousWeight": 0.58,
+      "weight": 0.56,
       "weightDeltaPp": -0.02
     },
     {
-      "code": "2449",
-      "name": "京元電子",
+      "code": "2327",
+      "name": "國巨*",
       "type": "weight_only",
-      "previousShares": 2410000,
-      "shares": 2410000,
+      "previousShares": 2420000,
+      "shares": 2420000,
       "sharesDelta": 0,
-      "previousWeight": 0.27,
-      "weight": 0.25,
-      "weightDeltaPp": -0.02
-    },
-    {
-      "code": "2890",
-      "name": "永豐金融控股",
-      "type": "weight_only",
-      "previousShares": 10300000,
-      "shares": 10300000,
-      "sharesDelta": 0,
-      "previousWeight": 0.27,
-      "weight": 0.25,
-      "weightDeltaPp": -0.02
-    },
-    {
-      "code": "3661",
-      "name": "世芯電子",
-      "type": "weight_only",
-      "previousShares": 320000,
-      "shares": 320000,
-      "sharesDelta": 0,
-      "previousWeight": 0.74,
-      "weight": 0.76,
-      "weightDeltaPp": 0.02
-    },
-    {
-      "code": "6213",
-      "name": "聯茂電子",
-      "type": "weight_only",
-      "previousShares": 1821000,
-      "shares": 1821000,
-      "sharesDelta": 0,
-      "previousWeight": 0.46,
+      "previousWeight": 0.5,
       "weight": 0.48,
-      "weightDeltaPp": 0.02
-    },
-    {
-      "code": "6223",
-      "name": "旺矽科技",
-      "type": "weight_only",
-      "previousShares": 1052000,
-      "shares": 1052000,
-      "sharesDelta": 0,
-      "previousWeight": 2.69,
-      "weight": 2.67,
       "weightDeltaPp": -0.02
     },
     {
-      "code": "2059",
-      "name": "川湖科技",
-      "type": "increase",
-      "previousShares": 413000,
-      "shares": 425000,
-      "sharesDelta": 12000,
-      "previousWeight": 1.59,
-      "weight": 1.6,
-      "weightDeltaPp": 0.01
+      "code": "2881",
+      "name": "富邦金融控股",
+      "type": "weight_only",
+      "previousShares": 6200000,
+      "shares": 6200000,
+      "sharesDelta": 0,
+      "previousWeight": 0.54,
+      "weight": 0.52,
+      "weightDeltaPp": -0.02
     },
     {
-      "code": "2395",
-      "name": "研華",
+      "code": "2885",
+      "name": "元大金融控股",
       "type": "weight_only",
-      "previousShares": 121000,
-      "shares": 121000,
+      "previousShares": 16656000,
+      "shares": 16656000,
       "sharesDelta": 0,
-      "previousWeight": 0.05,
-      "weight": 0.04,
-      "weightDeltaPp": -0.01
+      "previousWeight": 0.65,
+      "weight": 0.63,
+      "weightDeltaPp": -0.02
+    },
+    {
+      "code": "2886",
+      "name": "兆豐金融控股",
+      "type": "weight_only",
+      "previousShares": 17030000,
+      "shares": 17030000,
+      "sharesDelta": 0,
+      "previousWeight": 0.57,
+      "weight": 0.55,
+      "weightDeltaPp": -0.02
+    },
+    {
+      "code": "2887",
+      "name": "台新新光金融控股股份有限公司",
+      "type": "weight_only",
+      "previousShares": 22760000,
+      "shares": 22760000,
+      "sharesDelta": 0,
+      "previousWeight": 0.5,
+      "weight": 0.48,
+      "weightDeltaPp": -0.02
     },
     {
       "code": "3167",
@@ -1329,20 +1145,20 @@
       "previousShares": 1330000,
       "shares": 1330000,
       "sharesDelta": 0,
-      "previousWeight": 0.49,
-      "weight": 0.5,
-      "weightDeltaPp": 0.01
+      "previousWeight": 0.5,
+      "weight": 0.48,
+      "weightDeltaPp": -0.02
     },
     {
-      "code": "3491",
-      "name": "昇達科技",
+      "code": "3231",
+      "name": "緯創資通",
       "type": "weight_only",
-      "previousShares": 330000,
-      "shares": 330000,
+      "previousShares": 5800000,
+      "shares": 5800000,
       "sharesDelta": 0,
-      "previousWeight": 0.29,
-      "weight": 0.28,
-      "weightDeltaPp": -0.01
+      "previousWeight": 0.57,
+      "weight": 0.55,
+      "weightDeltaPp": -0.02
     },
     {
       "code": "6147",
@@ -1351,8 +1167,129 @@
       "previousShares": 7077000,
       "shares": 7077000,
       "sharesDelta": 0,
-      "previousWeight": 0.59,
+      "previousWeight": 0.58,
+      "weight": 0.56,
+      "weightDeltaPp": -0.02
+    },
+    {
+      "code": "6213",
+      "name": "聯茂電子",
+      "type": "weight_only",
+      "previousShares": 1821000,
+      "shares": 1821000,
+      "sharesDelta": 0,
+      "previousWeight": 0.48,
+      "weight": 0.46,
+      "weightDeltaPp": -0.02
+    },
+    {
+      "code": "6715",
+      "name": "嘉基科技",
+      "type": "weight_only",
+      "previousShares": 3110000,
+      "shares": 3110000,
+      "sharesDelta": 0,
+      "previousWeight": 0.57,
+      "weight": 0.55,
+      "weightDeltaPp": -0.02
+    },
+    {
+      "code": "6805",
+      "name": "富世達股份有限公司",
+      "type": "weight_only",
+      "previousShares": 765000,
+      "shares": 765000,
+      "sharesDelta": 0,
+      "previousWeight": 0.74,
+      "weight": 0.72,
+      "weightDeltaPp": -0.02
+    },
+    {
+      "code": "8996",
+      "name": "高力熱處理工業",
+      "type": "weight_only",
+      "previousShares": 1052000,
+      "shares": 1052000,
+      "sharesDelta": 0,
+      "previousWeight": 0.6,
       "weight": 0.58,
+      "weightDeltaPp": -0.02
+    },
+    {
+      "code": "1560",
+      "name": "中國砂輪企業",
+      "type": "weight_only",
+      "previousShares": 425000,
+      "shares": 425000,
+      "sharesDelta": 0,
+      "previousWeight": 0.16,
+      "weight": 0.15,
+      "weightDeltaPp": -0.01
+    },
+    {
+      "code": "2317",
+      "name": "鴻海精密工業",
+      "type": "weight_only",
+      "previousShares": 2345000,
+      "shares": 2345000,
+      "sharesDelta": 0,
+      "previousWeight": 0.32,
+      "weight": 0.31,
+      "weightDeltaPp": -0.01
+    },
+    {
+      "code": "2449",
+      "name": "京元電子",
+      "type": "weight_only",
+      "previousShares": 2410000,
+      "shares": 2410000,
+      "sharesDelta": 0,
+      "previousWeight": 0.25,
+      "weight": 0.24,
+      "weightDeltaPp": -0.01
+    },
+    {
+      "code": "2890",
+      "name": "永豐金融控股",
+      "type": "weight_only",
+      "previousShares": 10300000,
+      "shares": 10300000,
+      "sharesDelta": 0,
+      "previousWeight": 0.25,
+      "weight": 0.24,
+      "weightDeltaPp": -0.01
+    },
+    {
+      "code": "3105",
+      "name": "穩懋半導體",
+      "type": "weight_only",
+      "previousShares": 1616000,
+      "shares": 1616000,
+      "sharesDelta": 0,
+      "previousWeight": 0.44,
+      "weight": 0.43,
+      "weightDeltaPp": -0.01
+    },
+    {
+      "code": "3491",
+      "name": "昇達科技",
+      "type": "weight_only",
+      "previousShares": 330000,
+      "shares": 330000,
+      "sharesDelta": 0,
+      "previousWeight": 0.28,
+      "weight": 0.27,
+      "weightDeltaPp": -0.01
+    },
+    {
+      "code": "6510",
+      "name": "中華精測科技",
+      "type": "weight_only",
+      "previousShares": 275000,
+      "shares": 275000,
+      "sharesDelta": 0,
+      "previousWeight": 0.41,
+      "weight": 0.4,
       "weightDeltaPp": -0.01
     },
     {
@@ -1362,20 +1299,9 @@
       "previousShares": 955000,
       "shares": 955000,
       "sharesDelta": 0,
-      "previousWeight": 0.17,
-      "weight": 0.16,
+      "previousWeight": 0.16,
+      "weight": 0.15,
       "weightDeltaPp": -0.01
-    },
-    {
-      "code": "6187",
-      "name": "萬潤科技",
-      "type": "removed",
-      "previousShares": 2000,
-      "shares": 0,
-      "sharesDelta": -2000,
-      "previousWeight": 0.0,
-      "weight": 0,
-      "weightDeltaPp": 0.0
     }
   ],
   "derivativeChanges": {
@@ -1383,46 +1309,46 @@
       {
         "code": "TX",
         "name": "臺股期貨",
-        "previousQuantity": 4540.0,
+        "previousQuantity": 4750.0,
         "quantity": 4750.0,
-        "quantityDelta": 210.0,
-        "previousReportedWeight": 23.34,
-        "reportedWeight": 23.24,
-        "weightDeltaPp": -0.1
+        "quantityDelta": 0.0,
+        "previousReportedWeight": 23.24,
+        "reportedWeight": 22.46,
+        "weightDeltaPp": -0.78
       }
     ],
     "options": [
       {
         "code": "TX4",
         "name": "臺指選擇權第四週週三到期契約",
-        "previousQuantity": -19950.0,
-        "quantity": -18750.0,
-        "quantityDelta": 1200.0,
-        "previousReportedWeight": -11.11,
-        "reportedWeight": -13.06,
-        "weightDeltaPp": -1.95
+        "previousQuantity": -18750.0,
+        "quantity": -13950.0,
+        "quantityDelta": 4800.0,
+        "previousReportedWeight": -13.06,
+        "reportedWeight": -14.46,
+        "weightDeltaPp": -1.4
       },
       {
         "code": "TXY",
         "name": "臺指選擇權第四週週五到期契約",
         "previousQuantity": -9300.0,
-        "quantity": -9300.0,
-        "quantityDelta": 0.0,
-        "previousReportedWeight": -6.9,
-        "reportedWeight": -7.42,
-        "weightDeltaPp": -0.52
+        "quantity": -5786.0,
+        "quantityDelta": 3514.0,
+        "previousReportedWeight": -7.42,
+        "reportedWeight": -5.81,
+        "weightDeltaPp": 1.61
       }
     ]
   },
   "metrics": {
-    "premiumPct": 0.818,
-    "adjustedPriceDrawdownPct": 39.337,
-    "priceDate": "2026-11-23",
+    "premiumPct": 2.301,
+    "adjustedPriceDrawdownPct": 34.314,
+    "priceDate": "2026-11-24",
     "dividendLatest": 0.138,
     "dividendPrevious": 0.138,
-    "stockWeightPct": 77.77,
-    "maxSingleStockPct": 8.45,
-    "top10WeightPct": 44.9,
+    "stockWeightPct": 75.87,
+    "maxSingleStockPct": 8.17,
+    "top10WeightPct": 43.38,
     "grossExposurePct": null,
     "optionNotionalPct": null,
     "sectorConcentrationPct": null
